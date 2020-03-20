@@ -1,24 +1,3 @@
-meta.title: Boilerplate
-meta.description: Description
-topbar.home: HOME
-not_found.bar: Not Found
-not_found.title: Oops!
-not_found.info: We cannot find the page for you...
-topbar.brand: DELEGATES
-topbar.delegate_list: 'Delegate List'
-topbar.faucet: FAUCET
-topbar.giveaway: GIVEAWAY
-topbar.i_am_a_delegate: DELEGATE
-topbar.logout: Logout
-topbar.member: MEMBER
-topbar.my_referrals: 'My Referrals'
-topbar.my_votes: 'My Votes'
-topbar.poll_list: 'Poll List'
-topbar.sign_in: 'SIGN IN'
-topbar.staking: STAKING
-topbar.support: SUPPORT
-topbar.vita: VITA
-topbar.voting: VOTING
 footer.about_us: 'About Us'
 footer.announcemenets: Announcements
 footer.announcements: Announcements
@@ -42,3 +21,96 @@ footer.subscribe_success: 'Success To Subscribe'
 footer.support: Support
 footer.team: Team
 footer.wallet: Wallet
+meta.description: Description
+meta.title: Boilerplate
+not_found.bar: Not Found
+not_found.info: We cannot find the page for you...
+not_found.title: Oops!
+tools.address_convert: 'Address Convert'
+tools.address_required: 'Address required'
+tools.another_eth_addr: 'Another ETH address'
+tools.another_io_addr: 'Another IoTeX address'
+tools.balance: 'Balance'
+tools.continue_to_swap: 'Continue to Swap'
+tools.convert: Convert
+tools.converted_eth: 'Your Eth Address is: '
+tools.converted_iotex: 'Your IoTeX Address is: '
+tools.current_eth_addr: 'Current ETH Address: ${ethAddress}'
+tools.current_io_addr: 'Current IoTeX address: ${ioAddress}'
+tools.distribute: 'Distribute IOTX/VITA'
+tools.enter_ioaddress_here: 'Enter a IoTeX address here'
+tools.enter_your_trade_hash: Please enter your trade hash
+tools.eth_addr_required: 'Eth address required'
+tools.eth_or_iotex_addr: 'Eth Address or IoTeX Address'
+tools.faucet_info: 'The faucet allows you to request IOTX tokens to be used on our <a target=''_blank'' href=''https://testnet.iotexscan.io/''>testnet</a>. This is not a real mainnet IOTX. It has no market value.<br/><br/> To prevent abuse, a Github account is required and you can request 100 token per 24 hours.'
+tools.faucet_limit: 'Faucet draw rate limit reached. Come back in 24 hours.'
+tools.faucet_success: 'Faucet draw rate reached.'
+tools.faucet_test_net: 'Testnet IOTX Faucet'
+tools.github_star: Star
+tools.hash_invalid: Your Hash is invalid
+tools.iotx_balance: 'IOTX Balance:'
+tools.iotxe_balance: 'IOTX-E Balance:'
+tools.issue_report_tip: 'Please verify the swap transaction you are about to report can be found on <a href="${href}" target="_blank">${address}</a>, and has a Success Status. Swap won''t happen if the transaction failed.'
+tools.issue_report_verified: "Make sure the swap failed."
+tools.login_github: 'Login With github'
+tools.mainnet_address: 'IoTeX Mainnet Address'
+tools.mainnet_address_placeholder: io12345693ug8r3zdeysppnyrcdu2xssz0lcam9l9
+tools.mainnet_address_required: 'IoTeX address required'
+tools.mainnet_airdop_stop: 'We have temporarily stopped Mainnet IOTX airdrop due to suspecious activities detected. Please stay tuned for further airdrops. Thanks for your support!'
+tools.mainnet_info: 'Welcome to IoTeX - The privacy-centric blockchain platform to power the Internet of Trusted Things. Here you can receive free IOTX tokens.<br/><br/> To prevent abuse, a Github account is required. Please star our repo and request tokens below. You can only request once per Github Account or IOTX address.'
+tools.mainnet_limit: 'Only once per Github Account or IOTX address'
+tools.mainnet_send: 'Send me IOTX!'
+tools.mainnet_success: 'We have sent free IOTX tokens.'
+tools.mainnet_title: 'Mainnet IOTX Airdrop'
+tools.maxEpochCountError: Epoch count should be less than or equal ${max}
+tools.multi_send.approve: Approve
+tools.multi_send.erc20: 'MultiSend IOTX/VITA'
+tools.multi_send.iotex: 'MultiSend IOTX-E'
+tools.multi_send.multisend: 'Multi Send'
+tools.multi_send.send_type: 'Send Type'
+tools.multi_send: 'Multi Send'
+tools.no_blank: this field can not be empty
+tools.please_wait: Thanks for reporting the issue. Our team will check the transaction and make sure it went through within 12 hours. Please wait up to 12 hours and check back again. Thanks for your patience!
+tools.report_modal_title: Problem Report
+tools.report_tube_problem: Failed to swap? Report issue
+tools.send_failed: Send failed
+tools.send_iotex_testnet: 'Send me IOTX!'
+tools.send_success: Send success
+tools.swap_eth_address: 'Swap to the following ETH Address'
+tools.swap_from: 'Swap From'
+tools.swap_io_address: 'Swap to the following IoTeX Address'
+tools.swap_to: 'Swap To'
+tools.swap_to_iotex: 'Swap to IOTX'
+tools.swap_to_iotex_native: 'Swap to IOTX (Native)'
+tools.swap_type: Swap type
+tools.swap_v2: 'Token Swap-v2'
+tools.swap_v2_bep2_address: BNB Receive Address
+tools.swap_v2_erc20_address: Eth Receive Address
+tools.swap_v2_swap: Swap Direction
+tools.swap_v2_token: Token
+tools.swapping_to_iotx: Swapping to IOTX(Native)
+tools.swapping_to_iotxe: Swapping to IOTX-E
+tools.test_net_address: 'Testnet address'
+tools.title: Tools
+tools.token_swap: 'Token Swap (IoTeX Tube)'
+tools.us_warning: 'Sorry. This service is not available in your location.'
+tools.your_eth: 'Your ETH Address:'
+tools.your_io: 'Your IoTeX Address:'
+tools.your_transaction_hash: Your transaction hash
+tools.token_migration: Token Migration
+topbar.brand: DELEGATES
+topbar.delegate_list: 'Delegate List'
+topbar.faucet: FAUCET
+topbar.giveaway: GIVEAWAY
+topbar.home: HOME
+topbar.i_am_a_delegate: DELEGATE
+topbar.logout: Logout
+topbar.member: MEMBER
+topbar.my_referrals: 'My Referrals'
+topbar.my_votes: 'My Votes'
+topbar.poll_list: 'Poll List'
+topbar.sign_in: 'SIGN IN'
+topbar.staking: STAKING
+topbar.support: SUPPORT
+topbar.vita: VITA
+topbar.voting: VOTING

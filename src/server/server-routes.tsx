@@ -4,7 +4,6 @@ import * as React from "react";
 import { setApiGateway } from "../api-gateway/api-gateway";
 import { AppContainer } from "../shared/app-container";
 import { apolloSSR } from "../shared/common/apollo-ssr";
-import { setEmailPasswordIdentityProviderRoutes } from "../shared/onefx-auth-provider/email-password-identity-provider/email-password-identity-provider-handler";
 import { MyServer } from "./start-server";
 
 export function setServerRoutes(server: MyServer): void {
@@ -14,7 +13,6 @@ export function setServerRoutes(server: MyServer): void {
   });
 
   setApiGateway(server);
-  setEmailPasswordIdentityProviderRoutes(server);
 
   // @ts-ignore
   server.get("SPA", /^(?!\/?api-gateway\/).+$/, async (ctx: koa.Context) => {

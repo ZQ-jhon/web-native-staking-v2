@@ -1,24 +1,3 @@
-meta.title: Boilerplate
-meta.description: Description
-topbar.home: HOME
-not_found.bar: Not Found
-not_found.title: Oops!
-not_found.info: We cannot find the page for you...
-topbar.brand: 节点
-topbar.delegate_list: 节点列表
-topbar.faucet: FAUCET
-topbar.giveaway: 赠品
-topbar.i_am_a_delegate: 节点
-topbar.logout: 退出登录
-topbar.member: 会员
-topbar.my_referrals: 我的推荐
-topbar.my_votes: 我的选票
-topbar.poll_list: 公投列表
-topbar.sign_in: 登录
-topbar.staking: 质押
-topbar.support: 帮助
-topbar.vita: VITA
-topbar.voting: 投票
 footer.about_us: 关于我们
 footer.announcemenets: 公告
 footer.announcements: 公告
@@ -42,3 +21,84 @@ footer.subscribe_success: 成功订阅
 footer.support: 技术支持
 footer.team: 团队
 footer.wallet: 钱包
+meta.description: Description
+meta.title: Boilerplate
+not_found.bar: Not Found
+not_found.info: We cannot find the page for you...
+not_found.title: Oops!
+tools.address_convert: 地址转换
+tools.address_required: 需要地址
+tools.another_eth_addr: 另一个ETH地址
+tools.another_io_addr: 另一个IO地址
+tools.continue_to_swap: 继续交换
+tools.convert: 兑换
+tools.converted_eth: 您的Eth地址是：
+tools.converted_iotex: 您的IoTeX地址是：
+tools.current_eth_addr: '当前ETH地址：${ethAddress}'
+tools.current_io_addr: '当前IO地址：${ioAddress}'
+tools.distribute: '发放 IOTX/VITA'
+tools.enter_ioaddress_here: 在此输入io地址
+tools.enter_your_trade_hash: 请输入您的交易hash
+tools.eth_addr_required: 需要ETH地址
+tools.eth_or_iotex_addr: Eth地址或IoTeX地址
+tools.faucet_info: 'This faucet allows you to request Iotex Testnet to be used on Testnet Ethereum test network This is not real (mainnet) ETH. It has no market value. It is only useful for testing A GitHub account is required to be able to request testnet.'
+tools.faucet_limit: 'Faucet draw rate limit reached. Come back in 24 hours.'
+tools.faucet_success: 'Faucet draw rate reached.'
+tools.faucet_test_net: 'Test Net Faucet'
+tools.github_star: 星
+tools.hash_invalid: 您的哈希地址格式不正确
+tools.iotx_balance: IOTX余额：
+tools.iotxe_balance: IOTX-E余额：
+tools.login_github: 使用Github登录
+tools.mainnet_address: IoTeX主网地址
+tools.mainnet_address_placeholder: io12345693ug8r3zdeysppnyrcdu2xssz0lcam9l9
+tools.mainnet_address_required: 需要IoTeX地址
+tools.mainnet_airdop_stop: 由于检测到可疑活动，我们暂时停止了主网IOTX空投。请留意进一步的空投。感谢您的支持！
+tools.mainnet_info: '欢迎来到IoTeX--以隐私为中心的区块链平台，为可信物联网提供支持。在这里，您可以获得免费的IOTX代币。 <br/> <br/>为防止滥用，需要Github帐户。请在我们的repo中点击星标，并在下面请求令牌。每个Github帐户或IOTX地址只能请求一次。'
+tools.mainnet_limit: 每个Github帐户或IOTX地址只有10个令牌
+tools.mainnet_send: 请发送原生的IOTX！
+tools.mainnet_success: 您已收到10个免费的IOTX原生通证
+tools.mainnet_title: '主网 IOTX 空投'
+tools.multi_send.approve: 同意
+tools.multi_send.erc20: '批量发送 IOTX/VITA'
+tools.multi_send.iotex: '批量发送 IOTX-E'
+tools.multi_send.multisend: 批量发送
+tools.multi_send.send_type: 发送类型
+tools.multi_send: 批量发送
+tools.no_blank: 该值不能为空
+tools.report_modal_title: 问题报告
+tools.report_tube_problem: 交换失败? 报告该问题
+tools.send_failed: 发送失败
+tools.send_iotex_testnet: 'Send me Iotex Testnet!'
+tools.send_success: 发送成功
+tools.swap_eth_address: '交换到以下 ETH 地址'
+tools.swap_io_address: 切换到以下IO地址
+tools.swap_to_iotex: 交换到IOTX
+tools.swap_to_iotex_native: '交换到 IOTX(本地)'
+tools.swap_type: 交换类型
+tools.swapping_to_iotx: 交换到 IOTX(Native)
+tools.swapping_to_iotxe: 交换到 IOTX-E
+tools.test_net_address: 'Testnet 地址'
+tools.title: 工具
+tools.token_swap: '令牌交换(IoTeX 渠道)'
+tools.us_warning: '对不起. 此服务在您的国家不可用.'
+tools.your_eth: 你的ETH地址：
+tools.your_io: '您的 IO 地址:'
+tools.your_transaction_hash: 您的交易 hash 值
+tools.token_migration: Token 置换更新
+topbar.brand: 节点
+topbar.delegate_list: 节点列表
+topbar.faucet: FAUCET
+topbar.giveaway: 赠品
+topbar.home: HOME
+topbar.i_am_a_delegate: 节点
+topbar.logout: 退出登录
+topbar.member: 会员
+topbar.my_referrals: 我的推荐
+topbar.my_votes: 我的选票
+topbar.poll_list: 公投列表
+topbar.sign_in: 登录
+topbar.staking: 质押
+topbar.support: 帮助
+topbar.vita: VITA
+topbar.voting: 投票

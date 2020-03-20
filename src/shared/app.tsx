@@ -1,4 +1,3 @@
-// @ts-ignore
 import { styled } from "onefx/lib/styletron-react";
 import React, { Component } from "react";
 import { RouteComponentProps, Switch } from "react-router";
@@ -12,7 +11,7 @@ import { ScrollToTop } from "./common/scroll-top";
 import { colors } from "./common/styles/style-color";
 import { fonts } from "./common/styles/style-font";
 import { TopBar } from "./common/top-bar";
-import { Home } from "./home/home";
+import { TokenMigrationTool } from "./token-migration-tool";
 
 type Props = {
   googleTid: string;
@@ -32,7 +31,7 @@ export class App extends Component<Props> {
         <div style={FOOTER_ABOVE}>
           <ScrollToTop>
             <Switch>
-              <Route exact={true} path="/" component={Home} />
+              <Route exact={true} path="/" component={TokenMigrationTool} />
               <Route component={NotFound} />
             </Switch>
           </ScrollToTop>
@@ -45,7 +44,7 @@ export class App extends Component<Props> {
 
 const RootStyle = styled("div", () => ({
   ...fonts.body,
-  backgroundColor: colors.black10,
+  backgroundColor: colors.white,
   color: colors.text01,
   textRendering: "optimizeLegibility"
 }));
