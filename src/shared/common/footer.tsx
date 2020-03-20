@@ -1,35 +1,14 @@
 // @ts-ignore
-import { styled } from "onefx/lib/styletron-react";
+import Footer, { FOOTER_HEIGHT } from "iotex-react-footer";
 import React from "react";
-import { Flex } from "./flex";
-import { colors } from "./styles/style-color";
-import { contentPadding } from "./styles/style-padding";
 import { TOP_BAR_HEIGHT } from "./top-bar";
 
-export const FOOTER_HEIGHT = 89;
+export { FOOTER_HEIGHT };
 
 export const FOOTER_ABOVE = {
   minHeight: `calc(100vh - ${FOOTER_HEIGHT + TOP_BAR_HEIGHT}px)`
 };
 
 export function Footer(): JSX.Element {
-  return (
-    <Align>
-      <Flex>{`Copyright © ${new Date().getFullYear()}`}</Flex>
-      <Flex>Built with ❤️ in San Francisco</Flex>
-    </Align>
-  );
+  return <Footer />;
 }
-
-const Align = styled("div", (_: React.CSSProperties) => ({
-  ...contentPadding,
-  display: "flex",
-  flexDirection: "row",
-  alignItems: "center",
-  justifyContent: "space-between",
-  paddingTop: "32px",
-  paddingBottom: "32px",
-  minHeight: `${FOOTER_HEIGHT}px`,
-  backgroundColor: colors.nav02,
-  color: colors.white
-}));

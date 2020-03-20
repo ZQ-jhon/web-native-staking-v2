@@ -1,7 +1,44 @@
 meta.title: Boilerplate
 meta.description: Description
-topbar.brand: OneFx
 topbar.home: HOME
 not_found.bar: Not Found
 not_found.title: Oops!
 not_found.info: We cannot find the page for you...
+topbar.brand: DELEGATES
+topbar.delegate_list: 'Delegate List'
+topbar.faucet: FAUCET
+topbar.giveaway: GIVEAWAY
+topbar.i_am_a_delegate: DELEGATE
+topbar.logout: Logout
+topbar.member: MEMBER
+topbar.my_referrals: 'My Referrals'
+topbar.my_votes: 'My Votes'
+topbar.poll_list: 'Poll List'
+topbar.sign_in: 'SIGN IN'
+topbar.staking: STAKING
+topbar.support: SUPPORT
+topbar.vita: VITA
+topbar.voting: VOTING
+footer.about_us: 'About Us'
+footer.announcemenets: Announcements
+footer.announcements: Announcements
+footer.charity_program: 'Charity Program'
+footer.delegates_program: 'Delegates Program'
+footer.develop: Develop
+footer.documentations: Documentations
+footer.enter_email: 'Enter email for Iotex updates'
+footer.explorer: Explorer
+footer.forum: Forum
+footer.github: Github
+footer.lauch: Launch
+footer.launch: Launch
+footer.libraries_tools: 'Libraries and Tools'
+footer.policy: 'Terms of Use & Privacy Policy'
+footer.research_paper: 'Research Papers'
+footer.resource: Resources
+footer.roadmap: Roadmap
+footer.subscribe: Subscribe
+footer.subscribe_success: 'Success To Subscribe'
+footer.support: Support
+footer.team: Team
+footer.wallet: Wallet

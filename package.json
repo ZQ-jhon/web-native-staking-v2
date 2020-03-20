@@ -18,7 +18,7 @@
     "cover": "NODE_ENV=test tsc && nyc npm run ava",
     "size": "ls -lh dist/",
     "bp": "npm run build-production && npm run size",
-    "kill": "lsof -n -i4TCP:5000 | grep LISTEN | awk '{ print $2 }' | xargs kill",
+    "kill": "lsof -n -i4TCP:5004 | grep LISTEN | awk '{ print $2 }' | xargs kill",
     "doc": "graphdoc --config ./package.json --force"
   },
   "graphdoc": {
@@ -149,6 +149,8 @@
     "graphql": "14.6.0",
     "graphql-iso-date": "3.6.1",
     "graphql-tag": "2.10.3",
+    "iotex-react-footer": "^2.6.5",
+    "iotex-react-language-dropdown": "2.4.3",
     "is-browser": "2.1.0",
     "isomorphic-unfetch": "3.0.0",
     "jsonwebtoken": "8.5.1",
@@ -167,7 +169,7 @@
     "redux": "4.0.5",
     "reflect-metadata": "0.1.13",
     "safe-json-globals": "2.1.0",
-    "shader": "1.0.0",
+    "shader": "^1.0.0",
     "styletron-engine-atomic": "1.4.6",
     "ts-node": "8.7.0",
     "type-graphql": "0.17.6",

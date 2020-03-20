@@ -104,7 +104,8 @@
     "no-use-before-declare": false,
     "react-unused-props-and-state": false,
     "jsx-no-lambda": false,
-    "member-access": false
+    "member-access": false,
+    "no-http-string": false
   },
   "jsRules": {
     "quotemark": [true, "double", "jsx-double"],

@@ -1,93 +1,117 @@
 // @ts-ignore
-import { styled, StyleObject } from "onefx/lib/styletron-react";
-import { Component } from "react";
-import OutsideClickHandler from "react-outside-click-handler";
-import { Link } from "react-router-dom";
-
+import document from "global/document";
+// @ts-ignore
+import window from "global/window";
 import { assetURL } from "onefx/lib/asset-url";
-import { t } from "onefx/lib/iso-i18n";
+import { styled } from "onefx/lib/styletron-react";
 import React from "react";
-import { CommonMargin } from "./common-margin";
-import { Icon } from "./icon";
+import { Component } from "react";
+import { connect } from "react-redux";
+import { withRouter } from "react-router";
+import { Flex } from "./flex";
 import { Cross } from "./icons/cross.svg";
 import { Hamburger } from "./icons/hamburger.svg";
-import { transition } from "./styles/style-animation";
+import { Image } from "./image";
 import { colors } from "./styles/style-color";
 import { media, PALM_WIDTH } from "./styles/style-media";
 import { contentPadding } from "./styles/style-padding";
+import { TopBarMenu, TopBarMobileMenu } from "./top-bar-menu";
 
-export const TOP_BAR_HEIGHT = 52;
+export const TOP_BAR_HEIGHT = 75;
+export const TOP_BAR_MARGIN = 32;
 
 type State = {
   displayMobileMenu: boolean;
 };
+type Props = {
+  eth?: string;
+  // tslint:disable-next-line:no-any
+  history?: any;
+  userId?: string;
+  faucetEnable?: boolean;
+  displayWarning?: boolean;
+  // tslint:disable-next-line:no-any
+  updateTopBar?: any;
+};
 
-export class TopBar extends Component<{}, State> {
-  constructor(props: {}) {
+// @ts-ignore
+@withRouter
+// @ts-ignore
+// tslint:disable-next-line:no-any
+@connect((state: any) => ({
+  faucetEnable: state.base.faucetEnable,
+  displayWarning: state.base.displayWarning,
+  updateTopBar: state.base.updateTopBar,
+  eth: state.base.eth,
+  userId: state.base.userId
+}))
+class TopBar extends Component<Props, State> {
+  props: Props;
+
+  // tslint:disable-next-line:no-any
+  constructor(props: any) {
     super(props);
     this.state = {
       displayMobileMenu: false
     };
   }
 
-  public componentDidMount(): void {
+  componentDidMount(): void {
+    // @ts-ignore
+    let resizeTimer = null;
     window.addEventListener("resize", () => {
-      if (
-        document.documentElement &&
-        document.documentElement.clientWidth > PALM_WIDTH
-      ) {
-        this.setState({
-          displayMobileMenu: false
-        });
+      // @ts-ignore
+      if (resizeTimer) {
+        // @ts-ignore
+        window.clearTimeout(resizeTimer);
       }
+      resizeTimer = window.setTimeout(() => {
+        if (
+          document.documentElement &&
+          document.documentElement.clientWidth > PALM_WIDTH
+        ) {
+          this.setState({
+            displayMobileMenu: false
+          });
+        }
+      }, 500);
     });
   }
 
-  public displayMobileMenu = () => {
+  displayMobileMenu = () => {
     this.setState({
       displayMobileMenu: true
     });
   };
 
-  public hideMobileMenu = () => {
+  hideMobileMenu = () => {
     this.setState({
       displayMobileMenu: false
     });
   };
 
-  public renderMenu = () => {
-    return [
-      <A key={0} href="/" onClick={this.hideMobileMenu}>
-        {t("topbar.home")}
-      </A>
-    ];
-  };
-
-  public renderMobileMenu = () => {
-    if (!this.state.displayMobileMenu) {
-      return null;
-    }
-
-    return (
-      <OutsideClickHandler onOutsideClick={this.hideMobileMenu}>
-        <Dropdown>{this.renderMenu()}</Dropdown>
-      </OutsideClickHandler>
-    );
-  };
-
-  public render(): JSX.Element {
+  render(): JSX.Element {
     const displayMobileMenu = this.state.displayMobileMenu;
-
+    const { history, faucetEnable, displayWarning } = this.props;
+    const topheight = displayWarning ? TOP_BAR_MARGIN : 0;
     return (
       <div>
-        <Bar>
-          <Flex>
+        {/*
+        // @ts-ignore */}
+        <Bar topheight={topheight}>
+          <Flex alignItems={"center"} flexWrap={"nowrap"}>
             <Logo />
-            <CommonMargin />
-            <BrandText href="/">{t("topbar.brand")}</BrandText>
-          </Flex>
-          <Flex>
-            <Menu>{this.renderMenu()}</Menu>
+            <Flex>
+              <Menu>
+                {/*
+        // @ts-ignore */}
+                <TopBarMenu
+                  history={history}
+                  hideMobileMenu={this.hideMobileMenu}
+                  faucetEnable={faucetEnable}
+                />
+              </Menu>
+            </Flex>
           </Flex>
           <HamburgerBtn
             onClick={this.displayMobileMenu}
@@ -99,32 +123,38 @@ export class TopBar extends Component<{}, State> {
             <Cross />
           </CrossBtn>
         </Bar>
-        <BarPlaceholder />
-        {this.renderMobileMenu()}
+        {/*
+        // @ts-ignore */}
+        <BarPlaceholder topheight={topheight} />
+        <TopBarMobileMenu
+          displayMobileMenu={displayMobileMenu}
+          history={history}
+          hideMobileMenu={this.hideMobileMenu}
+          faucetEnable={faucetEnable}
+        />
       </div>
     );
   }
 }
 
-const Bar = styled("div", {
+const Bar = styled("div", _ => ({
   display: "flex",
   flexDirection: "row",
   justifyContent: "space-between",
   alignItems: "center",
-  lineHeight: `${TOP_BAR_HEIGHT}px`,
   height: `${TOP_BAR_HEIGHT}px`,
   backgroundColor: colors.nav01,
   color: colors.white,
   position: "fixed",
   top: "0px",
   left: "0px",
-  width: "100%",
   "z-index": "70",
+  width: "100%",
   ...contentPadding,
   boxSizing: "border-box"
-});
+}));
 
-const BarPlaceholder = styled("div", (_: React.CSSProperties) => {
+const BarPlaceholder = styled("div", _ => {
   const height = TOP_BAR_HEIGHT / 2;
   return {
     display: "block",
@@ -133,15 +163,13 @@ const BarPlaceholder = styled("div", (_: React.CSSProperties) => {
   };
 });
 
+// tslint:disable-next-line:no-any
 function HamburgerBtn({
   displayMobileMenu,
   children,
   onClick
-}: {
-  displayMobileMenu: boolean;
-  children: Array<JSX.Element> | JSX.Element;
-  onClick: Function;
-}): JSX.Element {
+}: // tslint:disable-next-line:no-any
+any): JSX.Element {
   const Styled = styled("div", {
     ":hover": {
       color: colors.primary
@@ -154,23 +182,11 @@ function HamburgerBtn({
     cursor: "pointer",
     justifyContent: "center"
   });
-  return (
-    <Styled
-      // @ts-ignore
-      onClick={onClick}
-    >
-      {children}
-    </Styled>
-  );
+  return <Styled onClick={onClick}>{children}</Styled>;
 }
 
-function CrossBtn({
-  displayMobileMenu,
-  children
-}: {
-  displayMobileMenu: boolean;
-  children: Array<JSX.Element> | JSX.Element;
-}): JSX.Element {
+// tslint:disable-next-line:no-any
+function CrossBtn({ displayMobileMenu, children }: any): JSX.Element {
   const Styled = styled("div", {
     ":hover": {
       color: colors.primary
@@ -181,73 +197,29 @@ function CrossBtn({
       ...(displayMobileMenu ? { display: "flex!important" } : {})
     },
     cursor: "pointer",
-    justifyContent: "center",
     padding: "5px"
   });
   return <Styled>{children}</Styled>;
 }
 
 const LogoWrapper = styled("a", {
-  width: `${TOP_BAR_HEIGHT}px`,
-  height: `${TOP_BAR_HEIGHT}px`
+  width: "150px",
+  height: "100%"
 });
-
 function Logo(): JSX.Element {
   return (
-    <LogoWrapper href="/">
-      <Icon url={assetURL("favicon.svg")} />
+    <LogoWrapper href="//iotex.io/">
+      <Image src={assetURL("logo.png")} width={"auto"} height={"35px"} />
     </LogoWrapper>
   );
 }
 
-const menuItem: StyleObject = {
-  color: colors.white,
-  marginLeft: "14px",
-  textDecoration: "none",
-  ":hover": {
-    color: colors.primary
-  },
-  transition,
-  fontWeight: "bold",
-  [media.palm]: {
-    boxSizing: "border-box",
-    width: "100%",
-    padding: "16px 0 16px 0",
-    borderBottom: "1px #EDEDED solid"
-  }
-};
-const A = styled("a", menuItem);
-const BrandText = styled("a", {
-  ...menuItem,
-  marginLeft: 0,
-  [media.palm]: {}
-});
-// @ts-ignore
-const StyledLink = styled(Link, menuItem);
-
-const Flex = styled("div", (_: React.CSSProperties) => ({
-  flexDirection: "row",
-  display: "flex",
-  boxSizing: "border-box"
-}));
-
 const Menu = styled("div", {
+  width: "100%",
   display: "flex!important",
   [media.palm]: {
     display: "none!important"
   }
 });
 
-const Dropdown = styled("div", {
-  backgroundColor: colors.nav01,
-  display: "flex",
-  flexDirection: "column",
-  ...contentPadding,
-  position: "fixed",
-  top: TOP_BAR_HEIGHT,
-  "z-index": "1",
-  width: "100vw",
-  height: "100vh",
-  alignItems: "flex-end!important",
-  boxSizing: "border-box"
-});
+export { TopBar };
