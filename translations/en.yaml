@@ -21,8 +21,8 @@ footer.subscribe_success: 'Success To Subscribe'
 footer.support: Support
 footer.team: Team
 footer.wallet: Wallet
-meta.description: Description
-meta.title: Boilerplate
+meta.description: IoTeX
+meta.title: Delegates
 not_found.bar: Not Found
 not_found.info: We cannot find the page for you...
 not_found.title: Oops!
@@ -92,12 +92,12 @@ tools.swapping_to_iotx: Swapping to IOTX(Native)
 tools.swapping_to_iotxe: Swapping to IOTX-E
 tools.test_net_address: 'Testnet address'
 tools.title: Tools
+tools.token_migration: Token Migration
 tools.token_swap: 'Token Swap (IoTeX Tube)'
 tools.us_warning: 'Sorry. This service is not available in your location.'
 tools.your_eth: 'Your ETH Address:'
 tools.your_io: 'Your IoTeX Address:'
 tools.your_transaction_hash: Your transaction hash
-tools.token_migration: Token Migration
 topbar.brand: DELEGATES
 topbar.delegate_list: 'Delegate List'
 topbar.faucet: FAUCET
