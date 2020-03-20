@@ -114,3 +114,9 @@ topbar.staking: STAKING
 topbar.support: SUPPORT
 topbar.vita: VITA
 topbar.voting: VOTING
+contract.called: 'Smart contract interaction succeeded! Please wait for a few minutes and refresh this page to see the result.'
+contract.install: 'Please use Chrome, install MetaMask Extension, import & unlock your wallet, and then refresh this page to continue.'
+contract.please_unlock: 'To continue, please unlock your wallet in MetaMask.'
+migration.title: IOTX migration registration
+migration.desc: <p>Dear IOT-E holders,</p><p>You can now migrate off the Ethereum platform and use the native IoTeX blockchain. Please input the mapping IoTeX address and sign with your Ethereum wallet.</p>
+my_stake.ioAddress.err: 'Invalid IoTeX Address'

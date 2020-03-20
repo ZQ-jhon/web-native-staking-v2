@@ -7,21 +7,14 @@ import {
   UserSwitchOutlined
 } from "@ant-design/icons";
 import { Layout, Menu } from "antd";
-import gql from "graphql-tag";
 import { t } from "onefx/lib/iso-i18n";
 import { styled } from "onefx/lib/styletron-react";
 import React, { Component } from "react";
-import { Query } from "react-apollo";
 import { RouteComponentProps, withRouter } from "react-router";
 import { TOP_BAR_HEIGHT } from "../common/top-bar";
+import { TokenMigrationPane } from "./token-migration-panel";
 
 const { Content, Sider } = Layout;
-
-const CHECK_USER_IS_US = gql`
-  query checkUserIsUS {
-    checkUserIsUS
-  }
-`;
 
 type TabItemProps = {
   text: string;
@@ -190,10 +183,7 @@ class ToolsContainer extends Component<Props> {
           text: "tools.token_migration",
           icon: <UserSwitchOutlined />
         }),
-        component: () => (
-          // $FlowFixMe
-          <div>yo</div>
-        )
+        component: () => <TokenMigrationPane />
       }
     ];
     const PANE = PANES[PANES.length - 1];
@@ -209,7 +199,8 @@ class ToolsContainer extends Component<Props> {
         style={{
           padding: "24px 0",
           background: "#fff",
-          minHeight: `calc((100vh - ${TOP_BAR_HEIGHT}px) - 86px)`
+          minHeight: `calc((100vh - ${TOP_BAR_HEIGHT}px) - 86px)`,
+          width: "100%"
         }}
         hasSider={true}
       >
@@ -243,21 +234,15 @@ class ToolsContainer extends Component<Props> {
           </Menu>
         </Sider>
 
-        <Query ssr={false} query={CHECK_USER_IS_US}>
-          {() => {
-            return (
-              <Content
-                style={{
-                  background: "#fff",
-                  margin: "0 16px"
-                }}
-              >
-                {// @ts-ignore
-                PANE.component && PANE.component()}
-              </Content>
-            );
+        <Content
+          style={{
+            background: "#fff",
+            margin: "0 16px"
           }}
-        </Query>
+        >
+          {// @ts-ignore
+          PANE.component && PANE.component()}
+        </Content>
       </Layout>
     );
   }
