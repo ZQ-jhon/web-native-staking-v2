@@ -127,10 +127,7 @@ class ToolsContainer extends Component<Props> {
           key: "token_swap",
           icon: <TrophyOutlined />,
           title: "tools.token_swap",
-          items: [
-            { subPath: "iotex", text: "tools.swap_to_iotex_native" },
-            { subPath: "ERC-20", text: "profile.move_to_eth_wallet" }
-          ],
+          items: [{ subPath: "iotex", text: "tools.swap_to_iotex_native" }],
           history
         }),
         // $FlowFixMe

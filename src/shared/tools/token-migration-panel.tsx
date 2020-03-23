@@ -41,7 +41,7 @@ class RawFormWrapper extends PureComponent {
 const RawForm = () => {
   const [ioAddress, setIoAddress] = useState({
     value: "",
-    errorMsg: null,
+    errorMsg: "",
     validateStatus: ""
   });
   const [isPending, setIsPending] = useState(false);
@@ -64,6 +64,15 @@ const RawForm = () => {
 
   // tslint:disable-next-line:no-any
   const onFinish = async (fieldsValue: Record<any, any>) => {
+    if (!fieldsValue.ioAddress) {
+      setIoAddress({
+        value: fieldsValue.ioAddress,
+        validateStatus: "error",
+        errorMsg: t("my_stake.ioAddress.err")
+      });
+      return;
+    }
+
     setIsPending(true);
     try {
       const ethAddress = fromString(fieldsValue.ioAddress).stringEth();
