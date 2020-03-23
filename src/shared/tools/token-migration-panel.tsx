@@ -3,7 +3,7 @@ import Input from "antd/lib/input";
 import { fromString } from "iotex-antenna/lib/crypto/address";
 import { MetamaskRequired } from "../common/metamask-required";
 
-import { Form } from "antd";
+import { Alert, Form, notification } from "antd";
 import { t } from "onefx/lib/iso-i18n";
 import React, { PureComponent, useState } from "react";
 import { lazyLoadTokenMigrationContract } from "../common/token-migration-contract";
@@ -45,6 +45,7 @@ const RawForm = () => {
     validateStatus: ""
   });
   const [isPending, setIsPending] = useState(false);
+  const [isOk, setIsOk] = useState(false);
 
   const tips = "mapping IoTeX address you would like to migrate to";
 
@@ -71,8 +72,9 @@ const RawForm = () => {
         // @ts-ignore
         from: window.web3.eth.accounts[0]
       });
+      setIsOk(true);
     } catch (e) {
-      window.console.error(`failed to register: ${e}`);
+      notification.error({ message: `failed to register: ${e}` });
     } finally {
       setIsPending(false);
     }
@@ -101,6 +103,14 @@ const RawForm = () => {
           Submit
         </Button>
       </Form.Item>
+
+      {isOk && (
+        <Alert
+          showIcon={true}
+          type="success"
+          message={t("migration.success")}
+        />
+      )}
     </Form>
   );
 };
