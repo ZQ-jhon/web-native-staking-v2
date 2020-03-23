@@ -96,14 +96,13 @@ const compileStatic = done => {
 };
 
 const watchStatic = done => {
-  gulp.watch("src/client/static/**/*", compileStatic, compileLess);
+  gulp.watch("src/client/static/**/*", compileStatic);
   done();
 };
 
 const build = gulp.parallel(
   compileJavascripts,
   compileStylesheets,
-  compileLess,
   compileStatic
 );
 const watch = gulp.parallel(
