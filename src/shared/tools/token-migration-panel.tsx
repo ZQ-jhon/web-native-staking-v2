@@ -1,13 +1,13 @@
 import Button from "antd/lib/button";
 import Input from "antd/lib/input";
 import gql from "graphql-tag";
-import { fromString } from "iotex-antenna/lib/crypto/address";
+import { fromBytes, fromString } from "iotex-antenna/lib/crypto/address";
 import { Query, QueryResult } from "react-apollo";
 import { MetamaskRequired } from "../common/metamask-required";
 
 import { Alert, Form, notification } from "antd";
 import { t } from "onefx/lib/iso-i18n";
-import React, { PureComponent, useState } from "react";
+import React, { PureComponent, useEffect, useState } from "react";
 import { Preloader } from "../common/preloader";
 import { lazyLoadTokenMigrationContract } from "../common/token-migration-contract";
 
@@ -43,7 +43,9 @@ class RawFormWrapper extends PureComponent {
 
 const tips = "mapping IoTeX address you would like to migrate to";
 
+// tslint:disable-next-line:max-func-body-length
 const RawForm = () => {
+  const [form] = Form.useForm();
   const [ioAddress, setIoAddress] = useState({
     value: "",
     errorMsg: "",
@@ -82,7 +84,8 @@ const RawForm = () => {
       const contract = lazyLoadTokenMigrationContract();
       await contract.register(ethAddress, {
         // @ts-ignore
-        from: window.web3.eth.accounts[0]
+        from: window.web3.eth.accounts[0],
+        gasLimit: 41000
       });
       setIsOk(true);
     } catch (e) {
@@ -93,14 +96,33 @@ const RawForm = () => {
   };
   const help = ioAddress.errorMsg || tips;
 
+  useEffect(() => {
+    (async () => {
+      // @ts-ignore
+      const curEth = window.web3.eth.accounts[0];
+      const contract = lazyLoadTokenMigrationContract();
+      const ioAddrE = await contract.ioAddress(curEth, { from: curEth });
+      if (
+        !ioAddrE ||
+        !ioAddrE[0] ||
+        ioAddrE[0] === "0x0000000000000000000000000000000000000000"
+      ) {
+        return;
+      }
+      const hexStr = String(ioAddrE[0]).replace("0x", "");
+      const hex = Buffer.from(hexStr, "hex");
+      const ioAddress = fromBytes(hex).string();
+      form.setFieldsValue({ ioAddress });
+    })();
+  }, []);
   return (
     // @ts-ignore
-    <Form onFinish={onFinish}>
+    <Form onFinish={onFinish} form={form}>
       {/*
       // @ts-ignore */}
       <Form.Item
         {...formItemLayout}
-        label="Ether Address"
+        label="IOTX-E Address"
         name={"etherAddress"}
         help={t("ETH address you will migrate off from")}
       >
@@ -115,14 +137,13 @@ const RawForm = () => {
 
       <Form.Item
         {...formItemLayout}
-        label="IoTeX Address"
+        label="Native IOTX Address"
         // @ts-ignore
         validateStatus={ioAddress.validateStatus}
         help={help}
         name={"ioAddress"}
       >
         <Input
-          value={ioAddress.value}
           onChange={onIoAddressChange}
           placeholder="io17rvgd2czf2x760q0ejhmvlgldlcj0x8xearedp"
         />

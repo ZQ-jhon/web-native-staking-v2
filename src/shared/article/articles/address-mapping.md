@@ -1,7 +1,7 @@
 ---
 layout: post
 id: en/address-mapping
-title: "ETH-to-IOTX Address Mapping (Optional)"
+title: "Map Your IOTX-E Address to Native IOTX Address (Optional)"
 ---
 
 The IoTeX Network currently supports both IOTX-E (ERC20) and Native IOTX. As we approach Mainnet GA in Q2 2020, two activities are required to transition from the current Ethereum/IoTeX hybrid to fully native IoTeX:
