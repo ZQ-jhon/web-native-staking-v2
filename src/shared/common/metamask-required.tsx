@@ -54,6 +54,10 @@ type Props = {
   isIoPay?: boolean;
 };
 
+function getIsMetaMaskUnlocked(): boolean {
+  return window.web3.eth.accounts && window.web3.eth.accounts.length > 0;
+}
+
 // tslint:disable-next-line:no-any
 export const MetamaskRequired = (InnerComponent: any) => {
   return class HOC extends PureComponent<Props, State> {
@@ -69,6 +73,9 @@ export const MetamaskRequired = (InnerComponent: any) => {
     web3: any;
 
     async componentDidMount(): Promise<void> {
+      window.ethereum.on("accountsChanged", () => {
+        window.location.reload();
+      });
       await this.setMetaMask();
     }
 
@@ -79,13 +86,12 @@ export const MetamaskRequired = (InnerComponent: any) => {
 
       if (isMetaMaskInstalled) {
         this.web3 = window.web3;
-
-        await enableEthereum();
-
-        const isMetaMaskUnlocked =
-          window.web3.eth.accounts && window.web3.eth.accounts.length > 0;
-        if (!isMetaMaskUnlocked) {
-          this.setState({ isMetaMaskUnlocked: false });
+        const unlocked = getIsMetaMaskUnlocked();
+        this.setState({ isMetaMaskUnlocked: unlocked });
+        if (!unlocked) {
+          await enableEthereum();
+          const unlocked = getIsMetaMaskUnlocked();
+          this.setState({ isMetaMaskUnlocked: unlocked });
         }
       } else {
         // TODO (remove log this after stablize)

@@ -106,6 +106,4 @@ contract.called: 合同签订成功！请稍候几分钟，刷新此页以查看
 contract.install: 请使用chrome，安装metamask扩展，导入和解锁您的钱包，然后刷新此页面以继续
 contract.please_unlock: 若要继续，请在Metamask中解锁您的钱包
 my_stake.ioAddress.err: 'Invalid IoTeX Address'
-migration.title: IOTX migration registration
-migration.desc: <p>Dear IOT-E holders,</p><p>You can now migrate off the Ethereum platform and use the native IoTeX blockchain. Please input the mapping IoTeX address and sign with your Ethereum wallet.</p>
 migration.success: You have successfully submitted the migration request. Please wait a while for it to take effects.

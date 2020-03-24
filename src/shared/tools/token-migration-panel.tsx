@@ -1,11 +1,14 @@
 import Button from "antd/lib/button";
 import Input from "antd/lib/input";
+import gql from "graphql-tag";
 import { fromString } from "iotex-antenna/lib/crypto/address";
+import { Query, QueryResult } from "react-apollo";
 import { MetamaskRequired } from "../common/metamask-required";
 
 import { Alert, Form, notification } from "antd";
 import { t } from "onefx/lib/iso-i18n";
 import React, { PureComponent, useState } from "react";
+import { Preloader } from "../common/preloader";
 import { lazyLoadTokenMigrationContract } from "../common/token-migration-contract";
 
 function validateIoAddress(
@@ -38,6 +41,8 @@ class RawFormWrapper extends PureComponent {
   }
 }
 
+const tips = "mapping IoTeX address you would like to migrate to";
+
 const RawForm = () => {
   const [ioAddress, setIoAddress] = useState({
     value: "",
@@ -46,8 +51,6 @@ const RawForm = () => {
   });
   const [isPending, setIsPending] = useState(false);
   const [isOk, setIsOk] = useState(false);
-
-  const tips = "mapping IoTeX address you would like to migrate to";
 
   // tslint:disable-next-line:no-any
   const onIoAddressChange = (event: any) => {
@@ -93,6 +96,23 @@ const RawForm = () => {
   return (
     // @ts-ignore
     <Form onFinish={onFinish}>
+      {/*
+      // @ts-ignore */}
+      <Form.Item
+        {...formItemLayout}
+        label="Ether Address"
+        name={"etherAddress"}
+        help={t("ETH address you will migrate off from")}
+      >
+        <Input
+          disabled={true}
+          defaultValue={
+            // @ts-ignore
+            window.web3.eth.accounts[0]
+          }
+        />
+      </Form.Item>
+
       <Form.Item
         {...formItemLayout}
         label="IoTeX Address"
@@ -124,13 +144,47 @@ const RawForm = () => {
   );
 };
 
+const QUERY = gql`
+  query {
+    articles(id: "en/address-mapping") {
+      title
+      contentHTML
+    }
+  }
+`;
+
 export class TokenMigrationPane extends PureComponent {
   render(): JSX.Element {
     return (
       <div>
-        <h1>{t("migration.title")}</h1>
-        {/* tslint:disable-next-line:react-no-dangerous-html */}
-        <div dangerouslySetInnerHTML={{ __html: t("migration.desc") }} />
+        <Query query={QUERY} variables={{}}>
+          {({
+            data,
+            error,
+            loading
+          }: QueryResult<{
+            articles: Array<{ title: string; contentHTML: string }>;
+          }>) => {
+            if (loading || error || !data) {
+              return <Preloader />;
+            }
+
+            return (
+              <>
+                {/* tslint:disable-next-line:react-no-dangerous-html */}
+                <h1
+                  dangerouslySetInnerHTML={{ __html: data.articles[0].title }}
+                />
+                {/* tslint:disable-next-line:react-no-dangerous-html */}
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: data.articles[0].contentHTML
+                  }}
+                />
+              </>
+            );
+          }}
+        </Query>
         <RawFormWrapper />
       </div>
     );
