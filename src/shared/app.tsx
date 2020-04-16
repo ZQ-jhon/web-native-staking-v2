@@ -11,7 +11,6 @@ import { ScrollToTop } from "./common/scroll-top";
 import { colors } from "./common/styles/style-color";
 import { fonts } from "./common/styles/style-font";
 import { TopBar } from "./common/top-bar";
-import { TokenMigrationTool } from "./token-migration-tool";
 
 type Props = {
   googleTid: string;
@@ -31,7 +30,6 @@ export class App extends Component<Props> {
         <div style={FOOTER_ABOVE}>
           <ScrollToTop>
             <Switch>
-              <Route exact={true} path="/" component={TokenMigrationTool} />
               <Route component={NotFound} />
             </Switch>
           </ScrollToTop>

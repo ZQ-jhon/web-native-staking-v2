@@ -4,7 +4,7 @@ config();
 module.exports = {
   project: "web-onefx-boilerplate",
   server: {
-    routePrefix: "/tools/token-migration",
+    routePrefix: "",
     port: process.env.PORT || 5004,
     staticDir: "./dist",
     delayInitMiddleware: false,

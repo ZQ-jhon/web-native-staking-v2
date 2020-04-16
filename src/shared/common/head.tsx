@@ -24,7 +24,7 @@ function HeadInner({ locale }: { locale: string }): JSX.Element {
       link={[
         // PWA & mobile
         { rel: "manifest", href: assetURL("manifest.json") },
-        { rel: "apple-touch-icon", href: "/favicon.svg" },
+        { rel: "apple-touch-icon", href: "/favicon.png" },
 
         {
           rel: "icon",
