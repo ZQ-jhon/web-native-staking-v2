@@ -40,6 +40,7 @@ module.exports = {
     "connect-src": [
       "self",
       "https://www.google-analytics.com/",
+      "https://member.iotex.io/api-gateway/",
       ...(process.env.API_GATEWAY_URL ? [process.env.API_GATEWAY_URL] : [])
     ],
     "child-src": ["self"],

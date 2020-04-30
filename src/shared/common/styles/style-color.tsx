@@ -24,5 +24,10 @@ export const colors = {
 
   nav01: "#011627", //	Global top bar
   nav02: "#20232a", //	CTA footer
-  nav03: "#151d27"
+  nav03: "#151d27",
+
+  PRODUCING: "#0b8de3",
+  VERIFYING: "#06a35a",
+  MISSED: "#E54937",
+  voteWarning: "#e44837"
 };

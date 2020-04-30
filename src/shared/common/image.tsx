@@ -5,6 +5,7 @@ const LEN = "100%";
 
 type PropTypes = {
   src: string;
+  className?: string,
   width?: string;
   height?: string;
   resizeWidth?: number;
@@ -38,4 +39,22 @@ export function Image({
   }
   const StyledImg = styled("img", style);
   return <StyledImg {...props} width={width} height={height} src={src} />;
+}
+class CloudinaryImage {
+  url: string;
+
+  constructor(url: string) {
+    this.url = url || "";
+  }
+
+  changeWidth(w: number): CloudinaryImage {
+    return new CloudinaryImage(this.url.replace("upload", `upload/w_${w}`));
+  }
+
+  cdnUrl(): string {
+    return this.url.replace("res.cloudinary.com", "imgc.iotex.io");
+  }
+}
+export function cloudinaryImage(url: string): CloudinaryImage {
+  return new CloudinaryImage(url);
 }

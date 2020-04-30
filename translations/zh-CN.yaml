@@ -22,6 +22,8 @@ footer.support: 技术支持
 footer.team: 团队
 footer.wallet: 钱包
 meta.description: IoTeX
+meta.description.delegates: 'IoTeX 节点计划'
+meta.title.voting: 节点投票
 meta.title: 节点
 not_found.bar: Not Found
 not_found.info: We cannot find the page for you...
@@ -107,3 +109,59 @@ contract.install: 请使用chrome，安装metamask扩展，导入和解锁您的
 contract.please_unlock: 若要继续，请在Metamask中解锁您的钱包
 my_stake.ioAddress.err: 'Invalid IoTeX Address'
 migration.success: You have successfully submitted the migration request. Please wait a while for it to take effects.
+voting.tweet.summary.title: IoTeX节点投票已经开启，现在加入!
+voting.tweet.summary.description: '参与1000IOTX投票成为创世会员！ 早期参与赢得30%年化收益，赢得限量版会员大礼包！'
+voting.tweet.summary.image: 'https://res.cloudinary.com/dokc3pa1x/image/upload/v1552428805/delegates/voting_twitter.png'
+voting.tweet.content: '#VOTING for IoTeX节点现在正在进行中！作为#GenesisVoter， %0a 我投了 ${name} 。到你了！%0a #IoTeXvote #IoTeXdelegate'
+voting.progress-bar.circulating.supply: 流通
+voting.buy_iotx: '购买 IOTX'
+voting.metamask-reminder.content: '开始投票前请确保你已经解锁并连接了MetaMask。<a target="_blank" href="https://support.iotex.io/hc/en-us/articles/360020614094">了解更多信息</a>'
+button.understand: 我明白，继续。
+button.cancel: 取消
+candidates.vote_now: 现在投票
+candidates.election.ELECTED: 当选
+candidates.election.NOT_ELECTED: 未当选
+candidates.election.UNQUALIFIED: 未当选
+candidates.election.explain: '节点必须质押至少<b> 120万 IOTX </b>并获得<b> 200万IOTX </b>以上的总票数才能成为正式的全民节点。'
+candidates.election.NOT_EQUIPPED: 未提供
+candidates.election.ONLINE: 在线
+candidates.election.OFFLINE: 离线
+candidates.election.CHECKING: 检测中
+candidates.election.consensus_delegates: 共识节点
+candidates.election.delegates: 'IoTeX  代表'
+candidates.election.delegates_candidates: 共识节点候选人
+candidates.delegate_list: 节点列表
+candidates.rank: 排名
+candidates.blurb: 简介
+candidates.badge_info.hermes.title: Hermes Delegate
+candidates.badge_info.hermes.content: Automatic Rewards Distribution via Hermes
+candidates.badge_info.genesis.title: Delegate Since Day 1
+candidates.badge_info.genesis.content: Joined to produce the genesis block
+candidates.badge_info.ambassador.title: Ambassador Delegate
+candidates.badge_info.ambassador.content: Official IoTeX Community Ambassador
+candidate.MISSED: 丢了
+candidate.PRODUCING: 出块中
+candidate.VERIFYING: 验证中
+candidate.vote: 投票
+candidate.delegate_name: 节点名称
+candidate.status: 状态
+candidate.live_votes: 实时得票
+candidate.percent: 得票率
+candidate.elected: 当选
+candidate.not_elected: 未当选
+candidate.productivity: Productivity
+my_stake.address: 钱包地址
+my_stake.staking_amount: 质押总数
+my_stake.unstake_pendding_amount: 正在赎回的数量
+my_stake.withdrawable_amount: 可以取出的
+my_stake.votes_amount: 总投票数
+my_stake.staking_bucket: 投票桶
+my_stake.vote_for: 投票给
+my_stake.stake_duration: 质押期限
+my_stake.autostake: 自动质押
+my_stake.bucket_status: 状态
+my_stake.nonDecay: 自动质押
+my_stake.new_vote: 新投票
+my_votes.erc20_tab: 'IOTX-E (ERC-20)'
+my_votes.native_tab: 'IOTX'
+my_stake.title: 我的投票

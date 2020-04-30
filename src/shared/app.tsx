@@ -11,6 +11,7 @@ import { ScrollToTop } from "./common/scroll-top";
 import { colors } from "./common/styles/style-color";
 import { fonts } from "./common/styles/style-font";
 import { TopBar } from "./common/top-bar";
+import { VotingContainer } from "./home/voting-container";
 
 type Props = {
   googleTid: string;
@@ -30,6 +31,7 @@ export class App extends Component<Props> {
         <div style={FOOTER_ABOVE}>
           <ScrollToTop>
             <Switch>
+              <Route exact={true} path="/" component={VotingContainer} />
               <Route component={NotFound} />
             </Switch>
           </ScrollToTop>

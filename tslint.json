@@ -12,11 +12,15 @@
   ],
   "rules": {
     "react-no-dangerous-html": [
-      true,
+      false,
       [
         {
           "file": "src/shared/onefx-auth-provider/email-password-identity-provider/view/sign-up.tsx",
           "method": "render",
+          "comment": "Usage has been approved by Tian on 2019-07-17 17:22"
+        },
+        {
+          "file": "src/shared/home/vote-button-modal.tsx",
           "comment": "Usage has been approved by Tian on 2019-07-17 17:22"
         }
       ]

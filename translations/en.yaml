@@ -22,6 +22,8 @@ footer.support: Support
 footer.team: Team
 footer.wallet: Wallet
 meta.description: IoTeX
+meta.description.delegates: 'IoTeX Delegates'
+meta.title.voting: Voting
 meta.title: Delegates
 not_found.bar: Not Found
 not_found.info: We cannot find the page for you...
@@ -119,3 +121,66 @@ contract.install: 'Please use Chrome, install MetaMask Extension, import & unloc
 contract.please_unlock: 'To continue, please unlock your wallet in MetaMask.'
 migration.success: You have successfully submitted the migration request. Please wait a while for it to take effects.
 my_stake.ioAddress.err: 'Invalid IoTeX Address'
+voting.tweet.summary.title: 'Voting for IoTeX Delegates is now LIVE - vote today!'
+voting.tweet.summary.description: 'Vote more than 1,000 IOTX-E to become a Genesis Voter! Seize the chance to earn 30% APR early bird voting rewards and limited edition member mega box!'
+voting.tweet.summary.image: 'https://res.cloudinary.com/dokc3pa1x/image/upload/v1552428805/delegates/voting_twitter.png'
+voting.tweet.content: '#VOTING for IoTeX Delegates is NOW LIVE - vote today!%0a I voted for ${name} and I became a #GenesisVoter. How about you?%0a #IoTeXvote #IoTeXdelegate'
+voting.progress-bar.circulating.supply: 'Circulating Supply'
+voting.buy_iotx: 'Buy IOTX'
+voting.metamask-reminder.content: 'To proceed with the voting process, please make sure you have unlocked your MetaMask and linked to IoTex. <a target="_blank" href="https://support.iotex.io/hc/en-us/articles/360020614094">Learn more.</a> '
+voting.banner_title: Earn Passive Income With IoTeX
+voting.banner_content: IoTeX member portal is the leading platform for proof-of-staking experiences. 72 nodes has ditributed 4,35B IOTX rewards
+button.understand: 'I understand. Continue.'
+button.cancel: Cancel
+candidates.vote_now: 'Vote Now!'
+candidates.election.ELECTED: Elected
+candidates.election.NOT_ELECTED: 'Not Elected'
+candidates.election.UNQUALIFIED: 'Not Elected'
+candidates.election.PROBATION: 'Probation'
+candidates.election.explain: 'Delegates must register <a href="https://member.iotex.io/profile/name-registration/">your operator and reward addresses</a> and self-stake at least <b>1,200,000 IOTX-E</b> and earn <b>2,000,000 IOTX-E</b> total votes to be elected.'
+candidates.election.NOT_EQUIPPED: 'Not Equipped'
+candidates.election.ONLINE: Online
+candidates.election.OFFLINE: Offline
+candidates.election.CHECKING: Checking
+candidates.election.consensus_delegates: 'Consensus Delegates'
+candidates.election.delegates: 'IoTeX  Delegates'
+candidates.election.delegates_candidates: 'Consensus Delegates Candidates'
+candidates.delegate_list: 'Delegate List'
+candidates.rank: Rank
+candidates.blurb: Blurb
+candidates.badge_info.hermes.title: Hermes Delegate
+candidates.badge_info.hermes.content: Automatic Rewards Distribution via Hermes
+candidates.badge_info.genesis.title: Delegate Since Day 1
+candidates.badge_info.genesis.content: Joined to produce the genesis block
+candidates.badge_info.ambassador.title: Ambassador Delegate
+candidates.badge_info.ambassador.content: Official IoTeX Community Ambassador
+candidate.MISSED: Missed
+candidate.PRODUCING: Producing
+candidate.VERIFYING: Verifying
+candidate.vote: Vote
+candidate.vote.native: IOTX
+candidate.vote.erc20: IOTX-E (ERC-20)
+candidate.delegate_badges: Badges
+candidate.delegate_name: Delegate Name
+candidate.status: Status
+candidate.live_votes: LiveVotes
+candidate.percent: Percent
+candidate.node_version: Node Version
+candidate.elected: Elected
+candidate.not_elected: Not Elected
+candidate.productivity: Productivity
+my_stake.address: 'Account address'
+my_stake.staking_amount: 'Total Staked Amount'
+my_stake.unstake_pendding_amount: 'Pending Unstake Amount'
+my_stake.withdrawable_amount: 'Ready to Withdraw'
+my_stake.votes_amount: 'Total Votes Amount'
+my_stake.staking_bucket: 'Staking Bucket'
+my_stake.vote_for: 'Vote For'
+my_stake.stake_duration: 'Stake Duration'
+my_stake.autostake: 'Auto Stake'
+my_stake.bucket_status: 'Bucket Status'
+my_stake.nonDecay: Auto-Stake
+my_stake.new_vote: 'New Vote'
+my_votes.erc20_tab: 'IOTX-E (ERC-20)'
+my_votes.native_tab: 'IOTX'
+my_stake.title: 'My Votes'
