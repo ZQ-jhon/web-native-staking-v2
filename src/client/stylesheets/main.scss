@@ -1,0 +1,77 @@
+* {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+@keyframes float {
+  0% {
+    box-shadow: 0 5px 15px 0px rgba(0, 0, 0, 0.6);
+    transform: translatey(0px);
+  }
+  50% {
+    box-shadow: 0 25px 15px 0px rgba(0, 0, 0, 0.2);
+    transform: translatey(-20px);
+  }
+  100% {
+    box-shadow: 0 5px 15px 0px rgba(0, 0, 0, 0.6);
+    transform: translatey(0px);
+  }
+}
+
+/* vote progress */
+.vote-progress {
+  margin: 0px 0px 30px 44px;
+  padding-top: 25px;
+  position: relative;
+  width: 85%;
+}
+.vote-progress .ant-progress-show-info .ant-progress-outer {
+  padding-right: 0 !important;
+}
+.vote-progress .progress-text {
+  color: #1fc2a9;
+  position: absolute;
+  top: 12px;
+  font-size: 12px;
+}
+.vote-progress .progress-bar {
+  position: absolute;
+  top: 30px;
+  left: 18%;
+  width: 7px;
+}
+.vote-progress .progress-bar-2 {
+  position: absolute;
+  top: 30px;
+  left: 38%;
+  width: 7px;
+}
+.vote-progress .ant-progress-inner {
+  background-color: #e4e4e4 !important;
+}
+.vote-progress .ant-progress-bg {
+  background: linear-gradient(to right, #e5d816, #25ceb7) !important;
+}
+.ant-select-auto-complete.ant-select .ant-select-selection--single {
+  background: #f7f7f7;
+}
+.ant-select-selection-selected-value {
+  font-size: 12px;
+}
+
+.vote-banner .ant-carousel {
+  width: 100%;
+  height: 100%;
+  .slick-list,
+  .slick-track,
+  .slick-slide > div {
+    height: 100%;
+  }
+  .slick-dots {
+    bottom: -12px;
+  }
+}
+.BorderRowWarning > td {
+  border-color: $border-warning !important;
+}
