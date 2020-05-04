@@ -3,6 +3,7 @@ import Helmet from "onefx/lib/react-helmet";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router";
+import { getRemoteAntenna } from "../common/wallet/get-antenna.js";
 import { ContentPadding } from "../common/styles/style-padding";
 import { VotingBannerModal } from "./voting-banner-modal";
 import { VotingTab } from "./voting-tab";
@@ -49,6 +50,24 @@ class VotingContainer extends Component<Props> {
       </ContentPadding>
     );
   }
+}
+
+export async function getIoAddressFromRemote(): Promise<string> {
+  const antenna = getRemoteAntenna();
+  let sec = 1;
+  let address;
+  while (!address) {
+    await sleepPromise(sec * 1000);
+    address =
+      antenna.iotx.accounts &&
+      antenna.iotx.accounts[0] &&
+      antenna.iotx.accounts[0].address;
+    sec = sec * 2;
+    if (sec >= 16) {
+      sec = 16;
+    }
+  }
+  return address;
 }
 
 export { VotingContainer };
