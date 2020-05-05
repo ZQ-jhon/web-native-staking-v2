@@ -1,16 +1,15 @@
 // @ts-ignore
 import window from "global/window";
 import Antenna from "iotex-antenna/lib";
-import {Contract} from "iotex-antenna/lib/contract/contract";
-import {WsSignerPlugin} from "iotex-antenna/lib/plugin/ws";
+import { fromRau } from "iotex-antenna/lib/account/utils";
+import { Contract } from "iotex-antenna/lib/contract/contract";
+import { WsSignerPlugin } from "iotex-antenna/lib/plugin/ws";
 import isBrowser from "is-browser";
 // @ts-ignore
 import JsonGlobal from "safe-json-globals/get";
 // @ts-ignore
 import sleepPromise from "sleep-promise";
-import {WvSigner} from "./wv-signer";
-import {fromRau} from "iotex-antenna/lib/account/utils";
-
+import { WvSigner } from "./wv-signer";
 
 const state = isBrowser && JsonGlobal("state");
 const isIoPay = isBrowser && state.base.isIoPay;
@@ -40,7 +39,7 @@ export function lazyGetContract(address: string, abi: any): Contract {
   if (isIoPay) {
     const contract = getXAppTokenContract(abi, address);
     contractsByAddrs[address] = contract;
-  } else{
+  } else {
     contractsByAddrs[address] = new Contract(abi, address, {
       provider: getAntenna().currentProvider(),
       signer: new WsSignerPlugin("wss://local.iotex.io:64102")
@@ -48,7 +47,6 @@ export function lazyGetContract(address: string, abi: any): Contract {
   }
   return contractsByAddrs[address];
 }
-
 
 // tslint:disable-next-line:insecure-random
 let reqId = Math.round(Math.random() * 10000);
@@ -72,10 +70,12 @@ export function getXAppTokenContract(
   });
 }
 
-let ioPayAddress:string;
+let ioPayAddress: string;
 
 export async function getIoAddressFromIoPay(): Promise<string> {
-  if (ioPayAddress) { return ioPayAddress; }
+  if (ioPayAddress) {
+    return ioPayAddress;
+  }
   window.console.log("getIoAddressFromIoPay start");
   await getMobileNativeAntenna();
   const id = reqId++;
@@ -124,9 +124,12 @@ export function getMobileNativeAntenna(): Antenna {
   const injectedWindow: Window & { mobileNativeAntenna?: Antenna } = window;
   if (!injectedWindow.mobileNativeAntenna) {
     const signer = new WvSigner();
-    injectedWindow.mobileNativeAntenna = new Antenna("https://member.iotex.io/iotex-core-proxy", {
-      signer
-    });
+    injectedWindow.mobileNativeAntenna = new Antenna(
+      "https://member.iotex.io/iotex-core-proxy",
+      {
+        signer
+      }
+    );
   }
   return injectedWindow.mobileNativeAntenna;
 }
@@ -138,7 +141,7 @@ export async function getIoPayAddress(): Promise<string> {
     return address;
   }
   const account = getAntenna().iotx.accounts[0];
-  return (account&&account.address)||"";
+  return (account && account.address) || "";
 }
 
 export async function getIotxBalance(address: string): Promise<number> {

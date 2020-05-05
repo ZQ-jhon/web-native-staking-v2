@@ -1,37 +1,44 @@
 // @flow
-import {InfoCircleOutlined, RetweetOutlined} from "@ant-design/icons/lib";
-import {Form, InputNumber, Switch} from "antd";
+import { InfoCircleOutlined, RetweetOutlined } from "@ant-design/icons/lib";
+import { Form, InputNumber, Switch } from "antd";
 // @ts-ignore
-import {t} from "onefx/lib/iso-i18n";
-import React, {Component} from "react";
-import {CommonMarginBottomStyle, CommonMarginTop, NoMarginBottomStyle} from "../common/common-margin";
-import {Flex} from "../common/flex";
-import {formItemLayout} from "../common/form-item-layout";
-import {colors} from "../common/styles/style-color2";
-import {fontFamily, fonts} from "../common/styles/style-font";
-import {getPowerEstimation,} from "../common/token-utils";
-import {getStakeDurationMaxValue, validateStakeDuration} from "./field-validators";
+import { t } from "onefx/lib/iso-i18n";
+import React, { Component } from "react";
+import {
+  CommonMarginBottomStyle,
+  CommonMarginTop,
+  NoMarginBottomStyle
+} from "../common/common-margin";
+import { Flex } from "../common/flex";
+import { formItemLayout } from "../common/form-item-layout";
+import { colors } from "../common/styles/style-color2";
+import { fontFamily, fonts } from "../common/styles/style-font";
+import { getPowerEstimation } from "../common/token-utils";
+import {
+  getStakeDurationMaxValue,
+  validateStakeDuration
+} from "./field-validators";
 
 type Props = {
   // tslint:disable-next-line:no-any
-  children?: any,
-  showAutoStack?: boolean,
+  children?: any;
+  showAutoStack?: boolean;
   // tslint:disable-next-line:no-any
-  style?: any,
-  fieldName?: string,
-  initialValue?: boolean,
-  stakeAmount?: number,
-  stakeDuration?: number,
-  forceDisable?: boolean
+  style?: any;
+  fieldName?: string;
+  initialValue?: boolean;
+  stakeAmount?: number;
+  stakeDuration?: number;
+  forceDisable?: boolean;
 };
 
 type State = {
-  nonDecay: boolean
+  nonDecay: boolean;
 };
 
 type IconLabelType = {
-  iconType: JSX.Element,
-  text: string
+  iconType: JSX.Element | string;
+  text: string;
 };
 
 export function IconLabel({ iconType, text = "" }: IconLabelType): JSX.Element {
@@ -68,16 +75,17 @@ export const centerTextStyle = {
 };
 
 type FormItemTextTypes = {
-  text: string,
-  sub: string
+  text: string;
+  sub: string;
 };
 
-export function FormItemText({ text = "", sub = "" }: FormItemTextTypes): JSX.Element {
+export function FormItemText({
+  text = "",
+  sub = ""
+}: FormItemTextTypes): JSX.Element {
   return (
     <>
-      <label style={{ ...fonts.inputLabel, fontFamily}}>
-        {text}
-      </label>
+      <label style={{ ...fonts.inputLabel, fontFamily }}>{text}</label>
       <br />
       {
         // @ts-ignore
@@ -121,54 +129,62 @@ export class AutoStakeFormItem extends Component<Props, State> {
     return (
       <div>
         {showAutoStack ? (
-          <div>{(
-            // @ts-ignore
-            <Form.Item
-              {...formItemLayout}
-              className={"autoStakeSwitch"}
-              labelAlign={"left"}
-              label={
-                <IconLabel iconType={<RetweetOutlined style={{ color: colors.deltaUp }}/>} text={t("my_stake.nonDecay")} />
-              }
-              style={{ marginBottom: 0 }}
-              name={fieldName}
-              initialValue={this.state.nonDecay}
-              valuePropName={"checked"}
-            >
-              {
-                // tslint:disable-next-line:use-simple-attributes
-                <Switch
-                  style={{ textAlign: "right" }}
-                  disabled={forceDisable || !this.props.stakeDuration}
-                  onChange={checked => {
-                    if (!forceDisable) {
-                      this.setState({ nonDecay: checked });
+          <div>
+            {
+              // @ts-ignore
+              <Form.Item
+                {...formItemLayout}
+                className={"autoStakeSwitch"}
+                labelAlign={"left"}
+                label={
+                  <IconLabel
+                    iconType={
+                      <RetweetOutlined style={{ color: colors.deltaUp }} />
                     }
-                  }}
-                />
-              }
-            </Form.Item>
-          )}
-          {(
-            // @ts-ignore
-            <span style={{ ...subTextStyle, ...CommonMarginBottomStyle }}>
-            {t("my_stake.autoStake_explain")}
-          </span>
-          )}
+                    text={t("my_stake.nonDecay")}
+                  />
+                }
+                style={{ marginBottom: 0 }}
+                name={fieldName}
+                initialValue={this.state.nonDecay}
+                valuePropName={"checked"}
+              >
+                {
+                  // tslint:disable-next-line:use-simple-attributes
+                  <Switch
+                    style={{ textAlign: "right" }}
+                    disabled={forceDisable || !this.props.stakeDuration}
+                    onChange={checked => {
+                      if (!forceDisable) {
+                        this.setState({ nonDecay: checked });
+                      }
+                    }}
+                  />
+                }
+              </Form.Item>
+            }
+            {
+              // @ts-ignore
+              <span style={{ ...subTextStyle, ...CommonMarginBottomStyle }}>
+                {t("my_stake.autoStake_explain")}
+              </span>
+            }
           </div>
         ) : null}
         <CommonMarginTop />
 
         <div style={{ marginTop: "26px" }}>
           <IconLabel
-            iconType={<InfoCircleOutlined style={{ color: colors.deltaUp }}/>}
+            iconType={<InfoCircleOutlined style={{ color: colors.deltaUp }} />}
             text={t("my_stake.voting_power")}
           />
         </div>
         <div style={{ marginBottom: "18px", marginTop: "10px" }}>
           {
             // @ts-ignore
-            <span style={subTextStyle}>{t("my_stake.voting_power_explain")}</span>
+            <span style={subTextStyle}>
+              {t("my_stake.voting_power_explain")}
+            </span>
           }
         </div>
 
@@ -179,7 +195,8 @@ export class AutoStakeFormItem extends Component<Props, State> {
               // @ts-ignore
               style={centerTextStyle}
               dangerouslySetInnerHTML={{
-                __html: t("my_stake.nonDecay.calculate_auto",
+                __html: t(
+                  "my_stake.nonDecay.calculate_auto",
                   // @ts-ignore
                   {
                     duration: stakeDuration,
@@ -247,11 +264,13 @@ export class AutoStakeFormItem extends Component<Props, State> {
 }
 
 type DurationFormItemProps = {
-  fieldName?: string,
-  initialValue?: number,
+  fieldName?: string;
+  initialValue?: number;
   onChange?(value: number): void;
-  // tslint:disable-next-line:no-any
-  validatorFactory?(maxDuration: number): (rule: any, value: any, callback: any) => void;
+  validatorFactory?(
+    maxDuration: number
+  ): // tslint:disable-next-line:no-any
+  (rule: any, value: any, callback: any) => void;
 };
 
 export class DurationFormItem extends Component<DurationFormItemProps> {
@@ -268,56 +287,57 @@ export class DurationFormItem extends Component<DurationFormItemProps> {
 
     maxDuration = maxDuration >= initialValue ? maxDuration : initialValue;
     return (
-      <>{
-        // @ts-ignore
-        <Form.Item
-          {...formItemLayout}
-          style={NoMarginBottomStyle}
-          labelAlign={"left"}
-          label={
-            // tslint:disable-next-line:use-simple-attributes
-            <FormItemText
-              text={t("my_stake.stakeDuration")}
-              sub={t("my_stake.duration_of_epoch")}
-            />
-          }
-          name={fieldName}
-          rules={[
-            {
-              required: true,
-              message: t("my_stake.stakeDuration.required")
-            },
-            {
-              validator: validatorFactory(maxDuration)
+      <>
+        {
+          // @ts-ignore
+          <Form.Item
+            {...formItemLayout}
+            style={NoMarginBottomStyle}
+            labelAlign={"left"}
+            label={
+              // tslint:disable-next-line:use-simple-attributes
+              <FormItemText
+                text={t("my_stake.stakeDuration")}
+                sub={t("my_stake.duration_of_epoch")}
+              />
             }
-          ]}
-          initialValue={initialValue}
-        >
-          <InputNumber
-            size="large"
-            step={7}
-            min={0}
-            max={maxDuration}
-            style={{ width: "100%", background: "#f7f7f7", border: "none" }}
-            // @ts-ignore
-            onChange={onChange}
-          />
-        </Form.Item>
-      }
+            name={fieldName}
+            rules={[
+              {
+                required: true,
+                message: t("my_stake.stakeDuration.required")
+              },
+              {
+                validator: validatorFactory(maxDuration)
+              }
+            ]}
+            initialValue={initialValue}
+          >
+            <InputNumber
+              size="large"
+              step={7}
+              min={0}
+              max={maxDuration}
+              style={{ width: "100%", background: "#f7f7f7", border: "none" }}
+              // @ts-ignore
+              onChange={onChange}
+            />
+          </Form.Item>
+        }
         <Form.Item
           {...formItemLayout}
           style={CommonMarginBottomStyle}
-          label={<span/>}
+          label={<span />}
         >
           <div style={{ display: "flex", justifyContent: "space-between" }}>
-            {(
+            {
               // @ts-ignore
               <span style={subTextStyle}>{t("my_stake.change_anytime")}</span>
-            )}
-            {(
+            }
+            {
               // @ts-ignore
               <span style={subTextStyle}>{t("my_stake.epoch_day")}</span>
-            )}
+            }
           </div>
         </Form.Item>
       </>

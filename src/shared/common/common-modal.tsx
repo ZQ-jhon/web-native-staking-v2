@@ -6,11 +6,16 @@ import { TOP_BAR_HEIGHT } from "./top-bar";
 
 type Props = {
   // tslint:disable-next-line:no-any
-  children: any,
+  children: any;
   // tslint:disable-next-line:no-any
-  style?: any,
-  isIoPay?: boolean
-};
+  style?: any;
+  isIoPay?: boolean;
+  title?: JSX.Element;
+  okText?: string;
+  cancelText?: string;
+  visible?: boolean;
+  // tslint:disable-next-line:no-any
+} & any;
 type State = {};
 
 // @ts-ignore
