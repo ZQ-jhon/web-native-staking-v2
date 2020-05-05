@@ -156,7 +156,7 @@
     "graphql-iso-date": "3.6.1",
     "graphql-tag": "2.10.3",
     "highlight.js": "^9.18.1",
-    "iotex-antenna": "^0.28.0",
+    "iotex-antenna": "^0.29.0",
     "iotex-react-block-producers": "^2.8.3",
     "iotex-react-footer": "^2.6.5",
     "iotex-react-language-dropdown": "2.4.3",
