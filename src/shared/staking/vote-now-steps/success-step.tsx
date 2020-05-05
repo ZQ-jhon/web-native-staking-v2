@@ -1,0 +1,48 @@
+// @flow
+import {Form} from "antd";
+import {t} from "onefx/lib/iso-i18n";
+import React from "react";
+import {Flex} from "../../common/flex";
+import {colors} from "../../common/styles/style-color2";
+
+export function SuccessStep({ txHash }: { txHash: string, siteUrl: string }): JSX.Element {
+  return (
+    // @ts-ignore
+    <Form layout={"vertical"}>
+      <Flex
+        column={true}
+        fontSize={"14px"}
+        alignItems={"baseline"}
+        lineHeight={1.88}
+        color={colors.black}
+      >
+        {txHash.startsWith("0x") ? (
+          // tslint:disable-next-line:react-no-dangerous-html
+          <span
+            dangerouslySetInnerHTML={{
+              __html: t("my_stake.transaction_hash", {
+                txHash,
+                href: `https://etherscan.io/tx/${txHash}`
+              })
+            }}
+            style={{ wordBreak: "break-word" }}
+          />
+        ) : (
+          // tslint:disable-next-line:react-no-dangerous-html
+          <span
+            dangerouslySetInnerHTML={{
+              __html: t("my_stake.transaction_hash", {
+                txHash,
+                href: `https://iotexscan.io/action/${txHash}`
+              })
+            }}
+            style={{ wordBreak: "break-word" }}
+          />
+        )}
+        <span
+          dangerouslySetInnerHTML={{ __html: t("my_stake.check_few_seconds") }}
+        />
+      </Flex>
+    </Form>
+  );
+}

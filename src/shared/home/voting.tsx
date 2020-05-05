@@ -1,24 +1,20 @@
 import Button from "antd/lib/button";
 import Layout from "antd/lib/layout";
-import BlockProducers, {
-  RenderDelegateComponent
-} from "iotex-react-block-producers";
-import { assetURL } from "onefx/lib/asset-url";
-import { t } from "onefx/lib/iso-i18n";
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { withRouter } from "react-router";
-import { webBpApolloClient as apolloClient } from "../common/apollo-client";
-import { colors } from "../common/styles/style-color";
-import { VoteButtonModal } from "./vote-button-modal";
-import { VotingCandidateView } from "./voting-candidate-view";
+import BlockProducers, {RenderDelegateComponent} from "iotex-react-block-producers";
+import {assetURL} from "onefx/lib/asset-url";
+import {t} from "onefx/lib/iso-i18n";
+import React, {Component} from "react";
+import {connect} from "react-redux";
+import {withRouter} from "react-router";
+import {webBpApolloClient as apolloClient} from "../common/apollo-client";
+import {colors} from "../common/styles/style-color";
+import {VoteButtonModal} from "./vote-button-modal";
 
 export const MAX_WIDTH = 1320;
 
 type State = {
   showModal: boolean;
   currentCandidateName: string;
-  shouldDisplayVotingModal: boolean;
   // tslint:disable-next-line:no-any
   currentCandidate: any;
   shouldDisplayMetaMaskReminder: boolean;
@@ -46,7 +42,6 @@ class Voting extends Component<Props, State> {
     this.state = {
       showModal: false,
       currentCandidateName: "",
-      shouldDisplayVotingModal: false,
       shouldDisplayMetaMaskReminder: false,
       userConfirmedMetaMaskReminder: false,
       currentCandidate: null
@@ -116,13 +111,6 @@ class Voting extends Component<Props, State> {
             ]}
             extraMobileComponents={[this.mobileVoteButtonRender]}
             badgeImg={assetURL("bnbridge/hermes.svg")}
-          />
-          <VotingCandidateView
-            registeredName={this.state.currentCandidateName}
-            showModal={this.state.shouldDisplayVotingModal}
-            isNative={false}
-            onOk={() => this.setState({ shouldDisplayVotingModal: false })}
-            onCancel={() => this.setState({ shouldDisplayVotingModal: false })}
           />
         </Layout>
       </div>
