@@ -3,6 +3,7 @@ import { Staking } from "../staking";
 
 test("getAllCandidates", async t => {
   const st = new Staking();
-  const resp = await st.getAllCandidates(0, 100);
+  const height = await st.getHeight();
+  const resp = await st.getAllCandidates(0, 1000, height);
   t.truthy(resp.length > 0);
 });

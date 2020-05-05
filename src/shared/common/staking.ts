@@ -70,7 +70,15 @@ export class Staking {
     this.antenna = new Antenna("https://api.nightly-cluster-2.iotex.one");
   }
 
-  async getCandidate(candName: string): Promise<Array<Candidate>> {
+  async getHeight(): Promise<string> {
+    const res = await this.antenna.iotx.getChainMeta({});
+    return res.chainMeta.height;
+  }
+
+  async getCandidate(
+    candName: string,
+    height: string = ""
+  ): Promise<Array<Candidate>> {
     const state = await this.antenna.iotx.readState({
       protocolID: Buffer.from("staking"),
       methodName: IReadStakingDataMethodToBuffer({
@@ -81,14 +89,15 @@ export class Staking {
           candidateByName: { candName }
         })
       ],
-      height: undefined
+      height
     });
     return toCandidates(state.data);
   }
 
   async getAllCandidates(
     offset: number,
-    limit: number
+    limit: number,
+    height: string = ""
   ): Promise<Array<Candidate>> {
     const state = await this.antenna.iotx.readState({
       protocolID: Buffer.from("staking"),
@@ -103,7 +112,7 @@ export class Staking {
           }
         })
       ],
-      height: undefined
+      height
     });
     return toCandidates(state.data);
   }
@@ -111,7 +120,8 @@ export class Staking {
   async getBucketsByVoter(
     voterAddr: string,
     offset: number,
-    limit: number
+    limit: number,
+    height: string = ""
   ): Promise<Array<Bucket>> {
     const state = await this.antenna.iotx.readState({
       protocolID: Buffer.from("staking"),
@@ -126,7 +136,7 @@ export class Staking {
           }
         })
       ],
-      height: undefined
+      height
     });
     return toBuckets(state.data);
   }
@@ -134,7 +144,8 @@ export class Staking {
   async getBucketsByCandidate(
     candName: string,
     offset: number,
-    limit: number
+    limit: number,
+    height: string = ""
   ): Promise<Array<Bucket>> {
     const state = await this.antenna.iotx.readState({
       protocolID: Buffer.from("staking"),
@@ -149,12 +160,16 @@ export class Staking {
           }
         })
       ],
-      height: undefined
+      height
     });
     return toBuckets(state.data);
   }
 
-  async getAllBuckets(offset: number, limit: number): Promise<Array<Bucket>> {
+  async getAllBuckets(
+    offset: number,
+    limit: number,
+    height: string = ""
+  ): Promise<Array<Bucket>> {
     const state = await this.antenna.iotx.readState({
       protocolID: Buffer.from("staking"),
       methodName: IReadStakingDataMethodToBuffer({
@@ -167,7 +182,7 @@ export class Staking {
           }
         })
       ],
-      height: undefined
+      height
     });
     return toBuckets(state.data);
   }
