@@ -1,3 +1,5 @@
+import BigNumber from "bignumber.js";
+import {config} from "dotenv";
 import Antenna from "iotex-antenna/lib";
 import {
   IReadStakingDataMethodName,
@@ -10,6 +12,11 @@ import {
   VoteBucket,
   VoteBucketList
 } from "iotex-antenna/protogen/proto/types/state_data_pb";
+import {lowercase} from "../../shared/common/lowercase";
+import {BpCandidateManager} from "./bp-candidate-manager";
+import {logger} from "onefx/lib/integrated-gateways/logger";
+
+export const BP_BLACKLIST = "bp-blacklist";
 
 type Candidate = {
   name: string;
@@ -65,9 +72,11 @@ function toBuckets(buffer: Buffer | {}): Array<Bucket> {
 
 export class Staking {
   antenna: Antenna;
+  bpCandidateManager: BpCandidateManager;
 
   constructor() {
     this.antenna = new Antenna("https://api.nightly-cluster-2.iotex.one");
+    this.bpCandidateManager = new BpCandidateManager();
   }
 
   async getHeight(): Promise<string> {
@@ -186,4 +195,73 @@ export class Staking {
     });
     return toBuckets(state.data);
   }
+
+  async bpCandidates(
+    parent: any,
+    args: any,
+    context: TResolverCtx
+  ) {
+    const valStr = await context.model.cache.get(`bpCandidates_${config.env}`);
+    return JSON.parse(valStr);
+  }
+
+
+  async refreshBpCandidates(
+    // tslint:disable-next-line:no-any
+    args: { [key: string]: any},
+    context: TResolverCtx
+    // tslint:disable-next-line:no-any
+  ): Promise<any> {
+    const {
+      gateways: { nameRegistrationContract, delegateProfileContract }
+    } = context;
+    const {
+      rankingMeta,
+      lastRankingCandidatesByEth,
+      rankingCandidatesByEth,
+      probationCandidateList
+    } = await this.bpCandidateManager.getCandidatesResponses(context);
+
+    // $FlowFixMe
+    let bps = (await context.model.bpCandidate.findAll()) || [];
+    // populate bps from rankingCandidates
+    await this.bpCandidateManager.populateBps({
+      bps,
+      rankingCandidatesByEth,
+      lastRankingCandidatesByEth,
+      nameRegistrationContract,
+      delegateProfileContract,
+      rankingMeta,
+      gateways: context.gateways,
+      model: context.model
+    });
+
+    const blacklist = (await context.model.adminSettings.get(BP_BLACKLIST)) || [];
+    // $FlowFixMe
+    bps = bps.filter(
+      bp => bp.registeredName && blacklist.indexOf(bp.registeredName) === -1 // don't show if no name // don't show if in blacklist
+    );
+
+    // bp productivity
+    try {
+      (await this.bpCandidateManager.getAndAddProductivityFn(parent, args, context))(bps);
+    } catch (err) {
+      logger.warn(`partial downgrade: failed to getAndAddProductivityFn: ${err}`);
+    }
+
+    this.bpCandidateManager.addProbation({ bps, probationCandidateList });
+
+    this.bpCandidateManager.sortAndCacheRanking(bps);
+    const whitelist =
+      (await context.model.adminSettings.get("bp-whitelist")) || [];
+    for (const bp of bps) {
+      if (bp.registeredName && whitelist.indexOf(bp.registeredName) !== -1) {
+        bp.serverStatus = "ONLINE";
+      }
+    }
+    const cacheVal = JSON.stringify(bps);
+    await context.model.cache.put(`bpCandidates_${config.env}`, cacheVal);
+    return bps;
+  }
+
 }
