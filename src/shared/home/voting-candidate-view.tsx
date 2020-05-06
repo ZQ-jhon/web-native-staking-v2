@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { CommonModal } from "../common/common-modal";
+import { getIoAddressFromRemote } from "./voting-container";
 
 type Props = {
   showModal: Boolean;
@@ -14,6 +15,10 @@ class VotingCandidateView extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
   }
+  componentDidMount(): void {
+    await getIoAddressFromRemote();
+  }
+
   render(): JSX.Element {
     const { showModal, onOk, onCancel } = this.props;
     return (
