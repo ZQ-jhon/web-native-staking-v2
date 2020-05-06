@@ -1,8 +1,8 @@
 import React, { PureComponent } from "react";
 import { connect } from "react-redux";
+import { VoteNowContainer } from "../staking/vote-now-steps/vote-now-container";
 import { VotingModal } from "./vote-button-modal";
 import { VotingBanner } from "./voting-banner";
-import { VotingCandidateView } from "./voting-candidate-view";
 
 type Props = {
   isMobile: boolean;
@@ -50,30 +50,27 @@ class VotingBannerModal extends PureComponent<Props, State> {
     this.setState(nextState);
   };
   // tslint:disable-next-line:no-any
-  showVotingModal = (record: any, isNative: boolean) => {
+  showVotingModal = (record: any) => {
     const { isIoPay } = this.props;
 
     if (this.state.userConfirmedMetaMaskReminder) {
       this.setState({
         currentCandidateName: record && record.registeredName,
         shouldDisplayVotingModal: true,
-        currentCandidate: record,
-        isNative
+        currentCandidate: record
       });
     } else {
       this.setState({
         currentCandidateName: record && record.registeredName,
         shouldDisplayMetaMaskReminder: !isIoPay,
         shouldDisplayVotingModal: !!isIoPay,
-        currentCandidate: record,
-        isNative
+        currentCandidate: record
       });
     }
   };
 
   render(): JSX.Element {
     const { isMobile, history, isIoPay } = this.props;
-    const { isNative } = this.state;
     const showVotingModal =
       isMobile && !isIoPay
         ? () => {
@@ -88,7 +85,6 @@ class VotingBannerModal extends PureComponent<Props, State> {
         />
         <VotingModal
           visible={this.state.shouldDisplayMetaMaskReminder}
-          isNative={isNative}
           onOk={() => {
             this.handleMetaMaskReminderOk();
           }}
@@ -96,13 +92,17 @@ class VotingBannerModal extends PureComponent<Props, State> {
             this.setState({ shouldDisplayMetaMaskReminder: false })
           }
         />
-        <VotingCandidateView
-          registeredName={this.state.currentCandidateName}
-          showModal={this.state.shouldDisplayVotingModal}
-          isNative={isNative}
-          onOk={() => this.setState({ shouldDisplayVotingModal: false })}
-          onCancel={() => this.setState({ shouldDisplayVotingModal: false })}
-        />
+        {
+          // @ts-ignore
+          <VoteNowContainer
+            registeredName={this.state.currentCandidateName}
+            displayOthers={false}
+            forceDisplayModal={this.state.shouldDisplayVotingModal}
+            requestDismiss={() =>
+              this.setState({ shouldDisplayVotingModal: false })
+            }
+          />
+        }
       </>
     );
   }

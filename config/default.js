@@ -27,6 +27,10 @@ module.exports = {
     logger: {
       enabled: true,
       level: "debug"
+    },
+    staking: {
+      // provider: "https://kovan.infura.io/v3/1d4b3ba280cb43678bb11eb272ea70f4",
+      contractAddress: "io1zn9mn4v63jg3047ylqx9nqaqz0ev659777q3xc"
     }
   },
   analytics: {
@@ -36,11 +40,17 @@ module.exports = {
     "default-src": ["none"],
     "manifest-src": ["self"],
     "style-src": ["self", "unsafe-inline", "https://fonts.googleapis.com/css"],
-    "frame-src": [],
+    "frame-src": [
+      "https://wvjb-queue-message/",
+      "https://bridge-loaded/",
+      "yy://jb-queue-message/"
+    ],
     "connect-src": [
       "self",
       "https://www.google-analytics.com/",
       "https://member.iotex.io/api-gateway/",
+      "wss://local.iotex.io:64102/",
+      "https://member.iotex.io/iotex-core-proxy/",
       ...(process.env.API_GATEWAY_URL ? [process.env.API_GATEWAY_URL] : [])
     ],
     "child-src": ["self"],
@@ -48,7 +58,7 @@ module.exports = {
     "img-src": ["*", "data:"],
     "media-src": ["self"],
     "object-src": ["self"],
-    "script-src": ["self", "https://www.google-analytics.com/"]
+    "script-src": ["self", "https://www.google-analytics.com/", "unsafe-eval"]
   },
   apiGatewayUrl:
     process.env.API_GATEWAY_URL ||

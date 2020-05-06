@@ -19,7 +19,12 @@ export function setServerRoutes(server: MyServer): void {
     "SPA",
     /^(?!\/?tools\/token-migration\/api-gateway\/).+$/,
     async (ctx: koa.Context) => {
-      ctx.setState("base.blah", "this is a sample initial state");
+      ctx.setState(
+        "staking.contractAddress",
+        // @ts-ignore
+        server.config.gateways.staking.contractAddress
+      );
+      checkingAppSource(ctx);
       // @ts-ignore
       ctx.body = await apolloSSR(ctx, server.config.apiGatewayUrl, {
         VDom: <AppContainer />,
@@ -28,4 +33,15 @@ export function setServerRoutes(server: MyServer): void {
       });
     }
   );
+}
+
+export function checkingAppSource(ctx: koa.Context): void {
+  if (
+    ctx.header["user-agent"].includes("IoPayAndroid") ||
+    ctx.header["user-agent"].includes("IoPayiOs") ||
+    ctx.session.app_source === "IoPay"
+  ) {
+    ctx.session.app_source = "IoPay";
+    ctx.setState("base.isIoPay", true);
+  }
 }

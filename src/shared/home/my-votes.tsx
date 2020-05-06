@@ -7,13 +7,11 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { CommonMargin } from "../common/common-margin";
 import { VotingButton } from "../home/vote-button-modal";
+import { VoteNowContainer } from "../staking/vote-now-steps/vote-now-container";
 import { MyVotesTable } from "./my-votes-table";
 
-import { VotingCandidateView } from "./voting-candidate-view";
-
 type State = {
-  isNative: Boolean;
-  showVoteNowModal: Boolean;
+  showVoteNowModal: boolean;
 };
 
 type Props = {};
@@ -35,7 +33,6 @@ export const StakingContractContainer = connect()(
     constructor(props: Props) {
       super(props);
       this.state = {
-        isNative: false,
         showVoteNowModal: false
       };
     }
@@ -46,9 +43,7 @@ export const StakingContractContainer = connect()(
       return (
         <div style={{ width: "100%" }}>
           <VotingButton
-            launch={(isNative: boolean) =>
-              this.setState({ showVoteNowModal: true, isNative })
-            }
+            launch={() => this.setState({ showVoteNowModal: true })}
             disabled={false}
             extra={{ size: "large" }}
           >
@@ -59,12 +54,14 @@ export const StakingContractContainer = connect()(
           </VotingButton>
 
           <MyVotesTab isIoPay={isIoPay} />
-          <VotingCandidateView
-            showModal={this.state.showVoteNowModal}
-            isNative={false}
-            onOk={() => this.setState({ showVoteNowModal: false })}
-            onCancel={() => this.setState({ showVoteNowModal: false })}
-          />
+          {
+            // @ts-ignore
+            <VoteNowContainer
+              displayOthers={false}
+              forceDisplayModal={this.state.showVoteNowModal}
+              requestDismiss={() => this.setState({ showVoteNowModal: false })}
+            />
+          }
         </div>
       );
     }

@@ -1,25 +1,25 @@
-import Modal from "antd/lib/modal";
+// @flow
+import { Modal } from "antd";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { TOP_BAR_HEIGHT } from "./top-bar";
 
 type Props = {
-  children: JSX.Element | string;
-  style?: Object;
+  // tslint:disable-next-line:no-any
+  children: any;
+  // tslint:disable-next-line:no-any
+  style?: any;
   isIoPay?: boolean;
-  title?: String | JSX.Element;
-  okText?: String;
-  cancelText?: String;
-  visible: Boolean;
+  title?: JSX.Element;
+  okText?: string;
+  cancelText?: string;
+  visible?: boolean;
   // tslint:disable-next-line:no-any
-  onOk: any;
-  // tslint:disable-next-line:no-any
-  onCancel: any;
-};
+} & any;
 type State = {};
+
 // @ts-ignore
-// tslint:disable-next-line:no-any
-@connect((state: any) => ({ isIoPay: state.base.isIoPay }))
+@connect(state => ({ isIoPay: state.base.isIoPay }))
 class CommonModal extends Component<Props, State> {
   state: State;
   props: Props;
@@ -27,12 +27,12 @@ class CommonModal extends Component<Props, State> {
   render(): JSX.Element {
     const { children, style, isIoPay = false, ...otherProps } = this.props;
     return (
-      // @ts-ignore
       <Modal
         width={677}
         style={{
           top: isIoPay ? `${TOP_BAR_HEIGHT}px` : `${TOP_BAR_HEIGHT + 50}px`,
-          marginBottom: `${TOP_BAR_HEIGHT * 2}px`,
+          // tslint:disable-next-line:binary-expression-operand-order
+          marginBottom: `${2 * TOP_BAR_HEIGHT}px`,
           ...style
         }}
         {...otherProps}

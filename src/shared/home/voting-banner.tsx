@@ -98,7 +98,7 @@ const BannerTitle = (): JSX.Element => {
 };
 type Props = {
   displayMobileList: Boolean;
-  showVotingModal(record: Object | null, native: Boolean): void;
+  showVotingModal(record: Object | null): void;
 };
 type State = { showBuyIotx: Boolean };
 
@@ -178,7 +178,7 @@ class VotingBanner extends Component<Props, State> {
                   marginTop: "16px"
                 }}
               >
-                 {t("voting.banner_content")}
+                {t("voting.banner_content")}
               </div>
               <CommonMargin
                 style={{
@@ -188,8 +188,8 @@ class VotingBanner extends Component<Props, State> {
                 }}
               >
                 <VotingButton
-                  launch={(isNative: boolean) => {
-                    this.props.showVotingModal(null, isNative);
+                  launch={() => {
+                    this.props.showVotingModal(null);
                   }}
                   extra={{
                     style: {
