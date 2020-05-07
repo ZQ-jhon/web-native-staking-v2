@@ -1,4 +1,3 @@
-import BigNumber from "bignumber.js";
 import {config} from "dotenv";
 import Antenna from "iotex-antenna/lib";
 import {
@@ -12,31 +11,10 @@ import {
   VoteBucket,
   VoteBucketList
 } from "iotex-antenna/protogen/proto/types/state_data_pb";
-import {lowercase} from "../../shared/common/lowercase";
-import {BpCandidateManager} from "./bp-candidate-manager";
 import {logger} from "onefx/lib/integrated-gateways/logger";
-
-export const BP_BLACKLIST = "bp-blacklist";
-
-type Candidate = {
-  name: string;
-  ownerAddress: string;
-  operatorAddress: string;
-  rewardAddress: string;
-  selfStakeBucketIdx: number;
-  selfStakingTokens: string;
-  totalWeightedVotes: string;
-};
-
-type Bucket = {
-  index: number;
-  owner: string;
-  candidate: string;
-  stakeStartTime: Date | undefined;
-  stakedDuration: number;
-  autoStake: boolean;
-  unstakeStartTime: Date | undefined;
-};
+import {BP_BLACKLIST} from "../../constant/admin-setting-constant";
+import {Bucket, Candidate} from "../../shared/types";
+import {Bp} from "./bp";
 
 function toCandidates(buffer: Buffer | {}): Array<Candidate> {
   // @ts-ignore
@@ -72,11 +50,11 @@ function toBuckets(buffer: Buffer | {}): Array<Bucket> {
 
 export class Staking {
   antenna: Antenna;
-  bpCandidateManager: BpCandidateManager;
+  bp: Bp;
 
   constructor() {
     this.antenna = new Antenna("https://api.nightly-cluster-2.iotex.one");
-    this.bpCandidateManager = new BpCandidateManager();
+    this.bp = new Bp();
   }
 
   async getHeight(): Promise<string> {
@@ -197,8 +175,6 @@ export class Staking {
   }
 
   async bpCandidates(
-    parent: any,
-    args: any,
     context: TResolverCtx
   ) {
     const valStr = await context.model.cache.get(`bpCandidates_${config.env}`);
@@ -220,12 +196,11 @@ export class Staking {
       lastRankingCandidatesByEth,
       rankingCandidatesByEth,
       probationCandidateList
-    } = await this.bpCandidateManager.getCandidatesResponses(context);
+    } = await this.bp.getCandidatesResponses(context);
 
-    // $FlowFixMe
     let bps = (await context.model.bpCandidate.findAll()) || [];
     // populate bps from rankingCandidates
-    await this.bpCandidateManager.populateBps({
+    await this.bp.populateBps({
       bps,
       rankingCandidatesByEth,
       lastRankingCandidatesByEth,
@@ -239,19 +214,20 @@ export class Staking {
     const blacklist = (await context.model.adminSettings.get(BP_BLACKLIST)) || [];
     // $FlowFixMe
     bps = bps.filter(
-      bp => bp.registeredName && blacklist.indexOf(bp.registeredName) === -1 // don't show if no name // don't show if in blacklist
+      // don't show if no name // don't show if in blacklist
+      bp => bp.registeredName && blacklist.indexOf(bp.registeredName) === -1
     );
 
     // bp productivity
     try {
-      (await this.bpCandidateManager.getAndAddProductivityFn(parent, args, context))(bps);
+      (await this.bp.getAndAddProductivityFn(parent, args, context))(bps);
     } catch (err) {
       logger.warn(`partial downgrade: failed to getAndAddProductivityFn: ${err}`);
     }
 
-    this.bpCandidateManager.addProbation({ bps, probationCandidateList });
+    this.bp.addProbation({ bps, probationCandidateList });
 
-    this.bpCandidateManager.sortAndCacheRanking(bps);
+    this.bp.sortAndCacheRanking(bps);
     const whitelist =
       (await context.model.adminSettings.get("bp-whitelist")) || [];
     for (const bp of bps) {
