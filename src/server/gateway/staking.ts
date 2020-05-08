@@ -1,4 +1,5 @@
 import Antenna from "iotex-antenna/lib";
+import {fromRau} from "iotex-antenna/lib/account/utils";
 import {
   CandidateRegisterMethod,
   CandidateUpdateMethod,
@@ -96,6 +97,14 @@ export class Staking {
   async getHeight(): Promise<string> {
     const res = await this.antenna.iotx.getChainMeta({});
     return res.chainMeta.height;
+  }
+
+  async getIotxBalance(address: string): Promise<number> {
+    const { accountMeta } = await this.antenna.iotx.getAccount({ address });
+    if(accountMeta){
+      return Number(fromRau(accountMeta.balance, "IOTX"));
+    }
+    return 0;
   }
 
   async getCandidate(

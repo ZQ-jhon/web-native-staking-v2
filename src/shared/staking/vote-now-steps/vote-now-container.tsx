@@ -28,6 +28,9 @@ import {ConfirmStep} from "./confirm-step";
 import {SuccessStep} from "./success-step";
 
 import {toRau} from "iotex-antenna/lib/account/utils";
+import {WsSignerPlugin} from "iotex-antenna/lib/plugin/ws";
+import sleepPromise from "sleep-promise";
+import {Staking} from "../../../server/gateway/staking";
 import {webBpApolloClient} from "../../common/apollo-client";
 import {NATIVE_TOKEN_ABI} from "../native-token-abi";
 
@@ -139,13 +142,33 @@ class VoteNowContainer extends Component<Props, State> {
 
       try {
         if (this.isFreshStaking()) {
-          this.txHash = await tokenContract.methods.createPygg(
+
+          const staking = new Staking({
+            signer: new WsSignerPlugin()
+          });
+
+          while(!staking.antenna.iotx.accounts.length) {
+            await sleepPromise(3000);
+          }
+
+          window.console.log("createStake")
+          this.txHash = await staking.createStake({
+            candidateName: this.bucket.canName,
+            stakedAmount: amount,
+            stakedDuration: stakeDuration,
+            autoStake: nonDecay,
+            payload: ""
+          })
+          window.console.log(this.txHash)
+
+          /*this.txHash = await tokenContract.methods.createPygg(
             canName,
             stakeDuration,
             Number(nonDecay), // FIXME: report 'failed to rawEncode: Error: Argument is not a number' error, if not transform to number explicitly
             "0",
             data
           );
+          */
           this.ioAddress = await getIoPayAddress();
           recordStakingReferral({
             variables: {
@@ -167,7 +190,7 @@ class VoteNowContainer extends Component<Props, State> {
         window.console.log(`create native staking: ${this.txHash}`);
         this.setState({ step: SUCCESS_STEP });
       } catch (err) {
-        window.console.error(`failed to make transaction: ${err.stack}`);
+        window.console.error(`failed to make transaction`, err);
       }
     }
 
