@@ -34,6 +34,10 @@ import {
   VoteBucket,
   VoteBucketList
 } from "iotex-antenna/protogen/proto/types/state_data_pb";
+import sleepPromise from "sleep-promise";
+import {getMobileNativeAntenna} from "../../shared/common/get-antenna";
+import {WvSigner} from "../../shared/common/wv-signer";
+import {WsSignerPlugin} from "iotex-antenna/lib/plugin/ws";
 
 type Candidate = {
   name: string;
@@ -89,9 +93,13 @@ function toBuckets(buffer: Buffer | {}): Array<Bucket> {
 
 export class Staking {
   antenna: Antenna;
+  ioPayAddress: string;
+  reqId: number;
 
   constructor({ signer }: { signer?: SignerPlugin }) {
     this.antenna = new Antenna("https://api.testnet.iotex.one", { signer });
+    // tslint:disable-next-line:insecure-random
+    this.reqId = Math.round(Math.random() * 10000);
   }
 
   async getHeight(): Promise<string> {
@@ -99,6 +107,57 @@ export class Staking {
     return res.chainMeta.height;
   }
 
+  async getIoPayAddress(): Promise<string> {
+    if( this.antenna.iotx.signer instanceof WsSignerPlugin) {
+      return this.antenna.iotx.accounts[0].address;
+    }
+    if (this.ioPayAddress) {
+      return this.ioPayAddress;
+    }
+    window.console.log("getIoAddressFromIoPay start");
+    await getMobileNativeAntenna();
+    const id = this.reqId++;
+    const req = {
+      reqId: id,
+      type: "GET_ACCOUNTS"
+    };
+    let sec = 1;
+    // @ts-ignore
+    while (!window.WebViewJavascriptBridge) {
+      window.console.log(
+        "getIoAddressFromIoPay get_account sleepPromise sec: ",
+        sec
+      );
+      await sleepPromise(sec * 200);
+      sec = sec * 1.6;
+      if (sec >= 48) {
+        sec = 48;
+      }
+    }
+    return new Promise<string>(resolve =>
+      // @ts-ignore
+      window.WebViewJavascriptBridge.callHandler(
+        "get_account",
+        JSON.stringify(req),
+        (responseData: string) => {
+          window.console.log(
+            "getIoAddressFromIoPay get_account responseData: ",
+            responseData
+          );
+          let resp = { reqId: -1, address: "" };
+          try {
+            resp = JSON.parse(responseData);
+          } catch (_) {
+            return;
+          }
+          if (resp.reqId === id) {
+            resolve(resp.address);
+            this.ioPayAddress = resp.address;
+          }
+        }
+      )
+    );
+  }
   async getIotxBalance(address: string): Promise<number> {
     const { accountMeta } = await this.antenna.iotx.getAccount({ address });
     if(accountMeta){
@@ -220,9 +279,8 @@ export class Staking {
   }
 
   public async createStake(req: StakeCreate): Promise<string> {
-    const sender = await this.antenna.iotx.tryGetAccount(
-      this.antenna.iotx.accounts[0].address
-    );
+    const address = await this.getIoPayAddress();
+    const sender = await this.antenna.iotx.tryGetAccount(address);
 
     return new StakeCreateMethod(this.antenna.iotx, sender, req, {
       signer: this.antenna.iotx.signer
@@ -308,4 +366,5 @@ export class Staking {
       signer: this.antenna.iotx.signer
     }).execute();
   }
+
 }

@@ -9,7 +9,7 @@ import React, {PureComponent} from "react";
 import {connect} from "react-redux";
 // @ts-ignore
 import sleepPromise from "sleep-promise";
-import {getAntenna} from "./get-antenna";
+import {getStaking} from "./get-staking";
 
 type State = {
   isIopayConnected?: boolean;
@@ -29,7 +29,7 @@ export function DownloadButton(): JSX.Element {
               target="_blank"
             >
               <img
-                alt="download metamask"
+                alt="download IoPay"
                 style={{ height: "60px" }}
                 src={assetURL("favicon.png")}
               />
@@ -66,13 +66,15 @@ export const IopayRequired = (InnerComponent: any) => {
 
     async componentDidMount(): Promise<void> {
       const { isIoPay = false } = this.props;
-      if (!isIoPay) {
+      if (isIoPay) {
+        await getStaking();
+      } else{
         await this.setMetaMask();
       }
     }
 
     setMetaMask = async (): Promise<void> => {
-      const antenna = getAntenna();
+      const antenna = getStaking().antenna;
       // tslint:disable-next-line:no-typeof-undefined
       let iopayConnected =
         antenna &&

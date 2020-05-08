@@ -28,11 +28,9 @@ import {ConfirmStep} from "./confirm-step";
 import {SuccessStep} from "./success-step";
 
 import {toRau} from "iotex-antenna/lib/account/utils";
-import {WsSignerPlugin} from "iotex-antenna/lib/plugin/ws";
-import sleepPromise from "sleep-promise";
-import {Staking} from "../../../server/gateway/staking";
 import {webBpApolloClient} from "../../common/apollo-client";
 import {NATIVE_TOKEN_ABI} from "../native-token-abi";
+import {getStaking} from "../../common/get-staking";
 
 type TcanName = {
   value: string,
@@ -143,14 +141,15 @@ class VoteNowContainer extends Component<Props, State> {
       try {
         if (this.isFreshStaking()) {
 
-          const staking = new Staking({
+          /*const staking = new Staking({
             signer: new WsSignerPlugin()
           });
 
           while(!staking.antenna.iotx.accounts.length) {
             await sleepPromise(3000);
           }
-
+*/
+          const staking = getStaking();
           window.console.log("createStake")
           this.txHash = await staking.createStake({
             candidateName: this.bucket.canName,
@@ -191,6 +190,7 @@ class VoteNowContainer extends Component<Props, State> {
         this.setState({ step: SUCCESS_STEP });
       } catch (err) {
         window.console.error(`failed to make transaction`, err);
+        this.setState({ stepConfirming: false });
       }
     }
 

@@ -1,15 +1,14 @@
 // @ts-ignore
 import window from "global/window";
 import Antenna from "iotex-antenna/lib";
-import { fromRau } from "iotex-antenna/lib/account/utils";
-import { Contract } from "iotex-antenna/lib/contract/contract";
-import { WsSignerPlugin } from "iotex-antenna/lib/plugin/ws";
+import {Contract} from "iotex-antenna/lib/contract/contract";
+import {WsSignerPlugin} from "iotex-antenna/lib/plugin/ws";
 import isBrowser from "is-browser";
 // @ts-ignore
 import JsonGlobal from "safe-json-globals/get";
 // @ts-ignore
 import sleepPromise from "sleep-promise";
-import { WvSigner } from "./wv-signer";
+import {WvSigner} from "./wv-signer";
 
 const state = isBrowser && JsonGlobal("state");
 const isIoPay = isBrowser && state.base.isIoPay;
@@ -132,21 +131,4 @@ export function getMobileNativeAntenna(): Antenna {
     );
   }
   return injectedWindow.mobileNativeAntenna;
-}
-
-export async function getIoPayAddress(): Promise<string> {
-  if (isIoPay) {
-    // tslint:disable-next-line:no-unnecessary-local-variable
-    const address = await getIoAddressFromIoPay();
-    return address;
-  }
-  const account = getAntenna().iotx.accounts[0];
-  return (account && account.address) || "";
-}
-
-export async function getIotxBalance(address: string): Promise<number> {
-  const antenna = getAntenna();
-  const { accountMeta } = await antenna.iotx.getAccount({ address });
-  // @ts-ignore
-  return Number(fromRau(accountMeta.balance, "IOTX"));
 }
