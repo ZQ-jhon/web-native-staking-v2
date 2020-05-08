@@ -1,5 +1,28 @@
 import Antenna from "iotex-antenna/lib";
 import {
+  CandidateRegisterMethod,
+  CandidateUpdateMethod,
+  SignerPlugin,
+  StakeAddDepositMethod,
+  StakeChangeCandidateMethod,
+  StakeCreateMethod,
+  StakeRestakeMethod,
+  StakeTransferOwnershipMethod,
+  StakeUnstakeMethod,
+  StakeWithdrawMethod
+} from "iotex-antenna/lib/action/method";
+import {
+  CandidateRegister,
+  CandidateUpdate,
+  StakeAddDeposit,
+  StakeChangeCandidate,
+  StakeCreate,
+  StakeRestake,
+  StakeTransferOwnership,
+  StakeUnstake,
+  StakeWithdraw
+} from "iotex-antenna/lib/action/types";
+import {
   IReadStakingDataMethodName,
   IReadStakingDataMethodToBuffer,
   IReadStakingDataRequestToBuffer
@@ -66,8 +89,8 @@ function toBuckets(buffer: Buffer | {}): Array<Bucket> {
 export class Staking {
   antenna: Antenna;
 
-  constructor() {
-    this.antenna = new Antenna("https://api.nightly-cluster-2.iotex.one");
+  constructor({ signer }: { signer?: SignerPlugin }) {
+    this.antenna = new Antenna("https://api.testnet.iotex.one", { signer });
   }
 
   async getHeight(): Promise<string> {
@@ -185,5 +208,95 @@ export class Staking {
       height
     });
     return toBuckets(state.data);
+  }
+
+  public async createStake(req: StakeCreate): Promise<string> {
+    const sender = await this.antenna.iotx.tryGetAccount(
+      this.antenna.iotx.accounts[0].address
+    );
+
+    return new StakeCreateMethod(this.antenna.iotx, sender, req, {
+      signer: this.antenna.iotx.signer
+    }).execute();
+  }
+
+  public async unstake(req: StakeUnstake): Promise<string> {
+    const sender = await this.antenna.iotx.tryGetAccount(
+      this.antenna.iotx.accounts[0].address
+    );
+
+    return new StakeUnstakeMethod(this.antenna.iotx, sender, req, {
+      signer: this.antenna.iotx.signer
+    }).execute();
+  }
+
+  public async withdraw(req: StakeWithdraw): Promise<string> {
+    const sender = await this.antenna.iotx.tryGetAccount(
+      this.antenna.iotx.accounts[0].address
+    );
+
+    return new StakeWithdrawMethod(this.antenna.iotx, sender, req, {
+      signer: this.antenna.iotx.signer
+    }).execute();
+  }
+
+  public async addDeposit(req: StakeAddDeposit): Promise<string> {
+    const sender = await this.antenna.iotx.tryGetAccount(
+      this.antenna.iotx.accounts[0].address
+    );
+
+    return new StakeAddDepositMethod(this.antenna.iotx, sender, req, {
+      signer: this.antenna.iotx.signer
+    }).execute();
+  }
+
+  public async restake(req: StakeRestake): Promise<string> {
+    const sender = await this.antenna.iotx.tryGetAccount(
+      this.antenna.iotx.accounts[0].address
+    );
+
+    return new StakeRestakeMethod(this.antenna.iotx, sender, req, {
+      signer: this.antenna.iotx.signer
+    }).execute();
+  }
+
+  public async changeCandidate(req: StakeChangeCandidate): Promise<string> {
+    const sender = await this.antenna.iotx.tryGetAccount(
+      this.antenna.iotx.accounts[0].address
+    );
+
+    return new StakeChangeCandidateMethod(this.antenna.iotx, sender, req, {
+      signer: this.antenna.iotx.signer
+    }).execute();
+  }
+
+  public async transferOwnership(req: StakeTransferOwnership): Promise<string> {
+    const sender = await this.antenna.iotx.tryGetAccount(
+      this.antenna.iotx.accounts[0].address
+    );
+
+    return new StakeTransferOwnershipMethod(this.antenna.iotx, sender, req, {
+      signer: this.antenna.iotx.signer
+    }).execute();
+  }
+
+  public async registerCandidate(req: CandidateRegister): Promise<string> {
+    const sender = await this.antenna.iotx.tryGetAccount(
+      this.antenna.iotx.accounts[0].address
+    );
+
+    return new CandidateRegisterMethod(this.antenna.iotx, sender, req, {
+      signer: this.antenna.iotx.signer
+    }).execute();
+  }
+
+  public async updateCandidate(req: CandidateUpdate): Promise<string> {
+    const sender = await this.antenna.iotx.tryGetAccount(
+      this.antenna.iotx.accounts[0].address
+    );
+
+    return new CandidateUpdateMethod(this.antenna.iotx, sender, req, {
+      signer: this.antenna.iotx.signer
+    }).execute();
   }
 }
