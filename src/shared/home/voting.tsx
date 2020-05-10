@@ -25,14 +25,12 @@ type Props = {
   // tslint:disable-next-line:no-any
   history: any;
   isMobile: boolean;
-  isIoPay?: boolean;
 };
 
 // @ts-ignore
 // tslint:disable-next-line:no-any
 @connect((state: any) => ({
   isMobile: state.base.isMobile,
-  isIoPay: state.base.isIoPay
 }))
 // @ts-ignore
 @withRouter
@@ -56,7 +54,7 @@ class Voting extends Component<Props, State> {
 
   // tslint:disable-next-line:no-any
   mobileVoteButtonRender: RenderDelegateComponent = (delegate: any) => {
-    const { history, isIoPay } = this.props;
+    const { history } = this.props;
     const disabled = !delegate.status || delegate.status === "UNQUALIFIED";
     return (
       <div style={{ padding: "0 15px", textAlign: "center" }}>
@@ -66,7 +64,7 @@ class Voting extends Component<Props, State> {
           onClick={() => {
             if (history && history.push) {
               history.push(
-                `/${isIoPay ? "vote-native" : "vote"}/${encodeURIComponent(
+                `vote-native/${encodeURIComponent(
                   delegate.registeredName
                 )}`
               );
