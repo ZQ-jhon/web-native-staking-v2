@@ -20,7 +20,6 @@ type State = {
   displayMobileList: boolean;
   shouldDisplayMetaMaskReminder: boolean;
   userConfirmedMetaMaskReminder: boolean;
-  isNative: boolean;
 };
 
 // @ts-ignore
@@ -36,8 +35,7 @@ class VotingBannerModal extends PureComponent<Props, State> {
       shouldDisplayMetaMaskReminder: false,
       userConfirmedMetaMaskReminder: false,
       currentCandidate: null,
-      displayMobileList: false,
-      isNative: false
+      displayMobileList: false
     };
   }
 

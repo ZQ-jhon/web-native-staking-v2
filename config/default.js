@@ -51,6 +51,7 @@ module.exports = {
       "https://member.iotex.io/api-gateway/",
       "wss://local.iotex.io:64102/",
       "https://member.iotex.io/iotex-core-proxy/",
+      "https://api.nightly-cluster-2.iotex.one/",
       ...(process.env.API_GATEWAY_URL ? [process.env.API_GATEWAY_URL] : [])
     ],
     "child-src": ["self"],

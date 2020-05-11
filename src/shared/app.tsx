@@ -12,6 +12,7 @@ import { colors } from "./common/styles/style-color";
 import { fonts } from "./common/styles/style-font";
 import { TopBar } from "./common/top-bar";
 import { VotingContainer } from "./home/voting-container";
+import { VoteNativePage } from "./staking/voting-native-page";
 
 type Props = {
   googleTid: string;
@@ -32,6 +33,16 @@ export class App extends Component<Props> {
           <ScrollToTop>
             <Switch>
               <Route exact={true} path="/" component={VotingContainer} />
+              <Route
+                exact={true}
+                path="/vote-native/:registeredName"
+                component={VoteNativePage}
+              />
+              <Route
+                exact={true}
+                path="/vote-native/"
+                component={VoteNativePage}
+              />
               <Route component={NotFound} />
             </Switch>
           </ScrollToTop>

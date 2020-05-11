@@ -5,12 +5,13 @@ import window from "global/window";
 import { t } from "onefx/lib/iso-i18n";
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { getIoPayAddress } from "../common/get-antenna";
+import { IopayRequired } from "../common/iopay-required";
 import {
   convertToString,
   getTwitterAccount,
   TWEET_WEB_INTENT_URL
 } from "../common/twitter";
-import { generateReferralLink } from "./my-referral-link";
 
 type Props = {
   // tslint:disable-next-line:no-any
@@ -20,20 +21,29 @@ type Props = {
   siteUrl?: string;
 };
 
+type States = {
+  address?: string;
+};
+
+// @ts-ignore
+@IopayRequired
 // @ts-ignore
 @connect(state => ({
   // @ts-ignore
   siteUrl: state.base.siteUrl
 }))
-class MyReferralTwitterButton extends Component<Props> {
+class MyReferralTwitterButton extends Component<Props, States> {
+  async componentDidMount(): Promise<void> {
+    try {
+      const address = await getIoPayAddress();
+      this.setState({ address });
+    } catch (e) {
+      window.console.log("error when load iotx balance", e);
+    }
+  }
   render(): JSX.Element {
     const { data = {}, siteUrl = "" } = this.props;
-    //TODO replace by native one
-    const address =
-      window.web3 &&
-      window.web3.eth &&
-      window.web3.eth.accounts &&
-      window.web3.eth.accounts[0];
+    const { address = "" } = this.state;
 
     const url = generateReferralLink(siteUrl, address);
     const name = getTwitterAccount(data) || data.name;
@@ -64,6 +74,13 @@ class MyReferralTwitterButton extends Component<Props> {
       </a>
     );
   }
+}
+
+export function generateReferralLink(
+  siteUrl: string,
+  address?: string
+): string {
+  return `${siteUrl}/?src=${address ? address.substr(8, 8) : ""}`;
 }
 
 export { MyReferralTwitterButton };

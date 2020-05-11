@@ -21,18 +21,7 @@ export function SuccessStep({
         lineHeight={1.88}
         color={colors.black}
       >
-        {txHash.startsWith("0x") ? (
-          // tslint:disable-next-line:react-no-dangerous-html
-          <span
-            dangerouslySetInnerHTML={{
-              __html: t("my_stake.transaction_hash", {
-                txHash,
-                href: `https://etherscan.io/tx/${txHash}`
-              })
-            }}
-            style={{ wordBreak: "break-word" }}
-          />
-        ) : (
+        {
           // tslint:disable-next-line:react-no-dangerous-html
           <span
             dangerouslySetInnerHTML={{
@@ -43,7 +32,7 @@ export function SuccessStep({
             }}
             style={{ wordBreak: "break-word" }}
           />
-        )}
+        }
         <span
           dangerouslySetInnerHTML={{ __html: t("my_stake.check_few_seconds") }}
         />

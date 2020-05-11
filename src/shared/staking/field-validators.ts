@@ -1,10 +1,7 @@
 // @ts-ignore
-import window from "global/window";
 import { t } from "onefx/lib/iso-i18n";
 
 export const STAKE_DURATION_MAX_VALUE = 14 * 24;
-
-export const STAKE_DURATION_MAX_VALUE_ON_KOVAN = 14 * 24;
 
 // @ts-ignore
 export const validateCanName = (rule, value, callback) => {
@@ -49,12 +46,5 @@ export const validateStakeDuration = (maxValue: number) => (
 };
 
 export const getStakeDurationMaxValue = () => {
-  const net =
-    window.web3 && window.web3.currentProvider.networkVersion === "42"
-      ? "kovan"
-      : "main";
-  const isMainNet = net === "main";
-  return isMainNet
-    ? STAKE_DURATION_MAX_VALUE
-    : STAKE_DURATION_MAX_VALUE_ON_KOVAN;
+  return STAKE_DURATION_MAX_VALUE;
 };

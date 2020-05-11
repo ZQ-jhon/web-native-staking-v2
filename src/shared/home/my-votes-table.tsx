@@ -2,7 +2,6 @@
 import CheckOutlined from "@ant-design/icons/CheckOutlined";
 import MinusOutlined from "@ant-design/icons/MinusOutlined";
 import Avatar from "antd/lib/alert";
-import notification from "antd/lib/notification";
 import Table from "antd/lib/table";
 import dateformat from "dateformat";
 import { t } from "onefx/lib/iso-i18n";
@@ -129,26 +128,9 @@ class MyVotesTable extends Component<Props, State> {
   render(): JSX.Element {
     const bpCandidates: any = [];
     const dataSource: any = [];
-    const isNative = false;
     const { expandedRowKeys } = this.state;
-    const onExpand = (record: any, bpCandidates: any) => (e: any) => {
-      const { id, canName } = record;
-      e.preventDefault();
-      const index = expandedRowKeys.findIndex(v => v === id);
-      if (index === -1) {
-        expandedRowKeys.push(id);
-      } else {
-        expandedRowKeys.splice(index, 1);
-      }
-      if (!bpCandidates.find((bp: any) => bp.registeredName === canName)) {
-        return notification.error({
-          message: t("voting.delegate_reward_view_error"),
-          duration: 5
-        });
-      }
-      this.setState({ expandedRowKeys });
-    };
 
+    // @ts-ignore
     const DisplayMyStakeCols = (bpCandidates: any): Array<any> =>
       // tslint:disable-next-line:max-func-body-length
       [
@@ -207,14 +189,9 @@ class MyVotesTable extends Component<Props, State> {
                   >
                     <BoldText>{t("my_stake.order_no", { no })}</BoldText>
                     <BoldText style={{ whiteSpace: "nowrap" }}>
-                      {t(
-                        isNative
-                          ? "my_stake.native_staked_amount_format"
-                          : "my_stake.staked_amount_format",
-                        {
-                          amountText: record.stakedAmount.toLocaleString()
-                        }
-                      )}
+                      {t("my_stake.native_staked_amount_format", {
+                        amountText: record.stakedAmount.toLocaleString()
+                      })}
                     </BoldText>
                   </Flex>
                 </Flex>
@@ -228,22 +205,6 @@ class MyVotesTable extends Component<Props, State> {
                     })}
                   </StatisticValue>
                 </Flex>
-                {!isNative && (
-                  <span
-                    role="button"
-                    onClick={onExpand(record, bpCandidates)}
-                    style={{
-                      padding: "3px 0",
-                      color: colors.PRODUCING,
-                      fontWeight: "bold",
-                      lineHeight: 1.36
-                    }}
-                  >
-                    {expandedRowKeys.includes(record.id)
-                      ? t("voting.delegate_reward_hide")
-                      : t("voting.delegate_reward_view")}
-                  </span>
-                )}
               </Flex>
             );
           }

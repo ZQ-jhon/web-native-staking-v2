@@ -201,6 +201,13 @@ class VoteNowContainer extends Component<Props, State> {
         validateStatus: ""
       }
     };
+    // @ts-ignore
+    this.setState({
+      visible: false,
+      step: undefined,
+      reEdit: false,
+      stepConfirming: false
+    });
   }
 
   onSubmit = () => {
