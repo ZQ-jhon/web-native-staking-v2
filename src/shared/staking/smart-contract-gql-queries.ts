@@ -18,12 +18,26 @@ export const GET_ALL_CANDIDATE = gql`
   }
 `;
 
-export const GET_BP_CANDIDATE_REWARD_DISTRIBUTION = gql`
-  query bpCandidateRewardDistribution {
-    bpCandidateRewardDistribution {
+export const GET_BP_CANDIDATES = gql`
+  query bpCandidates {
+    bpCandidates {
+      id
+      rank
+      logo
+      name
+      status
+      serverStatus
+      liveVotes
+      liveVotesDelta
+      nodeVersion
+      percent
+      registeredName
+      socialMedia
+      productivity
       blockRewardPortion
       epochRewardPortion
       foundationRewardPortion
+      rewardPlan
     }
   }
 `;

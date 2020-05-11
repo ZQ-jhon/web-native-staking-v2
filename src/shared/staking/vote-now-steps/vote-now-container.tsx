@@ -14,7 +14,7 @@ import {connect} from "react-redux";
 import {CommonMargin, CommonMarginBottomStyle} from "../../common/common-margin";
 import {CommonModal} from "../../common/common-modal";
 import {formItemLayout} from "../../common/form-item-layout";
-import {getIoPayAddress, lazyGetContract} from "../../common/get-antenna";
+import {lazyGetContract} from "../../common/get-antenna";
 import {colors} from "../../common/styles/style-color2";
 import {Bucket, DEFAULT_STAKING_GAS_LIMIT} from "../../common/token-utils";
 import {MyReferralTwitterButton} from "../../my-referrals/my-referral-twitter-button";
@@ -29,6 +29,7 @@ import {SuccessStep} from "./success-step";
 
 import {toRau} from "iotex-antenna/lib/account/utils";
 import {webBpApolloClient} from "../../common/apollo-client";
+import {getStaking} from "../../common/get-staking";
 import {NATIVE_TOKEN_ABI} from "../native-token-abi";
 
 type TcanName = {
@@ -139,6 +140,19 @@ class VoteNowContainer extends Component<Props, State> {
 
       try {
         if (this.isFreshStaking()) {
+          const staking = getStaking();
+          this.ioAddress = await staking.getIoPayAddress();
+          /* const staking = getStaking();
+           window.console.log("createStake")
+           this.txHash = await staking.createStake({
+             candidateName: this.bucket.canName,
+             stakedAmount: amount,
+             stakedDuration: stakeDuration,
+             autoStake: nonDecay,
+             payload: ""
+           })
+           window.console.log(this.txHash);*/
+
           this.txHash = await tokenContract.methods.createPygg(
             canName,
             stakeDuration,
@@ -146,7 +160,6 @@ class VoteNowContainer extends Component<Props, State> {
             "0",
             data
           );
-          this.ioAddress = await getIoPayAddress();
           recordStakingReferral({
             variables: {
               stakingReferralInput: {
@@ -167,7 +180,8 @@ class VoteNowContainer extends Component<Props, State> {
         window.console.log(`create native staking: ${this.txHash}`);
         this.setState({ step: SUCCESS_STEP });
       } catch (err) {
-        window.console.error(`failed to make transaction: ${err.stack}`);
+        window.console.error(`failed to make transaction`, err);
+        this.setState({ stepConfirming: false });
       }
     }
 

@@ -5,7 +5,7 @@ import window from "global/window";
 import {t} from "onefx/lib/iso-i18n";
 import React, {Component} from "react";
 import {connect} from "react-redux";
-import {getIoPayAddress} from "../common/get-antenna";
+import {getStaking} from "../common/get-staking";
 import {IopayRequired} from "../common/iopay-required";
 import {convertToString, getTwitterAccount, TWEET_WEB_INTENT_URL} from "../common/twitter";
 
@@ -31,7 +31,8 @@ type States = {
 class MyReferralTwitterButton extends Component<Props, States> {
   async componentDidMount(): Promise<void> {
     try{
-      const address = await getIoPayAddress();
+      const staking = getStaking();
+      const address = await staking.getIoPayAddress();
       this.setState({address});
     } catch (e) {
       window.console.log("error when load iotx balance", e);

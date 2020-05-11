@@ -1,26 +1,43 @@
 // tslint:disable:no-any
 import CheckOutlined from "@ant-design/icons/CheckOutlined";
 import MinusOutlined from "@ant-design/icons/MinusOutlined";
+import {notification} from "antd";
 import Avatar from "antd/lib/alert";
 import Table from "antd/lib/table";
 import dateformat from "dateformat";
+import {SpinPreloader} from "iotex-react-block-producers/lib/spin-preloader";
 import {t} from "onefx/lib/iso-i18n";
 import {styled} from "onefx/lib/styletron-react";
 import React, {Component} from "react";
+import { Query } from "react-apollo";
+import {webBpApolloClient} from "../common/apollo-client";
 import {Flex} from "../common/flex";
+import {getStaking} from "../common/get-staking";
 import {IopayRequired} from "../common/iopay-required";
 import {colors} from "../common/styles/style-color";
 import {media} from "../common/styles/style-media";
+import {Bucket} from "../common/token-utils";
+import {GET_BP_CANDIDATES} from "../staking/smart-contract-gql-queries";
 
 const CustomExpandIcon = () => null;
 const ACCOUNT_AREA_WIDTH = 290;
 
+export type TMyStakeStatus = {
+  addr: string,
+  buckets: Array<Bucket>,
+  totalStaking: number,
+  unStakePendingAmount: number,
+  withdrawableAmount: number,
+  totalVotesAmount: string,
+};
+
 type Props = {};
 type State = {
-  invalidNames: String;
-  expandedRowKeys: Array<String>;
+  invalidNames: string;
+  expandedRowKeys: Array<string>;
   showMore: any;
-  net: String;
+  stakeStatus?: TMyStakeStatus;
+  address?: string;
 };
 
 // @ts-ignore
@@ -32,7 +49,7 @@ class MyVotesTable extends Component<Props, State> {
       invalidNames: "",
       expandedRowKeys: [],
       showMore: {},
-      net: "testnet"
+      address: "",
     };
   }
 
@@ -127,12 +144,52 @@ class MyVotesTable extends Component<Props, State> {
 
     return null;
   };
+
+  async componentDidMount(): Promise<void> {
+    const staking = getStaking();
+    const [height, address] = await Promise.all([
+      staking.getHeight(),
+      staking.getIoPayAddress()
+    ]);
+    const bucketsByVoter = await staking.getBucketsByVoter(
+      address,
+      0,
+      10,
+      height
+    );
+
+    const buckets = bucketsByVoter.map(it => {
+      const bk = new Bucket();
+      bk.id = it.index;
+      bk.stakedAmount = 0;
+      bk.canName = it.candidate;
+      bk.bucketOwner = it.owner;
+      bk.stakeStartTime = it.stakeStartTime?it.stakeStartTime.toDateString():"";
+      bk.stakeDuration = it.stakedDuration;
+      bk.nonDecay = it.autoStake;
+      bk.unstakeStartTime = it.unstakeStartTime?it.unstakeStartTime.toDateString():"";
+      return bk;
+    })
+
+    // @ts-ignore
+    this.setState({
+      stakeStatus: {
+        buckets,
+        addr: address,
+        totalStaking: buckets.length,
+        unStakePendingAmount: 0,
+        withdrawableAmount: 0,
+        totalVotesAmount: buckets.length
+      },
+      address
+    });
+  }
+
   // tslint:disable-next-line:max-func-body-length
   render(): JSX.Element {
     const bpCandidates: any = [];
     const dataSource: any = [];
-    const { expandedRowKeys } = this.state;
-
+    const { expandedRowKeys, stakeStatus } = this.state;
     // @ts-ignore
     const DisplayMyStakeCols = (bpCandidates: any): Array<any> =>
       // tslint:disable-next-line:max-func-body-length
@@ -145,12 +202,9 @@ class MyVotesTable extends Component<Props, State> {
           className: "BorderTop BorderLeft BorderBottom",
           // @ts-ignore
 
-          render(text: any, record: any): JSX.Element {
+          render(text: any, record: Bucket): JSX.Element {
             // Can not use index here because of antd table will reset the index as soon as pagination changed
-            const no =
-              record.patchDummyId !== undefined
-                ? record.patchDummyId
-                : record.id;
+            const no = record.id;
 
             return (
               <Flex
@@ -190,7 +244,10 @@ class MyVotesTable extends Component<Props, State> {
                       }
                     }}
                   >
-                    <BoldText>{t("my_stake.order_no", { no })}</BoldText>
+                    <BoldText>{
+                      // @ts-ignore
+                      t("my_stake.order_no", { no })}
+                    </BoldText>
                     <BoldText style={{ whiteSpace: "nowrap" }}>
                       {t("my_stake.native_staked_amount_format",
                         {
@@ -234,18 +291,11 @@ class MyVotesTable extends Component<Props, State> {
           className: "BorderTop BorderBottom",
 
           render(text: any, record: any): JSX.Element {
-            const { net } = this.state;
-            const timeformat =
-              net === "testnet" ? "yyyy/mm/dd HH:MM" : "yyyy/mm/dd";
+            const timeformat = "yyyy/mm/dd";
             return (
               <Flex column={true} alignItems={"baseline"}>
                 <CellSpan>
-                  {t(
-                    net === "testnet"
-                      ? "my_stake.duration_epochs.testnet"
-                      : "my_stake.duration_epochs",
-                    { stakeDuration: text }
-                  )}
+                  {t("my_stake.duration_epochs",{ stakeDuration: text })}
                 </CellSpan>
                 <TimeSpan>
                   {t("my_stake.from_time", {
@@ -357,25 +407,44 @@ class MyVotesTable extends Component<Props, State> {
             }
           }}
         >
-          {/*
-        // @ts-ignore */}
-          <Table
-            className={"MyStakeInfo"}
-            rowClassName={this.setRowClassName}
-            style={{ width: "100%" }}
-            pagination={{ pageSize: 6 }}
-            columns={DisplayMyStakeCols(bpCandidates)}
-            dataSource={dataSource}
-            expandIcon={CustomExpandIcon}
-            expandedRowRender={(record: any) =>
-              this.renderReward(bpCandidates, record)
-            }
-            // @ts-ignore
-            expandIconAsCell={false}
-            // @ts-ignore
-            expandedRowKeys={expandedRowKeys}
-            rowKey="id"
-          />
+          <Query ssr={false}
+                 client={webBpApolloClient}
+                 query={GET_BP_CANDIDATES}>
+            {
+              // @ts-ignore
+              ({ data, loading, error}) => {
+                if (!loading && error) {
+                  notification.error({ message: error.message });
+                  return <></>;
+                }
+              const bpCandidates = (data && data.bpCandidates) || [];
+              const dataSource = (stakeStatus && stakeStatus.buckets) || [];
+
+              return (
+                <SpinPreloader spinning={loading}>
+                  {
+                    // @ts-ignore
+                    <Table
+                      className={"MyStakeInfo"}
+                      rowClassName={this.setRowClassName}
+                      style={{ width: "100%" }}
+                      pagination={{ pageSize: 6 }}
+                      columns={DisplayMyStakeCols(bpCandidates)}
+                      dataSource={dataSource}
+                      expandIcon={CustomExpandIcon}
+                      expandedRowRender={
+                        // @ts-ignore
+                        record => this.renderReward(bpCandidates, record)
+                      }
+                      expandIconAsCell={false}
+                      expandedRowKeys={expandedRowKeys}
+                      rowKey="id"
+                    />
+                  }
+                </SpinPreloader>
+              );
+            }}
+          </Query>
         </Flex>
         <Flex
           column={true}

@@ -94,8 +94,6 @@ export class Bucket {
   stakedAmount: number;
   unstakeStartTime: string;
   withdrawWaitUntil?: string | number;
-  // tslint:disable-next-line:variable-name
-  _isPatch: boolean = false;
 
   static fromContractRes(
     bucketId: number,
@@ -174,13 +172,5 @@ export class Bucket {
     }
 
     return "no_stake_starttime";
-  }
-
-  get isPatch(): boolean {
-    return this._isPatch;
-  }
-
-  set isPatch(is: boolean) {
-    this._isPatch = is;
   }
 }
