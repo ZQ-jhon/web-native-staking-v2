@@ -263,6 +263,7 @@ my_stake.order_no: 'No.${no}'
 my_stake.staked_amount_format: '${amountText} IOTX'
 my_stake.native_staked_amount_format: '${amountText} IOTX'
 my_stake.duration_epochs: '${stakeDuration} Days'
+my_stake.duration_epochs.testnet: '${stakeDuration} Days'
 my_stake.from_time: 'From ${startTime}'
 my_stake.start_from: 'Start From'
 my_stake.to: To

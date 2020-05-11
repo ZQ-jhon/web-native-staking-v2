@@ -100,7 +100,7 @@ export const IopayRequired = (InnerComponent: any) => {
       }
       switch (isIopayConnected) {
         case undefined:
-          return <LoadingOutlined />;
+          return <LoadingOutlined style={{margin: "10px"}}/>;
         case false:
           return <DownloadButton />;
         case true:

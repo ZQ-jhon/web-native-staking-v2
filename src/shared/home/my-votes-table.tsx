@@ -8,6 +8,7 @@ import {t} from "onefx/lib/iso-i18n";
 import {styled} from "onefx/lib/styletron-react";
 import React, {Component} from "react";
 import {Flex} from "../common/flex";
+import {IopayRequired} from "../common/iopay-required";
 import {colors} from "../common/styles/style-color";
 import {media} from "../common/styles/style-media";
 
@@ -22,6 +23,8 @@ type State = {
   net: String;
 };
 
+// @ts-ignore
+@IopayRequired
 class MyVotesTable extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
@@ -29,7 +32,7 @@ class MyVotesTable extends Component<Props, State> {
       invalidNames: "",
       expandedRowKeys: [],
       showMore: {},
-      net: "kovan"
+      net: "testnet"
     };
   }
 
@@ -233,13 +236,13 @@ class MyVotesTable extends Component<Props, State> {
           render(text: any, record: any): JSX.Element {
             const { net } = this.state;
             const timeformat =
-              net === "kovan" ? "yyyy/mm/dd HH:MM" : "yyyy/mm/dd";
+              net === "testnet" ? "yyyy/mm/dd HH:MM" : "yyyy/mm/dd";
             return (
               <Flex column={true} alignItems={"baseline"}>
                 <CellSpan>
                   {t(
-                    net === "kovan"
-                      ? "my_stake.duration_epochs.kovan"
+                    net === "testnet"
+                      ? "my_stake.duration_epochs.testnet"
                       : "my_stake.duration_epochs",
                     { stakeDuration: text }
                   )}
