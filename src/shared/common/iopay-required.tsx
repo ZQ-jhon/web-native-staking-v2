@@ -73,14 +73,20 @@ export const IopayRequired = (InnerComponent: any) => {
 
     setMetaMask = async (): Promise<void> => {
       const antenna = getAntenna();
-      await sleepPromise(3000);
       // tslint:disable-next-line:no-typeof-undefined
-      const iopayConnected =
+      let iopayConnected =
         antenna &&
         antenna.iotx &&
         antenna.iotx.accounts &&
         antenna.iotx.accounts[0];
-
+      if (!Boolean(iopayConnected)){
+        await sleepPromise(3000);
+        iopayConnected =
+          antenna &&
+          antenna.iotx &&
+          antenna.iotx.accounts &&
+          antenna.iotx.accounts[0];
+      }
       this.setState({ isIopayConnected: Boolean(iopayConnected) });
     };
 

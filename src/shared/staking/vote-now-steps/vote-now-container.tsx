@@ -206,15 +206,15 @@ class VoteNowContainer extends Component<Props, State> {
         const { actionSmartContractCalled } = this.props;
         actionSmartContractCalled(true);
       }
-      // @ts-ignore
-      this.setState({ visible: false, step: undefined });
+      const form = this.formRef.current;
+      if (form){
+        form.resetFields();
+      }
       if (this.props.requestDismiss) {
-        const form = this.formRef.current;
-        if (form){
-          form.resetFields();
-        }
         this.props.requestDismiss();
       }
+      // @ts-ignore
+      this.setState({ visible: false, step: undefined, reEdit: false, stepConfirming: false });
     };
 
     // tslint:disable-next-line:no-any

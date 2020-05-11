@@ -132,7 +132,7 @@ export class VoteButtonModal extends PureComponent<Props, State> {
             this.setState({ shouldDisplayMetaMaskReminder: false })
           }
         />
-        {(
+        {
           // @ts-ignore
           <VoteNowContainer
             registeredName={this.state.currentCandidateName}
@@ -140,7 +140,7 @@ export class VoteButtonModal extends PureComponent<Props, State> {
             forceDisplayModal={this.state.shouldDisplayVotingModal}
             requestDismiss={() => this.setState({ shouldDisplayVotingModal: false })}
           />
-        )}
+        }
       </Flex>
     );
   }
