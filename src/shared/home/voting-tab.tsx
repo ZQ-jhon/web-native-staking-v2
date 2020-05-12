@@ -24,8 +24,13 @@ const VotingTab = withRouter(
     constructor(props: Props) {
       super(props);
 
+      let pathname = props.history.location.pathname;
+      if (pathname.endsWith("/")) {
+        pathname = pathname.substring(0, pathname.length - 1);
+      }
+
       this.state = {
-        activeKey: props.history.location.pathname
+        activeKey: pathname
       };
     }
 
