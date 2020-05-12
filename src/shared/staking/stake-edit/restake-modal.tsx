@@ -17,7 +17,12 @@ export const RestakeModal = connect()(
             t("my_stake.restake.title", { bucketIndex })
           }
         >
-          <p>{t("my_stake.restake.desc")}</p>
+          <p>
+            {
+              // @ts-ignore
+              t("my_stake.restake.title", { bucketIndex })
+            }
+          </p>
         </ModalWrapper>
       );
     }

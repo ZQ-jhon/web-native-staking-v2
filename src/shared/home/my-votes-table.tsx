@@ -4,6 +4,7 @@ import {DownOutlined} from "@ant-design/icons/lib";
 import MinusOutlined from "@ant-design/icons/MinusOutlined";
 import {Avatar, Button, Dropdown, notification} from "antd";
 import Table from "antd/lib/table";
+import { BigNumber } from "bignumber.js";
 import dateformat from "dateformat";
 import {fromRau} from "iotex-antenna/lib/account/utils";
 import {SpinPreloader} from "iotex-react-block-producers/lib/spin-preloader";
@@ -165,17 +166,25 @@ class MyVotesTable extends Component<Props, State> {
       bk.stakeStartTime = it.stakeStartTime?it.stakeStartTime.toDateString():"";
       bk.unstakeStartTime = it.unstakeStartTime?it.unstakeStartTime.toDateString():"";
       return bk;
-    })
-
+    });
+    const {
+      totalStaking,
+      totalVotesAmount,
+      unStakePendingAmount,
+      withdrawableAmount
+    } = await getNativeStakeStatus(
+      address,
+      buckets
+    );
     // @ts-ignore
     this.setState({
       stakeStatus: {
         buckets,
         addr: address,
-        totalStaking: buckets.length,
-        unStakePendingAmount: 0,
-        withdrawableAmount: 0,
-        totalVotesAmount: buckets.length
+        totalStaking,
+        unStakePendingAmount,
+        withdrawableAmount,
+        totalVotesAmount
       },
       address
     });
@@ -470,13 +479,29 @@ class MyVotesTable extends Component<Props, State> {
           <b>{t("my_stake.address")}</b>
           <LabelText>{this.state.address}</LabelText>
           <b>{t("my_stake.staking_amount")}</b>
-          <LabelText>unknow</LabelText>
+          <LabelText>
+            {
+            `${this.state.stakeStatus && this.state.stakeStatus.totalStaking.toLocaleString()} IOTX`
+            }
+          </LabelText>
           <b>{t("my_stake.unstake_pendding_amount")}</b>
-          <LabelText>unknow</LabelText>
+          <LabelText>
+            {
+              `${this.state.stakeStatus && this.state.stakeStatus.unStakePendingAmount.toLocaleString()} IOTX`
+            }
+          </LabelText>
           <b>{t("my_stake.withdrawable_amount")}</b>
-          <LabelText>unknow</LabelText>
+          <LabelText>
+            {
+              `${this.state.stakeStatus && this.state.stakeStatus.withdrawableAmount.toLocaleString()} IOTX`
+            }
+          </LabelText>
           <b>{t("my_stake.votes_amount")}</b>
-          <LabelText>unknow</LabelText>
+          <LabelText>
+            {
+              `${this.state.stakeStatus && this.state.stakeStatus.totalVotesAmount} IOTX`
+            }
+          </LabelText>
         </Flex>
       </Flex>
     );
@@ -484,6 +509,40 @@ class MyVotesTable extends Component<Props, State> {
 }
 
 export { MyVotesTable };
+
+export async function getNativeStakeStatus(
+  addr: string,
+  buckets: Array<Bucket>
+): Promise<TMyStakeStatus> {
+  let bigTotalVotesAmount = new BigNumber(0);
+  const stakeStatus: TMyStakeStatus = {
+    addr,
+    buckets: buckets,
+    totalStaking: 0,
+    unStakePendingAmount: 0,
+    withdrawableAmount: 0,
+    totalVotesAmount: "0"
+  };
+
+  buckets.forEach(bucket => {
+    const totalVotes = getPowerEstimation(
+      bucket.stakedAmount,
+      bucket.stakeDuration,
+      0
+    ).total;
+    bigTotalVotesAmount = bigTotalVotesAmount.plus(totalVotes);
+    if (bucket.getStatus() === "staking") {
+      stakeStatus.totalStaking += bucket.stakedAmount;
+    } else if (bucket.getStatus() === "unstaking") {
+      stakeStatus.unStakePendingAmount += bucket.stakedAmount;
+    } else if (bucket.getStatus() === "withdrawable") {
+      stakeStatus.withdrawableAmount += bucket.stakedAmount;
+    }
+  });
+  stakeStatus.totalVotesAmount = bigTotalVotesAmount.toFixed(0);
+  return stakeStatus;
+}
+
 const BoldText = styled("b", {
   fontSize: "12px"
 });

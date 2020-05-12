@@ -258,32 +258,35 @@ export function renderActionMenu(
       <Menu.Item key="1">
         {
           // @ts-ignore
+          // tslint:disable-next-line:use-simple-attributes
           <RevoteModal
-            bucketIndex={record.id}
+            bucketIndex={record.id !== undefined? record.id: -1}
             canName={record.canName}
-            addr={addr}
             clickable={renderRevote(record)}
           />
         }
       </Menu.Item>
       <Menu.Item key="addStaking">
+        {
+          // @ts-ignore
+          // tslint:disable-next-line:use-simple-attributes
           <AddStakingModal
-            // @ts-ignore
-            bucketIndex={record.id}
+            bucketIndex={record.id !== undefined? record.id: -1}
             addr={addr}
             clickable={renderAddStaking()}
             stakeDuration={record.stakeDuration}
             stakedAmount={record.stakedAmount}
             nonDecay={record.nonDecay}
           />
+        }
       </Menu.Item>
 
       <Menu.Item key="2">
         {
           // @ts-ignore
+          // tslint:disable-next-line:use-simple-attributes
           <RestakeModal
-            // @ts-ignore
-            bucketIndex={record.id}
+            bucketIndex={record.id !== undefined? record.id: -1}
             stakeDuration={record.stakeDuration}
             nonDecay={record.nonDecay}
             stakeTime={record.stakeStartTime}
@@ -297,8 +300,9 @@ export function renderActionMenu(
       <Menu.Item key="3">
         {
           // @ts-ignore
+          // tslint:disable-next-line:use-simple-attributes
           <UnstakeModal
-            bucketIndex={record.id}
+            bucketIndex={record.id !== undefined? record.id: -1}
             stakeStartTime={record.stakeStartTime}
             stakeDuration={record.stakeDuration}
             nonDecay={record.nonDecay}
@@ -311,8 +315,9 @@ export function renderActionMenu(
       <Menu.Item key="4">
         {
           // @ts-ignore
+          // tslint:disable-next-line:use-simple-attributes
           <WithdrawModal
-            bucketIndex={record.id}
+            bucketIndex={record.id !== undefined? record.id: -1}
             waitUntil={record.withdrawWaitUntil}
             addr={addr}
             clickable={renderWithdraw(record)}

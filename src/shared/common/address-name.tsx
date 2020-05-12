@@ -1,11 +1,10 @@
-import { get } from "dottie";
+import {get} from "dottie";
 import gql from "graphql-tag";
-import { validateAddress } from "iotex-antenna/lib/account/utils";
+import {validateAddress} from "iotex-antenna/lib/account/utils";
 import React from "react";
-import { Query, QueryResult } from "react-apollo";
-import { iotexExplorerClient } from "./apollo-client";
-import { LinkButton } from "./buttons";
-import {colors} from "./styles/style-color";
+import {Query, QueryResult} from "react-apollo";
+import {iotexExplorerClient} from "./apollo-client";
+import {LinkButton} from "./buttons";
 
 export const GET_ADDRESS_META = gql`
   query addressMeta($address: String!) {
