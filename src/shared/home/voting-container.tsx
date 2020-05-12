@@ -4,8 +4,8 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router";
 import sleepPromise from "sleep-promise";
+import { getRemoteAntenna } from "../common/get-antenna";
 import { ContentPadding } from "../common/styles/style-padding";
-import { getRemoteAntenna } from "../common/wallet/get-antenna.js";
 import { VotingBannerModal } from "./voting-banner-modal";
 import { VotingTab } from "./voting-tab";
 

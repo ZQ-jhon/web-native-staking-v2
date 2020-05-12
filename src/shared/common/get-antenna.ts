@@ -150,3 +150,15 @@ export async function getIotxBalance(address: string): Promise<number> {
   // @ts-ignore
   return Number(fromRau(accountMeta.balance, "IOTX"));
 }
+
+export function getRemoteAntenna(): Antenna {
+  // $FlowFixMe
+  const injectedWindow: Window & { remoteAntenna?: Antenna } = window;
+  if (injectedWindow.remoteAntenna) {
+    return injectedWindow.remoteAntenna;
+  }
+  injectedWindow.remoteAntenna = new Antenna("/iotex-core-proxy", {
+    signer: new WsSignerPlugin("wss://local.iotex.io:64102")
+  });
+  return injectedWindow.remoteAntenna;
+}

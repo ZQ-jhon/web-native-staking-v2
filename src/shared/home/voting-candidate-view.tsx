@@ -15,9 +15,6 @@ class VotingCandidateView extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
   }
-  componentDidMount(): void {
-    await getIoAddressFromRemote();
-  }
 
   render(): JSX.Element {
     const { showModal, onOk, onCancel } = this.props;
