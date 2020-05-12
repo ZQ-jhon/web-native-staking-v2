@@ -4,10 +4,10 @@ import Helmet from "onefx/lib/react-helmet";
 import React, {Component} from "react";
 import {connect} from "react-redux";
 import {CommonMargin} from "../common/common-margin";
+import {Flex} from "../common/flex";
 import {VotingButton} from "../home/vote-button-modal";
 import {VoteNowContainer} from "../staking/vote-now-steps/vote-now-container";
 import {MyVotesTable} from "./my-votes-table";
-import {Flex} from "../common/flex";
 
 type State = {
   showVoteNowModal: boolean;
@@ -20,7 +20,6 @@ export function MyVotes(): JSX.Element {
   return (
     <div>
       <Helmet title={`${t("my_stake.title")} - ${t("meta.description")}`} />
-      <CommonMargin />
       <StakingContractContainer />
       <CommonMargin />
     </div>
@@ -42,9 +41,7 @@ export const StakingContractContainer = connect()(
         // @ts-ignore
         <Flex style={{ width: "100%" }} column={true} alignItems={"baseline"}>
           <VotingButton
-            launch={() =>
-              this.setState({ showVoteNowModal: true})
-            }
+            launch={() => this.setState({ showVoteNowModal: true })}
             disabled={false}
             extra={{ size: "large" }}
           >
@@ -53,7 +50,11 @@ export const StakingContractContainer = connect()(
               {t("my_stake.new_vote")}
             </span>
           </VotingButton>
+
+          <CommonMargin />
+
           <MyVotesTable />
+
           {
             // @ts-ignore
             <VoteNowContainer

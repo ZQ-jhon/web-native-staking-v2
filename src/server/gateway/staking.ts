@@ -83,10 +83,10 @@ function toBuckets(buffer: Buffer | {}): Array<Bucket> {
       owner: b.getOwner(),
       candidate: b.getCandidateaddress(),
       stakedAmount: b.getStakedamount(),
-      stakeStartTime: sTime && sTime.toDate(),
+      stakeStartTime: sTime && sTime.toString()? sTime.toDate(): undefined,
       stakedDuration: b.getStakedduration(),
       autoStake: b.getAutostake(),
-      unstakeStartTime: uTime && uTime.toDate()
+      unstakeStartTime: uTime && uTime.toString()? uTime.toDate(): undefined
     };
   });
 }

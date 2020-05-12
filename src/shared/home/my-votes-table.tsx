@@ -1,8 +1,8 @@
 // tslint:disable:no-any
 import CheckOutlined from "@ant-design/icons/CheckOutlined";
+import {DownOutlined} from "@ant-design/icons/lib";
 import MinusOutlined from "@ant-design/icons/MinusOutlined";
-import {notification} from "antd";
-import Avatar from "antd/lib/alert";
+import {Avatar, Button, Dropdown, notification} from "antd";
 import Table from "antd/lib/table";
 import dateformat from "dateformat";
 import {fromRau} from "iotex-antenna/lib/account/utils";
@@ -11,14 +11,16 @@ import {t} from "onefx/lib/iso-i18n";
 import {styled} from "onefx/lib/styletron-react";
 import React, {Component} from "react";
 import { Query } from "react-apollo";
+import {AddressName} from "../common/address-name";
 import {webBpApolloClient} from "../common/apollo-client";
 import {Flex} from "../common/flex";
 import {getStaking} from "../common/get-staking";
 import {IopayRequired} from "../common/iopay-required";
 import {colors} from "../common/styles/style-color";
 import {media} from "../common/styles/style-media";
-import {Bucket} from "../common/token-utils";
+import {Bucket, DEFAULT_STAKING_DURATION_SECOND, getPowerEstimation} from "../common/token-utils";
 import {GET_BP_CANDIDATES} from "../staking/smart-contract-gql-queries";
+import {renderActionMenu} from "../staking/stake-edit/modal-menu";
 
 const CustomExpandIcon = () => null;
 const ACCOUNT_AREA_WIDTH = 290;
@@ -121,18 +123,12 @@ class MyVotesTable extends Component<Props, State> {
     if (record.canName) {
       return (
         <Flex column={true} alignItems={"baseline"} color={colors.black}>
-          <a
-            // tslint:disable-next-line:react-a11y-anchors
-            href={"#"}
-            style={{
-              padding: "3px 0",
-              color: colors.PRODUCING,
-              fontWeight: "bold",
-              lineHeight: 1.36
-            }}
+          <span
+            className="ellipsis-text"
+            style={{ maxWidth: "9vw", minWidth: 70 }}
           >
-            {text}
-          </a>
+          <AddressName address={text} className={"StakingLink"} />
+        </span>
           <TimeSpan>{record.roleName || ""}</TimeSpan>
           {this.state.invalidNames.includes(record.canName) ? (
             <TimeSpan style={{ color: colors.voteWarning }}>
@@ -155,19 +151,18 @@ class MyVotesTable extends Component<Props, State> {
     const bucketsByVoter = await staking.getBucketsByVoter(
       address,
       0,
-      10,
+      1000,
       height
     );
 
     const buckets = bucketsByVoter.map(it => {
-      const bk = new Bucket();
-      bk.id = it.index;
-      bk.stakedAmount = Number(fromRau(it.stakedAmount, "IOTX"));
-      bk.canName = it.candidate;
+      const bk = Bucket.fromFormInput(it.candidate,
+        it.autoStake,
+        it.stakedDuration,
+        Number(fromRau(it.stakedAmount, "IOTX")),
+        it.index);
       bk.bucketOwner = it.owner;
       bk.stakeStartTime = it.stakeStartTime?it.stakeStartTime.toDateString():"";
-      bk.stakeDuration = it.stakedDuration;
-      bk.nonDecay = it.autoStake;
       bk.unstakeStartTime = it.unstakeStartTime?it.unstakeStartTime.toDateString():"";
       return bk;
     })
@@ -188,7 +183,8 @@ class MyVotesTable extends Component<Props, State> {
 
   // tslint:disable-next-line:max-func-body-length
   render(): JSX.Element {
-    const { expandedRowKeys, stakeStatus } = this.state;
+    const { expandedRowKeys, stakeStatus, address } = this.state;
+    const networkStakeDuringSeconds = DEFAULT_STAKING_DURATION_SECOND;
     // @ts-ignore
     const DisplayMyStakeCols = (bpCandidates: any): Array<any> =>
       // tslint:disable-next-line:max-func-body-length
@@ -225,7 +221,6 @@ class MyVotesTable extends Component<Props, State> {
                   {/*
                 // @ts-ignore */}
                   <Avatar
-                    // @ts-ignore
                     shape="square"
                     src={"/my-staking/box.png"}
                     size={40}
@@ -262,7 +257,11 @@ class MyVotesTable extends Component<Props, State> {
                   </StatisticSpan>
                   <StatisticValue style={{ width: "50%" }}>
                     {t("my_stake.staking_power.estimate", {
-                      total: "0"
+                      total: getPowerEstimation(
+                        record.stakedAmount,
+                        record.stakeDuration,
+                        0
+                      ).total.toFormat(0)
                     })}
                   </StatisticValue>
                 </Flex>
@@ -337,17 +336,16 @@ class MyVotesTable extends Component<Props, State> {
           dataIndex: "stakeStartTime",
           className: "BorderTop BorderBottom",
           // @ts-ignore
-
-          render(text: any, record: any): JSX.Element {
+          render(text: any, record: Bucket): JSX.Element {
             let time;
             let status;
             const bucketStatus = record.getStatus();
             if (bucketStatus === "withdrawable") {
               status = "my_stake.status.withdrawable";
-              time = new Date(record.withdrawWaitUntil).toLocaleDateString();
+              time = record.withdrawWaitUntil? (new Date(record.withdrawWaitUntil).toLocaleDateString()): "";
             } else if (bucketStatus === "unstaking") {
               status = "my_stake.status.unstaking";
-              time = new Date(record.withdrawWaitUntil).toLocaleDateString();
+              time = record.unstakeStartTime? (new Date(record.unstakeStartTime).toLocaleDateString()): "";
             } else if (bucketStatus === "staking") {
               status = "my_stake.status.ongoing";
               const date = new Date(record.stakeStartTime);
@@ -371,7 +369,7 @@ class MyVotesTable extends Component<Props, State> {
               <Flex column={true} alignItems={"baseline"}>
                 <CellSpan>{t(status)}</CellSpan>
                 <TimeSpan>
-                  {bucketStatus !== "staking"
+                  {bucketStatus !== "staking" && time
                     ? t(`${status}.prefix`, { time })
                     : ""}
                 </TimeSpan>
@@ -381,7 +379,22 @@ class MyVotesTable extends Component<Props, State> {
         },
         {
           title: "",
-          className: "BorderTop BorderBottom BorderRight"
+          className: "BorderTop BorderBottom BorderRight",
+          // @ts-ignore
+          render(text: any, record: Bucket): JSX.Element {
+            const menu = renderActionMenu(
+              record,
+              address || "",
+              networkStakeDuringSeconds,
+            );
+            return (
+              <Dropdown overlay={menu} trigger={["click"]}>
+                <Button>
+                  {t("my_stake.edit.row")} <DownOutlined />
+                </Button>
+              </Dropdown>
+            );
+          }
         }
       ];
     return (
@@ -455,7 +468,7 @@ class MyVotesTable extends Component<Props, State> {
           marginBottom={"24px"}
         >
           <b>{t("my_stake.address")}</b>
-          <LabelText>unknow</LabelText>
+          <LabelText>{this.state.address}</LabelText>
           <b>{t("my_stake.staking_amount")}</b>
           <LabelText>unknow</LabelText>
           <b>{t("my_stake.unstake_pendding_amount")}</b>

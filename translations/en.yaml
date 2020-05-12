@@ -175,6 +175,7 @@ my_stake.canName.err: 'Name is invalid.'
 my_stake.canName.required: 'Please enter the delegate name.'
 my_stake.canName: 'Delegate Name'
 my_stake.data: Data
+my_stake.edit.add_staking: Add Votes
 my_stake.edit.restake: Restake
 my_stake.edit.revote: 'Change Delegate'
 my_stake.edit.row: Action

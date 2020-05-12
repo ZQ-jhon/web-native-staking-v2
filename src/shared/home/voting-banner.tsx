@@ -178,7 +178,7 @@ class VotingBanner extends Component<Props, State> {
                   marginTop: "16px"
                 }}
               >
-                 {t("voting.banner_content")}
+                {t("voting.banner_content")}
               </div>
               <CommonMargin
                 style={{
@@ -250,7 +250,7 @@ class VotingBanner extends Component<Props, State> {
             center={true}
             padding={"24px 0 24px 24px"}
           >
-            <IotexCarousel autoplay={true}>
+            <IotexCarousel>
               {this.getCarouselData(items).map(
                 ({ href, desktop, mobile }, index) => (
                   <LinkWrapper href={href} key={index}>

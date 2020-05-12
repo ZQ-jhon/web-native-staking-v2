@@ -46,3 +46,6 @@ export const validateStakeDuration = (maxValue: number) => (_rule: any,
 export const getStakeDurationMaxValue = () => {
   return STAKE_DURATION_MAX_VALUE;
 };
+
+export const hasError = (fieldsError: { [x: string]: boolean; }) =>
+  Object.keys(fieldsError).some(field => fieldsError[field]);
