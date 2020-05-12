@@ -9,7 +9,7 @@ import React, {PureComponent} from "react";
 import {connect} from "react-redux";
 // @ts-ignore
 import sleepPromise from "sleep-promise";
-import {getStaking} from "./get-staking";
+import {getNativeStaking} from "./get-native-staking";
 
 type State = {
   isIopayConnected?: boolean;
@@ -72,7 +72,7 @@ export const IopayRequired = (InnerComponent: any) => {
     }
 
     setMetaMask = async (): Promise<void> => {
-      const antenna = getStaking().antenna;
+      const antenna = getNativeStaking().antenna;
       // tslint:disable-next-line:no-typeof-undefined
       let iopayConnected =
         antenna &&

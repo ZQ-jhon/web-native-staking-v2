@@ -1,5 +1,4 @@
 import Antenna from "iotex-antenna/lib";
-import {fromRau} from "iotex-antenna/lib/account/utils";
 import {
   CandidateRegisterMethod,
   CandidateUpdateMethod,
@@ -23,7 +22,6 @@ import {
   StakeUnstake,
   StakeWithdraw
 } from "iotex-antenna/lib/action/types";
-import {WsSignerPlugin} from "iotex-antenna/lib/plugin/ws";
 import {
   IReadStakingDataMethodName,
   IReadStakingDataMethodToBuffer,
@@ -35,7 +33,6 @@ import {
   VoteBucket,
   VoteBucketList
 } from "iotex-antenna/protogen/proto/types/state_data_pb";
-import sleepPromise from "sleep-promise";
 
 type Candidate = {
   name: string;
@@ -47,11 +44,10 @@ type Candidate = {
   totalWeightedVotes: string;
 };
 
-export type Bucket = {
+type Bucket = {
   index: number;
   owner: string;
   candidate: string;
-  stakedAmount: string;
   stakeStartTime: Date | undefined;
   stakedDuration: number;
   autoStake: boolean;
@@ -93,13 +89,9 @@ function toBuckets(buffer: Buffer | {}): Array<Bucket> {
 
 export class Staking {
   antenna: Antenna;
-  ioPayAddress: string;
-  reqId: number;
 
   constructor({ signer }: { signer?: SignerPlugin }) {
     this.antenna = new Antenna("https://api.testnet.iotex.one", { signer });
-    // tslint:disable-next-line:insecure-random
-    this.reqId = Math.round(Math.random() * 10000);
   }
 
   async getHeight(): Promise<string> {
@@ -220,8 +212,9 @@ export class Staking {
   }
 
   public async createStake(req: StakeCreate): Promise<string> {
-    const address = await this.getIoPayAddress();
-    const sender = await this.antenna.iotx.tryGetAccount(address);
+    const sender = await this.antenna.iotx.tryGetAccount(
+      this.antenna.iotx.accounts[0].address
+    );
 
     return new StakeCreateMethod(this.antenna.iotx, sender, req, {
       signer: this.antenna.iotx.signer
@@ -307,64 +300,4 @@ export class Staking {
       signer: this.antenna.iotx.signer
     }).execute();
   }
-
-  async getIoPayAddress(): Promise<string> {
-    window.console.log("getIoPayAddress start");
-    if( this.antenna.iotx.signer instanceof WsSignerPlugin) {
-      return this.antenna.iotx.accounts[0].address;
-    }
-    if (this.ioPayAddress) {
-      return this.ioPayAddress;
-    }
-    const id = this.reqId++;
-    const req = {
-      reqId: id,
-      type: "GET_ACCOUNTS"
-    };
-    let sec = 1;
-    // @ts-ignore
-    while (!window.WebViewJavascriptBridge) {
-      window.console.log(
-        "getIoPayAddress get_account sleepPromise sec: ",
-        sec
-      );
-      await sleepPromise(sec * 200);
-      sec = sec * 1.6;
-      if (sec >= 48) {
-        sec = 48;
-      }
-    }
-    return new Promise<string>(resolve =>
-      // @ts-ignore
-      window.WebViewJavascriptBridge.callHandler(
-        "get_account",
-        JSON.stringify(req),
-        (responseData: string) => {
-          window.console.log(
-            "getIoPayAddress get_account responseData: ",
-            responseData
-          );
-          let resp = { reqId: -1, address: "" };
-          try {
-            resp = JSON.parse(responseData);
-          } catch (_) {
-            return;
-          }
-          if (resp.reqId === id) {
-            resolve(resp.address);
-            this.ioPayAddress = resp.address;
-          }
-        }
-      )
-    );
-  }
-
-  async getIotxBalance(address: string): Promise<number> {
-    const { accountMeta } = await this.antenna.iotx.getAccount({ address });
-    if(accountMeta){
-      return Number(fromRau(accountMeta.balance, "IOTX"));
-    }
-    return 0;
-  }
-
 }

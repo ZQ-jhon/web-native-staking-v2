@@ -2,7 +2,7 @@
 import BigNumber from "bignumber.js";
 import {Contract} from "iotex-antenna/lib/contract/contract";
 import {fromString} from "iotex-antenna/lib/crypto/address";
-import {getStaking} from "../common/get-staking";
+import {getNativeStaking} from "../common/get-native-staking";
 import {
   Bucket,
   DEFAULT_STAKING_DURATION_SECOND,
@@ -69,7 +69,7 @@ export async function getNativeStakeStatus(
   contract: Contract,
   stakingDurationSecond: number
 ): Promise<TMyStakeStatus> {
-  const staking = getStaking();
+  const staking = getNativeStaking();
   const addr = await staking.getIoPayAddress();
 
   let resp = await contract.methods.getPyggIndexesByAddress(addr, {

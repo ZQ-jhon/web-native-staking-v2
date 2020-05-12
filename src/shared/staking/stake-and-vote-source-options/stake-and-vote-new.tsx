@@ -7,7 +7,7 @@ import React, {Component, RefObject} from "react";
 import {CommonMarginBottomStyle} from "../../common/common-margin";
 import {Flex} from "../../common/flex";
 import {formItemLayout} from "../../common/form-item-layout";
-import {getIoPayAddress, getStaking} from "../../common/get-staking";
+import {getIoPayAddress, getNativeStaking} from "../../common/get-native-staking";
 import {IopayRequired} from "../../common/iopay-required";
 import {Bucket} from "../../common/token-utils";
 import {smallerOrEqualTo, validateStakeDuration} from "../field-validators";
@@ -43,7 +43,7 @@ class StakeAndVoteNew extends Component<Props, State> {
     try{
       const ioAddress = await getIoPayAddress();
       if (validateAddress(ioAddress)){
-        const staking = getStaking();
+        const staking = getNativeStaking();
         const iotxBalance = await staking.getIotxBalance(ioAddress);
         this.setState({ iotxBalance });
       } else{

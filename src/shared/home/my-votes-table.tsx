@@ -15,7 +15,7 @@ import { Query } from "react-apollo";
 import {AddressName} from "../common/address-name";
 import {webBpApolloClient} from "../common/apollo-client";
 import {Flex} from "../common/flex";
-import {getStaking} from "../common/get-staking";
+import {getNativeStaking} from "../common/get-native-staking";
 import {IopayRequired} from "../common/iopay-required";
 import {colors} from "../common/styles/style-color";
 import {media} from "../common/styles/style-media";
@@ -144,7 +144,7 @@ class MyVotesTable extends Component<Props, State> {
   };
 
   async componentDidMount(): Promise<void> {
-    const staking = getStaking();
+    const staking = getNativeStaking();
     const [height, address] = await Promise.all([
       staking.getHeight(),
       staking.getIoPayAddress()

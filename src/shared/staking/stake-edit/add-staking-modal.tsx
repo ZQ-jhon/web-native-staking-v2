@@ -5,7 +5,7 @@ import React, {Component} from "react";
 import {connect} from "react-redux";
 import {CommonMarginBottomStyle} from "../../common/common-margin";
 import {Flex} from "../../common/flex";
-import {getStaking} from "../../common/get-staking";
+import {getNativeStaking} from "../../common/get-native-staking";
 import {colors} from "../../common/styles/style-color2";
 import {smallerOrEqualTo} from "../field-validators";
 import {actionSmartContractCalled} from "../smart-contract-reducer";
@@ -77,7 +77,7 @@ export const AddStakingModal = connect(
       };
 
       async componentDidMount(): Promise<void>{
-        const staking = getStaking();
+        const staking = getNativeStaking();
         const ioAddress = await staking.getIoPayAddress();
         const iotxBalance = await staking.getIotxBalance(ioAddress);
 

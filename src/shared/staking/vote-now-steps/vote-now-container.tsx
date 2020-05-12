@@ -29,7 +29,7 @@ import {SuccessStep} from "./success-step";
 
 import {toRau} from "iotex-antenna/lib/account/utils";
 import {webBpApolloClient} from "../../common/apollo-client";
-import {getStaking} from "../../common/get-staking";
+import {getNativeStaking} from "../../common/get-native-staking";
 import {NATIVE_TOKEN_ABI} from "../native-token-abi";
 
 type TcanName = {
@@ -140,7 +140,7 @@ class VoteNowContainer extends Component<Props, State> {
 
       try {
         if (this.isFreshStaking()) {
-          const staking = getStaking();
+          const staking = getNativeStaking();
           this.ioAddress = await staking.getIoPayAddress();
           /* const staking = getStaking();
            window.console.log("createStake")

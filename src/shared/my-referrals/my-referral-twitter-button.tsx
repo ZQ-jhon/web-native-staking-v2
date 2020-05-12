@@ -5,7 +5,7 @@ import window from "global/window";
 import {t} from "onefx/lib/iso-i18n";
 import React, {Component} from "react";
 import {connect} from "react-redux";
-import {getStaking} from "../common/get-staking";
+import {getNativeStaking} from "../common/get-native-staking";
 import {IopayRequired} from "../common/iopay-required";
 import {convertToString, getTwitterAccount, TWEET_WEB_INTENT_URL} from "../common/twitter";
 
@@ -31,7 +31,7 @@ type States = {
 class MyReferralTwitterButton extends Component<Props, States> {
   async componentDidMount(): Promise<void> {
     try{
-      const staking = getStaking();
+      const staking = getNativeStaking();
       const address = await staking.getIoPayAddress();
       this.setState({address});
     } catch (e) {
