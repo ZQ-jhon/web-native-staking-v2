@@ -51,6 +51,7 @@ export type Bucket = {
   index: number;
   owner: string;
   candidate: string;
+  stakedAmount: string;
   stakeStartTime: Date | undefined;
   stakedDuration: number;
   autoStake: boolean;
@@ -81,6 +82,7 @@ function toBuckets(buffer: Buffer | {}): Array<Bucket> {
       index: b.getIndex(),
       owner: b.getOwner(),
       candidate: b.getCandidateaddress(),
+      stakedAmount: b.getStakedamount(),
       stakeStartTime: sTime && sTime.toDate(),
       stakedDuration: b.getStakedduration(),
       autoStake: b.getAutostake(),

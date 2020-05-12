@@ -5,6 +5,7 @@ import {notification} from "antd";
 import Avatar from "antd/lib/alert";
 import Table from "antd/lib/table";
 import dateformat from "dateformat";
+import {fromRau} from "iotex-antenna/lib/account/utils";
 import {SpinPreloader} from "iotex-react-block-producers/lib/spin-preloader";
 import {t} from "onefx/lib/iso-i18n";
 import {styled} from "onefx/lib/styletron-react";
@@ -161,7 +162,7 @@ class MyVotesTable extends Component<Props, State> {
     const buckets = bucketsByVoter.map(it => {
       const bk = new Bucket();
       bk.id = it.index;
-      bk.stakedAmount = 0;
+      bk.stakedAmount = Number(fromRau(it.stakedAmount, "IOTX"));
       bk.canName = it.candidate;
       bk.bucketOwner = it.owner;
       bk.stakeStartTime = it.stakeStartTime?it.stakeStartTime.toDateString():"";
@@ -187,8 +188,6 @@ class MyVotesTable extends Component<Props, State> {
 
   // tslint:disable-next-line:max-func-body-length
   render(): JSX.Element {
-    const bpCandidates: any = [];
-    const dataSource: any = [];
     const { expandedRowKeys, stakeStatus } = this.state;
     // @ts-ignore
     const DisplayMyStakeCols = (bpCandidates: any): Array<any> =>
