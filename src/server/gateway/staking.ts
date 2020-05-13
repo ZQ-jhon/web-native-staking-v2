@@ -2,7 +2,6 @@ import Antenna from "iotex-antenna/lib";
 import {
   CandidateRegisterMethod,
   CandidateUpdateMethod,
-  SignerPlugin,
   StakeAddDepositMethod,
   StakeChangeCandidateMethod,
   StakeCreateMethod,
@@ -52,6 +51,9 @@ type Bucket = {
   stakedDuration: number;
   autoStake: boolean;
   unstakeStartTime: Date | undefined;
+  createTime: Date | undefined;
+  stakedAmount: string;
+  status: Status;
 };
 
 function toCandidates(buffer: Buffer | {}): Array<Candidate> {
@@ -68,29 +70,78 @@ function toCandidates(buffer: Buffer | {}): Array<Candidate> {
   }));
 }
 
+function daysLater(p: Date, days: number): Date {
+  const cur = new Date(p);
+  cur.setDate(cur.getDate() + days);
+  return cur;
+}
+
 function toBuckets(buffer: Buffer | {}): Array<Bucket> {
   // @ts-ignore
   const buckets = VoteBucketList.deserializeBinary(buffer);
   return buckets.getBucketsList().map((b: VoteBucket) => {
     const sTime = b.getStakestarttime();
     const uTime = b.getUnstakestarttime();
+    const cTime = b.getCreatetime();
+    const stakeStartTime = sTime && sTime.toDate();
+    const unstakeStartTime = uTime && uTime.toDate();
+    const createTime = cTime && cTime.toDate();
+    const withdrawWaitUntil =
+      unstakeStartTime && daysLater(unstakeStartTime, 3);
     return {
       index: b.getIndex(),
       owner: b.getOwner(),
       candidate: b.getCandidateaddress(),
-      stakeStartTime: sTime && sTime.toDate(),
+      stakeStartTime,
       stakedDuration: b.getStakedduration(),
       autoStake: b.getAutostake(),
-      unstakeStartTime: uTime && uTime.toDate()
+      unstakeStartTime,
+      createTime,
+      stakedAmount: b.getStakedamount(),
+      withdrawWaitUntil,
+      status: getStatus(withdrawWaitUntil, unstakeStartTime, stakeStartTime)
     };
   });
+}
+
+export type Status =
+  | "withdrawable"
+  | "unstaking"
+  | "staking"
+  | "no_stake_starttime";
+
+function getStatus(
+  withdrawWaitUntil?: Date,
+  unstakeStartTime?: Date,
+  stakeStartTime?: Date
+): Status {
+  const now = new Date();
+  if (withdrawWaitUntil && withdrawWaitUntil > daysLater(new Date(0), 4)) {
+    const date = new Date(withdrawWaitUntil);
+    if (date <= now) {
+      return "withdrawable";
+    }
+  }
+
+  if (unstakeStartTime && unstakeStartTime > daysLater(new Date(0), 4)) {
+    const date = new Date(unstakeStartTime);
+    if (date <= now) {
+      return "unstaking";
+    }
+  }
+
+  if (stakeStartTime && stakeStartTime > daysLater(new Date(0), 4)) {
+    return "staking";
+  }
+
+  return "no_stake_starttime";
 }
 
 export class Staking {
   antenna: Antenna;
 
-  constructor({ signer }: { signer?: SignerPlugin }) {
-    this.antenna = new Antenna("https://api.testnet.iotex.one", { signer });
+  constructor({ antenna }: { antenna: Antenna }) {
+    this.antenna = antenna;
   }
 
   async getHeight(): Promise<string> {

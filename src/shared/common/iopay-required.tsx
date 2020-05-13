@@ -1,15 +1,15 @@
 /* tslint:disable:no-any */
 // @flow
-import {LoadingOutlined} from "@ant-design/icons";
-import {Alert} from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
+import { Alert } from "antd";
 // @ts-ignore
-import {assetURL} from "onefx/lib/asset-url";
-import {t} from "onefx/lib/iso-i18n";
-import React, {PureComponent} from "react";
-import {connect} from "react-redux";
+import { assetURL } from "onefx/lib/asset-url";
+import { t } from "onefx/lib/iso-i18n";
+import React, { PureComponent } from "react";
+import { connect } from "react-redux";
 // @ts-ignore
 import sleepPromise from "sleep-promise";
-import {getAntenna} from "./get-antenna";
+import { getAntenna } from "./get-antenna";
 
 type State = {
   isIopayConnected?: boolean;
@@ -57,8 +57,8 @@ export const IopayRequired = (InnerComponent: any) => {
   }))
   class HOC extends PureComponent<Props, State> {
     static displayName: string = `HOC(${InnerComponent.displayName ||
-    InnerComponent.name ||
-    "Component"})`;
+      InnerComponent.name ||
+      "Component"})`;
 
     state: State = {
       isIopayConnected: undefined
@@ -79,7 +79,7 @@ export const IopayRequired = (InnerComponent: any) => {
         antenna.iotx &&
         antenna.iotx.accounts &&
         antenna.iotx.accounts[0];
-      if (!Boolean(iopayConnected)){
+      if (!Boolean(iopayConnected)) {
         await sleepPromise(3000);
         iopayConnected =
           antenna &&
@@ -95,7 +95,11 @@ export const IopayRequired = (InnerComponent: any) => {
       const { isIopayConnected } = this.state;
       if (isIoPay) {
         return (
-          <InnerComponent ref={forwardedRef} {...props} />
+          <InnerComponent
+            antenna={getAntenna()}
+            ref={forwardedRef}
+            {...props}
+          />
         );
       }
       switch (isIopayConnected) {
@@ -106,10 +110,14 @@ export const IopayRequired = (InnerComponent: any) => {
         case true:
         default:
           return (
-            <InnerComponent ref={forwardedRef} {...props} />
+            <InnerComponent
+              antenna={getAntenna()}
+              ref={forwardedRef}
+              {...props}
+            />
           );
       }
     }
-  };
+  }
   return HOC;
 };

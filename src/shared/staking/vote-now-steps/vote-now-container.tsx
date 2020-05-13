@@ -1,74 +1,80 @@
 // @flow
 import Icon from "@ant-design/icons";
-import {AutoComplete, Button, Form, Radio} from "antd";
-import {FormInstance} from "antd/lib/form";
-import {get} from "dottie";
+import { AutoComplete, Button, Form, Radio } from "antd";
+import { FormInstance } from "antd/lib/form";
+import { get } from "dottie";
 // @ts-ignore
 import window from "global/window";
-import {t} from "onefx/lib/iso-i18n";
-import {styled} from "onefx/lib/styletron-react";
-import React, {Component, RefObject} from "react";
-import {Mutation, Query} from "react-apollo";
-import {connect} from "react-redux";
+import { t } from "onefx/lib/iso-i18n";
+import { styled } from "onefx/lib/styletron-react";
+import React, { Component, RefObject } from "react";
+import { Mutation, Query } from "react-apollo";
+import { connect } from "react-redux";
 // @ts-ignore
-import {CommonMargin, CommonMarginBottomStyle} from "../../common/common-margin";
-import {CommonModal} from "../../common/common-modal";
-import {formItemLayout} from "../../common/form-item-layout";
-import {getIoPayAddress, lazyGetContract} from "../../common/get-antenna";
-import {colors} from "../../common/styles/style-color2";
-import {Bucket, DEFAULT_STAKING_GAS_LIMIT} from "../../common/token-utils";
-import {MyReferralTwitterButton} from "../../my-referrals/my-referral-twitter-button";
-import {validateCanName} from "../field-validators";
-import {GET_ALL_CANDIDATE, RECORD_STAKING_REFERRAL} from "../smart-contract-gql-queries";
-import {actionSmartContractCalled} from "../smart-contract-reducer";
-import {StakeAndVoteExisting} from "../stake-and-vote-source-options/stake-and-vote-existing";
-import {StakeAndVoteNew} from "../stake-and-vote-source-options/stake-and-vote-new";
-import {FormItemText, subTextStyle} from "../staking-form-item";
-import {ConfirmStep} from "./confirm-step";
-import {SuccessStep} from "./success-step";
+import {
+  CommonMargin,
+  CommonMarginBottomStyle
+} from "../../common/common-margin";
+import { CommonModal } from "../../common/common-modal";
+import { formItemLayout } from "../../common/form-item-layout";
+import { getIoPayAddress, lazyGetContract } from "../../common/get-antenna";
+import { colors } from "../../common/styles/style-color2";
+import { Bucket, DEFAULT_STAKING_GAS_LIMIT } from "../../common/token-utils";
+import { MyReferralTwitterButton } from "../../my-referrals/my-referral-twitter-button";
+import { validateCanName } from "../field-validators";
+import {
+  GET_ALL_CANDIDATE,
+  RECORD_STAKING_REFERRAL
+} from "../smart-contract-gql-queries";
+import { actionSmartContractCalled } from "../smart-contract-reducer";
+import { StakeAndVoteExisting } from "../stake-and-vote-source-options/stake-and-vote-existing";
+import { StakeAndVoteNew } from "../stake-and-vote-source-options/stake-and-vote-new";
+import { FormItemText, subTextStyle } from "../staking-form-item";
+import { ConfirmStep } from "./confirm-step";
+import { SuccessStep } from "./success-step";
 
-import {toRau} from "iotex-antenna/lib/account/utils";
-import {webBpApolloClient} from "../../common/apollo-client";
-import {NATIVE_TOKEN_ABI} from "../native-token-abi";
+import { toRau } from "iotex-antenna/lib/account/utils";
+import { webBpApolloClient } from "../../common/apollo-client";
+import { NATIVE_TOKEN_ABI } from "../native-token-abi";
 
 type TcanName = {
-  value: string,
-  errorMsg: string,
-  validateStatus: string
+  value: string;
+  errorMsg: string;
+  validateStatus: string;
 };
 
 type State = {
-  visible: boolean,
-  step: string,
-  currentStakeDuration: number,
-  currentStakeAmount: number,
-  votingSource: "VOTING_FROM_WALLET" | "VOTING_FROM_EXISTING",
-  stepConfirming: boolean,
-  canName: TcanName,
-  reEdit: boolean
+  visible: boolean;
+  step: string;
+  currentStakeDuration: number;
+  currentStakeAmount: number;
+  votingSource: "VOTING_FROM_WALLET" | "VOTING_FROM_EXISTING";
+  stepConfirming: boolean;
+  canName: TcanName;
+  reEdit: boolean;
 };
 
 type Props = {
-  actionSmartContractCalled(payload: boolean): void;
-  displayOthers: boolean,
-  registeredName: string,
-  forceDisplayModal: boolean,
+  displayOthers: boolean;
+  forceDisplayModal: boolean;
   // tslint:disable-next-line:no-any
   requestDismiss(): any;
-  siteUrl?: string,
+  actionSmartContractCalled?(payload: boolean): void;
+  registeredName?: string;
+  siteUrl?: string;
   // tslint:disable-next-line:no-any
-  currentCandidate?: any,
-  disableModal: boolean,
-  isIoPay?: boolean,
-  contractAddress: string,
+  currentCandidate?: any;
+  disableModal?: boolean;
+  isIoPay?: boolean;
+  contractAddress?: string;
 };
 
 type TNewStake = {
-  canName: string,
-  nonDecay: boolean,
-  stakeDuration: number,
-  stakedAmount: number,
-  data: string
+  canName: string;
+  nonDecay: boolean;
+  stakeDuration: number;
+  stakedAmount: number;
+  data: string;
 };
 
 const CONFIRM_STEP = "CONFIRM";
@@ -85,32 +91,30 @@ const Confirmation = styled("div", () => ({
   marginTop: "10px"
 }));
 
-// @ts-ignore
-@connect(
-  state => ({
-// @ts-ignore
+const VoteNowContainer = connect(
+  (state: {
+    staking: { contractAddress: string };
+    base: { siteUrl: string; isIoPay: boolean };
+  }) => ({
     siteUrl: state.base.siteUrl,
-// @ts-ignore
     contractAddress: state.staking.contractAddress,
-// @ts-ignore
     isIoPay: state.base.isIoPay
   }),
   dispatch => ({
-    // @ts-ignore
-    // tslint:disable-next-line:typedef
-    actionSmartContractCalled(payload) {
+    // tslint:disable-next-line:no-any
+    actionSmartContractCalled(payload: any): any {
       dispatch(actionSmartContractCalled(payload));
     }
   })
-)
-class VoteNowContainer extends Component<Props, State> {
+)(
+  class VoteNowContainer extends Component<Props, State> {
     state: State;
     props: Props;
     bucket: Bucket;
     isExistingBucket: boolean;
     txHash: string = "";
     ioAddress: string = "";
-    formRef:RefObject<FormInstance> = React.createRef<FormInstance>();
+    formRef: RefObject<FormInstance> = React.createRef<FormInstance>();
 
     // tslint:disable-next-line:no-any
     handleOk = (recordStakingReferral: any) => async (e: any) => {
@@ -122,11 +126,12 @@ class VoteNowContainer extends Component<Props, State> {
 
     // tslint:disable-next-line:no-any
     async launchNativeStaking(recordStakingReferral: any): Promise<void> {
-      const {
-        contractAddress,
-      } = this.props;
+      const { contractAddress } = this.props;
 
-      const tokenContract = await lazyGetContract(contractAddress, NATIVE_TOKEN_ABI);
+      const tokenContract = await lazyGetContract(
+        String(contractAddress),
+        NATIVE_TOKEN_ABI
+      );
       const { stakeDuration, nonDecay, id, stakedAmount } = this.bucket;
       const canName = this.bucket.canNameHex();
       // @ts-ignore
@@ -204,17 +209,24 @@ class VoteNowContainer extends Component<Props, State> {
     handleCancel = () => {
       if (this.state.step === SUCCESS_STEP) {
         const { actionSmartContractCalled } = this.props;
-        actionSmartContractCalled(true);
+        if (actionSmartContractCalled) {
+          actionSmartContractCalled(true);
+        }
       }
       const form = this.formRef.current;
-      if (form){
+      if (form) {
         form.resetFields();
       }
       if (this.props.requestDismiss) {
         this.props.requestDismiss();
       }
       // @ts-ignore
-      this.setState({ visible: false, step: undefined, reEdit: false, stepConfirming: false });
+      this.setState({
+        visible: false,
+        step: undefined,
+        reEdit: false,
+        stepConfirming: false
+      });
     };
 
     // tslint:disable-next-line:no-any
@@ -231,10 +243,11 @@ class VoteNowContainer extends Component<Props, State> {
             canName: this.state.canName.value
           });
           // @ts-ignore
-          const { nonDecay, stakeDuration, stakedAmount, id } = this.bucket || {};
+          const { nonDecay, stakeDuration, stakedAmount, id } =
+            this.bucket || {};
           this.bucket = Bucket.fromFormInput(
             values.canName || this.state.canName.value,
-            values.nonDecay !== undefined? values.nonDecay: nonDecay || false,
+            values.nonDecay !== undefined ? values.nonDecay : nonDecay || false,
             values.stakeDuration || stakeDuration || 0,
             values.stakedAmount || stakedAmount || 0,
             id
@@ -275,7 +288,7 @@ class VoteNowContainer extends Component<Props, State> {
     // tslint:disable-next-line:no-any
     handleReEdit = (e: any) => {
       e.preventDefault();
-      this.setState({ step: "" , reEdit: true});
+      this.setState({ step: "", reEdit: true });
     };
     getTitle = () => {
       switch (this.state.step) {
@@ -342,10 +355,7 @@ class VoteNowContainer extends Component<Props, State> {
 
     // tslint:disable-next-line:no-any
     getFooter = (recordStakingReferral: any) => {
-      const {
-        disableModal,
-        currentCandidate,
-      } = this.props;
+      const { disableModal, currentCandidate } = this.props;
 
       switch (this.state.step) {
         case SUCCESS_STEP:
@@ -392,10 +402,7 @@ class VoteNowContainer extends Component<Props, State> {
 
     // tslint:disable-next-line:max-func-body-length
     renderSteps(): JSX.Element {
-      const {
-        contractAddress,
-        siteUrl = ""
-      } = this.props;
+      const { contractAddress, siteUrl = "" } = this.props;
       const {
         votingSource,
         currentStakeDuration,
@@ -415,9 +422,7 @@ class VoteNowContainer extends Component<Props, State> {
         default:
           return (
             // @ts-ignore
-            <Form layout={"horizontal"}
-                  ref={this.formRef}
-            >
+            <Form layout={"horizontal"} ref={this.formRef}>
               <Form.Item
                 {...formItemLayout}
                 labelAlign={"left"}
@@ -438,58 +443,65 @@ class VoteNowContainer extends Component<Props, State> {
                   <Query
                     client={webBpApolloClient}
                     ssr={false}
-                    query={GET_ALL_CANDIDATE}>
+                    query={GET_ALL_CANDIDATE}
+                  >
                     {/* tslint:disable-next-line:no-any */}
                     {({ data }: any) => {
                       const bpCandidates = {};
                       const allCandidates =
-                          (data && data.bpCandidatesOnContract) || [];
+                        (data && data.bpCandidatesOnContract) || [];
                       if (data && Array.isArray(data.bpCandidates)) {
-                        data.bpCandidates.forEach((i: { status: string; registeredName: string | number; }) => {
-                          if (i.status && i.status !== "UNQUALIFIED") {
-                            // @ts-ignore
-                            bpCandidates[i.registeredName] = i;
+                        data.bpCandidates.forEach(
+                          (i: {
+                            status: string;
+                            registeredName: string | number;
+                          }) => {
+                            if (i.status && i.status !== "UNQUALIFIED") {
+                              // @ts-ignore
+                              bpCandidates[i.registeredName] = i;
+                            }
                           }
-                        });
+                        );
                       }
                       const dataSource = allCandidates
-                          // @ts-ignore
-                          .map(item => {
-                            const delegateName = get(
-                                // @ts-ignore
-                                bpCandidates[item.name],
-                                "name",
-                                ""
-                            );
-                            const displayName = delegateName
-                                ? `${item.name} - ${delegateName}`
-                                : item.name;
-                            return { text: displayName, value: item.name };
-                          })
-                          // tslint:disable-next-line:no-any
-                          .filter((item: { value: any; }) => Boolean(item.value));
+                        // @ts-ignore
+                        .map(item => {
+                          const delegateName = get(
+                            // @ts-ignore
+                            bpCandidates[item.name],
+                            "name",
+                            ""
+                          );
+                          const displayName = delegateName
+                            ? `${item.name} - ${delegateName}`
+                            : item.name;
+                          return { text: displayName, value: item.name };
+                        })
+                        // tslint:disable-next-line:no-any
+                        .filter((item: { value: any }) => Boolean(item.value));
                       return (
+                        // @ts-ignore
+                        <AutoComplete
+                          defaultValue={this.state.canName.value}
+                          onChange={this.handleCanNameChange}
+                          size="large"
+                          disabled={Boolean(this.props.registeredName)}
+                          dataSource={dataSource}
                           // @ts-ignore
-                          <AutoComplete
-                              defaultValue={this.state.canName.value}
-                              onChange={this.handleCanNameChange}
-                              size="large"
-                              disabled={Boolean(this.props.registeredName)}
-                              dataSource={dataSource}
-                              // @ts-ignore
-                              filterOption={(inputValue, option) =>
-                                  String(get(option, "props.children"))
-                                      .toLowerCase()
-                                      .indexOf(inputValue.toLowerCase()) !== -1
-                              }
-                          />
+                          filterOption={(inputValue, option) =>
+                            String(get(option, "props.children"))
+                              .toLowerCase()
+                              .indexOf(inputValue.toLowerCase()) !== -1
+                          }
+                        />
                       );
                     }}
                   </Query>
                 }
                 <span
                   // @ts-ignore
-                  style={subTextStyle}>
+                  style={subTextStyle}
+                >
                   {t("my_stake.change_anytime")}
                 </span>
               </Form.Item>
@@ -501,16 +513,12 @@ class VoteNowContainer extends Component<Props, State> {
                   <Radio value="VOTING_FROM_WALLET">
                     {t("voting.vote.from.wallet")}
                   </Radio>
-                  <Radio
-                    value="VOTING_FROM_EXISTING"
-                    style={{ marginTop: 8 }}
-                  >
+                  <Radio value="VOTING_FROM_EXISTING" style={{ marginTop: 8 }}>
                     {t("voting.vote.existing.bucket")}
                   </Radio>
                 </Radio.Group>
               </Form.Item>
-              {
-                votingSource === "VOTING_FROM_WALLET"? (
+              {votingSource === "VOTING_FROM_WALLET" ? (
                 <StakeAndVoteNew
                   bucket={this.bucket}
                   reEdit={this.state.reEdit}
@@ -535,7 +543,10 @@ class VoteNowContainer extends Component<Props, State> {
                   currentStakeDuration={currentStakeDuration}
                   currentStakeAmount={currentStakeAmount}
                   defaultValue={this.bucket && this.bucket.id}
-                  tokenContract={lazyGetContract(contractAddress, NATIVE_TOKEN_ABI)}
+                  tokenContract={lazyGetContract(
+                    String(contractAddress),
+                    NATIVE_TOKEN_ABI
+                  )}
                 />
               )}
             </Form>
@@ -586,9 +597,9 @@ class VoteNowContainer extends Component<Props, State> {
                       this.onSubmit();
                     }}
                   >
-            <span>
-              <Icon type="plus" /> {t("my_stake.new_vote")}
-            </span>
+                    <span>
+                      <Icon type="plus" /> {t("my_stake.new_vote")}
+                    </span>
                   </Button>
                 )}
               </div>
@@ -597,5 +608,6 @@ class VoteNowContainer extends Component<Props, State> {
         </Mutation>
       );
     }
-  };
+  }
+);
 export { VoteNowContainer };

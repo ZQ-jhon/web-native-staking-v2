@@ -1,6 +1,6 @@
-# web-onefx-boilerplate
+# web-native-staking-v2
 
-[![CircleCI](https://circleci.com/gh/puncsky/web-onefx-boilerplate/tree/master.svg?style=svg)](https://circleci.com/gh/puncsky/web-onefx-boilerplate/tree/master)
+[![CircleCI](https://circleci.com/gh/puncsky/web-native-staking-v2/tree/master.svg?style=svg)](https://circleci.com/gh/puncsky/web-native-staking-v2/tree/master)
 
 - [Documentation](https://onefx.js.org/doc.html?utm_source=github-iotex-explorer)
 - [Contributing](https://onefx.js.org/contributing.html?utm_source=github-iotex-explorer)
@@ -16,7 +16,7 @@ OneFx is a full-stack framework for building web apps. Here are the features you
 ### Create a project
 
 ```bash
-git clone git@github.com:puncsky/web-onefx-boilerplate.git my-awesome-project
+git clone git@github.com:puncsky/web-native-staking-v2.git my-awesome-project
 ```
 
 ### Run your project

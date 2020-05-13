@@ -4,17 +4,22 @@ import MinusOutlined from "@ant-design/icons/MinusOutlined";
 import Avatar from "antd/lib/alert";
 import Table from "antd/lib/table";
 import dateformat from "dateformat";
-import {t} from "onefx/lib/iso-i18n";
-import {styled} from "onefx/lib/styletron-react";
-import React, {Component} from "react";
-import {Flex} from "../common/flex";
-import {colors} from "../common/styles/style-color";
-import {media} from "../common/styles/style-media";
+import Antenna from "iotex-antenna/lib";
+import { t } from "onefx/lib/iso-i18n";
+import { styled } from "onefx/lib/styletron-react";
+import React, { Component } from "react";
+import { Flex } from "../common/flex";
+import { IopayRequired } from "../common/iopay-required";
+import { colors } from "../common/styles/style-color";
+import { media } from "../common/styles/style-media";
+import { AccountMeta } from "./account-meta";
 
 const CustomExpandIcon = () => null;
 const ACCOUNT_AREA_WIDTH = 290;
 
-type Props = {};
+type Props = {
+  antenna?: Antenna;
+};
 type State = {
   invalidNames: String;
   expandedRowKeys: Array<String>;
@@ -22,6 +27,8 @@ type State = {
   net: String;
 };
 
+// @ts-ignore
+@IopayRequired
 class MyVotesTable extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
@@ -124,11 +131,13 @@ class MyVotesTable extends Component<Props, State> {
 
     return null;
   };
+
   // tslint:disable-next-line:max-func-body-length
   render(): JSX.Element {
     const bpCandidates: any = [];
     const dataSource: any = [];
     const { expandedRowKeys } = this.state;
+    const { antenna } = this.props;
 
     // @ts-ignore
     const DisplayMyStakeCols = (bpCandidates: any): Array<any> =>
@@ -189,11 +198,9 @@ class MyVotesTable extends Component<Props, State> {
                   >
                     <BoldText>{t("my_stake.order_no", { no })}</BoldText>
                     <BoldText style={{ whiteSpace: "nowrap" }}>
-                      {t("my_stake.native_staked_amount_format",
-                        {
-                          amountText: record.stakedAmount.toLocaleString()
-                        }
-                      )}
+                      {t("my_stake.native_staked_amount_format", {
+                        amountText: record.stakedAmount.toLocaleString()
+                      })}
                     </BoldText>
                   </Flex>
                 </Flex>
@@ -383,16 +390,7 @@ class MyVotesTable extends Component<Props, State> {
           fontSize={"12px"}
           marginBottom={"24px"}
         >
-          <b>{t("my_stake.address")}</b>
-          <LabelText>unknow</LabelText>
-          <b>{t("my_stake.staking_amount")}</b>
-          <LabelText>unknow</LabelText>
-          <b>{t("my_stake.unstake_pendding_amount")}</b>
-          <LabelText>unknow</LabelText>
-          <b>{t("my_stake.withdrawable_amount")}</b>
-          <LabelText>unknow</LabelText>
-          <b>{t("my_stake.votes_amount")}</b>
-          <LabelText>unknow</LabelText>
+          <AccountMeta antenna={antenna} />
         </Flex>
       </Flex>
     );
@@ -420,9 +418,3 @@ const CellSpan = styled("span", {
   color: colors.black,
   padding: "3px 0"
 });
-const LabelText = styled("span", props => ({
-  fontSize: "14px",
-  marginBottom: "24px",
-  wordBreak: "break-word",
-  ...props
-}));

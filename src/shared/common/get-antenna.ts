@@ -22,12 +22,9 @@ export function getAntenna(): Antenna {
   if (injectedWindow.antenna) {
     return injectedWindow.antenna;
   }
-  injectedWindow.antenna = new Antenna(
-    "https://member.iotex.io/iotex-core-proxy",
-    {
-      signer: new WsSignerPlugin("wss://local.iotex.io:64102")
-    }
-  );
+  injectedWindow.antenna = new Antenna("https://api.testnet.iotex.one", {
+    signer: new WsSignerPlugin("wss://local.iotex.io:64102")
+  });
   return injectedWindow.antenna;
 }
 
@@ -125,7 +122,7 @@ export function getMobileNativeAntenna(): Antenna {
   if (!injectedWindow.mobileNativeAntenna) {
     const signer = new WvSigner();
     injectedWindow.mobileNativeAntenna = new Antenna(
-      "https://member.iotex.io/iotex-core-proxy",
+      "https://api.testnet.iotex.one",
       {
         signer
       }

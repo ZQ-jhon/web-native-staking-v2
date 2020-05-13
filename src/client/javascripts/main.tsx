@@ -2,8 +2,10 @@ import { clientReactRender } from "onefx/lib/iso-react-render/client-react-rende
 import { noopReducer } from "onefx/lib/iso-react-render/root/root-reducer";
 import React from "react";
 import { ApolloProvider } from "react-apollo";
+import { combineReducers } from "redux";
 import { AppContainer } from "../../shared/app-container";
 import { apolloClient } from "../../shared/common/apollo-client";
+import { bucketsReducer } from "../../shared/home/buckets-reducer";
 
 clientReactRender({
   VDom: (
@@ -11,5 +13,10 @@ clientReactRender({
       <AppContainer />
     </ApolloProvider>
   ),
-  reducer: noopReducer
+  reducer: combineReducers({
+    buckets: bucketsReducer,
+    base: noopReducer,
+    staking: noopReducer,
+    apolloState: noopReducer
+  })
 });

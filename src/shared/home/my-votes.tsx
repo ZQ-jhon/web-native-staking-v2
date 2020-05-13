@@ -1,6 +1,4 @@
 import PlusOutlined from "@ant-design/icons/PlusOutlined";
-import notification from "antd/lib/notification";
-import Tabs from "antd/lib/tabs";
 import { t } from "onefx/lib/iso-i18n";
 import Helmet from "onefx/lib/react-helmet";
 import React, { Component } from "react";
@@ -54,21 +52,13 @@ export const StakingContractContainer = connect()(
 
           <MyVotesTable />
 
-          {
-            // @ts-ignore
-            <VoteNowContainer
-              displayOthers={false}
-              forceDisplayModal={this.state.showVoteNowModal}
-              requestDismiss={() => this.setState({ showVoteNowModal: false })}
-            />
-          }
+          <VoteNowContainer
+            displayOthers={false}
+            forceDisplayModal={this.state.showVoteNowModal}
+            requestDismiss={() => this.setState({ showVoteNowModal: false })}
+          />
         </div>
       );
     }
   }
 );
-
-type VotesTabContainerProps = {
-  name: string;
-  total: number;
-};

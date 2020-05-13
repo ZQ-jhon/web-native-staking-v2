@@ -42,7 +42,7 @@ const VotingTab = withRouter(
           text: "topbar.delegate_list",
           // @ts-ignore
           component: <Voting />,
-          path: "/"
+          path: ""
         },
         {
           text: "topbar.my_votes",
