@@ -1,15 +1,15 @@
 // @ts-ignore
 import window from "global/window";
 import Antenna from "iotex-antenna/lib";
-import { fromRau } from "iotex-antenna/lib/account/utils";
-import { Contract } from "iotex-antenna/lib/contract/contract";
-import { WsSignerPlugin } from "iotex-antenna/lib/plugin/ws";
+import {fromRau} from "iotex-antenna/lib/account/utils";
+import {Contract} from "iotex-antenna/lib/contract/contract";
+import {WsSignerPlugin} from "iotex-antenna/lib/plugin/ws";
 import isBrowser from "is-browser";
 // @ts-ignore
 import JsonGlobal from "safe-json-globals/get";
-// @ts-ignore
 import sleepPromise from "sleep-promise";
-import { WvSigner } from "./wv-signer";
+// @ts-ignore
+import {WvSigner} from "./wv-signer";
 
 const state = isBrowser && JsonGlobal("state");
 const isIoPay = isBrowser && state.base.isIoPay;
@@ -22,8 +22,9 @@ export function getAntenna(): Antenna {
   if (injectedWindow.antenna) {
     return injectedWindow.antenna;
   }
+  const signer = isIoPay?new WvSigner(): new WsSignerPlugin("wss://local.iotex.io:64102");
   injectedWindow.antenna = new Antenna("https://api.testnet.iotex.one", {
-    signer: new WsSignerPlugin("wss://local.iotex.io:64102")
+    signer
   });
   return injectedWindow.antenna;
 }
@@ -45,16 +46,6 @@ export function lazyGetContract(address: string, abi: any): Contract {
   return contractsByAddrs[address];
 }
 
-// tslint:disable-next-line:insecure-random
-let reqId = Math.round(Math.random() * 10000);
-
-interface IRequest {
-  reqId: number;
-  type: "SIGN_AND_SEND" | "GET_ACCOUNTS";
-
-  envelop?: string; // serialized proto string
-}
-
 export function getXAppTokenContract(
   // tslint:disable-next-line:no-any
   abi: any,
@@ -67,14 +58,49 @@ export function getXAppTokenContract(
   });
 }
 
+export function getMobileNativeAntenna(): Antenna {
+  // $FlowFixMe
+  const injectedWindow: Window & { mobileNativeAntenna?: Antenna } = window;
+  if (!injectedWindow.mobileNativeAntenna) {
+    const signer = new WvSigner();
+    injectedWindow.mobileNativeAntenna = new Antenna(
+      "https://api.testnet.iotex.one",
+      {
+        signer
+      }
+    );
+  }
+  return injectedWindow.mobileNativeAntenna;
+}
+
+export async function getIoPayAddress(): Promise<string> {
+  const antenna = getAntenna();
+  if (isIoPay) {
+    // tslint:disable-next-line:no-unnecessary-local-variable
+    const address = await getIoAddressFromIoPay();
+    return address;
+  }
+  const account = antenna.iotx.accounts[0];
+  return (account && account.address) || "";
+}
+
+// tslint:disable-next-line:insecure-random
+let reqId = Math.round(Math.random() * 10000);
+
+interface IRequest {
+  reqId: number;
+  type: "SIGN_AND_SEND" | "GET_ACCOUNTS";
+
+  envelop?: string; // serialized proto string
+}
+
 let ioPayAddress: string;
 
-export async function getIoAddressFromIoPay(): Promise<string> {
+async function getIoAddressFromIoPay(): Promise<string> {
   if (ioPayAddress) {
     return ioPayAddress;
   }
   window.console.log("getIoAddressFromIoPay start");
-  await getMobileNativeAntenna();
   const id = reqId++;
   const req: IRequest = {
     reqId: id,
@@ -114,31 +140,6 @@ export async function getIoAddressFromIoPay(): Promise<string> {
       }
     )
   );
-}
-
-export function getMobileNativeAntenna(): Antenna {
-  // $FlowFixMe
-  const injectedWindow: Window & { mobileNativeAntenna?: Antenna } = window;
-  if (!injectedWindow.mobileNativeAntenna) {
-    const signer = new WvSigner();
-    injectedWindow.mobileNativeAntenna = new Antenna(
-      "https://api.testnet.iotex.one",
-      {
-        signer
-      }
-    );
-  }
-  return injectedWindow.mobileNativeAntenna;
-}
-
-export async function getIoPayAddress(): Promise<string> {
-  if (isIoPay) {
-    // tslint:disable-next-line:no-unnecessary-local-variable
-    const address = await getIoAddressFromIoPay();
-    return address;
-  }
-  const account = getAntenna().iotx.accounts[0];
-  return (account && account.address) || "";
 }
 
 export async function getIotxBalance(address: string): Promise<number> {

@@ -1,41 +1,35 @@
 // @flow
 import Icon from "@ant-design/icons";
-import { AutoComplete, Button, Form, Radio } from "antd";
-import { FormInstance } from "antd/lib/form";
-import { get } from "dottie";
+import {AutoComplete, Button, Form, Radio} from "antd";
+import {FormInstance} from "antd/lib/form";
+import {get} from "dottie";
 // @ts-ignore
 import window from "global/window";
-import { t } from "onefx/lib/iso-i18n";
-import { styled } from "onefx/lib/styletron-react";
-import React, { Component, RefObject } from "react";
-import { Mutation, Query } from "react-apollo";
-import { connect } from "react-redux";
+import {t} from "onefx/lib/iso-i18n";
+import {styled} from "onefx/lib/styletron-react";
+import React, {Component, RefObject} from "react";
+import {Mutation, Query} from "react-apollo";
+import {connect} from "react-redux";
 // @ts-ignore
-import {
-  CommonMargin,
-  CommonMarginBottomStyle
-} from "../../common/common-margin";
-import { CommonModal } from "../../common/common-modal";
-import { formItemLayout } from "../../common/form-item-layout";
-import { getIoPayAddress, lazyGetContract } from "../../common/get-antenna";
-import { colors } from "../../common/styles/style-color2";
-import { Bucket, DEFAULT_STAKING_GAS_LIMIT } from "../../common/token-utils";
-import { MyReferralTwitterButton } from "../../my-referrals/my-referral-twitter-button";
-import { validateCanName } from "../field-validators";
-import {
-  GET_ALL_CANDIDATE,
-  RECORD_STAKING_REFERRAL
-} from "../smart-contract-gql-queries";
-import { actionSmartContractCalled } from "../smart-contract-reducer";
-import { StakeAndVoteExisting } from "../stake-and-vote-source-options/stake-and-vote-existing";
-import { StakeAndVoteNew } from "../stake-and-vote-source-options/stake-and-vote-new";
-import { FormItemText, subTextStyle } from "../staking-form-item";
-import { ConfirmStep } from "./confirm-step";
-import { SuccessStep } from "./success-step";
+import {CommonMargin, CommonMarginBottomStyle} from "../../common/common-margin";
+import {CommonModal} from "../../common/common-modal";
+import {formItemLayout} from "../../common/form-item-layout";
+import {getIoPayAddress, lazyGetContract} from "../../common/get-antenna";
+import {colors} from "../../common/styles/style-color2";
+import {Bucket, DEFAULT_STAKING_GAS_LIMIT} from "../../common/token-utils";
+import {MyReferralTwitterButton} from "../../my-referrals/my-referral-twitter-button";
+import {validateCanName} from "../field-validators";
+import {GET_ALL_CANDIDATE, RECORD_STAKING_REFERRAL} from "../smart-contract-gql-queries";
+import {actionSmartContractCalled} from "../smart-contract-reducer";
+import {StakeAndVoteExisting} from "../stake-and-vote-source-options/stake-and-vote-existing";
+import {StakeAndVoteNew} from "../stake-and-vote-source-options/stake-and-vote-new";
+import {FormItemText, subTextStyle} from "../staking-form-item";
+import {ConfirmStep} from "./confirm-step";
+import {SuccessStep} from "./success-step";
 
-import { toRau } from "iotex-antenna/lib/account/utils";
-import { webBpApolloClient } from "../../common/apollo-client";
-import { NATIVE_TOKEN_ABI } from "../native-token-abi";
+import {toRau} from "iotex-antenna/lib/account/utils";
+import {webBpApolloClient} from "../../common/apollo-client";
+import {NATIVE_TOKEN_ABI} from "../native-token-abi";
 
 type TcanName = {
   value: string;

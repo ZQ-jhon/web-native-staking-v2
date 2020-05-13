@@ -2,7 +2,6 @@
 import BigNumber from "bignumber.js";
 import {Contract} from "iotex-antenna/lib/contract/contract";
 import {fromString} from "iotex-antenna/lib/crypto/address";
-import {getIoPayAddress} from "../common/get-antenna";
 import {
   Bucket,
   DEFAULT_STAKING_DURATION_SECOND,
@@ -10,6 +9,7 @@ import {
   getPowerEstimation
 } from "../common/token-utils";
 import {NATIVE_TOKEN_ABI} from "./native-token-abi";
+import {getIoPayAddress} from "../common/get-antenna";
 
 export type TMyStakeStatus = {
   addr: string,

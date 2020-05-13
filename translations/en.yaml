@@ -175,6 +175,7 @@ my_stake.canName.err: 'Name is invalid.'
 my_stake.canName.required: 'Please enter the delegate name.'
 my_stake.canName: 'Delegate Name'
 my_stake.data: Data
+my_stake.edit.add_staking: Add Votes
 my_stake.edit.restake: Restake
 my_stake.edit.revote: 'Change Delegate'
 my_stake.edit.row: Action
@@ -263,6 +264,7 @@ my_stake.order_no: 'No.${no}'
 my_stake.staked_amount_format: '${amountText} IOTX'
 my_stake.native_staked_amount_format: '${amountText} IOTX'
 my_stake.duration_epochs: '${stakeDuration} Days'
+my_stake.duration_epochs.testnet: '${stakeDuration} Days'
 my_stake.from_time: 'From ${startTime}'
 my_stake.start_from: 'Start From'
 my_stake.to: To
@@ -305,3 +307,15 @@ my_stake.existingBucket: 'Existing Bucket'
 my_stake.inMyVotes: 'in <b>My Votes</b>'
 voting.iopay-reminder.content: 'To proceed with the voting process, please make sure you have unlocked your IoTeX Desktop Wallet(version number >= 0.6.2). <a target="_blank" href="https://support.iotex.io/hc/en-us/articles/360020614094">Learn more.</a> '
 voting.iopay-reminder.title: 'You are going to vote for an IoTeX Delegate'
+my_stake.addStaking: Amount
+my_stake.addStakingAmount: '# of tokens to be added'
+my_stake.totalStaking: Total Amount
+my_stake.totalStakingAmount: '# of tokens voted in total'
+my_stake.add_staking.title: 'Add IOTX (native) to My Voting Bucket (ID ${bucketIndex})'
+my_stake.add_staking.desc: 'The newly added tokens will align with the current bucket settings including Delegate Name, the remaining stake/vote duration, auto-stake selection, etc.'
+my_stake.addStakingAmount.required: "Please enter an amount."
+my_votes.nativeStaking.open_ioPay_alert: "Make sure your ioPay desktop application is in opening state"
+my_votes.nativeStaking.open_ioPay_tip: 'If the page is loading for a long time, make sure that the ioPay desktop wallet is unlocked, then refresh the page.'
+my_stake.status.suffix.anytime: Anytime
+my_stake.status.suffix.not_applicable: 'Not applicable'
+my_stake.status.suffix.from: 'After ${time}'

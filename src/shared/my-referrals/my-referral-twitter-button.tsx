@@ -5,9 +5,9 @@ import window from "global/window";
 import {t} from "onefx/lib/iso-i18n";
 import React, {Component} from "react";
 import {connect} from "react-redux";
-import {getIoPayAddress} from "../common/get-antenna";
 import {IopayRequired} from "../common/iopay-required";
 import {convertToString, getTwitterAccount, TWEET_WEB_INTENT_URL} from "../common/twitter";
+import {getIoPayAddress} from "../common/get-antenna";
 
 type Props = {
   // tslint:disable-next-line:no-any

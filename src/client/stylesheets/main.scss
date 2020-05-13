@@ -77,6 +77,54 @@ $border-warning: #e44837;
     bottom: -12px;
   }
 }
+
+.MyStakeInfo table {
+  font-size: 12px;
+  border-spacing: 0 8px;
+  border-collapse: separate;
+}
+.MyStakeInfo .ant-table-thead > tr > th,
+.MyStakeInfo .ant-table-tbody > tr > td {
+  padding: 16px 2px;
+}
+
+.MyStakeInfo .ant-table-thead > tr > th {
+  border: none;
+  background-color: transparent;
+  font-weight: bold;
+}
+
+.MyStakeInfoAction .ant-dropdown-menu-item:hover,
+.MyStakeInfoAction .ant-dropdown-menu-submenu-title:hover {
+  background-color: $black10-color;
+}
 .BorderRowWarning > td {
   border-color: $border-warning !important;
+}
+
+.BorderTop {
+  border-top: solid 1px $border;
+}
+
+.BorderLeft {
+  border-left: solid 1px $border;
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+}
+
+.BorderBottom {
+  border-bottom: solid 1px $border;
+}
+
+.BorderRight {
+  border-right: solid 1px $border;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+
+.StakingLink{
+  padding: 3px 0;
+  color: #0b8de3;
+  font-weight: bold;
+  line-height: 1.36
 }

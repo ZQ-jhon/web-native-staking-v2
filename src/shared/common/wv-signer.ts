@@ -109,11 +109,44 @@ export class WvSigner implements SignerPlugin {
   }
 
   // eslint-disable-next-line no-unused-vars
-  async getAccount(_: string): Promise<Account> {
-    throw new Error("getAccount");
-    /*const acct = new Account();
-    acct.address = address;
-    return acct;*/
+  async getAccount(address: string): Promise<Account> {
+    const account = new Account();
+    account.address = address;
+    window.console.log("getAccount account ",account);
+    return  account;
+
+    const id = reqId++;
+    const req = {
+      reqId: id,
+      type: "GET_ACCOUNTS"
+    };
+
+    window.console.log(JSON.stringify(req));
+    // tslint:disable-next-line:promise-must-complete
+    return new Promise<Account>(async resolve => {
+      // tslint:disable-next-line:no-any
+      window.document.addEventListener("message", async (e: any) => {
+        let resp = { reqId: -1, address: "" };
+        try {
+          resp = JSON.parse(e.data);
+        } catch (err) {
+          window.console.log("error parse response ",resp);
+          return;
+        }
+        window.console.log("getAccount resp", resp);
+        if (resp.reqId === id) {
+          if(resp.address === address){
+            const account = new Account();
+            account.address = address
+            resolve(account);
+            return false
+          } else{
+            return true
+          }
+        }
+        throw new Error("could not get any account");
+      });
+    });
   }
 
   async getAccounts(): Promise<Array<Account>> {

@@ -5,7 +5,7 @@ import { styled } from "onefx/lib/styletron-react";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Staking } from "../../server/gateway/staking";
-import { getAntenna } from "../common/get-antenna";
+import {getAntenna, getIoPayAddress} from "../common/get-antenna";
 import {
   actionUpdateAccountMeta,
   actionUpdateBuckets
@@ -42,7 +42,7 @@ export const BucketsLoader = connect(
       const { actionUpdateBuckets, actionUpdateAccountMeta } = this.props;
       const antenna = getAntenna();
       const staking = new Staking({ antenna });
-      const address = antenna.iotx.accounts[0].address;
+      const address = await getIoPayAddress();
       const buckets = await staking.getBucketsByVoter(address, 0, 999);
       let totalStaked = new BigNumber(0);
       let totalVotes = new BigNumber(0);

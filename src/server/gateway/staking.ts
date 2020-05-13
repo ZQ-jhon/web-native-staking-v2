@@ -117,7 +117,7 @@ export type Status =
   | "staking"
   | "no_stake_starttime";
 
-function getStatus(
+export function getStatus(
   withdrawWaitUntil?: Date,
   unstakeStartTime?: Date,
   stakeStartTime?: Date

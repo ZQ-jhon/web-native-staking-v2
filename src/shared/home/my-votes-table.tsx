@@ -1,20 +1,22 @@
 // tslint:disable:no-any
-import CheckOutlined from "@ant-design/icons/CheckOutlined";
-import MinusOutlined from "@ant-design/icons/MinusOutlined";
+import {CheckOutlined, DownOutlined, MinusOutlined} from "@ant-design/icons/lib";
+import {Button, Dropdown} from "antd";
 import Avatar from "antd/lib/avatar";
 import Table from "antd/lib/table";
 import dateformat from "dateformat";
 import Antenna from "iotex-antenna/lib";
-import { assetURL } from "onefx/lib/asset-url";
-import { t } from "onefx/lib/iso-i18n";
-import { styled } from "onefx/lib/styletron-react";
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { IBucket } from "../../server/gateway/staking";
-import { Flex } from "../common/flex";
-import { colors } from "../common/styles/style-color";
-import { media } from "../common/styles/style-media";
-import { AccountMeta } from "./account-meta";
+import {assetURL} from "onefx/lib/asset-url";
+import {t} from "onefx/lib/iso-i18n";
+import React, {Component} from "react";
+import {connect} from "react-redux";
+import {styled} from "styletron-react";
+import {IBucket} from "../../server/gateway/staking";
+import {AddressName} from "../common/address-name";
+import {Flex} from "../common/flex";
+import {colors} from "../common/styles/style-color";
+import {media} from "../common/styles/style-media";
+import {renderActionMenu} from "../staking/stake-edit/modal-menu";
+import {AccountMeta} from "./account-meta";
 
 const CustomExpandIcon = () => null;
 const ACCOUNT_AREA_WIDTH = 290;
@@ -23,11 +25,12 @@ type Props = {
   antenna?: Antenna;
   dataSource?: Array<IBucket>;
 };
+
 type State = {
-  invalidNames: String;
-  expandedRowKeys: Array<String>;
+  invalidNames: string;
+  expandedRowKeys: Array<string>;
   showMore: any;
-  net: String;
+  address?: string;
 };
 
 // @ts-ignore
@@ -43,7 +46,7 @@ class MyVotesTable extends Component<Props, State> {
       invalidNames: "",
       expandedRowKeys: [],
       showMore: {},
-      net: "kovan"
+      address: "",
     };
   }
 
@@ -111,24 +114,20 @@ class MyVotesTable extends Component<Props, State> {
     );
   };
 
-  renderAction = (text: any, record: IBucket) => {
-    if (record.canName) {
+  // tslint:disable-next-line:variable-name
+  renderAction = (_text: any, record: IBucket) => {
+    if (record.candidate) {
       return (
         <Flex column={true} alignItems={"baseline"} color={colors.black}>
-          <a
-            // tslint:disable-next-line:react-a11y-anchors
-            href={"#"}
-            style={{
-              padding: "3px 0",
-              color: colors.PRODUCING,
-              fontWeight: "bold",
-              lineHeight: 1.36
-            }}
+          <span
+            className="ellipsis-text"
+            style={{ maxWidth: "9vw", minWidth: 70 }}
           >
-            {text}
-          </a>
+            {/* tslint:disable-next-line:use-simple-attributes */}
+          <AddressName address={record.candidate} className={"StakingLink"} />
+        </span>
           <TimeSpan>{record.roleName || ""}</TimeSpan>
-          {this.state.invalidNames.includes(record.canName) ? (
+          {record.canName && this.state.invalidNames.includes(record.canName) ? (
             <TimeSpan style={{ color: colors.voteWarning }}>
               Invalid voting name.
             </TimeSpan>
@@ -157,7 +156,6 @@ class MyVotesTable extends Component<Props, State> {
           dataIndex: "id",
           className: "BorderTop BorderLeft BorderBottom",
           // @ts-ignore
-
           render(text: any, record: IBucket): JSX.Element {
             const no = String(record.index);
 
@@ -196,7 +194,10 @@ class MyVotesTable extends Component<Props, State> {
                       }
                     }}
                   >
-                    <BoldText>{t("my_stake.order_no", { no })}</BoldText>
+                    <BoldText>{
+                      // @ts-ignore
+                      t("my_stake.order_no", { no })}
+                    </BoldText>
                     <BoldText style={{ whiteSpace: "nowrap" }}>
                       {t("my_stake.native_staked_amount_format", {
                         amountText: record.stakedAmount
@@ -220,17 +221,16 @@ class MyVotesTable extends Component<Props, State> {
             );
           }
         },
-        // TODO(tian): vote for
-        // {
-        //   title: (
-        //     <span style={{ whiteSpace: "nowrap" }}>
-        //       {t("my_stake.vote_for")}
-        //     </span>
-        //   ),
-        //   dataIndex: "canName",
-        //   className: "BorderTop BorderBottom",
-        //   render: this.renderAction
-        // },
+        {
+          title: (
+            <span style={{ whiteSpace: "nowrap" }}>
+              {t("my_stake.vote_for")}
+            </span>
+          ),
+          dataIndex: "canName",
+          className: "BorderTop BorderBottom",
+          render: this.renderAction
+        },
         {
           title: (
             <span style={{ whiteSpace: "nowrap" }}>
@@ -239,7 +239,6 @@ class MyVotesTable extends Component<Props, State> {
           ),
           dataIndex: "stakedDuration",
           className: "BorderTop BorderBottom",
-
           render(text: any, record: IBucket): JSX.Element {
             const timeformat = "yyyy/mm/dd";
             return (
@@ -335,7 +334,17 @@ class MyVotesTable extends Component<Props, State> {
         },
         {
           title: "",
-          className: "BorderTop BorderBottom BorderRight"
+          className: "BorderTop BorderBottom BorderRight",
+          // @ts-ignore
+          render(text: any, record: IBucket): JSX.Element {
+            return (
+              <Dropdown overlay={renderActionMenu(record)} trigger={["click"]}>
+                <Button>
+                  {t("my_stake.edit.row")} <DownOutlined />
+                </Button>
+              </Dropdown>
+            );
+          }
         }
       ];
     return (
@@ -377,7 +386,7 @@ class MyVotesTable extends Component<Props, State> {
             expandIconAsCell={false}
             // @ts-ignore
             expandedRowKeys={expandedRowKeys}
-            rowKey="id"
+            rowKey="index"
           />
         </Flex>
         <Flex
@@ -397,6 +406,7 @@ class MyVotesTable extends Component<Props, State> {
 }
 
 export { MyVotesTable };
+
 const BoldText = styled("b", {
   fontSize: "12px"
 });
