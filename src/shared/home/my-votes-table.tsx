@@ -1,15 +1,17 @@
 // tslint:disable:no-any
 import CheckOutlined from "@ant-design/icons/CheckOutlined";
 import MinusOutlined from "@ant-design/icons/MinusOutlined";
-import Avatar from "antd/lib/alert";
+import Avatar from "antd/lib/avatar";
 import Table from "antd/lib/table";
 import dateformat from "dateformat";
 import Antenna from "iotex-antenna/lib";
+import { assetURL } from "onefx/lib/asset-url";
 import { t } from "onefx/lib/iso-i18n";
 import { styled } from "onefx/lib/styletron-react";
 import React, { Component } from "react";
+import { connect } from "react-redux";
+import { IBucket } from "../../server/gateway/staking";
 import { Flex } from "../common/flex";
-import { IopayRequired } from "../common/iopay-required";
 import { colors } from "../common/styles/style-color";
 import { media } from "../common/styles/style-media";
 import { AccountMeta } from "./account-meta";
@@ -19,6 +21,7 @@ const ACCOUNT_AREA_WIDTH = 290;
 
 type Props = {
   antenna?: Antenna;
+  dataSource?: Array<IBucket>;
 };
 type State = {
   invalidNames: String;
@@ -28,7 +31,11 @@ type State = {
 };
 
 // @ts-ignore
-@IopayRequired
+@connect((state: { buckets: Array<IBucket> }) => {
+  return {
+    dataSource: state.buckets || []
+  };
+})
 class MyVotesTable extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
@@ -40,8 +47,8 @@ class MyVotesTable extends Component<Props, State> {
     };
   }
 
-  setRowClassName = (record: any) => {
-    return this.state.invalidNames.includes(record.canName)
+  setRowClassName = (record: IBucket) => {
+    return record.canName && this.state.invalidNames.includes(record.canName)
       ? "BorderRowWarning"
       : "";
   };
@@ -53,8 +60,9 @@ class MyVotesTable extends Component<Props, State> {
       showMore: { ...showMore }
     });
   };
-  renderReward = (bpCandidates: any, record: any) => {
-    const { id } = record;
+  renderReward = (bpCandidates: any, record: IBucket) => {
+    const { index } = record;
+    const id = String(index);
     const bpCandidate =
       bpCandidates.find((v: any) => v.registeredName === record.canName) || {};
     const {
@@ -103,7 +111,7 @@ class MyVotesTable extends Component<Props, State> {
     );
   };
 
-  renderAction = (text: any, record: any) => {
+  renderAction = (text: any, record: IBucket) => {
     if (record.canName) {
       return (
         <Flex column={true} alignItems={"baseline"} color={colors.black}>
@@ -135,9 +143,8 @@ class MyVotesTable extends Component<Props, State> {
   // tslint:disable-next-line:max-func-body-length
   render(): JSX.Element {
     const bpCandidates: any = [];
-    const dataSource: any = [];
     const { expandedRowKeys } = this.state;
-    const { antenna } = this.props;
+    const { dataSource } = this.props;
 
     // @ts-ignore
     const DisplayMyStakeCols = (bpCandidates: any): Array<any> =>
@@ -151,12 +158,8 @@ class MyVotesTable extends Component<Props, State> {
           className: "BorderTop BorderLeft BorderBottom",
           // @ts-ignore
 
-          render(text: any, record: any): JSX.Element {
-            // Can not use index here because of antd table will reset the index as soon as pagination changed
-            const no =
-              record.patchDummyId !== undefined
-                ? record.patchDummyId
-                : record.id;
+          render(text: any, record: IBucket): JSX.Element {
+            const no = String(record.index);
 
             return (
               <Flex
@@ -175,12 +178,9 @@ class MyVotesTable extends Component<Props, State> {
                   alignContent={"flex-start"}
                   justifyContent={"left"}
                 >
-                  {/*
-                // @ts-ignore */}
                   <Avatar
-                    // @ts-ignore
                     shape="square"
-                    src={"/my-staking/box.png"}
+                    src={assetURL("my-staking/box.png")}
                     size={40}
                     style={{ margin: "14px 10px 8px 0" }}
                   />
@@ -199,7 +199,9 @@ class MyVotesTable extends Component<Props, State> {
                     <BoldText>{t("my_stake.order_no", { no })}</BoldText>
                     <BoldText style={{ whiteSpace: "nowrap" }}>
                       {t("my_stake.native_staked_amount_format", {
-                        amountText: record.stakedAmount.toLocaleString()
+                        amountText: record.stakedAmount
+                          .toNumber()
+                          .toLocaleString()
                       })}
                     </BoldText>
                   </Flex>
@@ -218,45 +220,38 @@ class MyVotesTable extends Component<Props, State> {
             );
           }
         },
-        {
-          title: (
-            <span style={{ whiteSpace: "nowrap" }}>
-              {t("my_stake.vote_for")}
-            </span>
-          ),
-          dataIndex: "canName",
-          className: "BorderTop BorderBottom",
-          render: this.renderAction
-        },
+        // TODO(tian): vote for
+        // {
+        //   title: (
+        //     <span style={{ whiteSpace: "nowrap" }}>
+        //       {t("my_stake.vote_for")}
+        //     </span>
+        //   ),
+        //   dataIndex: "canName",
+        //   className: "BorderTop BorderBottom",
+        //   render: this.renderAction
+        // },
         {
           title: (
             <span style={{ whiteSpace: "nowrap" }}>
               {t("my_stake.stake_duration")}
             </span>
           ),
-          dataIndex: "stakeDuration",
+          dataIndex: "stakedDuration",
           className: "BorderTop BorderBottom",
 
-          render(text: any, record: any): JSX.Element {
-            const { net } = this.state;
-            const timeformat =
-              net === "kovan" ? "yyyy/mm/dd HH:MM" : "yyyy/mm/dd";
+          render(text: any, record: IBucket): JSX.Element {
+            const timeformat = "yyyy/mm/dd";
             return (
               <Flex column={true} alignItems={"baseline"}>
                 <CellSpan>
-                  {t(
-                    net === "kovan"
-                      ? "my_stake.duration_epochs.kovan"
-                      : "my_stake.duration_epochs",
-                    { stakeDuration: text }
-                  )}
+                  {t("my_stake.duration_epochs", { stakeDuration: text })}
                 </CellSpan>
                 <TimeSpan>
                   {t("my_stake.from_time", {
-                    startTime: dateformat(
-                      new Date(record.stakeStartTime),
-                      timeformat
-                    )
+                    startTime: record.stakeStartTime
+                      ? dateformat(record.stakeStartTime, timeformat)
+                      : "-"
                   })}
                 </TimeSpan>
               </Flex>
@@ -293,20 +288,24 @@ class MyVotesTable extends Component<Props, State> {
           className: "BorderTop BorderBottom",
           // @ts-ignore
 
-          render(text: any, record: any): JSX.Element {
+          render(text: any, record: IBucket): JSX.Element {
             let time;
             let status;
-            const bucketStatus = record.getStatus();
+            const bucketStatus = record.status;
             if (bucketStatus === "withdrawable") {
               status = "my_stake.status.withdrawable";
-              time = new Date(record.withdrawWaitUntil).toLocaleDateString();
+              time = new Date(
+                record.withdrawWaitUntil || new Date(0)
+              ).toLocaleDateString();
             } else if (bucketStatus === "unstaking") {
               status = "my_stake.status.unstaking";
-              time = new Date(record.withdrawWaitUntil).toLocaleDateString();
+              time = new Date(
+                record.withdrawWaitUntil || new Date(0)
+              ).toLocaleDateString();
             } else if (bucketStatus === "staking") {
               status = "my_stake.status.ongoing";
-              const date = new Date(record.stakeStartTime);
-              date.setTime(date.getTime() + record.stakeDuration * 1000);
+              const date = new Date(record.stakeStartTime || new Date(0));
+              date.setTime(date.getTime() + record.stakedDuration * 1000);
               const today = new Date();
               if (
                 date.getFullYear() === today.getFullYear() &&
@@ -371,7 +370,7 @@ class MyVotesTable extends Component<Props, State> {
             columns={DisplayMyStakeCols(bpCandidates)}
             dataSource={dataSource}
             expandIcon={CustomExpandIcon}
-            expandedRowRender={(record: any) =>
+            expandedRowRender={(record: IBucket) =>
               this.renderReward(bpCandidates, record)
             }
             // @ts-ignore
@@ -390,7 +389,7 @@ class MyVotesTable extends Component<Props, State> {
           fontSize={"12px"}
           marginBottom={"24px"}
         >
-          <AccountMeta antenna={antenna} />
+          <AccountMeta />
         </Flex>
       </Flex>
     );

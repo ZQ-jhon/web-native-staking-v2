@@ -4,8 +4,10 @@ import Helmet from "onefx/lib/react-helmet";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { CommonMargin } from "../common/common-margin";
+import { IopayRequired } from "../common/iopay-required";
 import { VotingButton } from "../home/vote-button-modal";
 import { VoteNowContainer } from "../staking/vote-now-steps/vote-now-container";
+import { BucketsLoader } from "./account-meta";
 import { MyVotesTable } from "./my-votes-table";
 
 type State = {
@@ -50,7 +52,7 @@ export const StakingContractContainer = connect()(
 
           <CommonMargin />
 
-          <MyVotesTable />
+          <MyVotesTableWrapper />
 
           <VoteNowContainer
             displayOthers={false}
@@ -62,3 +64,16 @@ export const StakingContractContainer = connect()(
     }
   }
 );
+
+@IopayRequired
+// @ts-ignore
+class MyVotesTableWrapper extends Component {
+  render(): JSX.Element {
+    return (
+      <>
+        <BucketsLoader />
+        <MyVotesTable />
+      </>
+    );
+  }
+}

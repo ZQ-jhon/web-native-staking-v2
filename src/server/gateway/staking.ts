@@ -1,4 +1,6 @@
+import BigNumber from "bignumber.js";
 import Antenna from "iotex-antenna/lib";
+import { fromRau } from "iotex-antenna/lib/account/utils";
 import {
   CandidateRegisterMethod,
   CandidateUpdateMethod,
@@ -43,7 +45,7 @@ type Candidate = {
   totalWeightedVotes: string;
 };
 
-type Bucket = {
+export type IBucket = {
   index: number;
   owner: string;
   candidate: string;
@@ -52,8 +54,13 @@ type Bucket = {
   autoStake: boolean;
   unstakeStartTime: Date | undefined;
   createTime: Date | undefined;
-  stakedAmount: string;
+  stakedAmount: BigNumber;
   status: Status;
+  withdrawWaitUntil: Date | undefined;
+
+  // TODO(tian): candName
+  canName?: string;
+  roleName?: string;
 };
 
 function toCandidates(buffer: Buffer | {}): Array<Candidate> {
@@ -76,7 +83,7 @@ function daysLater(p: Date, days: number): Date {
   return cur;
 }
 
-function toBuckets(buffer: Buffer | {}): Array<Bucket> {
+function toBuckets(buffer: Buffer | {}): Array<IBucket> {
   // @ts-ignore
   const buckets = VoteBucketList.deserializeBinary(buffer);
   return buckets.getBucketsList().map((b: VoteBucket) => {
@@ -97,7 +104,7 @@ function toBuckets(buffer: Buffer | {}): Array<Bucket> {
       autoStake: b.getAutostake(),
       unstakeStartTime,
       createTime,
-      stakedAmount: b.getStakedamount(),
+      stakedAmount: new BigNumber(fromRau(b.getStakedamount(), "Iotx")),
       withdrawWaitUntil,
       status: getStatus(withdrawWaitUntil, unstakeStartTime, stakeStartTime)
     };
@@ -196,7 +203,7 @@ export class Staking {
     offset: number,
     limit: number,
     height: string = ""
-  ): Promise<Array<Bucket>> {
+  ): Promise<Array<IBucket>> {
     const state = await this.antenna.iotx.readState({
       protocolID: Buffer.from("staking"),
       methodName: IReadStakingDataMethodToBuffer({
@@ -220,7 +227,7 @@ export class Staking {
     offset: number,
     limit: number,
     height: string = ""
-  ): Promise<Array<Bucket>> {
+  ): Promise<Array<IBucket>> {
     const state = await this.antenna.iotx.readState({
       protocolID: Buffer.from("staking"),
       methodName: IReadStakingDataMethodToBuffer({
@@ -243,7 +250,7 @@ export class Staking {
     offset: number,
     limit: number,
     height: string = ""
-  ): Promise<Array<Bucket>> {
+  ): Promise<Array<IBucket>> {
     const state = await this.antenna.iotx.readState({
       protocolID: Buffer.from("staking"),
       methodName: IReadStakingDataMethodToBuffer({

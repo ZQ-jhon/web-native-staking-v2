@@ -5,7 +5,10 @@ import { ApolloProvider } from "react-apollo";
 import { combineReducers } from "redux";
 import { AppContainer } from "../../shared/app-container";
 import { apolloClient } from "../../shared/common/apollo-client";
-import { bucketsReducer } from "../../shared/home/buckets-reducer";
+import {
+  accountMetaReducer,
+  bucketsReducer
+} from "../../shared/home/buckets-reducer";
 
 clientReactRender({
   VDom: (
@@ -17,6 +20,7 @@ clientReactRender({
     buckets: bucketsReducer,
     base: noopReducer,
     staking: noopReducer,
-    apolloState: noopReducer
+    apolloState: noopReducer,
+    accountMeta: accountMetaReducer
   })
 });
