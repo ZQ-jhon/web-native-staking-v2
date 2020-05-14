@@ -1,6 +1,7 @@
 // @flow
 import { InfoCircleOutlined, RetweetOutlined } from "@ant-design/icons/lib";
 import { Form, InputNumber, Switch } from "antd";
+import BigNumber from "bignumber.js";
 // @ts-ignore
 import { t } from "onefx/lib/iso-i18n";
 import React, { Component } from "react";
@@ -27,7 +28,7 @@ type Props = {
   style?: any;
   fieldName?: string;
   initialValue?: boolean;
-  stakeAmount?: number;
+  stakeAmount?: BigNumber;
   stakeDuration?: number;
   forceDisable?: boolean;
 };
@@ -122,7 +123,7 @@ export class AutoStakeFormItem extends Component<Props, State> {
       fieldName = "nonDecay",
       showAutoStack = true,
       children,
-      stakeAmount = 0,
+      stakeAmount = new BigNumber(0),
       stakeDuration = 0,
       forceDisable = false
     } = this.props;
@@ -200,7 +201,7 @@ export class AutoStakeFormItem extends Component<Props, State> {
                   {
                     duration: stakeDuration,
                     votes: this.getPowerEstimation(
-                      stakeAmount,
+                      stakeAmount.toNumber(),
                       stakeDuration,
                       0
                     ).total
@@ -217,7 +218,11 @@ export class AutoStakeFormItem extends Component<Props, State> {
                 dangerouslySetInnerHTML={{
                   __html: t(
                     "my_stake.nonDecay.calculate_estimate",
-                    this.getPowerEstimation(stakeAmount, stakeDuration, 0)
+                    this.getPowerEstimation(
+                      stakeAmount.toNumber(),
+                      stakeDuration,
+                      0
+                    )
                   )
                 }}
               />
@@ -230,7 +235,7 @@ export class AutoStakeFormItem extends Component<Props, State> {
                   __html: t(
                     "my_stake.nonDecay.calculate_estimate",
                     this.getPowerEstimation(
-                      stakeAmount,
+                      stakeAmount.toNumber(),
                       stakeDuration,
                       Math.round(Number(stakeDuration) / 3)
                     )
@@ -246,7 +251,7 @@ export class AutoStakeFormItem extends Component<Props, State> {
                   __html: t(
                     "my_stake.nonDecay.calculate_estimate",
                     this.getPowerEstimation(
-                      stakeAmount,
+                      stakeAmount.toNumber(),
                       stakeDuration,
                       stakeDuration
                     )

@@ -261,7 +261,7 @@ export const AddStakingModal = connect(
                 // @ts-ignore
                 <AutoStakeFormItem
                   initialValue={nonDecay}
-                  stakeAmount={this.state.currentStakeAmount.toNumber()}
+                  stakeAmount={this.state.currentStakeAmount}
                   stakeDuration={this.props.stakeDuration}
                   form={form}
                   showAutoStack={false}

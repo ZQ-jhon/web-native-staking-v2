@@ -1,6 +1,7 @@
 // @flow
 import { Form, Input } from "antd";
 import { FormInstance } from "antd/lib/form";
+import BigNumber from "bignumber.js";
 import { fromRau, validateAddress } from "iotex-antenna/lib/account/utils";
 import { t } from "onefx/lib/iso-i18n";
 import React, { Component, RefObject } from "react";
@@ -163,7 +164,7 @@ class StakeAndVoteNew extends Component<Props, State> {
           // @ts-ignore
           <AutoStakeFormItem
             initialValue={false}
-            stakeAmount={currentStakeAmount}
+            stakeAmount={new BigNumber(currentStakeAmount)}
             stakeDuration={currentStakeDuration}
             onChange={handleSelectChange}
           />

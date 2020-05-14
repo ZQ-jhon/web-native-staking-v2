@@ -1,6 +1,7 @@
 // @flow
 import { Select } from "antd";
 import { Form } from "antd";
+import BigNumber from "bignumber.js";
 import { t } from "onefx/lib/iso-i18n";
 import React, { Component } from "react";
 import { connect } from "react-redux";
@@ -18,7 +19,7 @@ import {
 
 type Props = {
   currentStakeDuration: number;
-  currentStakeAmount: number;
+  currentStakeAmount: BigNumber;
   handleRevote: Function;
   defaultValue?: number;
   epochSecondValue?: number;

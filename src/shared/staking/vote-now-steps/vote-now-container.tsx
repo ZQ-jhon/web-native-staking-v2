@@ -544,7 +544,7 @@ const VoteNowContainer = connect(
                   // @ts-ignore
                   handleRevote={bucket => this.handleRevote(bucket)}
                   currentStakeDuration={currentStakeDuration}
-                  currentStakeAmount={currentStakeAmount}
+                  currentStakeAmount={new BigNumber(currentStakeAmount)}
                   defaultValue={this.bucket.index}
                 />
               )}
