@@ -1,7 +1,6 @@
 // @flow
 // $FlowFixMe
 import { Menu } from "antd";
-import { fromRau } from "iotex-antenna/lib/account/utils";
 import { t } from "onefx/lib/iso-i18n";
 import React from "react";
 import { getStatus, IBucket } from "../../../server/gateway/staking";
@@ -290,9 +289,7 @@ export function renderActionMenu(record: IBucket): JSX.Element {
             bucketIndex={record.index}
             clickable={renderAddStaking()}
             stakeDuration={record.stakedDuration}
-            stakedAmount={Number(
-              fromRau(record.stakedAmount.toString(), "Iotx")
-            )}
+            stakedAmount={record.stakedAmount}
             nonDecay={record.autoStake}
           />
         }
