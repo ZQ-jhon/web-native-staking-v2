@@ -119,8 +119,8 @@ class StakeAndVoteExisting extends Component<Props, State> {
                 {existingBuckets.map((bucket, i) => (
                   <Select.Option key={i} value={String(bucket.index)}>
                     <div style={{ fontSize: 14 }}>
-                      Bucket ID {bucket.index} | <b>{bucket.candidate}</b>{" "}
-                      {!bucket.candidate && "Not Voted Yet"}
+                      Bucket ID {bucket.index} | <b>{bucket.canName}</b>{" "}
+                      {!bucket.canName && "Not Voted Yet"}
                     </div>
                     <div style={{ fontSize: 12, color: "#999" }}>
                       Amount: {String(bucket.stakedAmount)} | Staking Period:{" "}

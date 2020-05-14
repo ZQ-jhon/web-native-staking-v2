@@ -1,22 +1,26 @@
 // tslint:disable:no-any
-import {CheckOutlined, DownOutlined, MinusOutlined} from "@ant-design/icons/lib";
-import {Button, Dropdown} from "antd";
+import {
+  CheckOutlined,
+  DownOutlined,
+  MinusOutlined
+} from "@ant-design/icons/lib";
+import { Button, Dropdown } from "antd";
 import Avatar from "antd/lib/avatar";
 import Table from "antd/lib/table";
 import dateformat from "dateformat";
 import Antenna from "iotex-antenna/lib";
-import {assetURL} from "onefx/lib/asset-url";
-import {t} from "onefx/lib/iso-i18n";
-import React, {Component} from "react";
-import {connect} from "react-redux";
-import {styled} from "styletron-react";
-import {IBucket} from "../../server/gateway/staking";
-import {AddressName} from "../common/address-name";
-import {Flex} from "../common/flex";
-import {colors} from "../common/styles/style-color";
-import {media} from "../common/styles/style-media";
-import {renderActionMenu} from "../staking/stake-edit/modal-menu";
-import {AccountMeta} from "./account-meta";
+import { assetURL } from "onefx/lib/asset-url";
+import { t } from "onefx/lib/iso-i18n";
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { styled } from "styletron-react";
+import { IBucket } from "../../server/gateway/staking";
+import { AddressName } from "../common/address-name";
+import { Flex } from "../common/flex";
+import { colors } from "../common/styles/style-color";
+import { media } from "../common/styles/style-media";
+import { renderActionMenu } from "../staking/stake-edit/modal-menu";
+import { AccountMeta } from "./account-meta";
 
 const CustomExpandIcon = () => null;
 const ACCOUNT_AREA_WIDTH = 290;
@@ -46,7 +50,7 @@ class MyVotesTable extends Component<Props, State> {
       invalidNames: "",
       expandedRowKeys: [],
       showMore: {},
-      address: "",
+      address: ""
     };
   }
 
@@ -116,7 +120,7 @@ class MyVotesTable extends Component<Props, State> {
 
   // tslint:disable-next-line:variable-name
   renderAction = (_text: any, record: IBucket) => {
-    if (record.candidate) {
+    if (record.canName || record.candidate) {
       return (
         <Flex column={true} alignItems={"baseline"} color={colors.black}>
           <span
@@ -124,10 +128,14 @@ class MyVotesTable extends Component<Props, State> {
             style={{ maxWidth: "9vw", minWidth: 70 }}
           >
             {/* tslint:disable-next-line:use-simple-attributes */}
-          <AddressName address={record.candidate} className={"StakingLink"} />
-        </span>
+            <AddressName
+              address={record.canName || record.candidate}
+              className={"StakingLink"}
+            />
+          </span>
           <TimeSpan>{record.roleName || ""}</TimeSpan>
-          {record.canName && this.state.invalidNames.includes(record.canName) ? (
+          {record.canName &&
+          this.state.invalidNames.includes(record.canName) ? (
             <TimeSpan style={{ color: colors.voteWarning }}>
               Invalid voting name.
             </TimeSpan>
@@ -194,8 +202,8 @@ class MyVotesTable extends Component<Props, State> {
                       }
                     }}
                   >
-                    <BoldText>{
-                      // @ts-ignore
+                    <BoldText>
+                      {// @ts-ignore
                       t("my_stake.order_no", { no })}
                     </BoldText>
                     <BoldText style={{ whiteSpace: "nowrap" }}>

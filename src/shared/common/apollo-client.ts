@@ -12,6 +12,7 @@ const state = isBrowser && JsonGlobal("state");
 const apolloState = isBrowser && state.apolloState;
 const apiGatewayUrl = isBrowser && state.base.apiGatewayUrl;
 const csrfToken = isBrowser && state.base.csrfToken;
+export const ownersToNames = isBrowser && state.base.ownersToNames;
 
 export const apolloClient = new ApolloClient({
   ssrMode: !isBrowser,

@@ -1,13 +1,15 @@
 import PlusOutlined from "@ant-design/icons/PlusOutlined";
-import {t} from "onefx/lib/iso-i18n";
+import { Alert } from "antd";
+import { t } from "onefx/lib/iso-i18n";
 import Helmet from "onefx/lib/react-helmet";
-import React, {Component} from "react";
-import {CommonMargin} from "../common/common-margin";
-import {IopayRequired} from "../common/iopay-required";
-import {VotingButton} from "../home/vote-button-modal";
-import {VoteNowContainer} from "../staking/vote-now-steps/vote-now-container";
-import {BucketsLoader} from "./account-meta";
-import {MyVotesTable} from "./my-votes-table";
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { CommonMargin } from "../common/common-margin";
+import { IopayRequired } from "../common/iopay-required";
+import { VotingButton } from "../home/vote-button-modal";
+import { VoteNowContainer } from "../staking/vote-now-steps/vote-now-container";
+import { BucketsLoader } from "./account-meta";
+import { MyVotesTable } from "./my-votes-table";
 
 type State = {
   showVoteNowModal: boolean;
@@ -37,6 +39,7 @@ export class StakingContractContainer extends Component<Props, State> {
   render(): JSX.Element {
     return (
       <div>
+        <SmartContractCalled />
         <VotingButton
           launch={() => this.setState({ showVoteNowModal: true })}
           disabled={false}
@@ -74,3 +77,31 @@ class MyVotesTableWrapper extends Component {
     );
   }
 }
+
+const SmartContractCalled = connect(
+  (state: { smartContract: { smartContractCalled: boolean } }) => {
+    return {
+      smartContractCalled:
+        state.smartContract && state.smartContract.smartContractCalled
+    };
+  }
+)(function Inner({
+  smartContractCalled
+}: {
+  smartContractCalled: boolean;
+}): JSX.Element {
+  return (
+    <>
+      {smartContractCalled && (
+        <div>
+          <Alert
+            message={t("contract.called")}
+            type="success"
+            showIcon={true}
+          />
+          <CommonMargin />
+        </div>
+      )}
+    </>
+  );
+});

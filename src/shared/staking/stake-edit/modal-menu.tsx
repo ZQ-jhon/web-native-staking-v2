@@ -269,15 +269,16 @@ function renderAddStaking(): JSX.Element {
 }
 
 export function renderActionMenu(record: IBucket): JSX.Element {
+  const canName = record.canName || "";
   return (
     <Menu className={"MyStakeInfoAction"}>
       <Menu.Item key="1">
         {
-          // @ts-ignore
-          // tslint:disable-next-line:use-simple-attributes
           <RevoteModal
+            autoStake={record.autoStake}
+            stakedDuration={record.stakedDuration}
             bucketIndex={record.index}
-            canName={record.canName || ""}
+            canName={canName}
             clickable={renderRevote(record)}
           />
         }

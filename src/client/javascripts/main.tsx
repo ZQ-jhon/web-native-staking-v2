@@ -9,6 +9,7 @@ import {
   accountMetaReducer,
   bucketsReducer
 } from "../../shared/home/buckets-reducer";
+import { smartContractReducer } from "../../shared/staking/smart-contract-reducer";
 
 clientReactRender({
   VDom: (
@@ -21,6 +22,7 @@ clientReactRender({
     base: noopReducer,
     staking: noopReducer,
     apolloState: noopReducer,
-    accountMeta: accountMetaReducer
+    accountMeta: accountMetaReducer,
+    smartContract: smartContractReducer
   })
 });

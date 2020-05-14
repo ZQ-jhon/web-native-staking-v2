@@ -34,6 +34,7 @@ import {
   VoteBucket,
   VoteBucketList
 } from "iotex-antenna/protogen/proto/types/state_data_pb";
+import { ownersToNames } from "../../shared/common/apollo-client";
 import { getAntenna } from "../../shared/common/get-antenna";
 
 type Candidate = {
@@ -59,8 +60,8 @@ export type IBucket = {
   status: Status;
   withdrawWaitUntil: Date | undefined;
 
+  canName: string;
   // TODO(tian): candName
-  canName?: string;
   roleName?: string;
 };
 
@@ -107,7 +108,8 @@ function toBuckets(buffer: Buffer | {}): Array<IBucket> {
       createTime,
       stakedAmount: new BigNumber(fromRau(b.getStakedamount(), "Iotx")),
       withdrawWaitUntil,
-      status: getStatus(withdrawWaitUntil, unstakeStartTime, stakeStartTime)
+      status: getStatus(withdrawWaitUntil, unstakeStartTime, stakeStartTime),
+      canName: ownersToNames[b.getCandidateaddress()]
     };
   });
 }

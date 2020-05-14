@@ -1,9 +1,11 @@
+import Antenna from "iotex-antenna/lib";
 import koa from "koa";
 import { noopReducer } from "onefx/lib/iso-react-render/root/root-reducer";
 import * as React from "react";
 import { setApiGateway } from "../api-gateway/api-gateway";
 import { AppContainer } from "../shared/app-container";
 import { apolloSSR } from "../shared/common/apollo-ssr";
+import { Staking } from "./gateway/staking";
 import { MyServer } from "./start-server";
 
 export function setServerRoutes(server: MyServer): void {
@@ -19,6 +21,16 @@ export function setServerRoutes(server: MyServer): void {
     "SPA",
     /^(?!\/?tools\/token-migration\/api-gateway\/).+$/,
     async (ctx: koa.Context) => {
+      const st = new Staking({
+        antenna: new Antenna("https://api.testnet.iotex.one")
+      });
+      const height = await st.getHeight();
+      const resp = await st.getAllCandidates(0, 1000, height);
+      const ownersToNames: Record<string, string> = {};
+      for (const c of resp) {
+        ownersToNames[c.ownerAddress] = c.name;
+      }
+      ctx.setState("base.ownersToNames", ownersToNames);
       ctx.setState(
         "staking.contractAddress",
         // @ts-ignore
@@ -37,7 +49,7 @@ export function setServerRoutes(server: MyServer): void {
 
 export function checkingAppSource(ctx: koa.Context): void {
   if (
-    (ctx.header["user-agent"].includes("IoPayAndroid")) ||
+    ctx.header["user-agent"].includes("IoPayAndroid") ||
     ctx.header["user-agent"].includes("IoPayiOs") ||
     ctx.session.app_source === "IoPay"
   ) {
