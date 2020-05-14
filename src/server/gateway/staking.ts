@@ -1,5 +1,6 @@
 import BigNumber from "bignumber.js";
 import Antenna from "iotex-antenna/lib";
+import {Account} from "iotex-antenna/lib/account/account";
 import { fromRau } from "iotex-antenna/lib/account/utils";
 import {
   CandidateRegisterMethod,
@@ -35,7 +36,7 @@ import {
   VoteBucketList
 } from "iotex-antenna/protogen/proto/types/state_data_pb";
 import { ownersToNames } from "../../shared/common/apollo-client";
-import { getAntenna } from "../../shared/common/get-antenna";
+import { getAntenna, getIoPayAddress } from "../../shared/common/get-antenna";
 
 type Candidate = {
   name: string;
@@ -272,19 +273,14 @@ export class Staking {
   }
 
   public async createStake(req: StakeCreate): Promise<string> {
-    const sender = await this.antenna.iotx.tryGetAccount(
-      this.antenna.iotx.accounts[0].address
-    );
-
+    const sender = await this.getSender();
     return new StakeCreateMethod(this.antenna.iotx, sender, req, {
       signer: this.antenna.iotx.signer
     }).execute();
   }
 
   public async unstake(req: StakeUnstake): Promise<string> {
-    const sender = await this.antenna.iotx.tryGetAccount(
-      this.antenna.iotx.accounts[0].address
-    );
+    const sender = await this.getSender();
 
     return new StakeUnstakeMethod(this.antenna.iotx, sender, req, {
       signer: this.antenna.iotx.signer
@@ -292,9 +288,7 @@ export class Staking {
   }
 
   public async withdraw(req: StakeWithdraw): Promise<string> {
-    const sender = await this.antenna.iotx.tryGetAccount(
-      this.antenna.iotx.accounts[0].address
-    );
+    const sender = await this.getSender();
 
     return new StakeWithdrawMethod(this.antenna.iotx, sender, req, {
       signer: this.antenna.iotx.signer
@@ -302,9 +296,7 @@ export class Staking {
   }
 
   public async addDeposit(req: StakeAddDeposit): Promise<string> {
-    const sender = await this.antenna.iotx.tryGetAccount(
-      this.antenna.iotx.accounts[0].address
-    );
+    const sender = await this.getSender();
 
     return new StakeAddDepositMethod(this.antenna.iotx, sender, req, {
       signer: this.antenna.iotx.signer
@@ -312,9 +304,7 @@ export class Staking {
   }
 
   public async restake(req: StakeRestake): Promise<string> {
-    const sender = await this.antenna.iotx.tryGetAccount(
-      this.antenna.iotx.accounts[0].address
-    );
+    const sender = await this.getSender();
 
     return new StakeRestakeMethod(this.antenna.iotx, sender, req, {
       signer: this.antenna.iotx.signer
@@ -322,9 +312,7 @@ export class Staking {
   }
 
   public async changeCandidate(req: StakeChangeCandidate): Promise<string> {
-    const sender = await this.antenna.iotx.tryGetAccount(
-      this.antenna.iotx.accounts[0].address
-    );
+    const sender = await this.getSender();
 
     return new StakeChangeCandidateMethod(this.antenna.iotx, sender, req, {
       signer: this.antenna.iotx.signer
@@ -332,9 +320,7 @@ export class Staking {
   }
 
   public async transferOwnership(req: StakeTransferOwnership): Promise<string> {
-    const sender = await this.antenna.iotx.tryGetAccount(
-      this.antenna.iotx.accounts[0].address
-    );
+    const sender = await this.getSender();
 
     return new StakeTransferOwnershipMethod(this.antenna.iotx, sender, req, {
       signer: this.antenna.iotx.signer
@@ -342,9 +328,7 @@ export class Staking {
   }
 
   public async registerCandidate(req: CandidateRegister): Promise<string> {
-    const sender = await this.antenna.iotx.tryGetAccount(
-      this.antenna.iotx.accounts[0].address
-    );
+    const sender = await this.getSender();
 
     return new CandidateRegisterMethod(this.antenna.iotx, sender, req, {
       signer: this.antenna.iotx.signer
@@ -352,13 +336,18 @@ export class Staking {
   }
 
   public async updateCandidate(req: CandidateUpdate): Promise<string> {
-    const sender = await this.antenna.iotx.tryGetAccount(
-      this.antenna.iotx.accounts[0].address
-    );
+    const sender = await this.getSender();
 
     return new CandidateUpdateMethod(this.antenna.iotx, sender, req, {
       signer: this.antenna.iotx.signer
     }).execute();
+  }
+
+  private async getSender() : Promise<Account>{
+    const address = await getIoPayAddress();
+    // tslint:disable-next-line:no-unnecessary-local-variable
+    const sender = await this.antenna.iotx.tryGetAccount(address);
+    return sender
   }
 }
 

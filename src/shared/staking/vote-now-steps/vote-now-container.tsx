@@ -19,7 +19,7 @@ import { CommonModal } from "../../common/common-modal";
 import { formItemLayout } from "../../common/form-item-layout";
 import { getIoPayAddress } from "../../common/get-antenna";
 import { colors } from "../../common/styles/style-color2";
-import { Bucket, DEFAULT_STAKING_GAS_LIMIT } from "../../common/token-utils";
+import { DEFAULT_STAKING_GAS_LIMIT } from "../../common/token-utils";
 import { MyReferralTwitterButton } from "../../my-referrals/my-referral-twitter-button";
 import { validateCanName } from "../field-validators";
 import {
@@ -33,8 +33,9 @@ import { FormItemText, subTextStyle } from "../staking-form-item";
 import { ConfirmStep } from "./confirm-step";
 import { SuccessStep } from "./success-step";
 
-import { toRau } from "iotex-antenna/lib/account/utils";
-import { getStaking } from "../../../server/gateway/staking";
+import BigNumber from "bignumber.js";
+import { fromRau, toRau } from "iotex-antenna/lib/account/utils";
+import { getStaking, IBucket } from "../../../server/gateway/staking";
 import { webBpApolloClient } from "../../common/apollo-client";
 
 type TcanName = {
@@ -105,7 +106,7 @@ const VoteNowContainer = connect(
   class VoteNowContainer extends Component<Props, State> {
     state: State;
     props: Props;
-    bucket: Bucket;
+    bucket: IBucket;
     isExistingBucket: boolean;
     txHash: string = "";
     ioAddress: string = "";
@@ -121,43 +122,50 @@ const VoteNowContainer = connect(
 
     // tslint:disable-next-line:no-any
     async launchNativeStaking(recordStakingReferral: any): Promise<void> {
-      const { stakeDuration, nonDecay, id, stakedAmount } = this.bucket;
-      const canName = this.bucket.canName;
-      const amount = toRau(String(stakedAmount), "Iotx");
-      try {
-        if (this.isFreshStaking()) {
-          this.txHash = await getStaking().createStake({
-            candidateName: canName,
-            stakedAmount: amount,
-            stakedDuration: stakeDuration,
-            autoStake: nonDecay,
-            payload: "",
-            gasLimit: DEFAULT_STAKING_GAS_LIMIT,
-            gasPrice: toRau("1", "Qev")
-          });
-          this.ioAddress = await getIoPayAddress();
-          recordStakingReferral({
-            variables: {
-              stakingReferralInput: {
-                referralEthAddr: this.ioAddress,
-                txHash: this.txHash
+      const {
+        stakedDuration,
+        autoStake,
+        index,
+        stakedAmount,
+        canName
+      } = this.bucket;
+      const amount = stakedAmount.toString();
+      if (canName) {
+        try {
+          if (this.isFreshStaking()) {
+            this.txHash = await getStaking().createStake({
+              candidateName: canName,
+              stakedAmount: amount,
+              stakedDuration,
+              autoStake,
+              payload: "",
+              gasLimit: DEFAULT_STAKING_GAS_LIMIT,
+              gasPrice: toRau("1", "Qev")
+            });
+            this.ioAddress = await getIoPayAddress();
+            recordStakingReferral({
+              variables: {
+                stakingReferralInput: {
+                  referralEthAddr: this.ioAddress,
+                  txHash: this.txHash
+                }
               }
-            }
-          });
-        } else {
-          this.txHash = await getStaking().restake({
-            bucketIndex: Number(id || "0"),
-            stakedDuration: stakeDuration,
-            autoStake: nonDecay,
-            payload: "",
-            gasLimit: DEFAULT_STAKING_GAS_LIMIT,
-            gasPrice: toRau("1", "Qev")
-          });
+            });
+          } else {
+            this.txHash = await getStaking().restake({
+              bucketIndex: index,
+              stakedDuration,
+              autoStake,
+              payload: "",
+              gasLimit: DEFAULT_STAKING_GAS_LIMIT,
+              gasPrice: toRau("1", "Qev")
+            });
+          }
+          window.console.log(`create native staking: ${this.txHash}`);
+          this.setState({ step: SUCCESS_STEP });
+        } catch (err) {
+          window.console.error(`failed to make transaction: ${err.stack}`);
         }
-        window.console.log(`create native staking: ${this.txHash}`);
-        this.setState({ step: SUCCESS_STEP });
-      } catch (err) {
-        window.console.error(`failed to make transaction: ${err.stack}`);
       }
     }
 
@@ -230,13 +238,19 @@ const VoteNowContainer = connect(
           // @ts-ignore
           const { nonDecay, stakeDuration, stakedAmount, id } =
             this.bucket || {};
-          this.bucket = Bucket.fromFormInput(
-            values.canName || this.state.canName.value,
-            values.nonDecay !== undefined ? values.nonDecay : nonDecay || false,
-            values.stakeDuration || stakeDuration || 0,
-            values.stakedAmount || stakedAmount || 0,
-            id
-          );
+          // @ts-ignore
+          this.bucket = {
+            canName: values.canName || this.state.canName.value,
+            autoStake:
+              values.nonDecay !== undefined
+                ? values.nonDecay
+                : nonDecay || false,
+            stakedDuration: values.stakeDuration || stakeDuration || 0,
+            stakedAmount:
+              new BigNumber(toRau(values.stakedAmount.toString(), "Iotx")) ||
+              stakedAmount ||
+              0
+          };
           this.setState({ step: CONFIRM_STEP });
         }
       });
@@ -262,12 +276,14 @@ const VoteNowContainer = connect(
         currentStakeAmount: stakedAmount
       });
     };
-    handleRevote = (bucket: Bucket) => {
+    handleRevote = (bucket: IBucket) => {
       this.bucket = bucket;
       this.isExistingBucket = true;
       this.setState({
-        currentStakeAmount: bucket.stakedAmount,
-        currentStakeDuration: bucket.stakeDuration
+        currentStakeAmount: Number(
+          fromRau(bucket.stakedAmount.toString(), "Iotx")
+        ),
+        currentStakeDuration: bucket.stakedDuration
       });
     };
     // tslint:disable-next-line:no-any
@@ -529,7 +545,7 @@ const VoteNowContainer = connect(
                   handleRevote={bucket => this.handleRevote(bucket)}
                   currentStakeDuration={currentStakeDuration}
                   currentStakeAmount={currentStakeAmount}
-                  defaultValue={this.bucket && this.bucket.id}
+                  defaultValue={this.bucket.index}
                 />
               )}
             </Form>

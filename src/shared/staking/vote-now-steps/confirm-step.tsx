@@ -1,30 +1,30 @@
 // @flow
 import { Form } from "antd";
+import { fromRau } from "iotex-antenna/lib/account/utils";
 // @ts-ignore
-import window from "global/window";
 import { t } from "onefx/lib/iso-i18n";
 import React from "react";
+import { IBucket } from "../../../server/gateway/staking";
 import {
   CommonMarginBottomStyle,
   SmallMarginBottomStyle
 } from "../../common/common-margin";
 import { formItemLayout } from "../../common/form-item-layout";
 import { colors } from "../../common/styles/style-color2";
-import { Bucket } from "../../common/token-utils";
 import { subTextStyle } from "../staking-form-item";
 
 type Props = {
-  bucket: Bucket,
-  handleReEdit: Function
+  bucket: IBucket;
+  handleReEdit: Function;
 };
 
 type CommonStepControlProps = {
-  label: string,
-  isStakeControl?: boolean,
-  content?: string | number,
-  style?: {},
+  label: string;
+  isStakeControl?: boolean;
+  content?: string | number;
+  style?: {};
   // tslint:disable-next-line:no-any
-  children?: any
+  children?: any;
 };
 
 export function CommonStepControl({
@@ -44,11 +44,7 @@ export function CommonStepControl({
     >
       <b>
         {!isStakeControl ? content : <span style={style}>{content}</span>}
-        {isStakeControl ? (
-          <span>&nbsp;&nbsp;IOTX</span>
-        ) : (
-          ""
-        )}
+        {isStakeControl ? <span>&nbsp;&nbsp;IOTX</span> : ""}
       </b>
       {children}
     </Form.Item>
@@ -56,9 +52,9 @@ export function CommonStepControl({
 }
 
 type StakedAmountControlProps = {
-  amount: number,
-  handleReEdit: Function,
-  style?: {}
+  amount: number;
+  handleReEdit: Function;
+  style?: {};
 };
 
 export function StakedAmountControl({
@@ -92,11 +88,12 @@ export function StakedAmountControl({
 
 type ConfirmStepWrapProps = {
   // tslint:disable-next-line:no-any
-  children: any
+  children: any;
 };
 
-export function ConfirmStepWrapper({ children }: ConfirmStepWrapProps): JSX.Element {
-
+export function ConfirmStepWrapper({
+  children
+}: ConfirmStepWrapProps): JSX.Element {
   return (
     <div>
       {
@@ -123,12 +120,14 @@ export function ConfirmStepWrapper({ children }: ConfirmStepWrapProps): JSX.Elem
 export function ConfirmStep({ bucket, handleReEdit }: Props): JSX.Element {
   return (
     <ConfirmStepWrapper>
-      {bucket.id && (
-        <CommonStepControl content={bucket.id} label={t("my_stake.bucketId")} />
+      {bucket.index && (
+        <CommonStepControl
+          content={bucket.index}
+          label={t("my_stake.bucketId")}
+        />
       )}
-
       <StakedAmountControl
-        amount={bucket.stakedAmount}
+        amount={Number(fromRau(bucket.stakedAmount.toString(), "Iotx"))}
         handleReEdit={handleReEdit}
       />
 
@@ -139,14 +138,16 @@ export function ConfirmStep({ bucket, handleReEdit }: Props): JSX.Element {
 
       <CommonStepControl
         // @ts-ignore
-        content={t("my_stake.stakeDuration.epochs", { stakeDuration: bucket.stakeDuration || 0 })}
+        content={t("my_stake.stakeDuration.epochs", {
+          stakeDuration: bucket.stakedDuration || 0
+        })}
         label={t("my_stake.stakeDuration")}
       />
 
       {/* tslint:disable-next-line:use-simple-attributes */}
       <CommonStepControl
         content={
-          bucket.nonDecay
+          bucket.autoStake
             ? t("my_stake.nonDecay.yes")
             : t("my_stake.nonDecay.no")
         }

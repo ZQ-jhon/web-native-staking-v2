@@ -96,7 +96,7 @@ export const AddStakingModal = connect(
 
           await getStaking().addDeposit({
             bucketIndex: this.props.bucketIndex,
-            amount: addStaking,
+            amount: toRau(addStaking, "Iotx"),
             payload: "",
             gasLimit: DEFAULT_STAKING_GAS_LIMIT,
             gasPrice: toRau("1", "Qev")
@@ -117,7 +117,7 @@ export const AddStakingModal = connect(
           cb();
         }
       } catch (e) {
-        window.console.error(`failed to add staking: ${JSON.stringify(e)}`);
+        window.console.error(`failed to add staking: ${JSON.stringify(e)}`, e);
       }
     };
 
