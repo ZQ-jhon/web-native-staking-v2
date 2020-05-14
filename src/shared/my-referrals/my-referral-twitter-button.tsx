@@ -1,38 +1,44 @@
 // @flow
-import {Button} from "antd";
+import { Button } from "antd";
 // @ts-ignore
 import window from "global/window";
-import {t} from "onefx/lib/iso-i18n";
-import React, {Component} from "react";
-import {connect} from "react-redux";
-import {IopayRequired} from "../common/iopay-required";
-import {convertToString, getTwitterAccount, TWEET_WEB_INTENT_URL} from "../common/twitter";
-import {getIoPayAddress} from "../common/get-antenna";
+import { t } from "onefx/lib/iso-i18n";
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { getIoPayAddress } from "../common/get-antenna";
+import { IopayRequired } from "../common/iopay-required";
+import {
+  convertToString,
+  getTwitterAccount,
+  TWEET_WEB_INTENT_URL
+} from "../common/twitter";
 
 type Props = {
   // tslint:disable-next-line:no-any
-  onClick?: any,
+  onClick?: any;
   // tslint:disable-next-line:no-any
-  data?: any,
-  siteUrl?: string
+  data?: any;
+  siteUrl?: string;
 };
 
 type States = {
-  address?: string
+  address?: string;
 };
 
 // @ts-ignore
 @IopayRequired
 // @ts-ignore
 @connect(state => ({
-// @ts-ignore
+  // @ts-ignore
   siteUrl: state.base.siteUrl
 }))
 class MyReferralTwitterButton extends Component<Props, States> {
+  state: States = {};
+
   async componentDidMount(): Promise<void> {
-    try{
+    try {
       const address = await getIoPayAddress();
-      this.setState({address});
+      this.setState({ address });
     } catch (e) {
       window.console.log("error when load iotx balance", e);
     }
@@ -41,10 +47,7 @@ class MyReferralTwitterButton extends Component<Props, States> {
     const { data = {}, siteUrl = "" } = this.props;
     const { address = "" } = this.state;
 
-    const url = generateReferralLink(
-      siteUrl,
-      address
-    );
+    const url = generateReferralLink(siteUrl, address);
     const name = getTwitterAccount(data) || data.name;
 
     const tweetWebIntentParameters = convertToString({
@@ -59,15 +62,7 @@ class MyReferralTwitterButton extends Component<Props, States> {
         href={`${TWEET_WEB_INTENT_URL}?${tweetWebIntentParameters}`}
         data-size="large"
       >
-        <Button
-          style={{
-            fontWeight: "bold",
-            fontSize: "14px"
-          }}
-          type={"primary"}
-          size="large"
-          onClick={this.props.onClick}
-        >
+        <Button type={"primary"} onClick={this.props.onClick}>
           {t("my_stake.share_twitter")}
         </Button>
       </a>
@@ -75,7 +70,10 @@ class MyReferralTwitterButton extends Component<Props, States> {
   }
 }
 
-export function generateReferralLink(siteUrl: string, address?: string): string {
+export function generateReferralLink(
+  siteUrl: string,
+  address?: string
+): string {
   return `${siteUrl}/?src=${address ? address.substr(8, 8) : ""}`;
 }
 

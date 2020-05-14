@@ -1,35 +1,41 @@
 // @flow
 import Icon from "@ant-design/icons";
-import {AutoComplete, Button, Form, Radio} from "antd";
-import {FormInstance} from "antd/lib/form";
-import {get} from "dottie";
+import { AutoComplete, Button, Form, Radio } from "antd";
+import { FormInstance } from "antd/lib/form";
+import { get } from "dottie";
 // @ts-ignore
 import window from "global/window";
-import {t} from "onefx/lib/iso-i18n";
-import {styled} from "onefx/lib/styletron-react";
-import React, {Component, RefObject} from "react";
-import {Mutation, Query} from "react-apollo";
-import {connect} from "react-redux";
+import { t } from "onefx/lib/iso-i18n";
+import { styled } from "onefx/lib/styletron-react";
+import React, { Component, RefObject } from "react";
+import { Mutation, Query } from "react-apollo";
+import { connect } from "react-redux";
 // @ts-ignore
-import {CommonMargin, CommonMarginBottomStyle} from "../../common/common-margin";
-import {CommonModal} from "../../common/common-modal";
-import {formItemLayout} from "../../common/form-item-layout";
-import {getIoPayAddress, lazyGetContract} from "../../common/get-antenna";
-import {colors} from "../../common/styles/style-color2";
-import {Bucket, DEFAULT_STAKING_GAS_LIMIT} from "../../common/token-utils";
-import {MyReferralTwitterButton} from "../../my-referrals/my-referral-twitter-button";
-import {validateCanName} from "../field-validators";
-import {GET_ALL_CANDIDATE, RECORD_STAKING_REFERRAL} from "../smart-contract-gql-queries";
-import {actionSmartContractCalled} from "../smart-contract-reducer";
-import {StakeAndVoteExisting} from "../stake-and-vote-source-options/stake-and-vote-existing";
-import {StakeAndVoteNew} from "../stake-and-vote-source-options/stake-and-vote-new";
-import {FormItemText, subTextStyle} from "../staking-form-item";
-import {ConfirmStep} from "./confirm-step";
-import {SuccessStep} from "./success-step";
+import {
+  CommonMargin,
+  CommonMarginBottomStyle
+} from "../../common/common-margin";
+import { CommonModal } from "../../common/common-modal";
+import { formItemLayout } from "../../common/form-item-layout";
+import { getIoPayAddress } from "../../common/get-antenna";
+import { colors } from "../../common/styles/style-color2";
+import { Bucket, DEFAULT_STAKING_GAS_LIMIT } from "../../common/token-utils";
+import { MyReferralTwitterButton } from "../../my-referrals/my-referral-twitter-button";
+import { validateCanName } from "../field-validators";
+import {
+  GET_ALL_CANDIDATE,
+  RECORD_STAKING_REFERRAL
+} from "../smart-contract-gql-queries";
+import { actionSmartContractCalled } from "../smart-contract-reducer";
+import { StakeAndVoteExisting } from "../stake-and-vote-source-options/stake-and-vote-existing";
+import { StakeAndVoteNew } from "../stake-and-vote-source-options/stake-and-vote-new";
+import { FormItemText, subTextStyle } from "../staking-form-item";
+import { ConfirmStep } from "./confirm-step";
+import { SuccessStep } from "./success-step";
 
-import {toRau} from "iotex-antenna/lib/account/utils";
-import {webBpApolloClient} from "../../common/apollo-client";
-import {NATIVE_TOKEN_ABI} from "../native-token-abi";
+import { toRau } from "iotex-antenna/lib/account/utils";
+import { getStaking } from "../../../server/gateway/staking";
+import { webBpApolloClient } from "../../common/apollo-client";
 
 type TcanName = {
   value: string;
@@ -60,7 +66,6 @@ type Props = {
   currentCandidate?: any;
   disableModal?: boolean;
   isIoPay?: boolean;
-  contractAddress?: string;
 };
 
 type TNewStake = {
@@ -86,12 +91,8 @@ const Confirmation = styled("div", () => ({
 }));
 
 const VoteNowContainer = connect(
-  (state: {
-    staking: { contractAddress: string };
-    base: { siteUrl: string; isIoPay: boolean };
-  }) => ({
+  (state: { base: { siteUrl: string; isIoPay: boolean } }) => ({
     siteUrl: state.base.siteUrl,
-    contractAddress: state.staking.contractAddress,
     isIoPay: state.base.isIoPay
   }),
   dispatch => ({
@@ -120,31 +121,20 @@ const VoteNowContainer = connect(
 
     // tslint:disable-next-line:no-any
     async launchNativeStaking(recordStakingReferral: any): Promise<void> {
-      const { contractAddress } = this.props;
-
-      const tokenContract = await lazyGetContract(
-        String(contractAddress),
-        NATIVE_TOKEN_ABI
-      );
       const { stakeDuration, nonDecay, id, stakedAmount } = this.bucket;
-      const canName = this.bucket.canNameHex();
-      // @ts-ignore
-      const amount = toRau(stakedAmount, "Iotx");
-      const data = {
-        gasLimit: DEFAULT_STAKING_GAS_LIMIT,
-        gasPrice: toRau("1", "Qev"),
-        amount
-      };
-
+      const canName = this.bucket.canName;
+      const amount = toRau(String(stakedAmount), "Iotx");
       try {
         if (this.isFreshStaking()) {
-          this.txHash = await tokenContract.methods.createPygg(
-            canName,
-            stakeDuration,
-            Number(nonDecay), // FIXME: report 'failed to rawEncode: Error: Argument is not a number' error, if not transform to number explicitly
-            "0",
-            data
-          );
+          this.txHash = await getStaking().createStake({
+            candidateName: canName,
+            stakedAmount: amount,
+            stakedDuration: stakeDuration,
+            autoStake: nonDecay,
+            payload: "",
+            gasLimit: DEFAULT_STAKING_GAS_LIMIT,
+            gasPrice: toRau("1", "Qev")
+          });
           this.ioAddress = await getIoPayAddress();
           recordStakingReferral({
             variables: {
@@ -155,13 +145,14 @@ const VoteNowContainer = connect(
             }
           });
         } else {
-          this.txHash = await tokenContract.methods.restake(
-            id,
-            stakeDuration,
-            Number(nonDecay),
-            "0x0",
-            data
-          );
+          this.txHash = await getStaking().restake({
+            bucketIndex: Number(id || "0"),
+            stakedDuration: stakeDuration,
+            autoStake: nonDecay,
+            payload: "",
+            gasLimit: DEFAULT_STAKING_GAS_LIMIT,
+            gasPrice: toRau("1", "Qev")
+          });
         }
         window.console.log(`create native staking: ${this.txHash}`);
         this.setState({ step: SUCCESS_STEP });
@@ -359,6 +350,7 @@ const VoteNowContainer = connect(
                 {t("name_registration.cancel")}
               </Button>
             ),
+            " ",
             // tslint:disable-next-line:use-simple-attributes
             <MyReferralTwitterButton
               key="twitter"
@@ -376,6 +368,7 @@ const VoteNowContainer = connect(
                 {t("name_registration.cancel")}
               </Button>
             ),
+            " ",
             // tslint:disable-next-line:use-simple-attributes
             <Button
               key="submit"
@@ -396,7 +389,7 @@ const VoteNowContainer = connect(
 
     // tslint:disable-next-line:max-func-body-length
     renderSteps(): JSX.Element {
-      const { contractAddress, siteUrl = "" } = this.props;
+      const { siteUrl = "" } = this.props;
       const {
         votingSource,
         currentStakeDuration,
@@ -537,10 +530,6 @@ const VoteNowContainer = connect(
                   currentStakeDuration={currentStakeDuration}
                   currentStakeAmount={currentStakeAmount}
                   defaultValue={this.bucket && this.bucket.id}
-                  tokenContract={lazyGetContract(
-                    String(contractAddress),
-                    NATIVE_TOKEN_ABI
-                  )}
                 />
               )}
             </Form>

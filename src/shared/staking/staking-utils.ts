@@ -1,27 +1,26 @@
 // @flow
 import BigNumber from "bignumber.js";
-import {Contract} from "iotex-antenna/lib/contract/contract";
-import {fromString} from "iotex-antenna/lib/crypto/address";
+import { Contract } from "iotex-antenna/lib/contract/contract";
+import { fromString } from "iotex-antenna/lib/crypto/address";
+import { getIoPayAddress } from "../common/get-antenna";
 import {
   Bucket,
   DEFAULT_STAKING_DURATION_SECOND,
   encodeCandidateHexName,
   getPowerEstimation
 } from "../common/token-utils";
-import {NATIVE_TOKEN_ABI} from "./native-token-abi";
-import {getIoPayAddress} from "../common/get-antenna";
+import { NATIVE_TOKEN_ABI } from "./native-token-abi";
 
 export type TMyStakeStatus = {
-  addr: string,
-  buckets: Array<Bucket>,
-  totalStaking: number,
-  unStakePendingAmount: number,
-  withdrawableAmount: number,
-  totalVotesAmount: string,
-  patchArr?: string,
-  patchBuckets?: Array<Bucket>
+  addr: string;
+  buckets: Array<Bucket>;
+  totalStaking: number;
+  unStakePendingAmount: number;
+  withdrawableAmount: number;
+  totalVotesAmount: string;
+  patchArr?: string;
+  patchBuckets?: Array<Bucket>;
 };
-
 
 export function calcStats(
   addr: string,

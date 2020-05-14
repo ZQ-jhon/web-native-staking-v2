@@ -8,7 +8,7 @@ import leftPad from "left-pad";
 export const DEFAULT_EPOCH_SECOND = 24 * 3600;
 export const DEFAULT_STAKING_DURATION_SECOND = 24 * 3600;
 
-export const DEFAULT_STAKING_GAS_LIMIT = 500000;
+export const DEFAULT_STAKING_GAS_LIMIT = "10000000";
 
 BigNumber.set({ ROUNDING_MODE: BigNumber.ROUND_FLOOR });
 
@@ -53,12 +53,13 @@ export function getPowerEstimation(
   amount: number,
   duration: number,
   dayFromToday: number
-): { total: BigNumber, date: string } {
+): { total: BigNumber; date: string } {
   const daysLeft = duration - dayFromToday;
   let total = new BigNumber(0);
   if (amount > 0) {
-    // tslint:disable-next-line:binary-expression-operand-order
-    const percent = 1 + (daysLeft > 0 ? Math.log(daysLeft) / Math.log(1.2) / 100 : 0);
+    const percent =
+      // tslint:disable-next-line:binary-expression-operand-order
+      1 + (daysLeft > 0 ? Math.log(daysLeft) / Math.log(1.2) / 100 : 0);
     total = new BigNumber(amount).multipliedBy(percent);
   }
   const aDate = new Date();
@@ -70,12 +71,13 @@ export function getPowerEstimationForKovan(
   amount: number,
   duration: number,
   hourFromNow: number
-): { total: BigNumber, date: string } {
+): { total: BigNumber; date: string } {
   const hoursLeft = duration - hourFromNow;
   let total = new BigNumber(0);
   if (amount > 0) {
-    // tslint:disable-next-line:binary-expression-operand-order
-    const percent = 1 + (hoursLeft > 0 ? Math.log(hoursLeft) / Math.log(1.2) / 100 : 0);
+    const percent =
+      // tslint:disable-next-line:binary-expression-operand-order
+      1 + (hoursLeft > 0 ? Math.log(hoursLeft) / Math.log(1.2) / 100 : 0);
     total = new BigNumber(amount).multipliedBy(percent);
   }
   const aDate = new Date();
@@ -120,8 +122,11 @@ export class Bucket {
     b.withdrawWaitUntil =
       (unstakeStartTime || "") &&
       dateformat(
-        // tslint:disable-next-line:binary-expression-operand-order
-        new Date(new Date(unstakeStartTime).getTime() + 3 * stakingDurationSecond * 1000),
+        new Date(
+          new Date(unstakeStartTime).getTime() +
+            // tslint:disable-next-line:binary-expression-operand-order
+            3 * stakingDurationSecond * 1000
+        ),
         timeFormat
       );
     return b;

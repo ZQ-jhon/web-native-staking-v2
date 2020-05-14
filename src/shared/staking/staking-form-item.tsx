@@ -153,7 +153,6 @@ export class AutoStakeFormItem extends Component<Props, State> {
                   // tslint:disable-next-line:use-simple-attributes
                   <Switch
                     style={{ textAlign: "right" }}
-                    disabled={forceDisable || !this.props.stakeDuration}
                     onChange={checked => {
                       if (!forceDisable) {
                         this.setState({ nonDecay: checked });

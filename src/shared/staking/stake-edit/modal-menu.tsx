@@ -1,17 +1,17 @@
 // @flow
 // $FlowFixMe
-import {Menu} from "antd";
-import {fromRau} from "iotex-antenna/lib/account/utils";
-import {t} from "onefx/lib/iso-i18n";
+import { Menu } from "antd";
+import { fromRau } from "iotex-antenna/lib/account/utils";
+import { t } from "onefx/lib/iso-i18n";
 import React from "react";
-import {getStatus, IBucket} from "../../../server/gateway/staking";
-import {colors} from "../../common/styles/style-color2";
-import {DEFAULT_STAKING_DURATION_SECOND} from "../../common/token-utils";
-import {AddStakingModal} from "./add-staking-modal";
-import {RestakeModal} from "./restake-modal";
-import {RevoteModal} from "./revote-modal";
-import {UnstakeModal} from "./unstake-modal";
-import {WithdrawModal} from "./withdraw-modal";
+import { getStatus, IBucket } from "../../../server/gateway/staking";
+import { colors } from "../../common/styles/style-color2";
+import { DEFAULT_STAKING_DURATION_SECOND } from "../../common/token-utils";
+import { AddStakingModal } from "./add-staking-modal";
+import { RestakeModal } from "./restake-modal";
+import { RevoteModal } from "./revote-modal";
+import { UnstakeModal } from "./unstake-modal";
+import { WithdrawModal } from "./withdraw-modal";
 
 const MSEC_PER_DAY = 24 * 60 * 60 * 1000;
 const ACTION_ROW_STYLE = {
@@ -45,7 +45,11 @@ const menuInfoStyleDisabled = {
 };
 
 function renderRevote(record: IBucket): JSX.Element {
-  const status = getStatus(record.withdrawWaitUntil, record.unstakeStartTime, record.stakeStartTime);
+  const status = getStatus(
+    record.withdrawWaitUntil,
+    record.unstakeStartTime,
+    record.stakeStartTime
+  );
 
   switch (status) {
     case "staking":
@@ -55,8 +59,8 @@ function renderRevote(record: IBucket): JSX.Element {
           {
             // @ts-ignore
             <span style={menuInfoStyle}>
-            {t("my_stake.status.suffix.anytime")}
-          </span>
+              {t("my_stake.status.suffix.anytime")}
+            </span>
           }
         </div>
       );
@@ -67,7 +71,7 @@ function renderRevote(record: IBucket): JSX.Element {
           {
             // @ts-ignore
             <span style={menuInfoStyleDisabled}>
-            {t("my_stake.status.suffix.not_applicable")}
+              {t("my_stake.status.suffix.not_applicable")}
             </span>
           }
         </div>
@@ -79,7 +83,7 @@ function renderRevote(record: IBucket): JSX.Element {
           {
             // @ts-ignore
             <span style={menuInfoStyleDisabled}>
-            {t("my_stake.status.suffix.anytime")}
+              {t("my_stake.status.suffix.anytime")}
             </span>
           }
         </div>
@@ -90,19 +94,23 @@ function renderRevote(record: IBucket): JSX.Element {
 }
 
 function renderRestake(record: IBucket): JSX.Element {
-  const status = getStatus(record.withdrawWaitUntil, record.unstakeStartTime, record.stakeStartTime);
+  const status = getStatus(
+    record.withdrawWaitUntil,
+    record.unstakeStartTime,
+    record.stakeStartTime
+  );
 
   return ["staking", "unstaking", "withdrawable"].includes(status) ? (
     <div {...ACTION_ROW_STYLE}>
       <span>{t("my_stake.edit.restake")}</span>
       {
         // @ts-ignore
-        <span style={menuInfoStyle}>
-            {t("my_stake.status.suffix.anytime")}
-            </span>
+        <span style={menuInfoStyle}>{t("my_stake.status.suffix.anytime")}</span>
       }
     </div>
-  ) : <></>;
+  ) : (
+    <></>
+  );
 }
 
 function renderUnstake(record: IBucket): JSX.Element {
@@ -114,16 +122,20 @@ function renderUnstake(record: IBucket): JSX.Element {
           // @ts-ignore
           <span style={menuInfoStyle}>
             {t("my_stake.status.suffix.anytime")}
-            </span>
+          </span>
         }
       </div>
     );
   }
-  if (!record.stakeStartTime){
-    return <div>no stakeStartTime</div>
+  if (!record.stakeStartTime) {
+    return <div>no stakeStartTime</div>;
   }
 
-  const status = getStatus(record.withdrawWaitUntil, record.unstakeStartTime, record.stakeStartTime);
+  const status = getStatus(
+    record.withdrawWaitUntil,
+    record.unstakeStartTime,
+    record.stakeStartTime
+  );
   const today = new Date();
   const startTime = record.stakeStartTime;
   const stakingDurationSecond = DEFAULT_STAKING_DURATION_SECOND;
@@ -151,7 +163,7 @@ function renderUnstake(record: IBucket): JSX.Element {
             // @ts-ignore
             // tslint:disable-next-line:use-simple-attributes
             <span style={disabled ? menuInfoStyleDisabled : menuInfoStyle}>
-            {menuInfo}
+              {menuInfo}
             </span>
           }
         </div>
@@ -163,7 +175,7 @@ function renderUnstake(record: IBucket): JSX.Element {
           {
             // @ts-ignore
             <span style={menuInfoStyleDisabled}>
-            {t("my_stake.status.suffix.not_applicable")}
+              {t("my_stake.status.suffix.not_applicable")}
             </span>
           }
         </div>
@@ -175,7 +187,7 @@ function renderUnstake(record: IBucket): JSX.Element {
           {
             // @ts-ignore
             <span style={menuInfoStyleDisabled}>
-            {t("my_stake.status.suffix.not_applicable")}
+              {t("my_stake.status.suffix.not_applicable")}
             </span>
           }
         </div>
@@ -186,15 +198,19 @@ function renderUnstake(record: IBucket): JSX.Element {
 }
 
 function renderWithdraw(record: IBucket): JSX.Element {
-  const status = getStatus(record.withdrawWaitUntil, record.unstakeStartTime, record.stakeStartTime);
+  const status = getStatus(
+    record.withdrawWaitUntil,
+    record.unstakeStartTime,
+    record.stakeStartTime
+  );
   const today = new Date();
-  if(!record.withdrawWaitUntil) {
+  if (!record.withdrawWaitUntil) {
     return <></>;
   }
   const withdrawTime = new Date(record.withdrawWaitUntil);
   let time = withdrawTime.toLocaleDateString();
   // @ts-ignore
-  if (withdrawTime > today && (withdrawTime - today) < MSEC_PER_DAY) {
+  if (withdrawTime > today && withdrawTime - today < MSEC_PER_DAY) {
     time = withdrawTime.toLocaleTimeString();
   }
 
@@ -206,7 +222,7 @@ function renderWithdraw(record: IBucket): JSX.Element {
           {
             // @ts-ignore
             <span style={menuInfoStyleDisabled}>
-            {t("my_stake.status.suffix.not_applicable")}
+              {t("my_stake.status.suffix.not_applicable")}
             </span>
           }
         </div>
@@ -218,7 +234,7 @@ function renderWithdraw(record: IBucket): JSX.Element {
           {
             // @ts-ignore
             <span style={menuInfoStyleDisabled}>
-            {t("my_stake.status.suffix.from", { time })}
+              {t("my_stake.status.suffix.from", { time })}
             </span>
           }
         </div>
@@ -230,7 +246,7 @@ function renderWithdraw(record: IBucket): JSX.Element {
           {
             // @ts-ignore
             <span style={menuInfoStyle}>
-            {t("my_stake.status.suffix.anytime")}
+              {t("my_stake.status.suffix.anytime")}
             </span>
           }
         </div>
@@ -246,17 +262,13 @@ function renderAddStaking(): JSX.Element {
       <span>{t("my_stake.edit.add_staking")}</span>
       {
         // @ts-ignore
-        <span style={menuInfoStyle}>
-            {t("my_stake.status.suffix.anytime")}
-        </span>
+        <span style={menuInfoStyle}>{t("my_stake.status.suffix.anytime")}</span>
       }
     </div>
   );
 }
 
-export function renderActionMenu(
-  record: IBucket
-): JSX.Element {
+export function renderActionMenu(record: IBucket): JSX.Element {
   return (
     <Menu className={"MyStakeInfoAction"}>
       <Menu.Item key="1">
@@ -277,7 +289,9 @@ export function renderActionMenu(
             bucketIndex={record.index}
             clickable={renderAddStaking()}
             stakeDuration={record.stakedDuration}
-            stakedAmount={Number(fromRau(record.stakedAmount.toString(),"IOTX"))}
+            stakedAmount={Number(
+              fromRau(record.stakedAmount.toString(), "Iotx")
+            )}
             nonDecay={record.autoStake}
           />
         }

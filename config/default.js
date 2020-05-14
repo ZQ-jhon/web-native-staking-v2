@@ -12,11 +12,11 @@ module.exports = {
       secrets: ["insecure plain text", "insecure secret here"]
     },
     noSecurityHeadersRoutes: {
-      "/tools/token-migration/api-gateway/": true,
+      "/nsv2/api-gateway/": true,
       "/api/": true
     },
     noCsrfRoutes: {
-      "/tools/token-migration/api-gateway/": true,
+      "/nsv2/api-gateway/": true,
       "/api/": true
     }
   },
@@ -63,6 +63,5 @@ module.exports = {
     "script-src": ["self", "https://www.google-analytics.com/", "unsafe-eval"]
   },
   apiGatewayUrl:
-    process.env.API_GATEWAY_URL ||
-    "http://localhost:5004/tools/token-migration/api-gateway/"
+    process.env.API_GATEWAY_URL || "http://localhost:5004/nsv2/api-gateway/"
 };

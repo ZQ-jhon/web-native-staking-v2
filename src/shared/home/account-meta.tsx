@@ -4,8 +4,8 @@ import { t } from "onefx/lib/iso-i18n";
 import { styled } from "onefx/lib/styletron-react";
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Staking } from "../../server/gateway/staking";
-import {getAntenna, getIoPayAddress} from "../common/get-antenna";
+import { getStaking } from "../../server/gateway/staking";
+import { getIoPayAddress } from "../common/get-antenna";
 import {
   actionUpdateAccountMeta,
   actionUpdateBuckets
@@ -40,8 +40,7 @@ export const BucketsLoader = connect(
   class BucketsLoaderInner extends Component<Props, State> {
     async componentDidMount(): Promise<void> {
       const { actionUpdateBuckets, actionUpdateAccountMeta } = this.props;
-      const antenna = getAntenna();
-      const staking = new Staking({ antenna });
+      const staking = getStaking();
       const address = await getIoPayAddress();
       const buckets = await staking.getBucketsByVoter(address, 0, 999);
       let totalStaked = new BigNumber(0);

@@ -4,54 +4,46 @@ import { Form } from "antd";
 import { t } from "onefx/lib/iso-i18n";
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { getStaking, IBucket } from "../../../server/gateway/staking";
 import { CommonMarginBottomStyle } from "../../common/common-margin";
 import { formItemLayout } from "../../common/form-item-layout";
+import { getIoPayAddress } from "../../common/get-antenna";
 import { IopayRequired } from "../../common/iopay-required";
-import { Bucket, DEFAULT_EPOCH_SECOND } from "../../common/token-utils";
 import {
   AutoStakeFormItem,
   FormItemText,
   IconLabel,
   subTextStyle
 } from "../staking-form-item";
-import { getNativeStakeStatus } from "../staking-utils";
 
 type Props = {
-  currentStakeDuration: number,
-  currentStakeAmount: number,
-  handleRevote: Function,
-  defaultValue?: number,
-  epochSecondValue?: number,
-  // tslint:disable-next-line:no-any
-  tokenContract?: any
+  currentStakeDuration: number;
+  currentStakeAmount: number;
+  handleRevote: Function;
+  defaultValue?: number;
+  epochSecondValue?: number;
+  buckets: Array<IBucket>;
 };
 
 type State = {
-  existingBuckets: Array<Bucket>,
-  loading: boolean
+  existingBuckets: Array<IBucket>;
+  loading: boolean;
 };
 
 // @ts-ignore
 @IopayRequired
 // @ts-ignore
-@connect(state => ({
-// @ts-ignore
-  epochSecondValue: state.base.epochSecondValue,
+@connect((state: { buckets: Array<IBucket> }) => ({
+  // @ts-ignore
+  buckets: state.buckets
 }))
 class StakeAndVoteExisting extends Component<Props, State> {
   async componentDidMount(): Promise<void> {
-    const {
-      tokenContract,
-      epochSecondValue = DEFAULT_EPOCH_SECOND
-    } = this.props;
-
-    const stakeStatus = await getNativeStakeStatus(
-      tokenContract,
-      epochSecondValue
-    );
-    const existingBuckets = (stakeStatus.buckets) || [];
+    const staking = getStaking();
+    const address = await getIoPayAddress();
+    const buckets = await staking.getBucketsByVoter(address, 0, 999);
     this.setState({
-      existingBuckets,
+      existingBuckets: buckets,
       loading: false
     });
   }
@@ -78,11 +70,11 @@ class StakeAndVoteExisting extends Component<Props, State> {
           {
             // @ts-ignore
             <span style={subTextStyle}>
-            {t("my_stake.exsitingBucketWarningExplain")}
-          </span>
+              {t("my_stake.exsitingBucketWarningExplain")}
+            </span>
           }
         </div>
-        {(
+        {
           // @ts-ignore
           <Form.Item
             {...formItemLayout}
@@ -94,12 +86,14 @@ class StakeAndVoteExisting extends Component<Props, State> {
                 sub={
                   // tslint:disable-next-line:react-no-dangerous-html
                   <span
-                    dangerouslySetInnerHTML={{ __html: t("my_stake.inMyVotes") }}
+                    dangerouslySetInnerHTML={{
+                      __html: t("my_stake.inMyVotes")
+                    }}
                   />
                 }
               />
             }
-            style={{...CommonMarginBottomStyle}}
+            style={{ ...CommonMarginBottomStyle }}
             name="bucketId"
             rules={[
               {
@@ -109,7 +103,7 @@ class StakeAndVoteExisting extends Component<Props, State> {
             ]}
             initialValue={defaultValue}
           >
-            {(
+            {
               // @ts-ignore
               <Select
                 size="large"
@@ -117,31 +111,33 @@ class StakeAndVoteExisting extends Component<Props, State> {
                 // @ts-ignore
                 onChange={bucketId => {
                   const bucket = existingBuckets.find(
-                    b => String(b.id) === bucketId
+                    b => String(b.index) === bucketId
                   );
                   handleRevote(bucket);
                 }}
               >
-                {existingBuckets.map((bucket, index) => (
-                  <Select.Option key={index} value={String(bucket.id)}>
+                {existingBuckets.map((bucket, i) => (
+                  <Select.Option key={i} value={String(bucket.index)}>
                     <div style={{ fontSize: 14 }}>
-                      Bucket ID {bucket.id} | <b>{bucket.canName}</b>{" "}
-                      {!bucket.canName && "Not Voted Yet"}
+                      Bucket ID {bucket.index} | <b>{bucket.candidate}</b>{" "}
+                      {!bucket.candidate && "Not Voted Yet"}
                     </div>
                     <div style={{ fontSize: 12, color: "#999" }}>
-                      Amount: {bucket.stakedAmount} | Staking Period:{" "}
-                      {bucket.stakeDuration}
+                      Amount: {String(bucket.stakedAmount)} | Staking Period:{" "}
+                      {String(bucket.stakedDuration)}
                     </div>
                   </Select.Option>
                 ))}
               </Select>
-            )}
-            {(!currentStakeDuration || !currentStakeAmount) ? (
+            }
+            {!currentStakeDuration || !currentStakeAmount ? (
               // @ts-ignore
               <span style={subTextStyle}>{t("my_stake.extend_anytime")}</span>
-            ) : <></>}
+            ) : (
+              <></>
+            )}
           </Form.Item>
-        )}
+        }
         {
           // @ts-ignore
           <AutoStakeFormItem

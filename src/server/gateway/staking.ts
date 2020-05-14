@@ -34,6 +34,7 @@ import {
   VoteBucket,
   VoteBucketList
 } from "iotex-antenna/protogen/proto/types/state_data_pb";
+import { getAntenna } from "../../shared/common/get-antenna";
 
 type Candidate = {
   name: string;
@@ -357,4 +358,14 @@ export class Staking {
       signer: this.antenna.iotx.signer
     }).execute();
   }
+}
+
+let staking: undefined | Staking;
+
+export function getStaking(): Staking {
+  if (staking) {
+    return staking;
+  }
+  staking = new Staking({ antenna: getAntenna() });
+  return staking;
 }

@@ -1,15 +1,15 @@
 // @ts-ignore
 import window from "global/window";
 import Antenna from "iotex-antenna/lib";
-import {fromRau} from "iotex-antenna/lib/account/utils";
-import {Contract} from "iotex-antenna/lib/contract/contract";
-import {WsSignerPlugin} from "iotex-antenna/lib/plugin/ws";
+import { fromRau } from "iotex-antenna/lib/account/utils";
+import { Contract } from "iotex-antenna/lib/contract/contract";
+import { WsSignerPlugin } from "iotex-antenna/lib/plugin/ws";
 import isBrowser from "is-browser";
 // @ts-ignore
 import JsonGlobal from "safe-json-globals/get";
 import sleepPromise from "sleep-promise";
 // @ts-ignore
-import {WvSigner} from "./wv-signer";
+import { WvSigner } from "./wv-signer";
 
 const state = isBrowser && JsonGlobal("state");
 const isIoPay = isBrowser && state.base.isIoPay;
@@ -22,7 +22,9 @@ export function getAntenna(): Antenna {
   if (injectedWindow.antenna) {
     return injectedWindow.antenna;
   }
-  const signer = isIoPay?new WvSigner(): new WsSignerPlugin("wss://local.iotex.io:64102");
+  const signer = isIoPay
+    ? new WvSigner()
+    : new WsSignerPlugin("wss://local.iotex.io:64102");
   injectedWindow.antenna = new Antenna("https://api.testnet.iotex.one", {
     signer
   });
@@ -146,5 +148,5 @@ export async function getIotxBalance(address: string): Promise<number> {
   const antenna = getAntenna();
   const { accountMeta } = await antenna.iotx.getAccount({ address });
   // @ts-ignore
-  return Number(fromRau(accountMeta.balance, "IOTX"));
+  return Number(fromRau(accountMeta.balance, "Iotx"));
 }
