@@ -63,7 +63,7 @@ export const UnstakeModal = connect(
         ...values
       });
 
-      console.log({
+      window.console.log({
         stakeStartTime,
         stakeDuration,
         isAvailable: this.isAvailable(stakeStartTime, stakeDuration),
