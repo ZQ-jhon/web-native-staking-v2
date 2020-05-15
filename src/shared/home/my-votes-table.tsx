@@ -161,7 +161,7 @@ class MyVotesTable extends Component<Props, State> {
           title: (
             <b style={{ marginLeft: "19px" }}>{t("my_stake.staking_bucket")}</b>
           ),
-          dataIndex: "id",
+          dataIndex: "index",
           className: "BorderTop BorderLeft BorderBottom",
           // @ts-ignore
           render(text: any, record: IBucket): JSX.Element {
@@ -271,7 +271,7 @@ class MyVotesTable extends Component<Props, State> {
               {t("my_stake.nonDecay")}
             </span>
           ),
-          dataIndex: "nonDecay",
+          dataIndex: "autoStake",
           className: "BorderTop BorderBottom",
           render(t: Boolean): JSX.Element {
             return t ? (
