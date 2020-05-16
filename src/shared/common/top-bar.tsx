@@ -208,7 +208,7 @@ const LogoWrapper = styled("a", {
 });
 function Logo(): JSX.Element {
   return (
-    <LogoWrapper href="//iotex.io/">
+    <LogoWrapper href="/">
       <Image src={assetURL("logo.png")} width={"auto"} height={"35px"} />
     </LogoWrapper>
   );

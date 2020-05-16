@@ -1,3 +1,5 @@
+// @ts-ignore
+import window from "global/window";
 import { t } from "onefx/lib/iso-i18n";
 import { styled } from "onefx/lib/styletron-react";
 import React from "react";
@@ -17,8 +19,8 @@ const actived = { color: colors.white, ...minWitdh };
 const inactived = { ...minWitdh, textDecoration: "none" };
 
 // tslint:disable-next-line:no-any
-export const TopBarMenu = ({ history, hideMobileMenu, faucetEnable }: any) => {
-  const pathname = history && history.location && history.location.pathname;
+export const TopBarMenu = ({ hideMobileMenu, faucetEnable }: any) => {
+  const pathname = window && window.location && window.location.pathname;
   const profileStyle = { minWitdh: "30px" };
   const aStyle =
     String(pathname) === "/" ||
@@ -29,9 +31,16 @@ export const TopBarMenu = ({ history, hideMobileMenu, faucetEnable }: any) => {
   const a1Style = String(pathname).startsWith("/profile/")
     ? { ...actived, ...profileStyle }
     : { ...inactived, ...profileStyle };
+  const a2Style = String(pathname).startsWith("/v2/")
+    ? { ...actived, ...profileStyle }
+    : { ...inactived, ...profileStyle };
+
   const menu = [
     <A key={0} href="/" style={aStyle} onClick={hideMobileMenu}>
-      {t("topbar.voting")}
+      V1
+    </A>,
+    <A key={4} href="/v2/" style={a2Style} onClick={hideMobileMenu}>
+      V2
     </A>,
     <A key={1} href="/profile/" style={a1Style} onClick={hideMobileMenu}>
       {t("topbar.i_am_a_delegate")}
