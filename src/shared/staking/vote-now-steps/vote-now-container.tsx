@@ -20,6 +20,7 @@ import { formItemLayout } from "../../common/form-item-layout";
 import { getIoPayAddress } from "../../common/get-antenna";
 import { colors } from "../../common/styles/style-color2";
 import { DEFAULT_STAKING_GAS_LIMIT } from "../../common/token-utils";
+import { getIoAddressFromRemote } from "../../home/voting-container";
 import { MyReferralTwitterButton } from "../../my-referrals/my-referral-twitter-button";
 import { validateCanName } from "../field-validators";
 import {
@@ -193,6 +194,11 @@ const VoteNowContainer = connect(
           validateStatus: ""
         }
       };
+    }
+
+    // @ts-ignore
+    async componentDidMount(): Promise<void> {
+      await getIoAddressFromRemote();
     }
 
     onSubmit = () => {
