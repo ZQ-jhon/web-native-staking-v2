@@ -181,7 +181,7 @@ export const RestakeModal = connect(
                 <DurationFormItem
                   initialValue={stakeDuration}
                   validatorFactory={validateStakeDuration}
-                  form={this.formRef}
+                  formRef={this.formRef}
                   onChange={n => this.setState({ currentStakeDuration: n })}
                 />
               )}
@@ -192,7 +192,7 @@ export const RestakeModal = connect(
                   initialValue={nonDecay}
                   stakeAmount={this.state.currentStakeAmount}
                   stakeDuration={this.state.currentStakeDuration}
-                  form={this.formRef}
+                  formRef={this.formRef}
                   forceDisable={forceDisable}
                 />
               )}

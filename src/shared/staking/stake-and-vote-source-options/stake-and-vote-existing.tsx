@@ -1,9 +1,10 @@
 // @flow
 import { Select } from "antd";
 import { Form } from "antd";
+import {FormInstance} from "antd/lib/form";
 import BigNumber from "bignumber.js";
 import { t } from "onefx/lib/iso-i18n";
-import React, { Component } from "react";
+import React, {Component, RefObject} from "react";
 import { connect } from "react-redux";
 import { getStaking, IBucket } from "../../../server/gateway/staking";
 import { CommonMarginBottomStyle } from "../../common/common-margin";
@@ -24,6 +25,7 @@ type Props = {
   defaultValue?: number;
   epochSecondValue?: number;
   buckets: Array<IBucket>;
+  formRef?: RefObject<FormInstance>;
 };
 
 type State = {
@@ -142,6 +144,7 @@ class StakeAndVoteExisting extends Component<Props, State> {
         {
           // @ts-ignore
           <AutoStakeFormItem
+            formRef={this.props.formRef}
             showAutoStack={false}
             initialValue={false}
             stakeAmount={currentStakeAmount}

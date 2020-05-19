@@ -31,11 +31,14 @@ const isStakeDurationInvalid = (value: number, maxValue: number) => {
 };
 
 // tslint:disable-next-line:variable-name no-any
-export const validateStakeDuration = (maxValue: number) => (_rule: any,
+export const validateStakeDuration = (maxValue: number, minValue?: number) => (_rule: any,
                                                             value: number,
                                                             // tslint:disable-next-line:unified-signatures
                                                             callback: { (arg0: string): void; (): void; }) => {
-  if (isStakeDurationInvalid(value, maxValue)) {
+  if (minValue !== undefined && (value < minValue)) {
+    // @ts-ignore
+    callback(t("my_stake.largerOrEqualTo.err", { num: minValue }));
+  } else if (isStakeDurationInvalid(value, maxValue)) {
     // @ts-ignore
     callback(t("my_stake.stakeDuration.err", { maxValue }));
   } else {

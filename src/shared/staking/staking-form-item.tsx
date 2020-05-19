@@ -1,24 +1,18 @@
 // @flow
-import { InfoCircleOutlined, RetweetOutlined } from "@ant-design/icons/lib";
-import { Form, InputNumber, Switch } from "antd";
+import {InfoCircleOutlined, RetweetOutlined} from "@ant-design/icons/lib";
+import {Form, InputNumber, Switch} from "antd";
+import {FormInstance} from "antd/lib/form";
 import BigNumber from "bignumber.js";
 // @ts-ignore
-import { t } from "onefx/lib/iso-i18n";
-import React, { Component } from "react";
-import {
-  CommonMarginBottomStyle,
-  CommonMarginTop,
-  NoMarginBottomStyle
-} from "../common/common-margin";
-import { Flex } from "../common/flex";
-import { formItemLayout } from "../common/form-item-layout";
-import { colors } from "../common/styles/style-color2";
-import { fontFamily, fonts } from "../common/styles/style-font";
-import { getPowerEstimation } from "../common/token-utils";
-import {
-  getStakeDurationMaxValue,
-  validateStakeDuration
-} from "./field-validators";
+import {t} from "onefx/lib/iso-i18n";
+import React, {Component, RefObject} from "react";
+import {CommonMarginBottomStyle, CommonMarginTop, NoMarginBottomStyle} from "../common/common-margin";
+import {Flex} from "../common/flex";
+import {formItemLayout} from "../common/form-item-layout";
+import {colors} from "../common/styles/style-color2";
+import {fontFamily, fonts} from "../common/styles/style-font";
+import {getPowerEstimation} from "../common/token-utils";
+import {getStakeDurationMaxValue, validateStakeDuration} from "./field-validators";
 
 type Props = {
   // tslint:disable-next-line:no-any
@@ -31,6 +25,7 @@ type Props = {
   stakeAmount?: BigNumber;
   stakeDuration?: number;
   forceDisable?: boolean;
+  formRef?: RefObject<FormInstance>;
 };
 
 type State = {
@@ -102,9 +97,16 @@ export class AutoStakeFormItem extends Component<Props, State> {
   };
   props: Props;
 
-  componentDidMount(): void {
-    // @ts-ignore
-    this.setState({ nonDecay: this.props.initialValue });
+  async componentDidMount(): Promise<void> {
+    const { formRef } = this.props;
+    if (formRef) {
+      const form = formRef.current;
+      if (form) {
+        form.setFieldsValue({
+          nonDecay: this.props.initialValue,
+        });
+      }
+    }
   }
 
   getPowerEstimation(
@@ -125,7 +127,8 @@ export class AutoStakeFormItem extends Component<Props, State> {
       children,
       stakeAmount = new BigNumber(0),
       stakeDuration = 0,
-      forceDisable = false
+      forceDisable = false,
+      initialValue
     } = this.props;
     return (
       <div>
@@ -147,7 +150,7 @@ export class AutoStakeFormItem extends Component<Props, State> {
                 }
                 style={{ marginBottom: 0 }}
                 name={fieldName}
-                initialValue={this.state.nonDecay}
+                initialValue={initialValue}
                 valuePropName={"checked"}
               >
                 {
@@ -272,7 +275,8 @@ type DurationFormItemProps = {
   initialValue?: number;
   onChange?(value: number): void;
   validatorFactory?(
-    maxDuration: number
+    maxDuration: number,
+    minValue?: number
   ): // tslint:disable-next-line:no-any
   (rule: any, value: any, callback: any) => void;
 };
@@ -288,6 +292,7 @@ export class DurationFormItem extends Component<DurationFormItemProps> {
       onChange,
       validatorFactory = validateStakeDuration
     } = this.props;
+    const minDuration = initialValue;
 
     maxDuration = maxDuration >= initialValue ? maxDuration : initialValue;
     return (
@@ -312,9 +317,9 @@ export class DurationFormItem extends Component<DurationFormItemProps> {
                 message: t("my_stake.stakeDuration.required")
               },
               {
-                validator: validatorFactory(maxDuration)
+                validator: validatorFactory(maxDuration, minDuration)
               }
-            ]}
+              ]}
             initialValue={initialValue}
           >
             <InputNumber

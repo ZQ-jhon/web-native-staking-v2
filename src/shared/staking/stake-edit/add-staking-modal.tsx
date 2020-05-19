@@ -13,6 +13,7 @@ import { formItemLayout } from "../../common/form-item-layout";
 import { getIoPayAddress, getIotxBalance } from "../../common/get-antenna";
 import { colors } from "../../common/styles/style-color2";
 import { DEFAULT_STAKING_GAS_LIMIT } from "../../common/token-utils";
+import {smallerOrEqualTo} from "../field-validators";
 import { actionSmartContractCalled } from "../smart-contract-reducer";
 import {
   AutoStakeFormItem,
@@ -34,8 +35,6 @@ type Props = {
   nonDecay: boolean;
   stakedAmount: BigNumber;
   stakeDuration: number;
-  // tslint:disable-next-line:no-any
-  form: any;
   actionSmartContractCalled(payload: boolean): void;
 };
 
@@ -137,7 +136,7 @@ export const AddStakingModal = connect(
 
     // tslint:disable-next-line:max-func-body-length
     render(): JSX.Element {
-      const { bucketIndex, clickable, nonDecay, form } = this.props;
+      const { bucketIndex, clickable, nonDecay } = this.props;
       // const { getFieldDecorator, setFieldsValue, getFieldsError } = form;
       const {
         currentStakeAmount,
@@ -185,7 +184,10 @@ export const AddStakingModal = connect(
                   rules={[
                     {
                       required: true,
-                      message: t("my_stake.addStakingAmount.required")
+                      message: t("my_stake.addStakingAmount.required"),
+                    },
+                    {
+                      validator: smallerOrEqualTo(iotxBalance, 1)
                     }
                   ]}
                 >
@@ -193,9 +195,8 @@ export const AddStakingModal = connect(
                     size="large"
                     addonAfter="IOTX"
                     style={inputNumberStyle}
-                    disabled={iotxBalance < 100}
+                    disabled={iotxBalance <= 0}
                     onChange={event => {
-                      // $FlowFixMe
                       const value = Number(event.target.value);
                       this.setState({
                         currentStakeAmount: new BigNumber(
@@ -204,11 +205,9 @@ export const AddStakingModal = connect(
                       });
                     }}
                     onBlur={event => {
-                      // $FlowFixMe
                       const value = Number(event.target.value);
-                      const minValue = 100;
+                      const minValue = 1;
                       if (value < minValue) {
-                        // setFieldsValue({ addStaking: minValue });
                         this.setState({
                           currentStakeAmount: new BigNumber(
                             this.props.stakedAmount
@@ -225,7 +224,7 @@ export const AddStakingModal = connect(
                     // @ts-ignore
                     style={{
                       ...subTextStyle,
-                      opacity: Number(iotxBalance < 100),
+                      opacity: Number(iotxBalance <= 0),
                       color: colors.warning
                     }}
                   >
@@ -263,7 +262,7 @@ export const AddStakingModal = connect(
                   initialValue={nonDecay}
                   stakeAmount={this.state.currentStakeAmount}
                   stakeDuration={this.props.stakeDuration}
-                  form={form}
+                  formRef={this.formRef}
                   showAutoStack={false}
                   forceDisable={!nonDecay}
                 />
