@@ -545,7 +545,7 @@ const VoteNowContainer = connect(
                   handleRevote={bucket => this.handleRevote(bucket)}
                   currentStakeDuration={currentStakeDuration}
                   currentStakeAmount={new BigNumber(currentStakeAmount)}
-                  defaultValue={this.bucket.index}
+                  defaultValue={this.bucket && this.bucket.index}
                 />
               )}
             </Form>
