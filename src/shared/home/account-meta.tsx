@@ -96,7 +96,7 @@ export const AccountMeta = connect(
       totalVotes: string;
     };
   }) => {
-    return state.accountMeta;
+    return { ...(state.accountMeta || {}) };
   }
 )(
   class AccountMetaInner extends Component<AMProps> {

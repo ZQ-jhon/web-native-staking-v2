@@ -318,6 +318,7 @@ export class DurationFormItem extends Component<DurationFormItemProps> {
             initialValue={initialValue}
           >
             <InputNumber
+              type="number"
               size="large"
               step={7}
               min={0}

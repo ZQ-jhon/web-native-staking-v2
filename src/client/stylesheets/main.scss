@@ -80,7 +80,7 @@ $border-warning: #e44837;
 
 .MyStakeInfo table {
   font-size: 12px;
-  border-spacing: 0 8px;
+  border-spacing: 0 8px !important;
   border-collapse: separate;
 }
 .MyStakeInfo .ant-table-thead > tr > th,
@@ -122,9 +122,9 @@ $border-warning: #e44837;
   border-bottom-right-radius: 3px;
 }
 
-.StakingLink{
+.StakingLink {
   padding: 3px 0;
   color: #0b8de3;
   font-weight: bold;
-  line-height: 1.36
+  line-height: 1.36;
 }

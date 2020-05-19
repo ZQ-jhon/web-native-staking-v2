@@ -22,7 +22,6 @@ import { media } from "../common/styles/style-media";
 import { renderActionMenu } from "../staking/stake-edit/modal-menu";
 import { AccountMeta } from "./account-meta";
 
-const CustomExpandIcon = () => null;
 const ACCOUNT_AREA_WIDTH = 290;
 
 type Props = {
@@ -32,7 +31,6 @@ type Props = {
 
 type State = {
   invalidNames: string;
-  expandedRowKeys: Array<string>;
   showMore: any;
   address?: string;
 };
@@ -48,7 +46,6 @@ class MyVotesTable extends Component<Props, State> {
     super(props);
     this.state = {
       invalidNames: "",
-      expandedRowKeys: [],
       showMore: {},
       address: ""
     };
@@ -150,7 +147,6 @@ class MyVotesTable extends Component<Props, State> {
   // tslint:disable-next-line:max-func-body-length
   render(): JSX.Element {
     const bpCandidates: any = [];
-    const { expandedRowKeys } = this.state;
     const { dataSource } = this.props;
 
     // @ts-ignore
@@ -386,14 +382,6 @@ class MyVotesTable extends Component<Props, State> {
             pagination={{ pageSize: 6 }}
             columns={DisplayMyStakeCols(bpCandidates)}
             dataSource={dataSource}
-            expandIcon={CustomExpandIcon}
-            expandedRowRender={(record: IBucket) =>
-              this.renderReward(bpCandidates, record)
-            }
-            // @ts-ignore
-            expandIconAsCell={false}
-            // @ts-ignore
-            expandedRowKeys={expandedRowKeys}
             rowKey="index"
           />
         </Flex>
