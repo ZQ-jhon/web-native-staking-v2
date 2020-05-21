@@ -1,6 +1,6 @@
 # web-native-staking-v2
 
-[![CircleCI](https://circleci.com/gh/puncsky/web-native-staking-v2/tree/master.svg?style=svg)](https://circleci.com/gh/puncsky/web-native-staking-v2/tree/master)
+[![CircleCI](https://circleci.com/gh/iotexproject/web-native-staking-v2/tree/master.svg?style=svg)](https://circleci.com/gh/iotexproject/web-native-staking-v2/tree/master)
 
 - [Documentation](https://onefx.js.org/doc.html?utm_source=github-iotex-explorer)
 - [Contributing](https://onefx.js.org/contributing.html?utm_source=github-iotex-explorer)
