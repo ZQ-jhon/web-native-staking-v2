@@ -1,27 +1,25 @@
-import {Breadcrumb} from "antd";
-import {t} from "onefx/lib/iso-i18n";
+import { Breadcrumb } from "antd";
+import { t } from "onefx/lib/iso-i18n";
 import Helmet from "onefx/lib/react-helmet";
-import React, {Component} from "react";
-import {withRouter} from "react-router";
-import {Link} from "react-router-dom";
-import {CommonMargin} from "../common/common-margin";
-import {ContentPadding} from "../common/styles/style-padding";
-import {VoteNowContainer} from "./vote-now-steps/vote-now-container";
+import { withRouter } from "onefx/lib/react-router";
+import { Link } from "onefx/lib/react-router-dom";
+import React, { Component } from "react";
+import { CommonMargin } from "../common/common-margin";
+import { ContentPadding } from "../common/styles/style-padding";
+import { VoteNowContainer } from "./vote-now-steps/vote-now-container";
 
 type Props = {
   match: {
     params: {
-      registeredName: string
-    }
-  }
+      registeredName: string;
+    };
+  };
 };
 // @ts-ignore
 @withRouter
 class VoteNativePage extends Component<Props> {
   render(): JSX.Element {
-    const {
-      match,
-    } = this.props;
+    const { match } = this.props;
     let { registeredName } = match.params;
     if (registeredName) {
       registeredName = decodeURIComponent(registeredName);
@@ -46,18 +44,18 @@ class VoteNativePage extends Component<Props> {
             "meta.description.delegates"
           )}`}
         />
-          <CommonMargin />
-          <Breadcrumb>
-            <Breadcrumb.Item>
-              <Link to="/">{t("topbar.voting")}</Link>
-            </Breadcrumb.Item>
-            <Breadcrumb.Item>
-              <Link to={`/vote-native/${encodeURIComponent(registeredName)}`}>
-                {registeredName}
-              </Link>
-            </Breadcrumb.Item>
-          </Breadcrumb>
-          <CommonMargin />
+        <CommonMargin />
+        <Breadcrumb>
+          <Breadcrumb.Item>
+            <Link to="/">{t("topbar.voting")}</Link>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item>
+            <Link to={`/vote-native/${encodeURIComponent(registeredName)}`}>
+              {registeredName}
+            </Link>
+          </Breadcrumb.Item>
+        </Breadcrumb>
+        <CommonMargin />
         {
           // @ts-ignore
           <VoteNowContainer

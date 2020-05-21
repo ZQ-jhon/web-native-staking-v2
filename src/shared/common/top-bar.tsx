@@ -3,11 +3,11 @@ import document from "global/document";
 // @ts-ignore
 import window from "global/window";
 import { assetURL } from "onefx/lib/asset-url";
+import { withRouter } from "onefx/lib/react-router";
 import { styled } from "onefx/lib/styletron-react";
 import React from "react";
 import { Component } from "react";
 import { connect } from "react-redux";
-import { withRouter } from "react-router";
 import { Flex } from "./flex";
 import { Cross } from "./icons/cross.svg";
 import { Hamburger } from "./icons/hamburger.svg";

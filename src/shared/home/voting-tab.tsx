@@ -1,7 +1,7 @@
 import Tabs from "antd/lib/tabs";
 import { t } from "onefx/lib/iso-i18n";
+import { RouteComponentProps, withRouter } from "onefx/lib/react-router";
 import React, { Component } from "react";
-import { RouteComponentProps, withRouter } from "react-router";
 import { MyVotes } from "./my-votes";
 import { Voting } from "./voting";
 

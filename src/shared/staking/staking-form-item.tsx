@@ -1,18 +1,26 @@
 // @flow
-import {InfoCircleOutlined, RetweetOutlined} from "@ant-design/icons/lib";
-import {Form, InputNumber, Switch} from "antd";
-import {FormInstance} from "antd/lib/form";
+import InfoCircleOutlined from "@ant-design/icons/InfoCircleOutlined";
+import RetweetOutlined from "@ant-design/icons/RetweetOutlined";
+import { Form, InputNumber, Switch } from "antd";
+import { FormInstance } from "antd/lib/form";
 import BigNumber from "bignumber.js";
 // @ts-ignore
-import {t} from "onefx/lib/iso-i18n";
-import React, {Component, RefObject} from "react";
-import {CommonMarginBottomStyle, CommonMarginTop, NoMarginBottomStyle} from "../common/common-margin";
-import {Flex} from "../common/flex";
-import {formItemLayout} from "../common/form-item-layout";
-import {colors} from "../common/styles/style-color2";
-import {fontFamily, fonts} from "../common/styles/style-font";
-import {getPowerEstimation} from "../common/token-utils";
-import {getStakeDurationMaxValue, validateStakeDuration} from "./field-validators";
+import { t } from "onefx/lib/iso-i18n";
+import React, { Component, RefObject } from "react";
+import {
+  CommonMarginBottomStyle,
+  CommonMarginTop,
+  NoMarginBottomStyle
+} from "../common/common-margin";
+import { Flex } from "../common/flex";
+import { formItemLayout } from "../common/form-item-layout";
+import { colors } from "../common/styles/style-color2";
+import { fontFamily, fonts } from "../common/styles/style-font";
+import { getPowerEstimation } from "../common/token-utils";
+import {
+  getStakeDurationMaxValue,
+  validateStakeDuration
+} from "./field-validators";
 
 type Props = {
   // tslint:disable-next-line:no-any
@@ -103,7 +111,7 @@ export class AutoStakeFormItem extends Component<Props, State> {
       const form = formRef.current;
       if (form) {
         form.setFieldsValue({
-          nonDecay: this.props.initialValue,
+          nonDecay: this.props.initialValue
         });
       }
     }
@@ -319,7 +327,7 @@ export class DurationFormItem extends Component<DurationFormItemProps> {
               {
                 validator: validatorFactory(maxDuration, minDuration)
               }
-              ]}
+            ]}
             initialValue={initialValue}
           >
             <InputNumber

@@ -1,9 +1,7 @@
 // tslint:disable:no-any
-import {
-  CheckOutlined,
-  DownOutlined,
-  MinusOutlined
-} from "@ant-design/icons/lib";
+import CheckOutlined from "@ant-design/icons/CheckOutlined";
+import DownOutlined from "@ant-design/icons/DownOutlined";
+import MinusOutlined from "@ant-design/icons/MinusOutlined";
 import { Button, Dropdown } from "antd";
 import Avatar from "antd/lib/avatar";
 import Table from "antd/lib/table";
@@ -31,7 +29,7 @@ type Props = {
 
 type State = {
   invalidNames: string;
-  showMore: any;
+  showMore: Record<any, any>;
   address?: string;
 };
 

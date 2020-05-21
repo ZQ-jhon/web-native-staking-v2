@@ -1,7 +1,6 @@
 // @ts-ignore
-import { styled } from "onefx/lib/styletron-react";
+import { RouteComponentProps, withRouter } from "onefx/lib/react-router";
 import React from "react";
-import { RouteComponentProps, withRouter } from "react-router";
 
 type PathParamsType = {
   hash: string;

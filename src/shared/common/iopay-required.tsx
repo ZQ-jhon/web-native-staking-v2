@@ -1,6 +1,6 @@
 /* tslint:disable:no-any */
 // @flow
-import { LoadingOutlined } from "@ant-design/icons";
+import LoadingOutlined from "@ant-design/icons/LoadingOutlined";
 import { Alert } from "antd";
 // @ts-ignore
 import { assetURL } from "onefx/lib/asset-url";

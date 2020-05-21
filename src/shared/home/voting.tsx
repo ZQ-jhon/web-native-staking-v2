@@ -5,9 +5,9 @@ import BlockProducers, {
 } from "iotex-react-block-producers";
 import { assetURL } from "onefx/lib/asset-url";
 import { t } from "onefx/lib/iso-i18n";
+import { RouteComponentProps, withRouter } from "onefx/lib/react-router";
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import {RouteComponentProps, withRouter} from "react-router";
 import { webBpApolloClient as apolloClient } from "../common/apollo-client";
 import { colors } from "../common/styles/style-color";
 import { VoteButtonModal } from "./vote-button-modal";

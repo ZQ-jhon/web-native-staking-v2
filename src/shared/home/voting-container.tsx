@@ -1,8 +1,8 @@
 import { t } from "onefx/lib/iso-i18n";
 import Helmet from "onefx/lib/react-helmet";
+import { withRouter } from "onefx/lib/react-router";
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { withRouter } from "react-router";
 import { ContentPadding } from "../common/styles/style-padding";
 import { VotingBannerModal } from "./voting-banner-modal";
 import { VotingTab } from "./voting-tab";

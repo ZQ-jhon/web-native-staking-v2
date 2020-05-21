@@ -1,5 +1,6 @@
 // @flow
-import Icon from "@ant-design/icons";
+import PlusCircleFilled from "@ant-design/icons/PlusCircleFilled";
+import SnippetsFilled from "@ant-design/icons/SnippetsFilled";
 import { AutoComplete, Button, Form, Radio } from "antd";
 import { FormInstance } from "antd/lib/form";
 import { get } from "dottie";
@@ -300,7 +301,7 @@ const VoteNowContainer = connect(
         default:
           return (
             <span>
-              <Icon type="snippets" style={{ marginRight: "17px" }} />
+              <SnippetsFilled type="snippets" style={{ marginRight: "17px" }} />
               <ModalTitle>{t("my_stake.new")}</ModalTitle>
             </span>
           );
@@ -597,7 +598,7 @@ const VoteNowContainer = connect(
                     }}
                   >
                     <span>
-                      <Icon type="plus" /> {t("my_stake.new_vote")}
+                      <PlusCircleFilled type="plus" /> {t("my_stake.new_vote")}
                     </span>
                   </Button>
                 )}

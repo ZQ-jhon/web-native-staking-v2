@@ -1,7 +1,7 @@
+import { Switch } from "onefx/lib/react-router";
+import { Route } from "onefx/lib/react-router-dom";
 import { styled } from "onefx/lib/styletron-react";
 import React, { Component } from "react";
-import { RouteComponentProps, Switch } from "react-router";
-import { Route } from "react-router-dom";
 import { Footer, FOOTER_ABOVE } from "./common/footer";
 // @ts-ignore
 import initGoogleAnalytics from "./common/google-analytics";
@@ -17,7 +17,7 @@ import { VoteNativePage } from "./staking/voting-native-page";
 type Props = {
   googleTid: string;
   locale: string;
-} & RouteComponentProps;
+};
 
 export class App extends Component<Props> {
   public componentDidMount(): void {

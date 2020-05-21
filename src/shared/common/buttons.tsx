@@ -1,7 +1,7 @@
 import Button, { ButtonProps } from "antd/lib/button";
 import { BaseButtonProps } from "antd/lib/button/button";
+import { Link } from "onefx/lib/react-router-dom";
 import React from "react";
-import { Link } from "react-router-dom";
 
 export type LinkButtonProps = {
   href?: string;
@@ -16,7 +16,7 @@ const LinkButton: React.FC<LinkButtonProps> = props => {
     if (href.match(/^https?\:\/\/|^mailto\:/i)) {
       return (
         <a
-          className={`${className||""} link-button`}
+          className={`${className || ""} link-button`}
           href={href}
           target="_blank"
           rel="noreferrer"
