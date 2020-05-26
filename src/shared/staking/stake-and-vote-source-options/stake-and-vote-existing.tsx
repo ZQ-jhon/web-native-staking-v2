@@ -1,11 +1,12 @@
 // @flow
 import { Select } from "antd";
 import { Form } from "antd";
-import {FormInstance} from "antd/lib/form";
+import { FormInstance } from "antd/lib/form";
 import BigNumber from "bignumber.js";
 import { t } from "onefx/lib/iso-i18n";
-import React, {Component, RefObject} from "react";
+import React, { Component, RefObject } from "react";
 import { connect } from "react-redux";
+import InfoCircleFilled from "@ant-design/icons/InfoCircleFilled";
 import { getStaking, IBucket } from "../../../server/gateway/staking";
 import { CommonMarginBottomStyle } from "../../common/common-margin";
 import { formItemLayout } from "../../common/form-item-layout";
@@ -65,7 +66,7 @@ class StakeAndVoteExisting extends Component<Props, State> {
       <div>
         <div style={{ marginTop: "26px" }}>
           <IconLabel
-            iconType={"info-circle"}
+            iconType={<InfoCircleFilled />}
             text={t("my_stake.exsitingBucketWarning")}
           />
         </div>
