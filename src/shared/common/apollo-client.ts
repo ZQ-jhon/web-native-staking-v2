@@ -2,6 +2,7 @@ import { InMemoryCache } from "apollo-cache-inmemory";
 import { ApolloClient } from "apollo-client";
 import { ApolloLink } from "apollo-link";
 import { HttpLink } from "apollo-link-http";
+import ApolloLinkTimeout from "apollo-link-timeout";
 import { createWebBpApolloClient } from "iotex-react-block-producers";
 import isBrowser from "is-browser";
 import fetch from "isomorphic-unfetch";
@@ -14,14 +15,18 @@ const apiGatewayUrl = isBrowser && state.base.apiGatewayUrl;
 const csrfToken = isBrowser && state.base.csrfToken;
 export const ownersToNames = isBrowser && state.base.ownersToNames;
 
+const timeoutLink = new ApolloLinkTimeout(isBrowser ? 10000 : 200);
+const myHttpLink = new HttpLink({
+  uri: apiGatewayUrl,
+  fetch,
+  credentials: "same-origin",
+  headers: { "x-csrf-token": csrfToken }
+});
+const timeoutHttpLink = timeoutLink.concat(myHttpLink);
+
 export const apolloClient = new ApolloClient({
   ssrMode: !isBrowser,
-  link: new HttpLink({
-    uri: apiGatewayUrl,
-    fetch,
-    credentials: "same-origin",
-    headers: { "x-csrf-token": csrfToken }
-  }),
+  link: timeoutHttpLink,
   cache: new InMemoryCache().restore(apolloState)
 });
 export const webBpApolloClient = createWebBpApolloClient(
