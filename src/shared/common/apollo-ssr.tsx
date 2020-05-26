@@ -1,6 +1,8 @@
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { ApolloClient } from "apollo-client";
+import { ApolloLink } from "apollo-link";
 import { createHttpLink } from "apollo-link-http";
+import ApolloLinkTimeout from "apollo-link-timeout";
 import fetch from "isomorphic-unfetch";
 import koa from "koa";
 import { initAssetURL } from "onefx/lib/asset-url";
@@ -26,16 +28,20 @@ export async function apolloSSR(
   { VDom, reducer, clientScript }: Opts
 ): Promise<string> {
   ctx.setState("base.apiGatewayUrl", uri);
+  const timeoutLink = new ApolloLinkTimeout(200);
   const apolloClient = new ApolloClient({
     ssrMode: true,
-    link: createHttpLink({
-      uri,
-      fetch,
-      credentials: "same-origin",
-      headers: {
-        cookie: ctx.get("Cookie")
-      }
-    }),
+    link: ApolloLink.from([
+      timeoutLink,
+      createHttpLink({
+        uri,
+        fetch,
+        credentials: "same-origin",
+        headers: {
+          cookie: ctx.get("Cookie")
+        }
+      })
+    ]),
     cache: new InMemoryCache()
   });
 
