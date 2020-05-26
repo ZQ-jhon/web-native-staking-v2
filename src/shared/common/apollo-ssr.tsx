@@ -28,7 +28,7 @@ export async function apolloSSR(
   { VDom, reducer, clientScript }: Opts
 ): Promise<string> {
   ctx.setState("base.apiGatewayUrl", uri);
-  const timeoutLink = new ApolloLinkTimeout(200);
+  const timeoutLink = new ApolloLinkTimeout(100);
   const apolloClient = new ApolloClient({
     ssrMode: true,
     link: ApolloLink.from([
