@@ -241,6 +241,7 @@ const VoteNowContainer = connect(
         const bucket = this.bucket || {};
         // @ts-ignore
         this.bucket = {
+          index: bucket.index,
           canName: values.canName || this.state.canName.value,
           autoStake:
             values.nonDecay !== undefined
