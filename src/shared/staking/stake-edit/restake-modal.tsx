@@ -152,7 +152,7 @@ export const RestakeModal = connect(
                 <p
                   dangerouslySetInnerHTML={{
                     __html: t("my_stake.restake.desc", {
-                      stakeTime: stakeTime.toString()
+                      stakeTime: String(stakeTime)
                     })
                   }}
                 />
@@ -160,7 +160,7 @@ export const RestakeModal = connect(
                 <p
                   dangerouslySetInnerHTML={{
                     __html: t("my_stake.restake.cannot", {
-                      stakeTime: stakeTime.toString()
+                      stakeTime: String(stakeTime)
                     })
                   }}
                 />

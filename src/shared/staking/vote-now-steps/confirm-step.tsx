@@ -1,6 +1,5 @@
 // @flow
 import { Form } from "antd";
-import { fromRau } from "iotex-antenna/lib/account/utils";
 // @ts-ignore
 import { t } from "onefx/lib/iso-i18n";
 import React from "react";
@@ -127,7 +126,7 @@ export function ConfirmStep({ bucket, handleReEdit }: Props): JSX.Element {
         />
       )}
       <StakedAmountControl
-        amount={Number(fromRau(bucket.stakedAmount.toString(), "Iotx"))}
+        amount={Number(bucket.stakedAmount)}
         handleReEdit={handleReEdit}
       />
 

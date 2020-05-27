@@ -1,4 +1,5 @@
 // @flow
+import InfoCircleFilled from "@ant-design/icons/InfoCircleFilled";
 import { Select } from "antd";
 import { Form } from "antd";
 import { FormInstance } from "antd/lib/form";
@@ -6,7 +7,6 @@ import BigNumber from "bignumber.js";
 import { t } from "onefx/lib/iso-i18n";
 import React, { Component, RefObject } from "react";
 import { connect } from "react-redux";
-import InfoCircleFilled from "@ant-design/icons/InfoCircleFilled";
 import { getStaking, IBucket } from "../../../server/gateway/staking";
 import { CommonMarginBottomStyle } from "../../common/common-margin";
 import { formItemLayout } from "../../common/form-item-layout";
@@ -78,80 +78,77 @@ class StakeAndVoteExisting extends Component<Props, State> {
             </span>
           }
         </div>
-        {
-          // @ts-ignore
-          <Form.Item
-            {...formItemLayout}
-            labelAlign={"left"}
-            label={
-              <FormItemText
-                text={t("my_stake.existingBucket")}
-                // @ts-ignore
-                sub={
-                  // tslint:disable-next-line:react-no-dangerous-html
-                  <span
-                    dangerouslySetInnerHTML={{
-                      __html: t("my_stake.inMyVotes")
-                    }}
-                  />
-                }
-              />
-            }
-            style={{ ...CommonMarginBottomStyle }}
-            name="bucketId"
-            rules={[
-              {
-                required: true,
-                message: t("my_stake.bucketId.required")
+        {/*
+              // @ts-ignore */}
+        <Form.Item
+          {...formItemLayout}
+          labelAlign={"left"}
+          label={
+            <FormItemText
+              text={t("my_stake.existingBucket")}
+              // @ts-ignore
+              sub={
+                // tslint:disable-next-line:react-no-dangerous-html
+                <span
+                  dangerouslySetInnerHTML={{
+                    __html: t("my_stake.inMyVotes")
+                  }}
+                />
               }
-            ]}
-            initialValue={defaultValue}
-          >
+            />
+          }
+          style={{ ...CommonMarginBottomStyle }}
+          name="bucketId"
+          rules={[
             {
-              // @ts-ignore
-              <Select
-                size="large"
-                loading={loading}
-                // @ts-ignore
-                onChange={bucketId => {
-                  const bucket = existingBuckets.find(
-                    b => String(b.index) === bucketId
-                  );
-                  handleRevote(bucket);
-                }}
-              >
-                {existingBuckets.map((bucket, i) => (
-                  <Select.Option key={i} value={String(bucket.index)}>
-                    <div style={{ fontSize: 14 }}>
-                      Bucket ID {bucket.index} | <b>{bucket.canName}</b>{" "}
-                      {!bucket.canName && "Not Voted Yet"}
-                    </div>
-                    <div style={{ fontSize: 12, color: "#999" }}>
-                      Amount: {String(bucket.stakedAmount)} | Staking Period:{" "}
-                      {String(bucket.stakedDuration)}
-                    </div>
-                  </Select.Option>
-                ))}
-              </Select>
+              required: true,
+              message: t("my_stake.bucketId.required")
             }
-            {!currentStakeDuration || !currentStakeAmount ? (
-              // @ts-ignore
-              <span style={subTextStyle}>{t("my_stake.extend_anytime")}</span>
-            ) : (
-              <></>
-            )}
-          </Form.Item>
-        }
-        {
+          ]}
+          initialValue={defaultValue}
+        >
+          {/*
+              // @ts-ignore */}
+          <Select
+            size="large"
+            loading={loading}
+            // @ts-ignore
+            onChange={bucketId => {
+              const bucket = existingBuckets.find(
+                b => String(b.index) === bucketId
+              );
+              handleRevote(bucket);
+            }}
+          >
+            {existingBuckets.map((bucket, i) => (
+              <Select.Option key={i} value={String(bucket.index)}>
+                <div style={{ fontSize: 14 }}>
+                  Bucket ID {bucket.index} | <b>{bucket.canName}</b>{" "}
+                  {!bucket.canName && "Not Voted Yet"}
+                </div>
+                <div style={{ fontSize: 12, color: "#999" }}>
+                  Amount: {String(bucket.stakedAmount)} | Staking Period:{" "}
+                  {String(bucket.stakedDuration)}
+                </div>
+              </Select.Option>
+            ))}
+          </Select>
+        </Form.Item>
+        {!currentStakeDuration || !currentStakeAmount ? (
           // @ts-ignore
-          <AutoStakeFormItem
-            formRef={this.props.formRef}
-            showAutoStack={false}
-            initialValue={false}
-            stakeAmount={currentStakeAmount}
-            stakeDuration={currentStakeDuration}
-          />
-        }
+          <span style={subTextStyle}>{t("my_stake.extend_anytime")}</span>
+        ) : (
+          <></>
+        )}
+        {/*
+              // @ts-ignore */}
+        <AutoStakeFormItem
+          formRef={this.props.formRef}
+          showAutoStack={false}
+          initialValue={false}
+          stakeAmount={currentStakeAmount}
+          stakeDuration={currentStakeDuration}
+        />
       </div>
     );
   }

@@ -142,44 +142,39 @@ export class AutoStakeFormItem extends Component<Props, State> {
       <div>
         {showAutoStack ? (
           <div>
-            {
-              // @ts-ignore
-              <Form.Item
-                {...formItemLayout}
-                className={"autoStakeSwitch"}
-                labelAlign={"left"}
-                label={
-                  <IconLabel
-                    iconType={
-                      <RetweetOutlined style={{ color: colors.deltaUp }} />
-                    }
-                    text={t("my_stake.nonDecay")}
-                  />
-                }
-                style={{ marginBottom: 0 }}
-                name={fieldName}
-                initialValue={initialValue}
-                valuePropName={"checked"}
-              >
-                {
-                  // tslint:disable-next-line:use-simple-attributes
-                  <Switch
-                    style={{ textAlign: "right" }}
-                    onChange={checked => {
-                      if (!forceDisable) {
-                        this.setState({ nonDecay: checked });
-                      }
-                    }}
-                  />
-                }
-              </Form.Item>
-            }
-            {
-              // @ts-ignore
-              <span style={{ ...subTextStyle, ...CommonMarginBottomStyle }}>
-                {t("my_stake.autoStake_explain")}
-              </span>
-            }
+            {/*
+              // @ts-ignore */}
+            <Form.Item
+              {...formItemLayout}
+              className={"autoStakeSwitch"}
+              labelAlign={"left"}
+              label={
+                <IconLabel
+                  iconType={
+                    <RetweetOutlined style={{ color: colors.deltaUp }} />
+                  }
+                  text={t("my_stake.nonDecay")}
+                />
+              }
+              style={{ marginBottom: 0 }}
+              name={fieldName}
+              initialValue={initialValue}
+              valuePropName={"checked"}
+            >
+              <Switch
+                style={{ textAlign: "right" }}
+                onChange={checked => {
+                  if (!forceDisable) {
+                    this.setState({ nonDecay: checked });
+                  }
+                }}
+              />
+            </Form.Item>
+            {/*
+              // @ts-ignore */}
+            <span style={{ ...subTextStyle, ...CommonMarginBottomStyle }}>
+              {t("my_stake.autoStake_explain")}
+            </span>
           </div>
         ) : null}
         <CommonMarginTop />
@@ -191,12 +186,9 @@ export class AutoStakeFormItem extends Component<Props, State> {
           />
         </div>
         <div style={{ marginBottom: "18px", marginTop: "10px" }}>
-          {
-            // @ts-ignore
-            <span style={subTextStyle}>
-              {t("my_stake.voting_power_explain")}
-            </span>
-          }
+          {/*
+              // @ts-ignore */}
+          <span style={subTextStyle}>{t("my_stake.voting_power_explain")}</span>
         </div>
 
         <Flex backgroundColor={colors.black10} padding={"15px"}>
@@ -305,43 +297,42 @@ export class DurationFormItem extends Component<DurationFormItemProps> {
     maxDuration = maxDuration >= initialValue ? maxDuration : initialValue;
     return (
       <>
-        {
-          // @ts-ignore
-          <Form.Item
-            {...formItemLayout}
-            style={NoMarginBottomStyle}
-            labelAlign={"left"}
-            label={
-              // tslint:disable-next-line:use-simple-attributes
-              <FormItemText
-                text={t("my_stake.stakeDuration")}
-                sub={t("my_stake.duration_of_epoch")}
-              />
-            }
-            name={fieldName}
-            rules={[
-              {
-                required: true,
-                message: t("my_stake.stakeDuration.required")
-              },
-              {
-                validator: validatorFactory(maxDuration, minDuration)
-              }
-            ]}
-            initialValue={initialValue}
-          >
-            <InputNumber
-              type="number"
-              size="large"
-              step={7}
-              min={0}
-              max={maxDuration}
-              style={{ width: "100%", background: "#f7f7f7", border: "none" }}
-              // @ts-ignore
-              onChange={onChange}
+        {/*
+          // @ts-ignore */}
+        <Form.Item
+          {...formItemLayout}
+          style={NoMarginBottomStyle}
+          labelAlign={"left"}
+          label={
+            // tslint:disable-next-line:use-simple-attributes
+            <FormItemText
+              text={t("my_stake.stakeDuration")}
+              sub={t("my_stake.duration_of_epoch")}
             />
-          </Form.Item>
-        }
+          }
+          name={fieldName}
+          rules={[
+            {
+              required: true,
+              message: t("my_stake.stakeDuration.required")
+            },
+            {
+              validator: validatorFactory(maxDuration, minDuration)
+            }
+          ]}
+          initialValue={initialValue}
+        >
+          <InputNumber
+            type="number"
+            size="large"
+            step={7}
+            min={0}
+            max={maxDuration}
+            style={{ width: "100%", background: "#f7f7f7", border: "none" }}
+            // @ts-ignore
+            onChange={onChange}
+          />
+        </Form.Item>
         <Form.Item
           {...formItemLayout}
           style={CommonMarginBottomStyle}

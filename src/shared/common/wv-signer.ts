@@ -73,7 +73,7 @@ export class WvSigner implements SignerPlugin {
         (data: string, responseCallback: Function) => {
           window.console.log(
             "data from signAndSendJsFunction register handler: = ",
-            data.toString()
+            String(data)
           );
           responseCallback("responseData signAndSendJsFunction test");
         }
@@ -112,8 +112,8 @@ export class WvSigner implements SignerPlugin {
   async getAccount(address: string): Promise<Account> {
     const account = new Account();
     account.address = address;
-    window.console.log("getAccount account ",account);
-    return  account;
+    window.console.log("getAccount account ", account);
+    return account;
 
     const id = reqId++;
     const req = {
@@ -130,18 +130,18 @@ export class WvSigner implements SignerPlugin {
         try {
           resp = JSON.parse(e.data);
         } catch (err) {
-          window.console.log("error parse response ",resp);
+          window.console.log("error parse response ", resp);
           return;
         }
         window.console.log("getAccount resp", resp);
         if (resp.reqId === id) {
-          if(resp.address === address){
+          if (resp.address === address) {
             const account = new Account();
-            account.address = address
+            account.address = address;
             resolve(account);
-            return false
-          } else{
-            return true
+            return false;
+          } else {
+            return true;
           }
         }
         throw new Error("could not get any account");

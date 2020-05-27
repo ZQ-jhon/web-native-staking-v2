@@ -2,7 +2,7 @@
 import { Form, Input } from "antd";
 import { FormInstance } from "antd/lib/form";
 import BigNumber from "bignumber.js";
-import { fromRau, validateAddress } from "iotex-antenna/lib/account/utils";
+import { validateAddress } from "iotex-antenna/lib/account/utils";
 import { t } from "onefx/lib/iso-i18n";
 import React, { Component, RefObject } from "react";
 import { IBucket } from "../../../server/gateway/staking";
@@ -65,7 +65,7 @@ class StakeAndVoteNew extends Component<Props, State> {
         form.setFieldsValue({
           nonDecay: bucket.autoStake,
           stakeDuration: bucket.stakedDuration,
-          stakedAmount: Number(fromRau(bucket.stakedAmount.toString(), "Iotx"))
+          stakedAmount: Number(bucket.stakedAmount)
         });
       }
     }
@@ -87,50 +87,49 @@ class StakeAndVoteNew extends Component<Props, State> {
 
     return (
       <>
-        {
-          // @ts-ignore
-          <Form.Item
-            {...formItemLayout}
-            labelAlign={"left"}
-            label={
-              <FormItemText
-                text={t("my_stake.stakedAmount")}
-                sub={t("my_stake.amount_of_vote")}
-              />
-            }
-            style={CommonMarginBottomStyle}
-            name="stakedAmount"
-            rules={[
-              {
-                required: true,
-                message: t("my_stake.stakedAmount.required")
-              },
-              {
-                validator: smallerOrEqualTo(iotxBalance, 100)
-              }
-            ]}
-          >
-            <Input
-              type="number"
-              size="large"
-              addonAfter={tokenType}
-              style={{ width: "100%", background: "#f7f7f7", border: "none" }}
-              onChange={event => {
-                const numberValue = Number(event.target.value);
-                handleStakedAmountChange(numberValue);
-              }}
-              onBlur={event => {
-                const numberValue = Number(event.target.value);
-                const minValue = 100;
-                if (numberValue < minValue && formRef && formRef.current) {
-                  const { setFieldsValue } = formRef.current;
-                  setFieldsValue({ stakedAmount: minValue });
-                  handleStakedAmountChange(minValue);
-                }
-              }}
+        {/*
+          // @ts-ignore */}
+        <Form.Item
+          {...formItemLayout}
+          labelAlign={"left"}
+          label={
+            <FormItemText
+              text={t("my_stake.stakedAmount")}
+              sub={t("my_stake.amount_of_vote")}
             />
-          </Form.Item>
-        }
+          }
+          style={CommonMarginBottomStyle}
+          name="stakedAmount"
+          rules={[
+            {
+              required: true,
+              message: t("my_stake.stakedAmount.required")
+            },
+            {
+              validator: smallerOrEqualTo(iotxBalance, 100)
+            }
+          ]}
+        >
+          <Input
+            type="number"
+            size="large"
+            addonAfter={tokenType}
+            style={{ width: "100%", background: "#f7f7f7", border: "none" }}
+            onChange={event => {
+              const numberValue = Number(event.target.value);
+              handleStakedAmountChange(numberValue);
+            }}
+            onBlur={event => {
+              const numberValue = Number(event.target.value);
+              const minValue = 100;
+              if (numberValue < minValue && formRef && formRef.current) {
+                const { setFieldsValue } = formRef.current;
+                setFieldsValue({ stakedAmount: minValue });
+                handleStakedAmountChange(minValue);
+              }
+            }}
+          />
+        </Form.Item>
         <Form.Item
           {...formItemLayout}
           style={CommonMarginBottomStyle}

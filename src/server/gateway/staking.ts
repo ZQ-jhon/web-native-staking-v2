@@ -1,6 +1,6 @@
 import BigNumber from "bignumber.js";
 import Antenna from "iotex-antenna/lib";
-import {Account} from "iotex-antenna/lib/account/account";
+import { Account } from "iotex-antenna/lib/account/account";
 import { fromRau } from "iotex-antenna/lib/account/utils";
 import {
   CandidateRegisterMethod,
@@ -57,7 +57,7 @@ export type IBucket = {
   autoStake: boolean;
   unstakeStartTime: Date | undefined;
   createTime: Date | undefined;
-  stakedAmount: BigNumber;
+  stakedAmount: BigNumber; // iotx
   status: Status;
   withdrawWaitUntil: Date | undefined;
 
@@ -343,11 +343,11 @@ export class Staking {
     }).execute();
   }
 
-  private async getSender() : Promise<Account>{
+  private async getSender(): Promise<Account> {
     const address = await getIoPayAddress();
     // tslint:disable-next-line:no-unnecessary-local-variable
     const sender = await this.antenna.iotx.tryGetAccount(address);
-    return sender
+    return sender;
   }
 }
 

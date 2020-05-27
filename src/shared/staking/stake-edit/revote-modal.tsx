@@ -104,8 +104,7 @@ export const RevoteModal = connect(
                           message: t("my_stake.canName.required")
                         },
                         {
-                          validator: validateCanName,
-                          initialValue: canName
+                          validator: validateCanName
                         }
                       ]}
                     >

@@ -35,7 +35,7 @@ import { ConfirmStep } from "./confirm-step";
 import { SuccessStep } from "./success-step";
 
 import BigNumber from "bignumber.js";
-import { fromRau, toRau } from "iotex-antenna/lib/account/utils";
+import { toRau } from "iotex-antenna/lib/account/utils";
 import { getStaking, IBucket } from "../../../server/gateway/staking";
 import { webBpApolloClient } from "../../common/apollo-client";
 
@@ -68,14 +68,6 @@ type Props = {
   currentCandidate?: any;
   disableModal?: boolean;
   isIoPay?: boolean;
-};
-
-type TNewStake = {
-  canName: string;
-  nonDecay: boolean;
-  stakeDuration: number;
-  stakedAmount: number;
-  data: string;
 };
 
 const CONFIRM_STEP = "CONFIRM";
@@ -130,13 +122,21 @@ const VoteNowContainer = connect(
         stakedAmount,
         canName
       } = this.bucket;
-      const amount = stakedAmount.toString();
+      const amount = String(stakedAmount);
       if (canName) {
         try {
-          if (this.isFreshStaking()) {
+          if (this.state.votingSource === "VOTING_FROM_EXISTING") {
+            this.txHash = await getStaking().changeCandidate({
+              bucketIndex: index,
+              candidateName: canName,
+              payload: "",
+              gasLimit: DEFAULT_STAKING_GAS_LIMIT,
+              gasPrice: toRau("1", "Qev")
+            });
+          } else if (this.isFreshStaking()) {
             this.txHash = await getStaking().createStake({
               candidateName: canName,
-              stakedAmount: amount,
+              stakedAmount: toRau(amount, "Iotx"),
               stakedDuration,
               autoStake,
               payload: "",
@@ -217,45 +217,43 @@ const VoteNowContainer = connect(
       // @ts-ignore
       this.setState({
         visible: false,
-        step: undefined,
+        step: "",
         reEdit: false,
         stepConfirming: false
       });
     };
 
     // tslint:disable-next-line:no-any
-    handleConfirmation = (e: any) => {
+    handleConfirmation = async (e: any) => {
+      if (!this.formRef.current) {
+        return;
+      }
       e.preventDefault();
       if (!this.state.canName.validateStatus) {
         this.handleCanNameChange(this.state.canName.value);
       }
-      // @ts-ignore
-      this.formRef.current.validateFields().then(async (values: TNewStake) => {
-        if (!this.state.canName.errorMsg) {
-          window.console.log("Received values of form: ", {
-            ...values,
-            canName: this.state.canName.value
-          });
-          // @ts-ignore
-          const { nonDecay, stakeDuration, stakedAmount, id } =
-            this.bucket || {};
-          // @ts-ignore
-          this.bucket = {
-            canName: values.canName || this.state.canName.value,
-            autoStake:
-              values.nonDecay !== undefined
-                ? values.nonDecay
-                : nonDecay || false,
-            stakedDuration: values.stakeDuration || stakeDuration || 0,
-            stakedAmount:
-              new BigNumber(toRau(values.stakedAmount.toString(), "Iotx")) ||
-              stakedAmount ||
-              0
-          };
-          this.setState({ step: CONFIRM_STEP });
-        }
-      });
+      const values = await this.formRef.current.validateFields();
+      if (!this.state.canName.errorMsg) {
+        window.console.log("Received values of form: ", {
+          ...values,
+          canName: this.state.canName.value
+        });
+        const bucket = this.bucket || {};
+        // @ts-ignore
+        this.bucket = {
+          canName: values.canName || this.state.canName.value,
+          autoStake:
+            values.nonDecay !== undefined
+              ? values.nonDecay
+              : bucket.autoStake || false,
+          stakedDuration: values.stakeDuration || bucket.stakedDuration || 0,
+          stakedAmount:
+            values.stakedAmount || bucket.stakedAmount || new BigNumber(0)
+        };
+        this.setState({ step: CONFIRM_STEP });
+      }
     };
+
     // tslint:disable-next-line:no-any
     handleSuccess = (e: any) => {
       e.preventDefault();
@@ -281,9 +279,7 @@ const VoteNowContainer = connect(
       this.bucket = bucket;
       this.isExistingBucket = true;
       this.setState({
-        currentStakeAmount: Number(
-          fromRau(bucket.stakedAmount.toString(), "Iotx")
-        ),
+        currentStakeAmount: Number(bucket.stakedAmount),
         currentStakeDuration: bucket.stakedDuration
       });
     };
@@ -427,88 +423,94 @@ const VoteNowContainer = connect(
           return (
             // @ts-ignore
             <Form layout={"horizontal"} ref={this.formRef}>
-              <Form.Item
-                {...formItemLayout}
-                labelAlign={"left"}
-                label={
-                  <FormItemText
-                    text={t("my_stake.canName")}
-                    sub={t("my_stake.canName_tint")}
-                  />
-                }
-                style={CommonMarginBottomStyle}
-                required={true}
-                // @ts-ignore
-                validateStatus={this.state.canName.validateStatus}
-                help={this.state.canName.errorMsg}
+              {/*
+                // @ts-ignore */}
+              <Query
+                client={webBpApolloClient}
+                ssr={false}
+                query={GET_ALL_CANDIDATE}
               >
-                {
-                  // @ts-ignore
-                  <Query
-                    client={webBpApolloClient}
-                    ssr={false}
-                    query={GET_ALL_CANDIDATE}
-                  >
-                    {/* tslint:disable-next-line:no-any */}
-                    {({ data }: any) => {
-                      const bpCandidates = {};
-                      const allCandidates =
-                        (data && data.bpCandidatesOnContract) || [];
-                      if (data && Array.isArray(data.bpCandidates)) {
-                        data.bpCandidates.forEach(
-                          (i: {
-                            status: string;
-                            registeredName: string | number;
-                          }) => {
-                            if (i.status && i.status !== "UNQUALIFIED") {
-                              // @ts-ignore
-                              bpCandidates[i.registeredName] = i;
-                            }
-                          }
-                        );
-                      }
-                      const dataSource = allCandidates
-                        // @ts-ignore
-                        .map(item => {
-                          const delegateName = get(
-                            // @ts-ignore
-                            bpCandidates[item.name],
-                            "name",
-                            ""
-                          );
-                          const displayName = delegateName
-                            ? `${item.name} - ${delegateName}`
-                            : item.name;
-                          return { text: displayName, value: item.name };
-                        })
-                        // tslint:disable-next-line:no-any
-                        .filter((item: { value: any }) => Boolean(item.value));
-                      return (
-                        // @ts-ignore
-                        <AutoComplete
-                          defaultValue={this.state.canName.value}
-                          onChange={this.handleCanNameChange}
-                          size="large"
-                          disabled={Boolean(this.props.registeredName)}
-                          dataSource={dataSource}
+                {/* tslint:disable-next-line:no-any */}
+                {({ data }: any) => {
+                  const bpCandidates = {};
+                  const allCandidates =
+                    (data && data.bpCandidatesOnContract) || [];
+                  if (data && Array.isArray(data.bpCandidates)) {
+                    data.bpCandidates.forEach(
+                      (i: {
+                        status: string;
+                        registeredName: string | number;
+                      }) => {
+                        if (i.status && i.status !== "UNQUALIFIED") {
                           // @ts-ignore
-                          filterOption={(inputValue, option) =>
-                            String(get(option, "props.children"))
-                              .toLowerCase()
-                              .indexOf(inputValue.toLowerCase()) !== -1
-                          }
-                        />
+                          bpCandidates[i.registeredName] = i;
+                        }
+                      }
+                    );
+                  }
+                  const dataSource = allCandidates
+                    // @ts-ignore
+                    .map(item => {
+                      const delegateName = get(
+                        // @ts-ignore
+                        bpCandidates[item.name],
+                        "name",
+                        ""
                       );
-                    }}
-                  </Query>
-                }
-                <span
-                  // @ts-ignore
-                  style={subTextStyle}
-                >
-                  {t("my_stake.change_anytime")}
-                </span>
-              </Form.Item>
+                      const displayName = delegateName
+                        ? `${item.name} - ${delegateName}`
+                        : item.name;
+                      return { text: displayName, value: item.name };
+                    })
+                    // tslint:disable-next-line:no-any
+                    .filter((item: { value: any }) => Boolean(item.value));
+                  return (
+                    <Form.Item
+                      {...formItemLayout}
+                      labelAlign={"left"}
+                      label={
+                        <FormItemText
+                          text={t("my_stake.canName")}
+                          sub={t("my_stake.canName_tint")}
+                        />
+                      }
+                      style={CommonMarginBottomStyle}
+                      required={true}
+                      // @ts-ignore
+                      validateStatus={this.state.canName.validateStatus}
+                      help={this.state.canName.errorMsg}
+                    >
+                      {/*
+                      // @ts-ignore */}
+                      <AutoComplete
+                        defaultValue={this.state.canName.value}
+                        onChange={this.handleCanNameChange}
+                        size="large"
+                        disabled={Boolean(this.props.registeredName)}
+                        dataSource={dataSource}
+                        // @ts-ignore
+                        filterOption={(inputValue, option) =>
+                          String(
+                            get(
+                              // @ts-ignore
+                              option,
+                              "props.children"
+                            )
+                          )
+                            .toLowerCase()
+                            .indexOf(inputValue.toLowerCase()) !== -1
+                        }
+                      />
+                    </Form.Item>
+                  );
+                }}
+              </Query>
+              <span
+                // @ts-ignore
+                style={subTextStyle}
+              >
+                {t("my_stake.change_anytime")}
+              </span>
               <Form.Item {...formItemLayout} style={CommonMarginBottomStyle}>
                 <Radio.Group
                   value={votingSource}
