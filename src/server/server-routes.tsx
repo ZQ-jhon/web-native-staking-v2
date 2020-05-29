@@ -3,6 +3,7 @@ import koa from "koa";
 import { noopReducer } from "onefx/lib/iso-react-render/root/root-reducer";
 import * as React from "react";
 import { setApiGateway } from "../api-gateway/api-gateway";
+import { setProfileHandler } from "../shared/profile/profile-handler";
 import { AppContainer } from "../shared/app-container";
 import { apolloSSR } from "../shared/common/apollo-ssr";
 import { Staking } from "./gateway/staking";
@@ -15,6 +16,7 @@ export function setServerRoutes(server: MyServer): void {
   });
 
   setApiGateway(server);
+  setProfileHandler(server);
 
   // @ts-ignore
   server.get(

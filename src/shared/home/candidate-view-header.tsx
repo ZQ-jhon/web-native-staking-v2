@@ -1,9 +1,11 @@
 /* eslint-disable max-lines */
 // @flow
 import React, { Component } from "react";
+// @ts-ignore
 import window from "global/window";
 import { t } from "onefx/lib/iso-i18n";
-import { Avatar, Button, Icon, Layout } from "antd";
+import { Avatar, Button, Layout } from "antd";
+import { Icon } from "@ant-design/compatible";
 import { styled } from "onefx/lib/styletron-react";
 import Helmet from "onefx/lib/react-helmet";
 import { connect } from "react-redux";
@@ -20,7 +22,7 @@ import {
   getIconType,
   getTwitterAccount
 } from "./voting-render";
-import { VotingButton } from "./vote-button-modal";
+import { VotingButton } from "../home/vote-button-modal";
 
 const MAX_WIDTH = 560;
 const HEADER_HEIGHT = 160;
@@ -32,26 +34,26 @@ const LOWEST = 0.55;
 const { Header } = Layout;
 
 type Props = {
-  scale?: number,
-  eth: string,
-  match?: any,
-  data: any,
-  isIoPay?: boolean
+  scale?: number;
+  eth: string;
+  match?: any;
+  data: any;
+  isIoPay?: boolean;
 };
 
 type State = {
-  showVotingModal: boolean,
-  showMetaMaskReminder: boolean,
-  enableDetailedVote: boolean,
-  isNative: boolean
+  showVotingModal: boolean;
+  showMetaMaskReminder: boolean;
+  enableDetailedVote: boolean;
+  isNative: boolean;
 };
-
+// @ts-ignore
 @connect(state => ({ isIoPay: state.base.isIoPay }))
 class CandidateProfileViewHeader extends Component<Props, State> {
   props: Props;
 
-  constructor() {
-    super();
+  constructor(props: Props) {
+    super(props);
     this.state = {
       showVotingModal: false,
       showMetaMaskReminder: false,
@@ -99,6 +101,7 @@ class CandidateProfileViewHeader extends Component<Props, State> {
           {`#${data.rank || "---"}`}
         </Button>
         <VotingButton
+          // @ts-ignore
           launch={(isNative: boolean) => this.showVotingModal(isNative)}
           extra={{ style: { width: "100%", height: "50px" } }}
         >
@@ -252,7 +255,6 @@ class CandidateProfileViewHeader extends Component<Props, State> {
                   />
                 ))}
               </Flex>
-
               <Title
                 style={{
                   fontSize: "20px",
@@ -263,6 +265,7 @@ class CandidateProfileViewHeader extends Component<Props, State> {
                 {" "}
                 {data.location}{" "}
               </Title>
+              // @ts-ignore
               <Text fontSize={"20"} scale={scale}>
                 {" "}
                 {data.blurb}{" "}
@@ -276,6 +279,7 @@ class CandidateProfileViewHeader extends Component<Props, State> {
           href={`${TWEET_WEB_INTENT_URL}?${tweetWebIntentParameters}`}
           data-size="large"
         >
+          // @ts-ignore
           <Button type={"primary"} size="large" style={shareStyle}>
             {t("delegate.vote_share")}
           </Button>
@@ -288,13 +292,13 @@ class CandidateProfileViewHeader extends Component<Props, State> {
 }
 
 type SocialIconType = {
-  url?: string,
-  type?: string,
-  scale?: number
+  url?: string;
+  type?: string;
+  scale?: number;
 };
 
 function SocialIcon({ url, type, scale = 1 }: SocialIconType) {
-  function handleClick(e) {
+  function handleClick(e: any) {
     if (!e) {
       return;
     }
@@ -322,7 +326,7 @@ function SocialIcon({ url, type, scale = 1 }: SocialIconType) {
     </a>
   );
 }
-
+//@ts-ignore
 export const Text = styled("span", ({ scale, ...otherProps }) => ({
   lineHeight: LINE_HEIGHT * scale * MIDDLE,
   fontSize: `${scale * TEXT_SIZE * LOWEST}px`,
@@ -332,7 +336,8 @@ export const Text = styled("span", ({ scale, ...otherProps }) => ({
 
 // $FlowFixMe
 export const CandidateProfileViewHeaderContainer = withRouter(
-  connect(state => ({
+  // @ts-ignore
+  connect((state: { base: { eth: string } }) => ({
     eth: state.base.eth
   }))(CandidateProfileViewHeader)
 );

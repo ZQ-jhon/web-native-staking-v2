@@ -1,18 +1,18 @@
 // @flow
-import { Component } from "react";
+import React, { Component } from "react";
 import { Query } from "react-apollo";
 import { connect } from "react-redux";
 // $FlowFixMe
 import { notification } from "antd";
 import { CandidateForm } from "../profile/candidate-form";
-import type { TNewBpCandidate } from "../../types";
+import { TNewBpCandidate } from "../../types/global";
 import { SpinPreloader } from "../common/spin-preloader";
-import { GET_BP_CANDIDATE } from "../home/voting-gql-queries";
+import { GET_BP_CANDIDATE } from "./voting-gql-queries";
 
 type Props = {
-  candidateProfileId?: string,
-  eth?: string,
-  history?: any
+  candidateProfileId?: string;
+  eth?: string;
+  history?: any;
 };
 
 const DEFAULT_BP_CANDIDATE: TNewBpCandidate = {
@@ -39,8 +39,8 @@ const DEFAULT_BP_CANDIDATE: TNewBpCandidate = {
 
 class CandidateProfile extends Component<Props> {
   props: Props;
-  constructor() {
-    super();
+  constructor(props: any) {
+    super(props);
   }
 
   render() {
@@ -49,7 +49,9 @@ class CandidateProfile extends Component<Props> {
     const request = { candidateProfileId, eth };
     return (
       <div>
+        // @ts-ignore
         <Query ssr={false} query={GET_BP_CANDIDATE} variables={request}>
+          {/* tslint:disable-next-line:no-any */}
           {({ loading, error, data }) => {
             if (error && !loading) {
               notification.error({
@@ -62,12 +64,14 @@ class CandidateProfile extends Component<Props> {
             if (data && data.bpCandidate) {
               return (
                 <SpinPreloader spinning={loading}>
+                  // @ts-ignore
                   <CandidateForm data={data.bpCandidate} />
                 </SpinPreloader>
               );
             }
             return (
               <SpinPreloader spinning={loading}>
+                // @ts-ignore
                 <CandidateForm data={DEFAULT_BP_CANDIDATE} />
               </SpinPreloader>
             );
@@ -79,6 +83,8 @@ class CandidateProfile extends Component<Props> {
 }
 
 // $FlowFixMe
-export const CandidateProfileContainer = connect(state => ({
-  eth: state.base.eth
-}))(CandidateProfile);
+export const CandidateProfileContainer = connect(
+  (state: { base: { eth: string } }) => ({
+    eth: state.base.eth
+  })
+)(CandidateProfile);

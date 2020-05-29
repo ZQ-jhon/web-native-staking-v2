@@ -5,7 +5,7 @@ const promiseToCallback = require("promise-to-callback");
 
 module.exports = Eth;
 
-function Eth(provider, options) {
+function Eth(provider: any, options: any) {
   const self = this;
   const optionsObject = options || {};
 

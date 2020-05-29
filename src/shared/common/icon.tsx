@@ -31,3 +31,16 @@ export function Icon({
 
   return <StyledDiv />;
 }
+
+export function ImageIcon({
+  width = LEN,
+  height = LEN,
+  url,
+  margin = "0"
+}: PropTypes) {
+  const StyledDiv = styled("img", {
+    margin
+  });
+
+  return <StyledDiv src={url} width={width} height={height} />;
+}

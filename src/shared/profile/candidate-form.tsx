@@ -1,29 +1,31 @@
 /* eslint-disable no-invalid-this */
 // @flow
-import { Button, Form, Input, Upload, Icon, InputNumber } from "antd";
+import { Button, Input, Upload, InputNumber } from "antd";
+// @ts-ignore
 import window from "global/window";
-import { Component } from "react";
+import { Form, Icon } from "@ant-design/compatible";
+import React, { Component } from "react";
 import { connect } from "react-redux";
 import { t } from "onefx/lib/iso-i18n";
 import { Mutation } from "react-apollo";
 import gql from "graphql-tag";
 // $FlowFixMe
 import { notification } from "antd";
-import type { TBpCandidate } from "../../types";
+import { TBpCandidate } from "../../types/global";
 import { ImageIcon } from "../common/icon";
 import { upload } from "../common/upload";
 import { ProfileView } from "./profile-view";
 
 type Props = {
-  data: TBpCandidate,
-  form: any
+  data: TBpCandidate;
+  form: any;
 };
 type State = {
-  visible: boolean,
-  loading: boolean,
-  logo: string,
-  bannerUrl: string,
-  showInsertFormat: boolean
+  visible: boolean;
+  loading: boolean;
+  logo: string;
+  bannerUrl: string;
+  showInsertFormat: boolean;
 };
 const UPSERT_BP_CANDIDATE = gql`
   mutation upsertBpCandidate($bpCandidateInput: BpCandidateInput!) {
@@ -45,6 +47,7 @@ const UPSERT_BP_CANDIDATE = gql`
   }
 `;
 
+//@ts-ignore
 const validateUrls = (rule, value, callback) => {
   const str = String(value);
   const strs = str.split(" ");
@@ -83,13 +86,14 @@ export const CandidateForm = connect()(
         const { data } = this.props;
 
         e.preventDefault();
+        //@ts-ignore
         this.props.form.validateFields(async (err, values) => {
           if (!err) {
             window.console.log("Received values of Candidate form: ", values);
 
             // $FlowFixMe
             const prevData = { ...data };
-            delete prevData.__typename;
+            delete prevData.category;
             this.setState({ loading: true });
             // update profile
             upsertBpCandidate({
@@ -123,7 +127,7 @@ export const CandidateForm = connect()(
                   message: t("profile.change_saved")
                 });
               })
-              .catch(err => {
+              .catch((err: any) => {
                 // server error
                 this.setState({ loading: false });
                 notification.error({
@@ -155,6 +159,7 @@ export const CandidateForm = connect()(
 
       beforeUpload = (file: any, title: any) => {
         return upload(file, title).then(data => {
+          // @ts-ignore
           this.setState({ [title]: data.secure_url });
           const { form } = this.props;
           form.setFieldsValue({
@@ -169,8 +174,9 @@ export const CandidateForm = connect()(
         const { showInsertFormat } = this.state;
 
         return (
+          // @ts-ignore
           <Mutation mutation={UPSERT_BP_CANDIDATE}>
-            {(upsertBpCandidate, resp) => {
+            {(upsertBpCandidate: any, resp: any) => {
               const data =
                 (resp && resp.data && resp.data.upsertBpCandidate) ||
                 this.props.data;

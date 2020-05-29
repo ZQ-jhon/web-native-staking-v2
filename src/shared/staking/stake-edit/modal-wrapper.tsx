@@ -4,14 +4,14 @@ import { CommonModal } from "../../common/common-modal";
 
 type Props = {
   // tslint:disable-next-line:no-any
-  clickable: any,
+  clickable: any;
   // tslint:disable-next-line:no-any
-  children: any,
+  children: any;
   onOk(cb: () => void): void;
   // tslint:disable-next-line:no-any
-  onCancel?: any,
+  onCancel?: any;
   // tslint:disable-next-line:no-any
-  modalUnMountFun?: any
+  modalUnMountFun?: any;
 };
 type State = { visible: boolean };
 
@@ -37,7 +37,7 @@ export class ModalWrapper extends Component<Props, State> {
     }
   };
 
-  componentWillUnmount(): void {
+  componentDidMount(): void {
     if (this.props.modalUnMountFun) {
       this.props.modalUnMountFun();
     }
@@ -51,9 +51,7 @@ export class ModalWrapper extends Component<Props, State> {
     return (
       <div>
         {/* tslint:disable-next-line:react-a11y-event-has-role */}
-        <div
-          onClick={() => this.setState({ visible: true })}>{clickable}
-        </div>
+        <div onClick={() => this.setState({ visible: true })}>{clickable}</div>
         <CommonModal
           onCancel={() => this.onCancel()}
           onOk={() => this.onOk()}

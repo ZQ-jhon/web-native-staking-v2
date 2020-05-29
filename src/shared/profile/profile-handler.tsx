@@ -3,13 +3,14 @@ import { noopReducer } from "onefx/lib/iso-react-render/root/root-reducer";
 import { combineReducers } from "redux";
 import config from "config";
 import { apolloSSR } from "../common/apollo-ssr";
-import { smartContractReducer } from "../smart-contract/smart-contract-reducer";
+//import { smartContractReducer } from "../smart-contract/smart-contract-reducer";
 import { ProfileAppContainer } from "./profile-app";
 
 export function setProfileHandler(server: any) {
   server.get(
     "/profile/*",
     async (ctx: any, next: any) => {
+      // @ts-ignore
       if (config.profileIsMaintenance) {
         return ctx.redirect(`/page-maintenance`);
       }
@@ -17,6 +18,7 @@ export function setProfileHandler(server: any) {
     },
     server.auth.subFromMasterCookie,
     server.auth.authRequired,
+    // @ts-ignore
     async ctx => {
       if (
         ctx.query.utm_source === "cobowallet" ||
@@ -31,6 +33,7 @@ export function setProfileHandler(server: any) {
       const whitelist =
         (await server.model.adminSettings.get("whitelist")) || [];
       const enableMemberGiveaway =
+        // @ts-ignore
         config.enableMemberGiveaway || whitelist.includes(ctx.state.eth);
 
       ctx.setState("base.displayWarning", server.config.displayWarning);
@@ -75,10 +78,11 @@ export function setProfileHandler(server: any) {
       );
       ctx.setState("base.enableMemberGiveaway", enableMemberGiveaway);
       ctx.body = await apolloSSR(ctx, server.config.apiGatewayUrl, {
+        // @ts-ignore
         VDom: <ProfileAppContainer />,
         reducer: combineReducers({
           base: noopReducer,
-          smartContract: smartContractReducer,
+          //smartContract: smartContractReducer,
           apolloState: noopReducer,
           webBpApolloState: noopReducer
         }),
