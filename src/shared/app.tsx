@@ -13,6 +13,7 @@ import { fonts } from "./common/styles/style-font";
 import { TopBar } from "./common/top-bar";
 import { VotingContainer } from "./home/voting-container";
 import { VoteNativePage } from "./staking/voting-native-page";
+import { ProfileAppContainer } from "./profile/profile-app";
 
 type Props = {
   googleTid: string;
@@ -43,6 +44,7 @@ export class App extends Component<Props> {
                 path="/vote-native/:registeredName"
                 component={VoteNativePage}
               />
+              <Route exact path="/profile/" component={ProfileAppContainer} />
               <Route
                 exact={true}
                 path="/vote-native/"
