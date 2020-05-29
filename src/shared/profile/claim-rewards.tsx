@@ -2,11 +2,13 @@
 // @flow
 import { Buffer } from "buffer";
 import { t } from "onefx/lib/iso-i18n";
-import { PureComponent } from "react";
-import { Form, Input, Button, Modal, Alert, Divider } from "antd";
+import React, { PureComponent, ReactText } from "react";
+import { Input, Button, Modal, Alert, Divider } from "antd";
+import { Form } from '@ant-design/compatible';
 import { fromRau } from "iotex-antenna/lib/account/utils";
 import { fromString } from "iotex-antenna/lib/crypto/address";
 import { connect } from "react-redux";
+//@ts-ignore
 import window from "global/window";
 import { Query } from "react-apollo";
 import gql from "graphql-tag";
@@ -29,8 +31,10 @@ export const GET_BP_CANDIDATES = gql`
 `;
 
 type Props = {
+  /* tslint:disable-next-line:no-any */
   history: any,
   eth: string,
+  /* tslint:disable-next-line:no-any */
   form: any
 };
 
@@ -38,15 +42,11 @@ type State = {
   ioAddress: string,
   rewardRau: string,
   ethAddress: string,
-  pendingNonce: string,
+  pendingNonce: ReactText | undefined,
   claimModalShow: boolean
 };
 
-@connect(state => ({
-  eth: state.base.eth
-}))
-@Form.create({ name: "claim-rewards" })
-class ClaimRewards extends PureComponent<Props, State> {
+class ClaimRewardsForm extends PureComponent<Props, State> {
   state: State = {
     ioAddress: "",
     rewardRau: "",
@@ -56,13 +56,14 @@ class ClaimRewards extends PureComponent<Props, State> {
   };
 
   handleAddress = () => {
-    this.props.form.validateFields(async (err, value) => {
+    /* tslint:disable-next-line:no-any */
+    this.props.form.validateFields(async (err: any, value: any) => {
       if (err) {
         return;
       }
       const { ioAddress } = value;
       const antenna = getAntenna();
-
+      // @ts-ignore
       const state = await antenna.iotx.readState({
         protocolID: Buffer.from("rewarding"),
         methodName: Buffer.from("UnclaimedBalance"),
@@ -77,20 +78,24 @@ class ClaimRewards extends PureComponent<Props, State> {
       this.setState({
         ioAddress,
         ethAddress,
-        pendingNonce: accountMeta.pendingNonce,
+        pendingNonce: accountMeta && accountMeta.pendingNonce,
         rewardRau
       });
     });
   };
+
   renderForm = () => {
     const { getFieldDecorator } = this.props.form;
     return (
       <div>
+        {/*
+              // @ts-ignore */}
         <Query
           query={GET_BP_CANDIDATES}
           variables={{ address: this.props.eth }}
         >
-          {({ data }) => {
+          {/* tslint:disable-next-line:no-any */}
+          {({ data } :any) => {
             const bpCandidates = (data && data.bpCandidatesOnContract) || [];
             const bpCandidate = bpCandidates[0];
             const ioAddress = bpCandidate && bpCandidate.ioRewardAddr;
@@ -142,7 +147,7 @@ class ClaimRewards extends PureComponent<Props, State> {
         </Form.Item>
         <AmountFormInputItem
           form={form}
-          initialValue={fromRau(rewardRau, "IOTX")}
+          initialValue={Number(fromRau(rewardRau, "IOTX"))}
           unit="IOTX"
         />
         <Form.Item>
@@ -207,6 +212,7 @@ export function AmountFormInputItem({
   help,
   unit
 }: {
+  /* tslint:disable-next-line:no-any */
   form: any,
   initialValue?: number,
   label?: string,
@@ -244,7 +250,7 @@ export function AmountFormInputItem({
     </Form.Item>
   );
 }
-
+/* tslint:disable-next-line:no-any */
 export function IoctlAlert({ message, code }: any) {
   return (
     <Alert
@@ -290,7 +296,7 @@ export function CodeModal({
         }}
       >
         <span>{code}</span>{" "}
-        <CopyButtonClipboardComponent text={String(code)} size={"default"} />
+        <CopyButtonClipboardComponent text={String(code)} />
       </div>
       <div style={{ display: "flex", justifyContent: "center", marginTop: 40 }}>
         <Button size="large" type="primary" onClick={() => onClose()}>
@@ -301,4 +307,9 @@ export function CodeModal({
   );
 }
 
-export { ClaimRewards };
+export const ClaimRewards = connect(function mapStateToProps(state: { base: { eth: string } }) {
+  return {
+    eth: state.base.eth
+  };
+})(Form.create({ name: "claim-rewards" })(ClaimRewardsForm))
+

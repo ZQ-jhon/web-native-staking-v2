@@ -1,7 +1,7 @@
 // @flow
 import { Route, Switch, withRouter, RouteComponentProps } from "react-router";
 import { Layout, Menu } from "antd";
-import { PercentageOutlined, SolutionOutlined, InboxOutlined, TrophyOutlined, DashboardOutlined, InfoCircleOutlined, SettingOutlined } from "@ant-design/icons";
+import { SolutionOutlined, InboxOutlined, DashboardOutlined, InfoCircleOutlined, SettingOutlined } from "@ant-design/icons";
 import React from "react";
 import { connect } from "react-redux";
 import { PureComponent } from "react";
@@ -20,11 +20,11 @@ import { Settings } from "./settings";
 import { Welcome } from "./welcome";
 import { VotesIReceived } from "./votes-i-received";
 import { Technical } from "./technical";
-import { ClaimRewards } from "./claim-rewards";
-import { MoveToEthWallet } from "./moveto-ethwallet";
-import { Distribution } from "./distribution/distribution";
-import { DelegateRewards } from "../delegate/delegate-rewards";
-import { RewardDistributionContainer } from "./reward-distribution-container";
+// import { ClaimRewards } from "./claim-rewards";
+// import { MoveToEthWallet } from "./moveto-ethwallet";
+// import { Distribution } from "./distribution/distribution";
+// import { DelegateRewards } from "../delegate/delegate-rewards";
+// import { RewardDistributionContainer } from "./reward-distribution-container";
 
 type Props = RouteComponentProps & {
   history: any
@@ -41,7 +41,7 @@ class ProfileApp extends PureComponent<Props, State> {
   render() {
     const { history } = this.props;
     const { Sider, Content } = Layout;
-    const SubMenu = Menu.SubMenu;
+    // const SubMenu = Menu.SubMenu;
 
     const PANES = [
       {
@@ -52,7 +52,8 @@ class ProfileApp extends PureComponent<Props, State> {
             <span className="nav-text">{t("profile.welcome")}</span>
           </span>
         ),
-        component: Welcome
+        component: Welcome,
+        hide: false
       },
       {
         path: "/profile/profile",
@@ -62,18 +63,19 @@ class ProfileApp extends PureComponent<Props, State> {
             <span className="nav-text">{t("profile.profile")}</span>
           </span>
         ),
-        component: CandidateProfileContainer
+        component: CandidateProfileContainer,
+        hide: false
       },
-      {
-        path: "/profile/reward-distribution",
-        tab: (
-          <span>
-            <PercentageOutlined />
-            <span className="nav-text">{t("profile.reward-distribution")}</span>
-          </span>
-        ),
-        component: RewardDistributionContainer
-      },
+      // {
+      //   path: "/profile/reward-distribution",
+      //   tab: (
+      //     <span>
+      //       <PercentageOutlined />
+      //       <span className="nav-text">{t("profile.reward-distribution")}</span>
+      //     </span>
+      //   ),
+      //   component: RewardDistributionContainer
+      // },
       {
         path: "/profile/technical/",
         tab: (
@@ -82,7 +84,8 @@ class ProfileApp extends PureComponent<Props, State> {
             <span className="nav-text">{t("profile.technical")}</span>
           </span>
         ),
-        component: Technical
+        component: Technical,
+        hide: false
       },
       // {
       //   path: "/profile/name-registration/",
@@ -102,92 +105,93 @@ class ProfileApp extends PureComponent<Props, State> {
             <span className="nav-text">{t("profile.received")}</span>
           </span>
         ),
-        component: VotesIReceived
+        component: VotesIReceived,
+        hide: false
       },
-      {
-        path: "",
-        tab: (
-          <SubMenu
-            key="rewards"
-            title={
-              <span>
-                <TrophyOutlined />
-                <span>{t("profile.rewards_distribution")}</span>
-              </span>
-            }
-          >
-            <Menu.Item
-              key="rewards_1"
-              onClick={() => history.push("/profile/claim-rewards/")}
-            >
-              {t("profile.claim_rewards")}
-            </Menu.Item>
-            <Menu.Item
-              key="rewards_2"
-              onClick={() => history.push("/profile/moveto-ethwallet/")}
-            >
-              {t("profile.move_to_eth_wallet")}
-            </Menu.Item>
-            <Menu.Item
-              key="rewards_3"
-              onClick={() => history.push("/profile/distribute-rewards/")}
-            >
-              {t("profile.calculate_rewards")}
-            </Menu.Item>
-            <Menu.Item
-              key="rewards_4"
-              onClick={() => history.push("/profile/distribute-iotx/")}
-            >
-              {t("profile.distribute_iotx")}
-            </Menu.Item>
-          </SubMenu>
-        ),
-        component: null
-      },
-      {
-        path: "/profile/claim-rewards/",
-        tab: (
-          <span>
-            <SettingOutlined />
-            <span className="nav-text">{t("profile.settings")}</span>
-          </span>
-        ),
-        component: ClaimRewards,
-        hide: true
-      },
-      {
-        path: "/profile/moveto-ethwallet/",
-        tab: (
-          <span>
-            <SettingOutlined />
-            <span className="nav-text">{t("profile.settings")}</span>
-          </span>
-        ),
-        component: MoveToEthWallet,
-        hide: true
-      },
-      {
-        path: "/profile/distribute-rewards/",
-        tab: (
-          <span>
-            <SettingOutlined />
-            <span className="nav-text">{t("profile.settings")}</span>
-          </span>
-        ),
-        component: DelegateRewards,
-        hide: true
-      },
-      {
-        path: "/profile/distribute-iotx/",
-        tab: (
-          <span>
-            <SettingOutlined />
-            <span className="nav-text">{t("profile.settings")}</span>
-          </span>
-        ),
-        component: Distribution,
-        hide: true
-      },
+      // {
+      //   path: "",
+      //   tab: (
+      //     <SubMenu
+      //       key="rewards"
+      //       title={
+      //         <span>
+      //           <TrophyOutlined />
+      //           <span>{t("profile.rewards_distribution")}</span>
+      //         </span>
+      //       }
+      //     >
+      //       <Menu.Item
+      //         key="rewards_1"
+      //         onClick={() => history.push("/profile/claim-rewards/")}
+      //       >
+      //         {t("profile.claim_rewards")}
+      //       </Menu.Item>
+      //       <Menu.Item
+      //         key="rewards_2"
+      //         onClick={() => history.push("/profile/moveto-ethwallet/")}
+      //       >
+      //         {t("profile.move_to_eth_wallet")}
+      //       </Menu.Item>
+      //       <Menu.Item
+      //         key="rewards_3"
+      //         onClick={() => history.push("/profile/distribute-rewards/")}
+      //       >
+      //         {t("profile.calculate_rewards")}
+      //       </Menu.Item>
+      //       <Menu.Item
+      //         key="rewards_4"
+      //         onClick={() => history.push("/profile/distribute-iotx/")}
+      //       >
+      //         {t("profile.distribute_iotx")}
+      //       </Menu.Item>
+      //     </SubMenu>
+      //   ),
+      //   component: null
+      // },
+      // {
+      //   path: "/profile/claim-rewards/",
+      //   tab: (
+      //     <span>
+      //       <SettingOutlined />
+      //       <span className="nav-text">{t("profile.settings")}</span>
+      //     </span>
+      //   ),
+      //   component: ClaimRewards,
+      //   hide: true
+      // },
+      // {
+      //   path: "/profile/moveto-ethwallet/",
+      //   tab: (
+      //     <span>
+      //       <SettingOutlined />
+      //       <span className="nav-text">{t("profile.settings")}</span>
+      //     </span>
+      //   ),
+      //   component: MoveToEthWallet,
+      //   hide: true
+      // },
+      // {
+      //   path: "/profile/distribute-rewards/",
+      //   tab: (
+      //     <span>
+      //       <SettingOutlined />
+      //       <span className="nav-text">{t("profile.settings")}</span>
+      //     </span>
+      //   ),
+      //   component: DelegateRewards,
+      //   hide: true
+      // },
+      // {
+      //   path: "/profile/distribute-iotx/",
+      //   tab: (
+      //     <span>
+      //       <SettingOutlined />
+      //       <span className="nav-text">{t("profile.settings")}</span>
+      //     </span>
+      //   ),
+      //   component: Distribution,
+      //   hide: true
+      // },
       {
         path: "/profile/settings/",
         tab: (
@@ -196,7 +200,8 @@ class ProfileApp extends PureComponent<Props, State> {
             <span className="nav-text">{t("profile.settings")}</span>
           </span>
         ),
-        component: Settings
+        component: Settings,
+        hide: false
       }
     ];
 

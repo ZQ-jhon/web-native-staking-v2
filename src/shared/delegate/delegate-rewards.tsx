@@ -1,5 +1,5 @@
 // @flow
-import { Component } from "react";
+import React, { Component } from "react";
 import { t } from "onefx/lib/iso-i18n";
 // $FlowFixMe
 import { Table, Button, notification } from "antd";
