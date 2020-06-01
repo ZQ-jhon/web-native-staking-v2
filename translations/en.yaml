@@ -195,7 +195,7 @@ my_stake.stakedAmount.required: 'Please enter the amount.'
 my_stake.stakedAmount: Amount
 my_stake.bucketId: 'Bucket ID'
 my_stake.bucketId.required: 'Please select the Bucket'
-my_stake.stakeDuration.err: 'stake duration must be within 0 and ${maxValue} and in multiples of 7'
+my_stake.stakeDuration.err: 'stake duration must be within 0 and ${maxValue}'
 my_stake.largerOrEqualTo.err: 'must be larger or equal to ${num}.'
 my_stake.smallerOrEqualTo.err0: 'your balance is ${num}. smaller than ${min}'
 my_stake.smallerOrEqualTo.err: 'must be smaller or equal to ${num}.'

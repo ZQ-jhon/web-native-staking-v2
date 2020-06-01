@@ -27,7 +27,7 @@ export const smallerOrEqualTo = (num, min) => (rule, value, callback) => {
 };
 
 const isStakeDurationInvalid = (value: number, maxValue: number) => {
-  return value < 0 || value > maxValue || value % 7 !== 0;
+  return value < 0 || value > maxValue;
 };
 
 // tslint:disable-next-line:variable-name no-any
