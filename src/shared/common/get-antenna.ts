@@ -25,7 +25,7 @@ export function getAntenna(): Antenna {
   const signer = isIoPay
     ? new WvSigner()
     : new WsSignerPlugin("wss://local.iotex.io:64102");
-  injectedWindow.antenna = new Antenna("https://api.testnet.iotex.one", {
+  injectedWindow.antenna = new Antenna("https://api.iotex.one", {
     signer
   });
   return injectedWindow.antenna;
@@ -65,12 +65,9 @@ export function getMobileNativeAntenna(): Antenna {
   const injectedWindow: Window & { mobileNativeAntenna?: Antenna } = window;
   if (!injectedWindow.mobileNativeAntenna) {
     const signer = new WvSigner();
-    injectedWindow.mobileNativeAntenna = new Antenna(
-      "https://api.testnet.iotex.one",
-      {
-        signer
-      }
-    );
+    injectedWindow.mobileNativeAntenna = new Antenna("https://api.iotex.one", {
+      signer
+    });
   }
   return injectedWindow.mobileNativeAntenna;
 }

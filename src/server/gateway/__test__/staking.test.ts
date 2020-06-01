@@ -4,7 +4,7 @@ import { Staking } from "../staking";
 
 test("getAllCandidates", async t => {
   const st = new Staking({
-    antenna: new Antenna("https://api.testnet.iotex.one")
+    antenna: new Antenna("https://api.iotex.one")
   });
   const height = await st.getHeight();
   const resp = await st.getAllCandidates(0, 1000, height);
