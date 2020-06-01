@@ -178,7 +178,7 @@ export class AutoStakeFormItem extends Component<Props, State> {
           </div>
         ) : null}
         <CommonMarginTop />
-
+        {/*
         <div style={{ marginTop: "26px" }}>
           <IconLabel
             iconType={<InfoCircleOutlined style={{ color: colors.deltaUp }} />}
@@ -186,8 +186,7 @@ export class AutoStakeFormItem extends Component<Props, State> {
           />
         </div>
         <div style={{ marginBottom: "18px", marginTop: "10px" }}>
-          {/*
-              // @ts-ignore */}
+          {// @ts-ignore}
           <span style={subTextStyle}>{t("my_stake.voting_power_explain")}</span>
         </div>
 
@@ -214,7 +213,7 @@ export class AutoStakeFormItem extends Component<Props, State> {
             />
           ) : (
             <Flex margin={"0 auto"} alignItems={"baseline"}>
-              {/* tslint:disable-next-line:react-no-dangerous-html */}
+              {// tslint:disable-next-line:react-no-dangerous-html}
               <p
                 // @ts-ignore
                 style={centerTextStyle}
@@ -230,7 +229,7 @@ export class AutoStakeFormItem extends Component<Props, State> {
                 }}
               />
               <span>...</span>
-              {/* tslint:disable-next-line:react-no-dangerous-html */}
+              {// tslint:disable-next-line:react-no-dangerous-html}
               <p
                 // @ts-ignore
                 style={centerTextStyle}
@@ -246,7 +245,7 @@ export class AutoStakeFormItem extends Component<Props, State> {
                 }}
               />
               <span>...</span>
-              {/* tslint:disable-next-line:react-no-dangerous-html */}
+              {// tslint:disable-next-line:react-no-dangerous-html}
               <p
                 // @ts-ignore
                 style={centerTextStyle}
@@ -264,6 +263,7 @@ export class AutoStakeFormItem extends Component<Props, State> {
             </Flex>
           )}
         </Flex>
+*/}
         {children}
       </div>
     );

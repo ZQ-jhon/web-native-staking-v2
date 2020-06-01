@@ -209,6 +209,7 @@ class MyVotesTable extends Component<Props, State> {
                     </BoldText>
                   </Flex>
                 </Flex>
+                {/*
                 <Flex width={"100%"} padding={"1px 0 1px 0"}>
                   <StatisticSpan style={{ width: "50%" }}>
                     {t("my_stake.staking_power")}
@@ -219,6 +220,7 @@ class MyVotesTable extends Component<Props, State> {
                     })}
                   </StatisticValue>
                 </Flex>
+                */}
               </Flex>
             );
           }

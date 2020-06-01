@@ -118,8 +118,10 @@ export const AccountMeta = connect(
           <LabelText>{String(pendingUnstaked)}</LabelText>
           <b>{t("my_stake.withdrawable_amount")}</b>
           <LabelText>{String(readyToWithdraw)}</LabelText>
-          <b>{t("my_stake.votes_amount")}</b>
-          <LabelText>{String(totalVotes)}</LabelText>
+          {/*
+            <b>{t("my_stake.votes_amount")}</b>
+            <LabelText>{String(totalVotes)}</LabelText>
+          */}
         </>
       );
     }
