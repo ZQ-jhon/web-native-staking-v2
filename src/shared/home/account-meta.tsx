@@ -105,8 +105,8 @@ export const AccountMeta = connect(
         address,
         totalStaked,
         pendingUnstaked,
-        readyToWithdraw,
-        totalVotes
+        readyToWithdraw
+        // totalVotes
       } = this.props;
       return (
         <>

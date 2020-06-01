@@ -406,14 +406,6 @@ export { MyVotesTable };
 const BoldText = styled("b", {
   fontSize: "12px"
 });
-const StatisticSpan = styled("span", {
-  fontSize: "10px",
-  color: colors.black80
-});
-const StatisticValue = styled("span", {
-  fontSize: "10px",
-  color: colors.black95
-});
 const TimeSpan = styled("span", {
   fontSize: "10px",
   color: colors.black80

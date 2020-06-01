@@ -30,9 +30,9 @@ const isStakeDurationInvalid = (value: number, maxValue: number) => {
   return value < 0 || value > maxValue;
 };
 
-// tslint:disable-next-line:variable-name no-any
 export const validateStakeDuration = (maxValue: number, minValue?: number) => (
-  _rule: any,
+  // tslint:disable-next-line:variable-name no-any
+  _: any,
   value: number,
   // tslint:disable-next-line:unified-signatures
   callback: { (arg0: string): void; (): void }

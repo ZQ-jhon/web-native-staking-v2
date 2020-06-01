@@ -1,5 +1,4 @@
 // @flow
-import InfoCircleOutlined from "@ant-design/icons/InfoCircleOutlined";
 import RetweetOutlined from "@ant-design/icons/RetweetOutlined";
 import { Form, InputNumber, Switch } from "antd";
 import { FormInstance } from "antd/lib/form";
@@ -12,7 +11,6 @@ import {
   CommonMarginTop,
   NoMarginBottomStyle
 } from "../common/common-margin";
-import { Flex } from "../common/flex";
 import { formItemLayout } from "../common/form-item-layout";
 import { colors } from "../common/styles/style-color2";
 import { fontFamily, fonts } from "../common/styles/style-font";
@@ -133,8 +131,6 @@ export class AutoStakeFormItem extends Component<Props, State> {
       fieldName = "nonDecay",
       showAutoStack = true,
       children,
-      stakeAmount = new BigNumber(0),
-      stakeDuration = 0,
       forceDisable = false,
       initialValue
     } = this.props;
