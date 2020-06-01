@@ -325,7 +325,6 @@ export class DurationFormItem extends Component<DurationFormItemProps> {
           <InputNumber
             type="number"
             size="large"
-            step={7}
             min={0}
             max={maxDuration}
             style={{ width: "100%", background: "#f7f7f7", border: "none" }}
