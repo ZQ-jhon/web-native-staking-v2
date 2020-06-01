@@ -36,7 +36,7 @@ export const TopBarMenu = ({ hideMobileMenu, faucetEnable }: any) => {
     : { ...inactived, ...profileStyle };
 
   const menu = [
-    <A key={0} href="/" style={aStyle} onClick={hideMobileMenu}>
+    <A key={0} href="/v1/" style={aStyle} onClick={hideMobileMenu}>
       V1
     </A>,
     <A key={4} href="/v2/" style={a2Style} onClick={hideMobileMenu}>
