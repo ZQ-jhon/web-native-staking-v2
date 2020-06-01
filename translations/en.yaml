@@ -116,6 +116,8 @@ topbar.staking: STAKING
 topbar.support: SUPPORT
 topbar.vita: VITA
 topbar.voting: VOTING
+topbar.poll: POLL
+topbar.tool: TOOL
 contract.called: 'Smart contract interaction succeeded! Please wait for a few minutes and refresh this page to see the result.'
 contract.install: 'Please use ioPay desktop, import & unlock your wallet, and then refresh this page to continue.'
 contract.please_unlock: 'To continue, please unlock your wallet in MetaMask.'
