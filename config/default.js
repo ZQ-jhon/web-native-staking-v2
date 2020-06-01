@@ -53,6 +53,7 @@ module.exports = {
       "https://member.iotex.io/iotex-core-proxy/",
       "https://api.nightly-cluster-2.iotex.one/",
       "https://api.testnet.iotex.one/",
+      "https://api.iotex.one/",
       ...(process.env.API_GATEWAY_URL ? [process.env.API_GATEWAY_URL] : [])
     ],
     "child-src": ["self"],
