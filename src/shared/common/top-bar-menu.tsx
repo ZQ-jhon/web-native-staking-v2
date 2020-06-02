@@ -45,10 +45,10 @@ export const TopBarMenu = ({ hideMobileMenu, faucetEnable }: any) => {
     <A key={1} href="/profile/" style={a1Style} onClick={hideMobileMenu}>
       {t("topbar.i_am_a_delegate")}
     </A>,
-    <A key={2} href="/polls/" target="_blank" style={a3Style}>
+    <A key={2} href="/polls/" style={a3Style}>
       {t("topbar.poll")}
     </A>,
-    <A key={3} href="/tools/multi-send/" target="_blank" style={a4Style}>
+    <A key={3} href="/tools/multi-send/" style={a4Style}>
       {t("topbar.tool")}
     </A>
   ];
