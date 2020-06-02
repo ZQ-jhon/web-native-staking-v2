@@ -170,7 +170,7 @@
     "markdown-it": "10.0.0",
     "markdown-it-mark": "3.0.0",
     "markdown-it-toc-and-anchor": "4.2.0",
-    "mongoose": "5.9.16",
+    "mongoose": "5.9.17",
     "nodemailer": "5.1.1",
     "nodemailer-mailgun-transport": "1.4.0",
     "onefx": "1.8.9",
