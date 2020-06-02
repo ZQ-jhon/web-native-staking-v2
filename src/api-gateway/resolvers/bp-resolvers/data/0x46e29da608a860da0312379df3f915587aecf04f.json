@@ -1,0 +1,36 @@
+{
+  "contractAddress": "0x46e29da608a860da0312379df3f915587aecf04f",
+  "title": "test title",
+  "description": "test some description description description description description description description description description description description description description description description description description",
+  "category": "General",
+  "proposer": "0x859f8c4f109621b7b8abe05dd5f864189c2312a0",
+  "start": "2019-08-01T08:33:17.263Z",
+  "end": "2019-11-08T08:33:17.263Z",
+  "maxNumOfChoices": "3",
+  "status": "1",
+  "result": [98, 89, 100, 20],
+  "options": [
+    {
+      "id": 0,
+      "description": "short",
+      "__typename": "Option"
+    },
+    {
+      "id": 1,
+      "description": "not so short",
+      "__typename": "Option"
+    },
+    {
+      "id": 2,
+      "description": "long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long option",
+      "__typename": "Option"
+    },
+    {
+      "id": 3,
+      "description": "super super super super super super super super super super super super super super super super super super super super super super super super super super super super super super super super long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long option",
+      "__typename": "Option"
+    }
+  ],
+  "votes": [],
+  "__typename": "Poll"
+}

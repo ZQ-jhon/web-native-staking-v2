@@ -7,6 +7,39 @@ export const KeySpan = styled("span", {
   color: colors.black80
 });
 
+
+export const BoldText = styled("b", {
+  fontSize: "12px"
+});
+
+export const CellSpan = styled("span", {
+  fontSize: "12px",
+  color: colors.black,
+  padding: "3px 0"
+});
+
+export const TimeSpan = styled("span", {
+  fontSize: "10px",
+  color: colors.black80
+});
+
+export const StatisticSpan = styled("span", {
+  fontSize: "10px",
+  color: colors.black80
+});
+
+export const StatisticValue = styled("span", {
+  fontSize: "10px",
+  color: colors.black95
+});
+
+export const LabelText = styled("span", props => ({
+  fontSize: "14px",
+  marginBottom: "24px",
+  wordBreak: "break-word",
+  ...props
+}));
+
 export const ValueSpan = styled("span", () => ({
   fontSize: "14px",
   color: colors.black,
