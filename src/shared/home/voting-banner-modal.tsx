@@ -1,8 +1,8 @@
-import React, {PureComponent} from "react";
-import {connect} from "react-redux";
-import {VoteNowContainer} from "../staking/vote-now-steps/vote-now-container";
-import {VotingModal} from "./vote-button-modal";
-import {VotingBanner} from "./voting-banner";
+import React, { PureComponent } from "react";
+import { connect } from "react-redux";
+import { VoteNowContainer } from "../staking/vote-now-steps/vote-now-container";
+import { VotingModal } from "./vote-button-modal";
+import { VotingBanner } from "./voting-banner";
 
 type Props = {
   isMobile: boolean;
@@ -35,7 +35,7 @@ class VotingBannerModal extends PureComponent<Props, State> {
       shouldDisplayMetaMaskReminder: false,
       userConfirmedMetaMaskReminder: false,
       currentCandidate: null,
-      displayMobileList: false,
+      displayMobileList: false
     };
   }
 
@@ -90,15 +90,17 @@ class VotingBannerModal extends PureComponent<Props, State> {
             this.setState({ shouldDisplayMetaMaskReminder: false })
           }
         />
-        {(
+        {
           // @ts-ignore
           <VoteNowContainer
             registeredName={this.state.currentCandidateName}
             displayOthers={false}
             forceDisplayModal={this.state.shouldDisplayVotingModal}
-            requestDismiss={() => this.setState({ shouldDisplayVotingModal: false })}
+            requestDismiss={() =>
+              this.setState({ shouldDisplayVotingModal: false })
+            }
           />
-        )}
+        }
       </>
     );
   }

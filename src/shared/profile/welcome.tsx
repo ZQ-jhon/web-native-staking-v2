@@ -1,11 +1,11 @@
-import React from 'react';
+import React from "react";
 import MarkdownIt from "markdown-it";
 import { t } from "onefx/lib/iso-i18n";
 import { PureComponent } from "react";
 import { Flex } from "../common/flex";
 
 const md = new MarkdownIt({
-  linkify: true
+  linkify: true,
 });
 
 class Welcome extends PureComponent {

@@ -1,3 +1,4 @@
+import React from "react";
 import { clientReactRender } from "onefx/lib/iso-react-render/client-react-render";
 import { combineReducers } from "redux";
 import { ApolloProvider } from "react-apollo";
@@ -19,7 +20,7 @@ clientReactRender({
   reducer: combineReducers({
     base: noopReducer,
     apolloState: noopReducer,
-    webBpApolloState: noopReducer
+    webBpApolloState: noopReducer,
     //smartContract: smartContractReducer
-  })
+  }),
 });

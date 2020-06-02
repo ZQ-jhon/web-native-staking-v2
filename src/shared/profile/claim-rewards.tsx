@@ -4,7 +4,7 @@ import { Buffer } from "buffer";
 import { t } from "onefx/lib/iso-i18n";
 import React, { PureComponent, ReactText } from "react";
 import { Input, Button, Modal, Alert, Divider } from "antd";
-import { Form } from '@ant-design/compatible';
+import { Form } from "@ant-design/compatible";
 import { fromRau } from "iotex-antenna/lib/account/utils";
 import { fromString } from "iotex-antenna/lib/crypto/address";
 import { connect } from "react-redux";
@@ -14,7 +14,7 @@ import { Query } from "react-apollo";
 import gql from "graphql-tag";
 import {
   largerOrEqualTo,
-  validateIoAddress
+  validateIoAddress,
 } from "../smart-contract/field-validators";
 import { getAntenna } from "../common/get-antenna";
 // $FlowFixMe
@@ -32,18 +32,18 @@ export const GET_BP_CANDIDATES = gql`
 
 type Props = {
   /* tslint:disable-next-line:no-any */
-  history: any,
-  eth: string,
+  history: any;
+  eth: string;
   /* tslint:disable-next-line:no-any */
-  form: any
+  form: any;
 };
 
 type State = {
-  ioAddress: string,
-  rewardRau: string,
-  ethAddress: string,
-  pendingNonce: ReactText | undefined,
-  claimModalShow: boolean
+  ioAddress: string;
+  rewardRau: string;
+  ethAddress: string;
+  pendingNonce: ReactText | undefined;
+  claimModalShow: boolean;
 };
 
 class ClaimRewardsForm extends PureComponent<Props, State> {
@@ -52,7 +52,7 @@ class ClaimRewardsForm extends PureComponent<Props, State> {
     rewardRau: "",
     ethAddress: "",
     pendingNonce: "",
-    claimModalShow: false
+    claimModalShow: false,
   };
 
   handleAddress = () => {
@@ -67,19 +67,19 @@ class ClaimRewardsForm extends PureComponent<Props, State> {
       const state = await antenna.iotx.readState({
         protocolID: Buffer.from("rewarding"),
         methodName: Buffer.from("UnclaimedBalance"),
-        arguments: [Buffer.from(ioAddress)]
+        arguments: [Buffer.from(ioAddress)],
       });
       const rewardRau = new window.TextDecoder("utf-8").decode(state.data);
       const ethAddress = fromString(ioAddress).stringEth();
       const { accountMeta } = await antenna.iotx.getAccount({
-        address: ioAddress
+        address: ioAddress,
       });
 
       this.setState({
         ioAddress,
         ethAddress,
         pendingNonce: accountMeta && accountMeta.pendingNonce,
-        rewardRau
+        rewardRau,
       });
     });
   };
@@ -95,7 +95,7 @@ class ClaimRewardsForm extends PureComponent<Props, State> {
           variables={{ address: this.props.eth }}
         >
           {/* tslint:disable-next-line:no-any */}
-          {({ data } :any) => {
+          {({ data }: any) => {
             const bpCandidates = (data && data.bpCandidatesOnContract) || [];
             const bpCandidate = bpCandidates[0];
             const ioAddress = bpCandidate && bpCandidate.ioRewardAddr;
@@ -109,12 +109,12 @@ class ClaimRewardsForm extends PureComponent<Props, State> {
                   rules: [
                     {
                       required: true,
-                      message: t("claim-rewards.io_address.required")
+                      message: t("claim-rewards.io_address.required"),
                     },
                     {
-                      validator: validateIoAddress
-                    }
-                  ]
+                      validator: validateIoAddress,
+                    },
+                  ],
                 })(
                   <Input
                     onPressEnter={this.handleAddress}
@@ -157,7 +157,7 @@ class ClaimRewardsForm extends PureComponent<Props, State> {
             htmlType="submit"
             onClick={() => {
               this.setState({
-                claimModalShow: true
+                claimModalShow: true,
               });
             }}
           >
@@ -210,15 +210,15 @@ export function AmountFormInputItem({
   label,
   min,
   help,
-  unit
+  unit,
 }: {
   /* tslint:disable-next-line:no-any */
-  form: any,
-  initialValue?: number,
-  label?: string,
-  min?: number,
-  help?: string,
-  unit?: string
+  form: any;
+  initialValue?: number;
+  label?: string;
+  min?: number;
+  help?: string;
+  unit?: string;
 }) {
   const { getFieldDecorator } = form;
   return (
@@ -229,16 +229,16 @@ export function AmountFormInputItem({
           { validator: largerOrEqualTo(min || 0) },
           {
             required: true,
-            message: t("claim-reward.amount.error")
+            message: t("claim-reward.amount.error"),
           },
           {
             type: "number",
             message: t("claim-reward.amount.error"),
             transform: (value: string) => {
               return Number(value);
-            }
-          }
-        ]
+            },
+          },
+        ],
       })(
         <Input
           className="form-input"
@@ -271,12 +271,12 @@ export function CodeModal({
   show,
   code,
   onClose,
-  getCode
+  getCode,
 }: {
-  show: boolean,
-  code?: string,
-  getCode?: Function,
-  onClose: Function
+  show: boolean;
+  code?: string;
+  getCode?: Function;
+  onClose: Function;
 }) {
   if (getCode) {
     code = getCode();
@@ -292,11 +292,10 @@ export function CodeModal({
       <div
         style={{
           backgroundColor: colors.black10,
-          padding: 15
+          padding: 15,
         }}
       >
-        <span>{code}</span>{" "}
-        <CopyButtonClipboardComponent text={String(code)} />
+        <span>{code}</span> <CopyButtonClipboardComponent text={String(code)} />
       </div>
       <div style={{ display: "flex", justifyContent: "center", marginTop: 40 }}>
         <Button size="large" type="primary" onClick={() => onClose()}>
@@ -307,9 +306,10 @@ export function CodeModal({
   );
 }
 
-export const ClaimRewards = connect(function mapStateToProps(state: { base: { eth: string } }) {
+export const ClaimRewards = connect(function mapStateToProps(state: {
+  base: { eth: string };
+}) {
   return {
-    eth: state.base.eth
+    eth: state.base.eth,
   };
-})(Form.create({ name: "claim-rewards" })(ClaimRewardsForm))
-
+})(Form.create({ name: "claim-rewards" })(ClaimRewardsForm));

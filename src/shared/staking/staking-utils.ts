@@ -7,7 +7,7 @@ import {
   Bucket,
   DEFAULT_STAKING_DURATION_SECOND,
   encodeCandidateHexName,
-  getPowerEstimation
+  getPowerEstimation,
 } from "../common/token-utils";
 import { NATIVE_TOKEN_ABI } from "./native-token-abi";
 
@@ -36,7 +36,7 @@ export function calcStats(
     totalStaking: 0,
     unStakePendingAmount: 0,
     withdrawableAmount: 0,
-    totalVotesAmount: "0"
+    totalVotesAmount: "0",
   };
   let bigTotalVotesAmount = new BigNumber(0);
   for (let i = 0; i < resp.length; i++) {
@@ -72,16 +72,16 @@ export async function getNativeStakeStatus(
 
   let resp = await contract.methods.getPyggIndexesByAddress(addr, {
     from: addr,
-    gas: 600000
+    gas: 600000,
   });
   // @ts-ignore
-  const bucketIds = resp.map(id => id.toNumber()) || [];
+  const bucketIds = resp.map((id) => id.toNumber()) || [];
   resp = await Promise.all(
     // tslint:disable-next-line:no-any
     bucketIds.map((id: any) =>
       contract.methods.pyggs(id, {
         from: addr,
-        gas: 600000
+        gas: 600000,
       })
     )
   ); // FIXME: confirm params?
@@ -91,9 +91,9 @@ export async function getNativeStakeStatus(
 
 // tslint:disable-next-line:no-any
 function nativeResponseMap(response: Array<Array<any>>): any {
-  const item = NATIVE_TOKEN_ABI.find(item => item.name === "pyggs");
+  const item = NATIVE_TOKEN_ABI.find((item) => item.name === "pyggs");
   const fields = item && item.outputs;
-  return response.map(ary =>
+  return response.map((ary) =>
     ary.reduce((acc, cur, index) => {
       // @ts-ignore
       const key = fields[index].name;

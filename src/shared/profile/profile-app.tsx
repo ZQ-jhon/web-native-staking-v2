@@ -1,10 +1,15 @@
 // @flow
 import { Route, Switch, withRouter, RouteComponentProps } from "react-router";
 import { Layout, Menu } from "antd";
-import { SolutionOutlined, InboxOutlined, DashboardOutlined, InfoCircleOutlined, SettingOutlined } from "@ant-design/icons";
-import React from "react";
+import {
+  SolutionOutlined,
+  InboxOutlined,
+  DashboardOutlined,
+  InfoCircleOutlined,
+  SettingOutlined,
+} from "@ant-design/icons";
 import { connect } from "react-redux";
-import { PureComponent } from "react";
+import React, { PureComponent } from "react";
 import { t } from "onefx/lib/iso-i18n";
 import { CommonMargin } from "../common/common-margin";
 import { Head } from "../common/head";
@@ -27,11 +32,11 @@ import { Technical } from "./technical";
 // import { RewardDistributionContainer } from "./reward-distribution-container";
 
 type Props = RouteComponentProps & {
-  history: any
+  history: any;
 };
 
 type State = {
-  toggled: boolean
+  toggled: boolean;
 };
 
 class ProfileApp extends PureComponent<Props, State> {
@@ -53,7 +58,7 @@ class ProfileApp extends PureComponent<Props, State> {
           </span>
         ),
         component: Welcome,
-        hide: false
+        hide: false,
       },
       {
         path: "/profile/profile",
@@ -64,7 +69,7 @@ class ProfileApp extends PureComponent<Props, State> {
           </span>
         ),
         component: CandidateProfileContainer,
-        hide: false
+        hide: false,
       },
       // {
       //   path: "/profile/reward-distribution",
@@ -85,7 +90,7 @@ class ProfileApp extends PureComponent<Props, State> {
           </span>
         ),
         component: Technical,
-        hide: false
+        hide: false,
       },
       // {
       //   path: "/profile/name-registration/",
@@ -106,7 +111,7 @@ class ProfileApp extends PureComponent<Props, State> {
           </span>
         ),
         component: VotesIReceived,
-        hide: false
+        hide: false,
       },
       // {
       //   path: "",
@@ -201,15 +206,12 @@ class ProfileApp extends PureComponent<Props, State> {
           </span>
         ),
         component: Settings,
-        hide: false
-      }
+        hide: false,
+      },
     ];
-
     return (
       <RootStyle>
-        <Head
-          title={`${t("profile.title")} - ${t("meta.description")}`}
-        />
+        <Head title={`${t("profile.title")} - ${t("meta.description")}`} />
 
         <TopBar />
         <Layout>
@@ -219,7 +221,7 @@ class ProfileApp extends PureComponent<Props, State> {
               style={{
                 padding: "24px 0",
                 background: "#fff",
-                minHeight: `calc((100vh - ${TOP_BAR_HEIGHT}px) - 86px)`
+                minHeight: `calc((100vh - ${TOP_BAR_HEIGHT}px) - 86px)`,
               }}
               hasSider={true}
             >
@@ -233,8 +235,10 @@ class ProfileApp extends PureComponent<Props, State> {
                   mode="inline"
                   defaultSelectedKeys={[
                     String(
-                      PANES.findIndex(p => p.path === history.location.pathname)
-                    )
+                      PANES.findIndex(
+                        (p) => p.path === history.location.pathname
+                      )
+                    ),
                   ]}
                   style={{ height: "100%" }}
                 >
@@ -259,7 +263,7 @@ class ProfileApp extends PureComponent<Props, State> {
                 style={{
                   background: "#fff",
                   margin: "0 16px",
-                  fontFamily: secondFontFamily
+                  fontFamily: secondFontFamily,
                 }}
               >
                 <Switch>
@@ -290,9 +294,11 @@ class ProfileApp extends PureComponent<Props, State> {
 
 // $FlowFixMe
 export const ProfileAppContainer = withRouter(
-  connect(function mapStateToProps(state: { base: { analytics: { googleTid: string } } }) {
+  connect(function mapStateToProps(state: {
+    base: { analytics: { googleTid: string } };
+  }) {
     return {
-      googleTid: state.base.analytics.googleTid
+      googleTid: state.base.analytics.googleTid,
     };
   })(ProfileApp)
 );

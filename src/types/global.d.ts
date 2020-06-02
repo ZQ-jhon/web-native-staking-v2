@@ -12,7 +12,7 @@ import {
   NameRegistrationContract,
   StakingContract,
   DelegateProfileContract,
-  PollManager
+  PollManager,
 } from "./server/gateway/web3";
 import { Ranking } from "./server/gateway/ranking/ranking";
 import { IotexCore } from "./server/gateway/iotex-core";

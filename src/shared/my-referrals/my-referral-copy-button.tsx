@@ -11,11 +11,11 @@ import { colors } from "../common/styles/style-color2";
 
 type Props = {
   // tslint:disable-next-line:no-any
-  coppingValue?: any
+  coppingValue?: any;
 };
 
 type State = {
-  copied: boolean
+  copied: boolean;
 };
 
 export class MyReferralCopyButton extends Component<Props, State> {

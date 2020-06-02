@@ -12,7 +12,7 @@ import { fromBytes, fromString } from "iotex-antenna/lib/crypto/address";
 import { connect } from "react-redux";
 import {
   validateIoAddress,
-  validateAddress
+  validateAddress,
 } from "../smart-contract/field-validators";
 import { getAntenna } from "../common/get-antenna";
 import { CommonMargin } from "../common/common-margin";
@@ -28,10 +28,10 @@ import { ReportTubeIssueModal } from "../tools/report-tube-issue-modal";
 import { Flex } from "../common/flex";
 
 type Props = {
-  history: any,
-  eth: string,
-  form: any,
-  checkUserIsUS?: boolean
+  history: any;
+  eth: string;
+  form: any;
+  checkUserIsUS?: boolean;
 };
 
 const SWAP_TO_CURRENT = 1;
@@ -42,18 +42,18 @@ const DEFAULT_DOWNLOAD_LINK =
   "https://github.com/iotexproject/iotex-explorer/releases";
 
 type State = {
-  ioAddress: string,
-  rewardRau: string,
-  ethAddress: string,
-  pendingNonce: string,
-  claimModalShow: boolean,
-  radioValue: number,
-  downloadLink: string,
-  modalVisible: boolean
+  ioAddress: string;
+  rewardRau: string;
+  ethAddress: string;
+  pendingNonce: string;
+  claimModalShow: boolean;
+  radioValue: number;
+  downloadLink: string;
+  modalVisible: boolean;
 };
 
-@connect(state => ({
-  eth: state.base.eth
+@connect((state) => ({
+  eth: state.base.eth,
 }))
 @Form.create({ name: "claim-rewards" })
 class MoveToEthWallet extends PureComponent<Props, State> {
@@ -65,7 +65,7 @@ class MoveToEthWallet extends PureComponent<Props, State> {
     claimModalShow: false,
     radioValue: SWAP_TO_CURRENT,
     downloadLink: DEFAULT_DOWNLOAD_LINK,
-    modalVisible: false
+    modalVisible: false,
   };
 
   remoteAntenna: Antenna;
@@ -73,11 +73,11 @@ class MoveToEthWallet extends PureComponent<Props, State> {
   async componentDidMount(): Promise<void> {
     try {
       this.remoteAntenna = new Antenna("http://api.iotex.one:80/", {
-        signer: new WsSignerPlugin("wss://local.iotex.io:64102")
+        signer: new WsSignerPlugin("wss://local.iotex.io:64102"),
       });
     } catch (e) {
       notification.error({
-        message: `failed to connect to remote wallet: ${e}`
+        message: `failed to connect to remote wallet: ${e}`,
       });
     }
 
@@ -93,7 +93,7 @@ class MoveToEthWallet extends PureComponent<Props, State> {
 
     const packages = { mac: "", linux: "", window: "" };
 
-    resp.data.assets.forEach(item => {
+    resp.data.assets.forEach((item) => {
       if (/mac.zip$/.test(item.name)) {
         packages.mac = item.browser_download_url;
       }
@@ -137,21 +137,21 @@ class MoveToEthWallet extends PureComponent<Props, State> {
 
       const ethAddress = fromString(ioAddress).stringEth();
       const { accountMeta } = await antenna.iotx.getAccount({
-        address: ioAddress
+        address: ioAddress,
       });
 
       this.setState({
         ioAddress,
         ethAddress,
         pendingNonce: accountMeta.pendingNonce, // ? what does this field mean?
-        rewardRau: accountMeta.balance
+        rewardRau: accountMeta.balance,
       });
     });
   };
 
   handleRadioChange = (e: any) => {
     this.setState({
-      radioValue: e.target.value
+      radioValue: e.target.value,
     });
   };
 
@@ -170,12 +170,12 @@ class MoveToEthWallet extends PureComponent<Props, State> {
             rules: [
               {
                 required: true,
-                message: t("claim-rewards.io_address.required")
+                message: t("claim-rewards.io_address.required"),
               },
               {
-                validator: validateIoAddress
-              }
-            ]
+                validator: validateIoAddress,
+              },
+            ],
           })(
             <Input
               style={{ width: 400 }}
@@ -203,7 +203,7 @@ class MoveToEthWallet extends PureComponent<Props, State> {
     const radioStyle = {
       display: "block",
       height: "30px",
-      lineHeight: "30px"
+      lineHeight: "30px",
     };
     const errors = form.getFieldsError();
     const hasErrors = Object.values(errors).reduce(
@@ -256,12 +256,12 @@ class MoveToEthWallet extends PureComponent<Props, State> {
               rules: [
                 {
                   required: true,
-                  message: t("tools.eth_addr_required")
+                  message: t("tools.eth_addr_required"),
                 },
                 {
-                  validator: validateAddress
-                }
-              ]
+                  validator: validateAddress,
+                },
+              ],
             })(
               <Input
                 className="form-input"
@@ -342,17 +342,17 @@ class MoveToEthWallet extends PureComponent<Props, State> {
               this.state.radioValue === SWAP_TO_OTHER ? "depositTo" : "deposit",
             gasLimit: "300000",
             gasPrice: toRau("1", "Qev"),
-            from: ""
+            from: "",
           },
           ...(this.state.radioValue === SWAP_TO_OTHER ? [ioAddress] : [])
         )
-        .then(hash => {
+        .then((hash) => {
           window.console.log(hash);
         })
-        .catch(err => {
+        .catch((err) => {
           notification.error({
             message: `failed to execute contract: ${err}`,
-            duration: 5
+            duration: 5,
           });
           window.console.error(`failed to exec contract: ${err}`);
         });
@@ -407,13 +407,13 @@ export function SwapCodeModal({
   code,
   onClose,
   downloadLink,
-  openIotexWallet
+  openIotexWallet,
 }: {
-  show: boolean,
-  code?: string,
-  onClose: Function,
-  downloadLink: string,
-  openIotexWallet: Function
+  show: boolean;
+  code?: string;
+  onClose: Function;
+  downloadLink: string;
+  openIotexWallet: Function;
 }) {
   return (
     <Modal
@@ -438,7 +438,7 @@ export function SwapCodeModal({
           backgroundColor: colors.black10,
           padding: 15,
           marginLeft: 20,
-          marginTop: 15
+          marginTop: 15,
         }}
       >
         <span>{code}</span>{" "}

@@ -10,15 +10,15 @@ import copy from "text-to-clipboard";
 import { SizeType } from "antd/lib/config-provider/SizeContext";
 
 type Props = {
-  text: string,
-  size?: "small" | "medium" | "large"
+  text: string;
+  size?: "small" | "medium" | "large";
 };
 
 type State = {
-  trigger: "hover" | "focus" | "click" | "contextMenu",
-  title: string,
-  copied: string,
-  visible: boolean
+  trigger: "hover" | "focus" | "click" | "contextMenu";
+  title: string;
+  copied: string;
+  visible: boolean;
 };
 
 export class CopyButtonClipboardComponent extends Component<Props, State> {

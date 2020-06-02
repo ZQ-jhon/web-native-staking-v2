@@ -44,7 +44,11 @@ export class App extends Component<Props> {
                 path="/vote-native/:registeredName"
                 component={VoteNativePage}
               />
-              <Route exact path="/profile/" component={ProfileAppContainer} />
+              <Route
+                exact={false}
+                path="/profile/"
+                component={ProfileAppContainer}
+              />
               <Route
                 exact={true}
                 path="/vote-native/"

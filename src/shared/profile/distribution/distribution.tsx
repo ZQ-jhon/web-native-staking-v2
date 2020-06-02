@@ -9,7 +9,7 @@ import {
   Modal,
   Popover,
   Table,
-  Upload
+  Upload,
 } from "antd";
 import { styled } from "onefx/lib/styletron-react";
 import { t } from "onefx/lib/iso-i18n";
@@ -40,22 +40,22 @@ function UploadWhatRewardTable({ children }: any) {
 }
 
 type Props = {
-  tokenContractAddr?: any
+  tokenContractAddr?: any;
 };
 
 type State = {
-  loadingBadges: boolean,
-  uploadModalShow: boolean,
-  dataList: RewardBuckets,
-  showList: boolean,
-  showRecord: boolean
+  loadingBadges: boolean;
+  uploadModalShow: boolean;
+  dataList: RewardBuckets;
+  showList: boolean;
+  showRecord: boolean;
 };
 
 // @Form.create({name: 'move-to-eth'})
 
 @MetamaskRequired
-@connect(state => ({
-  tokenContractAddr: state.smartContract.tokenContractAddr
+@connect((state) => ({
+  tokenContractAddr: state.smartContract.tokenContractAddr,
 }))
 class Distribution extends Component<Props, State> {
   props: Props;
@@ -70,7 +70,7 @@ class Distribution extends Component<Props, State> {
       uploadModalShow: false,
       dataList: [],
       showList: false,
-      showRecord: false
+      showRecord: false,
     };
   }
 
@@ -80,34 +80,34 @@ class Distribution extends Component<Props, State> {
         title: "Recipient Address",
         dataIndex: "ra",
         width: 150,
-        render: text => {
+        render: (text) => {
           return (
             <Popover content={text}>
               {text.replace(text.substr(4, text.length - 8), "...")}
             </Popover>
           );
-        }
+        },
       },
       {
         title: "Tx Hash",
         dataIndex: "hash",
         width: 150,
-        render: text => {
+        render: (text) => {
           return (
             <Popover content={text}>
               {text.replace(text.substr(4, text.length - 8), "...")}
             </Popover>
           );
-        }
+        },
       },
       {
         title: "Amount",
         dataIndex: "at",
         width: 150,
-        render: text => {
+        render: (text) => {
           return `${text} IOTX-E`;
-        }
-      }
+        },
+      },
     ];
 
     const data1 = [];
@@ -116,7 +116,7 @@ class Distribution extends Component<Props, State> {
         key: i,
         ra: "0xAF8c006965bEC0C4a725DC32F586BDe34e72A60c",
         hash: "0x84330CB7F2c7A88466c7dc4F558973b81B004321",
-        at: 664.21
+        at: 664.21,
       });
     }
     return (
@@ -200,12 +200,12 @@ class Distribution extends Component<Props, State> {
       header: false,
       delimiter: ",",
       skipEmptyLines: true,
-      complete: results => {
+      complete: (results) => {
         this.setState(
           {
             dataList: this.parseDataList(results.data),
             uploadModalShow: false,
-            showList: true
+            showList: true,
           },
           () => {
             window.console.log(this.state.dataList);
@@ -214,7 +214,7 @@ class Distribution extends Component<Props, State> {
           }
         );
         return false;
-      }
+      },
     });
     return false;
   };
@@ -223,7 +223,7 @@ class Distribution extends Component<Props, State> {
     const bodyData = ifHeader ? data.slice(1) : data;
     if (bodyData.length > 0) {
       // $FlowFixMe
-      return bodyData.map(arr => {
+      return bodyData.map((arr) => {
         const obj = {};
         obj.recipient = arr[0];
         obj.amount = fromRau(arr[1], "Iotx");
@@ -244,7 +244,7 @@ class Distribution extends Component<Props, State> {
       >
         <Upload.Dragger
           multiple={false}
-          beforeUpload={file => this.beforeUpload(file)}
+          beforeUpload={(file) => this.beforeUpload(file)}
         >
           <p className="ant-upload-drag-icon">
             <Icon type="inbox" />
@@ -258,7 +258,7 @@ class Distribution extends Component<Props, State> {
   confirmDistribute = () => {
     this.setState({
       showList: false,
-      showRecord: true
+      showRecord: true,
     });
   };
 
@@ -283,30 +283,30 @@ class Distribution extends Component<Props, State> {
 }
 
 type ListProps = {
-  data: RewardBuckets,
-  confirmAction: Function,
-  tokenContractAddr?: string
+  data: RewardBuckets;
+  confirmAction: Function;
+  tokenContractAddr?: string;
 };
 
 class DistributionStep extends React.Component<
   ListProps,
-  { amount: string, eth: string }
+  { amount: string; eth: string }
 > {
   getColumns = () => {
     return [
       {
         title: t("rewards.distribution.recipient_address"),
         dataIndex: "recipient",
-        width: 385
+        width: 385,
       },
       {
         title: t("rewards.distribution.amount"),
         dataIndex: "amount",
         width: 150,
-        render: text => {
+        render: (text) => {
           return `${text} IOTX-E`;
-        }
-      }
+        },
+      },
     ];
   };
 
@@ -320,7 +320,7 @@ class DistributionStep extends React.Component<
     const balance = await tokenContract.balanceOf(addr);
     this.setState({
       amount: String(balance[0]),
-      eth: addr
+      eth: addr,
     });
   }
 
@@ -348,7 +348,7 @@ class DistributionStep extends React.Component<
           <MultiSendButton
             getProps={() => ({
               buckets: data,
-              payload: "web-bp:reward-distribution"
+              payload: "web-bp:reward-distribution",
             })}
           />
         </DistributionTable>
@@ -358,10 +358,10 @@ class DistributionStep extends React.Component<
 }
 
 type tcProps = {
-  data: RewardBuckets,
-  columns: Array<{ title: string, dataIndex: string, width: number }>,
-  children?: any,
-  downLoadFileName?: string
+  data: RewardBuckets;
+  columns: Array<{ title: string; dataIndex: string; width: number }>;
+  children?: any;
+  downLoadFileName?: string;
 };
 
 class DistributionTable extends Component<tcProps> {
@@ -394,26 +394,26 @@ class DistributionTable extends Component<tcProps> {
 
 const ContentTitle = styled("h2", {
   fontWeight: "bold",
-  marginTop: "10px"
+  marginTop: "10px",
 });
 
 const ContentSection = styled("div", {
   padding: "30px 0",
-  fontSize: "18px"
+  fontSize: "18px",
 });
 
 const BottomBtns = styled("div", {
-  marginTop: "35px"
+  marginTop: "35px",
 });
 
 const RedSpan = styled("p", {
   color: "rgb(244,80,83)",
   fontSize: "12px",
-  marginBottom: "10px"
+  marginBottom: "10px",
 });
 
 const MarginTopP = styled("p", {
-  marginTop: "10px"
+  marginTop: "10px",
 });
 
 export { Distribution };

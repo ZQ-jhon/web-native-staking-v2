@@ -12,7 +12,11 @@ const isStakeDurationInvalid = (value: any, maxValue: any) => {
 };
 
 /* tslint:disable-next-line:no-any */
-export const validateStakeDuration = (maxValue: any) => (_rule: any, value: any, callback: any) => {
+export const validateStakeDuration = (maxValue: any) => (
+  _rule: any,
+  value: any,
+  callback: any
+) => {
   if (isStakeDurationInvalid(value, maxValue)) {
     callback(t("my_stake.stakeDuration.err", { maxValue }));
   } else {
@@ -22,7 +26,10 @@ export const validateStakeDuration = (maxValue: any) => (_rule: any, value: any,
 
 export const validateRestakeDuration = (
   /* tslint:disable-next-line:no-any */
-  stakeDuration: any, stakeTime: any, nonDecay: any, maxValue: any
+  stakeDuration: any,
+  stakeTime: any,
+  nonDecay: any,
+  maxValue: any
   /* tslint:disable-next-line:no-any */
 ) => (_rule: any, value: any, callback: Function) => {
   const isRestateInvalid = nonDecay
@@ -39,7 +46,11 @@ export const validateRestakeDuration = (
 };
 
 /* tslint:disable-next-line:no-any */
-export const largerOrEqualTo = (num: any) => (_rule: any, value: any, callback: Function) => {
+export const largerOrEqualTo = (num: any) => (
+  _rule: any,
+  value: any,
+  callback: Function
+) => {
   if (value < num) {
     callback(t("my_stake.largerOrEqualTo.err", { num }));
   } else {
@@ -48,7 +59,11 @@ export const largerOrEqualTo = (num: any) => (_rule: any, value: any, callback: 
 };
 
 /* tslint:disable-next-line:no-any */
-export const validateIoAddress = (_rule: any, value: any, callback: Function) => {
+export const validateIoAddress = (
+  _rule: any,
+  value: any,
+  callback: Function
+) => {
   if (
     value &&
     (String(value).length !== 41 || !String(value).startsWith("io"))
@@ -69,7 +84,6 @@ export const validateCanName = (_rule: any, value: any, callback: Function) => {
   }
 };
 
-
 /* tslint:disable-next-line:no-any */
 export const validateAddress = (_rule: any, value: any, callback: Function) => {
   if (
@@ -83,7 +97,11 @@ export const validateAddress = (_rule: any, value: any, callback: Function) => {
 };
 
 /* tslint:disable-next-line:no-any */
-export const smallerOrEqualTo = (num: any, min: any) => (_rule: any, value: any, callback: Function) => {
+export const smallerOrEqualTo = (num: any, min: any) => (
+  _rule: any,
+  value: any,
+  callback: Function
+) => {
   if (num < min) {
     callback(t("my_stake.smallerOrEqualTo.err0", { num, min }));
   } else if (value && value < min) {
@@ -106,7 +124,11 @@ export function validateJSON(_rule: any, value: any, callback: Function) {
 }
 
 /* tslint:disable-next-line:no-any */
-export const validateEthOrIoAddress = (_rule: any, value: any, callback: Function) => {
+export const validateEthOrIoAddress = (
+  _rule: any,
+  value: any,
+  callback: Function
+) => {
   if (
     value &&
     (String(value).length !== 41 || !String(value).startsWith("io")) &&
@@ -129,10 +151,14 @@ export const validateHash = (_rule: any, value: any, callback: Function) => {
 
 /* tslint:disable-next-line:no-any */
 export const hasError = (fieldsError: any) =>
-  Object.keys(fieldsError).some(field => fieldsError[field]);
+  Object.keys(fieldsError).some((field) => fieldsError[field]);
 
-  /* tslint:disable-next-line:no-any */
-export const validateMaxEpochCount = (max: any) => (_rule: any, value: any, callback: Function) => {
+/* tslint:disable-next-line:no-any */
+export const validateMaxEpochCount = (max: any) => (
+  _rule: any,
+  value: any,
+  callback: Function
+) => {
   if (value > max) {
     callback(t("tools.maxEpochCountError", { max }));
   } else {

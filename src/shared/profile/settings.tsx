@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import { t } from "onefx/lib/iso-i18n";
 import { connect } from "react-redux";
 import { PureComponent } from "react";
@@ -24,8 +24,10 @@ class SettingsInner extends PureComponent<{ eth: string }> {
   }
 }
 
-export const Settings = connect(function mapStateToProps(state: { base: { eth: string } }) {
+export const Settings = connect(function mapStateToProps(state: {
+  base: { eth: string };
+}) {
   return {
-    eth: state.base.eth
+    eth: state.base.eth,
   };
-})(SettingsInner)
+})(SettingsInner);

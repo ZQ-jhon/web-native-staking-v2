@@ -9,7 +9,7 @@ export function actionSmartContractCalled(payload) {
   window.scrollTo(0, 0); // for-ios-safari
   return {
     type: SMART_CONTRACT_CALLED,
-    payload
+    payload,
   };
 }
 
@@ -24,7 +24,7 @@ export function smartContractReducer(
   if (action.type === SMART_CONTRACT_CALLED) {
     return {
       ...state,
-      smartContractCalled: true
+      smartContractCalled: true,
     };
   }
 

@@ -38,12 +38,12 @@ type State = {
   nativeTokenContractAddr: state.smartContract.nativeTokenContractAddr,
   nativePatchTokenContractAddr:
     state.smartContract.nativePatchTokenContractAddr,
-  isIoPay: state.base.isIoPay
+  isIoPay: state.base.isIoPay,
 }))
 class VotingCandidateView extends Component<Props, State> {
   state = {
     isMetaMaskInstalled: undefined,
-    isMetaMaskUnlocked: true
+    isMetaMaskUnlocked: true,
   };
 
   props: Props;
@@ -83,7 +83,7 @@ class VotingCandidateView extends Component<Props, State> {
       registeredName,
       showModal,
       requestDismiss,
-      currentCandidate
+      currentCandidate,
       //isNative,
       //nativeTokenContractAddr,
       //nativePatchTokenContractAddr,

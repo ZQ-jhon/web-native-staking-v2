@@ -36,14 +36,14 @@ type State = {
 class VotesReceivedTable extends PureComponent<Props, State> {
   state: State = {
     offset: 0,
-    limit: 30
+    limit: 30,
   };
   downloadVotes = () => {
     const { registeredName } = this.props;
     apolloClient
       .query({
         query: GET_VOTES_REVEIVED,
-        variables: { name: registeredName }
+        variables: { name: registeredName },
       })
       .then(({ data: { buckets } }) => {
         /* tslint:disable-next-line:no-any */
@@ -51,7 +51,7 @@ class VotesReceivedTable extends PureComponent<Props, State> {
         exportFromJSON({
           data: csvSource,
           fileName: "transactions",
-          exportType: "csv"
+          exportType: "csv",
         });
       });
   };
@@ -62,7 +62,7 @@ class VotesReceivedTable extends PureComponent<Props, State> {
       name: registeredName,
       // name: 'robotbp00000', // use for dev
       offset,
-      limit
+      limit,
     };
     const columns = [
       {
@@ -71,7 +71,7 @@ class VotesReceivedTable extends PureComponent<Props, State> {
         key: "voter",
         render(text: string) {
           return <div>{String(text).slice(0, 8)}</div>;
-        }
+        },
       },
       {
         title: t("delegate.votesreceived.token_amount"),
@@ -79,7 +79,7 @@ class VotesReceivedTable extends PureComponent<Props, State> {
         key: "votes",
         render(text: number) {
           return <span>{Math.abs(text).toLocaleString()}</span>;
-        }
+        },
       },
       {
         title: t("delegate.votesreceived.token_type"),
@@ -88,12 +88,12 @@ class VotesReceivedTable extends PureComponent<Props, State> {
         filters: [
           {
             text: t("delegate.votesreceived.native"),
-            value: "IOTX"
+            value: "IOTX",
           },
           {
             text: t("delegate.votesreceived.iotx"),
-            value: "IOTX-E"
-          }
+            value: "IOTX-E",
+          },
         ],
         /* tslint:disable-next-line:no-any */
         render(_text: string, record: any) {
@@ -104,18 +104,18 @@ class VotesReceivedTable extends PureComponent<Props, State> {
           const recordValue = record.isNative ? "IOTX" : "IOTX-E";
 
           return value === recordValue;
-        }
+        },
       },
       {
         title: t("delegate.votesreceived.votes"),
         dataIndex: "weightedVotes",
-        key: "weightedVotes"
+        key: "weightedVotes",
       },
       {
         title: t("delegate.votesreceived.remaining_duration"),
         dataIndex: "remainingDuration",
-        key: "remainingDuration"
-      }
+        key: "remainingDuration",
+      },
     ];
     return (
       // @ts-ignore
@@ -126,7 +126,7 @@ class VotesReceivedTable extends PureComponent<Props, State> {
             notification.error({
               message: "Error",
               description: `failed to get votes recieved: ${error.message}`,
-              duration: 3
+              duration: 3,
             });
             return null;
           }
@@ -151,18 +151,18 @@ class VotesReceivedTable extends PureComponent<Props, State> {
               <Table
                 pagination={{
                   pageSize: limit,
-                  onChange: page => {
+                  onChange: (page) => {
                     const cOffset = page > 0 ? (page - 1) * limit : 0;
                     this.setState({
                       offset: cOffset,
-                      limit
+                      limit,
                     });
                   },
                   total:
                     buckets.length < limit
                       ? offset + limit
                       : offset + limit + 1,
-                  defaultCurrent: offset / limit
+                  defaultCurrent: offset / limit,
                 }}
                 dataSource={buckets}
                 columns={columns}

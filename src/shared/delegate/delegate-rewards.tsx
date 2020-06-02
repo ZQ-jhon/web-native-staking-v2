@@ -4,30 +4,32 @@ import { t } from "onefx/lib/iso-i18n";
 // $FlowFixMe
 import { Table, Button, notification } from "antd";
 import { fromRau } from "iotex-antenna/lib/account/utils";
+// @ts-ignore
 import { get } from "dotty";
 import exportFromJSON from "export-from-json";
 import { Query } from "react-apollo";
 import { CommonMargin } from "../common/common-margin";
 import { CalcRewardsForm } from "../profile/distribution/clac-rewards-form";
-import type { BookkeeperParams } from "../profile/distribution/clac-rewards-form";
+import { BookkeeperParams } from "../profile/distribution/clac-rewards-form";
 import { colors } from "../common/styles/style-color2";
 import { analyticsApolloClient } from "../common/apollo-client";
 import { Flex } from "../common/flex";
 import { GET_BP_REWARDS } from "../home/voting-gql-queries";
 
 type State = {
-  showTable: boolean,
-  variables: BookkeeperParams
+  showTable: boolean;
+  variables: BookkeeperParams;
 };
 type Props = {
-  registeredName: string
+  registeredName: string;
 };
 
 class DelegateRewards extends Component<Props, State> {
-  constructor() {
-    super();
+  constructor(props: Props) {
+    super(props);
     this.state = {
       showTable: false,
+      // @ts-ignore
       variables: {}
     };
   }
@@ -41,7 +43,7 @@ class DelegateRewards extends Component<Props, State> {
       percentage,
       includeFoundationBonus
     } = this.state.variables;
-    const onSubmit = value => {
+    const onSubmit = (value: any) => {
       this.setState({
         variables: value,
         showTable: true
@@ -64,12 +66,14 @@ class DelegateRewards extends Component<Props, State> {
       {
         title: t("delegate.rewards"),
         dataIndex: "amount",
+        // @ts-ignore
         render: (text: any) => `${Number(fromRau(text)).toFixed(3)} IOTX`
       }
     ];
     return (
       <div style={{ background: colors.white, padding: "1rem" }}>
         {this.state.showTable ? (
+          // @ts-ignore
           <Query
             client={analyticsApolloClient}
             query={GET_BP_REWARDS}
@@ -78,6 +82,7 @@ class DelegateRewards extends Component<Props, State> {
               pagination: { skip: 0, first: 500 }
             }}
           >
+            {/* tslint:disable-next-line:no-any */}
             {({ data, loading, error }) => {
               if (error) {
                 notification.error({
@@ -92,6 +97,7 @@ class DelegateRewards extends Component<Props, State> {
               );
 
               if (source) {
+                // @ts-ignore
                 dataSource = source.map(({ voterEthAddress, amount }) => ({
                   voterAddress: voterEthAddress,
                   amount

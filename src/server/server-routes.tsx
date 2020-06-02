@@ -21,7 +21,7 @@ export function setServerRoutes(server: MyServer): void {
   // @ts-ignore
   server.get(
     "SPA",
-    /^(?!\/?tools\/token-migration\/api-gateway\/).+$/,
+    /^(?!\/?tools\/token-migration\/api-gateway\/|\/profile\/.*).+$/,
     async (ctx: koa.Context) => {
       const st = new Staking({
         antenna: new Antenna("https://api.testnet.iotex.one")

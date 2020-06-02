@@ -12,11 +12,11 @@ export async function earnEmeraldsForVoting(): Promise<any> {
     const res = await axiosInstance.post("/api-gateway/", {
       operationName: "earnEmeraldsForVoting",
       variables: {
-        earnEmeraldsForVoting: true
+        earnEmeraldsForVoting: true,
       },
       query: `mutation earnEmeraldsForVoting($earnEmeraldsForVoting: Boolean) {
         earnEmeraldsForVoting(earnEmeraldsForVoting: $earnEmeraldsForVoting)
-      }`
+      }`,
     });
 
     return res.data.data;
@@ -25,7 +25,7 @@ export async function earnEmeraldsForVoting(): Promise<any> {
     notification.error({
       message: "Error",
       description: e.message,
-      duration: 3
+      duration: 3,
     });
     return false;
   }

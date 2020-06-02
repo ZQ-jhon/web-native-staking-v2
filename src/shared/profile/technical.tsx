@@ -66,21 +66,25 @@ const validateServerEndpoint = (_rule: any, value: any, callback: any) => {
     .post("/api-gateway/", {
       operationName: "validateIotexEndpoint",
       variables: { endpoint: String(value) },
-      query: VALIDATE_ENDPOINT
+      query: VALIDATE_ENDPOINT,
     })
-    .then(resp => {
+    .then((resp) => {
       if (resp.data.data.validateIotexEndpoint.ok) {
         callback();
       } else {
         callback(resp.data.data.validateIotexEndpoint.message);
       }
     })
-    .catch(err => {
+    .catch((err) => {
       callback(`cannot connect to server ${err}`);
     });
 };
 /* tslint:disable-next-line:no-any */
-const validateServerHealthEndpoint = (_rule: any, value: any, callback: Function) => {
+const validateServerHealthEndpoint = (
+  _rule: any,
+  value: any,
+  callback: Function
+) => {
   const str = String(value);
   if (/(http|https):\/\/([\w.]+\/?)\S*/.test(str)) {
     callback();
@@ -111,7 +115,7 @@ export const Technical = connect()(
       constructor(props: Props) {
         super(props);
         this.state = {
-          loading: false
+          loading: false,
         };
       }
       /* tslint:disable-next-line:no-any */
@@ -127,21 +131,21 @@ export const Technical = connect()(
             upsertBpCandidate({
               variables: {
                 bpCandidateTechDetailInput: {
-                  ...values
-                }
-              }
+                  ...values,
+                },
+              },
             })
               .then(() => {
                 this.setState({ loading: false });
                 notification.success({
-                  message: t("profile.change_saved")
+                  message: t("profile.change_saved"),
                 });
               })
               .catch((err: string) => {
                 // server error
                 this.setState({ loading: false });
                 notification.error({
-                  message: `${t("profile.change_not_saved")}: ${err}`
+                  message: `${t("profile.change_not_saved")}: ${err}`,
                 });
               });
           }
@@ -166,7 +170,7 @@ export const Technical = connect()(
                 notification.error({
                   message: "Error",
                   description: error.message,
-                  duration: 3
+                  duration: 3,
                 });
                 return "error when load data";
               }
@@ -192,8 +196,8 @@ export const Technical = connect()(
                             initialValue: newData.serverEndpoint,
                             rules: [
                               { message: t("profile.serverEndpoint.required") },
-                              { validator: validateServerEndpoint }
-                            ]
+                              { validator: validateServerEndpoint },
+                            ],
                           })(<Input />)}
                         </Form.Item>
                         <Form.Item label={t("profile.serverHealthEndpoint")}>
@@ -202,10 +206,10 @@ export const Technical = connect()(
                             rules: [
                               {
                                 required: true,
-                                message: t("profile.serverEndpoint.required")
+                                message: t("profile.serverEndpoint.required"),
                               },
-                              { validator: validateServerHealthEndpoint }
-                            ]
+                              { validator: validateServerHealthEndpoint },
+                            ],
                           })(<Input />)}
                         </Form.Item>
                         <Form.Item label={t("profile.discordName")}>
@@ -214,9 +218,9 @@ export const Technical = connect()(
                             rules: [
                               {
                                 required: true,
-                                message: t("profile.discordName.required")
-                              }
-                            ]
+                                message: t("profile.discordName.required"),
+                              },
+                            ],
                           })(<Input />)}
                         </Form.Item>
                         <Form.Item label={t("profile.email")}>
@@ -225,10 +229,10 @@ export const Technical = connect()(
                             rules: [
                               {
                                 required: true,
-                                message: t("profile.email.required")
+                                message: t("profile.email.required"),
                               },
-                              { validator: validateEmail }
-                            ]
+                              { validator: validateEmail },
+                            ],
                           })(<Input />)}
                         </Form.Item>
 

@@ -8,11 +8,11 @@ import { GreySpan } from "./distribution-styles";
 import { validateMaxEpochCount } from "../../smart-contract/field-validators";
 
 export type BookkeeperParams = {
-  delegateName: string,
-  startEpoch: number,
-  epochCount: number,
-  percentage: number,
-  includeFoundationBonus: boolean
+  delegateName: string;
+  startEpoch: number;
+  epochCount: number;
+  percentage: number;
+  includeFoundationBonus: boolean;
 };
 
 function getBookkeeperCalcCli({
@@ -20,7 +20,7 @@ function getBookkeeperCalcCli({
   startEpoch,
   epochCount,
   percentage,
-  includeFoundationBonus
+  includeFoundationBonus,
 }: BookkeeperParams) {
   return `bookkeeper --bp ${delegateName} --start ${startEpoch} --to ${epochCount} --percentage ${percentage} ${
     includeFoundationBonus ? "--with-foundation-bonus" : ""
@@ -28,17 +28,17 @@ function getBookkeeperCalcCli({
 }
 
 type Props = {
-  form?: any,
-  isPublic?: boolean,
-  onSubmit?: (params: BookkeeperParams) => void,
-  delegateName?: string,
-  startEpoch?: number,
-  count?: number,
-  includeFoundationBonus?: boolean,
-  percentage?: number
+  form?: any;
+  isPublic?: boolean;
+  onSubmit?: (params: BookkeeperParams) => void;
+  delegateName?: string;
+  startEpoch?: number;
+  count?: number;
+  includeFoundationBonus?: boolean;
+  percentage?: number;
 };
 type State = {
-  showModal: boolean
+  showModal: boolean;
 };
 @Form.create({ name: "calc-rewards" })
 class CalcRewardsForm extends Component<Props, State> {
@@ -56,12 +56,12 @@ class CalcRewardsForm extends Component<Props, State> {
     const formItemLayout = {
       labelCol: {
         xs: { span: 24 },
-        sm: { span: 4 }
+        sm: { span: 4 },
       },
       wrapperCol: {
         xs: { span: 24 },
-        sm: { span: 20 }
-      }
+        sm: { span: 20 },
+      },
     };
     return (
       <Form {...formItemLayout}>
@@ -85,13 +85,13 @@ class CalcRewardsForm extends Component<Props, State> {
             rules: [
               {
                 required: true,
-                message: t("rewards.distribution.register_name.required")
+                message: t("rewards.distribution.register_name.required"),
               },
               {
                 pattern: /^[a-z\d#]+$/,
-                message: t("my_stake.canName.err")
-              }
-            ]
+                message: t("my_stake.canName.err"),
+              },
+            ],
           })(<Input />)}
         </Form.Item>
         <Form.Item
@@ -105,16 +105,16 @@ class CalcRewardsForm extends Component<Props, State> {
             rules: [
               {
                 required: true,
-                message: t("rewards.distribution.start.required")
+                message: t("rewards.distribution.start.required"),
               },
               {
                 type: "integer",
                 message: t("rewards.distribution.integer.error"),
                 transform: (value: string) => {
                   return Number(value);
-                }
-              }
-            ]
+                },
+              },
+            ],
           })(<Input />)}
         </Form.Item>
         <Form.Item
@@ -127,21 +127,21 @@ class CalcRewardsForm extends Component<Props, State> {
             rules: [
               {
                 required: true,
-                message: t("rewards.distribution.to.required")
+                message: t("rewards.distribution.to.required"),
               },
               {
                 type: "integer",
                 message: t("rewards.distribution.integer.error"),
                 transform: (value: string) => {
                   return Number(value);
-                }
+                },
               },
               {
                 message: t("tools.maxEpochCountError", { max: 250 }),
-                validator: validateMaxEpochCount(250)
-              }
+                validator: validateMaxEpochCount(250),
+              },
             ],
-            getValueFromEvent: this.changeToAbs
+            getValueFromEvent: this.changeToAbs,
           })(<Input />)}
         </Form.Item>
         <Form.Item>
@@ -155,7 +155,7 @@ class CalcRewardsForm extends Component<Props, State> {
           </Checkbox>
           {getFieldDecorator("includeFoundationBonus", {
             // Be careful that Initial Value of this.props.includeFoundationBonus is undefined.
-            initialValue: true
+            initialValue: true,
           })(
             <Checkbox defaultChecked={true}>
               <GreySpan>{t("profile.rewards.constructor2")}</GreySpan>
@@ -173,17 +173,17 @@ class CalcRewardsForm extends Component<Props, State> {
             rules: [
               {
                 required: true,
-                message: t("rewards.distribution.percentage.required")
+                message: t("rewards.distribution.percentage.required"),
               },
               {
                 type: "number",
                 message: t("claim-reward.amount.error"),
                 transform: (value: string) => {
                   return Number(value);
-                }
-              }
+                },
+              },
             ],
-            getValueFromEvent: this.changeToAbs
+            getValueFromEvent: this.changeToAbs,
           })(<Input />)}
         </Form.Item>
 

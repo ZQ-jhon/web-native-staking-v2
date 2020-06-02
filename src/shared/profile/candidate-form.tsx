@@ -78,7 +78,7 @@ export const CandidateForm = connect()(
           loading: false,
           logo: "",
           bannerUrl: "",
-          showInsertFormat: false
+          showInsertFormat: false,
         };
       }
 
@@ -113,9 +113,9 @@ export const CandidateForm = connect()(
                   rewardPlan: prevData.rewardPlan,
                   annualReward: prevData.annualReward,
                   ...values,
-                  socialMedia: values.socialMedia.split(" ")
-                }
-              }
+                  socialMedia: values.socialMedia.split(" "),
+                },
+              },
             })
               .then(() => {
                 this.setState({ loading: false });
@@ -124,14 +124,14 @@ export const CandidateForm = connect()(
                 window.document.documentElement.scrollTop = window.document.body.scrollTop = 0;
                 // show success notification
                 notification.success({
-                  message: t("profile.change_saved")
+                  message: t("profile.change_saved"),
                 });
               })
               .catch((err: any) => {
                 // server error
                 this.setState({ loading: false });
                 notification.error({
-                  message: `${t("profile.change_not_saved")}: ${err}`
+                  message: `${t("profile.change_not_saved")}: ${err}`,
                 });
               });
           }
@@ -158,12 +158,12 @@ export const CandidateForm = connect()(
       };
 
       beforeUpload = (file: any, title: any) => {
-        return upload(file, title).then(data => {
+        return upload(file, title).then((data) => {
           // @ts-ignore
           this.setState({ [title]: data.secure_url });
           const { form } = this.props;
           form.setFieldsValue({
-            [title]: data.secure_url
+            [title]: data.secure_url,
           });
           return Promise.reject();
         });
@@ -191,7 +191,7 @@ export const CandidateForm = connect()(
                   <h1>{t("profile.profile")}</h1>
 
                   {getFieldDecorator("id", {
-                    initialValue: data.id
+                    initialValue: data.id,
                   })(<input name="id" type="hidden" />)}
 
                   <Form.Item label={t("profile.name")}>
@@ -200,9 +200,9 @@ export const CandidateForm = connect()(
                       rules: [
                         {
                           required: true,
-                          message: t("profile.name.required")
-                        }
-                      ]
+                          message: t("profile.name.required"),
+                        },
+                      ],
                     })(<Input />)}
                   </Form.Item>
 
@@ -212,9 +212,9 @@ export const CandidateForm = connect()(
                       rules: [
                         {
                           required: true,
-                          message: t("profile.blurb.required")
-                        }
-                      ]
+                          message: t("profile.blurb.required"),
+                        },
+                      ],
                     })(<Input />)}
                   </Form.Item>
 
@@ -224,10 +224,10 @@ export const CandidateForm = connect()(
                       rules: [
                         {
                           required: true,
-                          message: t("profile.website.required")
+                          message: t("profile.website.required"),
                         },
-                        { validator: validateUrls }
-                      ]
+                        { validator: validateUrls },
+                      ],
                     })(<Input />)}
                   </Form.Item>
 
@@ -237,12 +237,12 @@ export const CandidateForm = connect()(
                       rules: [
                         {
                           required: true,
-                          message: t("profile.logo.required")
-                        }
-                      ]
+                          message: t("profile.logo.required"),
+                        },
+                      ],
                     })(<Input hidden={true} />)}
                     <Upload
-                      beforeUpload={file => this.beforeUpload(file, "logo")}
+                      beforeUpload={(file) => this.beforeUpload(file, "logo")}
                     >
                       {logo ? (
                         <ImageIcon url={logo} width={"auto"} height={"35px"} />
@@ -260,12 +260,12 @@ export const CandidateForm = connect()(
                       rules: [
                         {
                           required: true,
-                          message: t("profile.banner_url.required")
-                        }
-                      ]
+                          message: t("profile.banner_url.required"),
+                        },
+                      ],
                     })(<Input hidden={true} />)}
                     <Upload
-                      beforeUpload={file =>
+                      beforeUpload={(file) =>
                         this.beforeUpload(file, "bannerUrl")
                       }
                     >
@@ -289,9 +289,9 @@ export const CandidateForm = connect()(
                       rules: [
                         {
                           required: true,
-                          message: t("profile.annual_reward.required")
-                        }
-                      ]
+                          message: t("profile.annual_reward.required"),
+                        },
+                      ],
                     })(<InputNumber step={0.1} />)}
                   </Form.Item>
 
@@ -301,10 +301,10 @@ export const CandidateForm = connect()(
                       rules: [
                         {
                           required: true,
-                          message: t("profile.social_media.required")
+                          message: t("profile.social_media.required"),
                         },
-                        { validator: validateUrls }
-                      ]
+                        { validator: validateUrls },
+                      ],
                     })(<Input />)}
                   </Form.Item>
 
@@ -314,9 +314,9 @@ export const CandidateForm = connect()(
                       rules: [
                         {
                           required: true,
-                          message: t("profile.location.required")
-                        }
-                      ]
+                          message: t("profile.location.required"),
+                        },
+                      ],
                     })(<Input />)}
                   </Form.Item>
 
@@ -326,9 +326,9 @@ export const CandidateForm = connect()(
                       rules: [
                         {
                           required: true,
-                          message: t("profile.introduction.required")
-                        }
-                      ]
+                          message: t("profile.introduction.required"),
+                        },
+                      ],
                     })(<Input.TextArea rows={4} />)}
                   </Form.Item>
 
@@ -338,9 +338,9 @@ export const CandidateForm = connect()(
                       rules: [
                         {
                           required: true,
-                          message: t("profile.team.required")
-                        }
-                      ]
+                          message: t("profile.team.required"),
+                        },
+                      ],
                     })(<Input.TextArea rows={4} />)}
                   </Form.Item>
 
@@ -350,9 +350,9 @@ export const CandidateForm = connect()(
                       rules: [
                         {
                           required: true,
-                          message: t("profile.tech_setup.required")
-                        }
-                      ]
+                          message: t("profile.tech_setup.required"),
+                        },
+                      ],
                     })(<Input.TextArea rows={4} />)}
                   </Form.Item>
 
@@ -362,9 +362,9 @@ export const CandidateForm = connect()(
                       rules: [
                         {
                           required: true,
-                          message: t("profile.community_plan.required")
-                        }
-                      ]
+                          message: t("profile.community_plan.required"),
+                        },
+                      ],
                     })(<Input.TextArea rows={4} />)}
                   </Form.Item>
                   <Form.Item
@@ -374,7 +374,7 @@ export const CandidateForm = connect()(
                         <span>{t("profile.reward_plan")}:</span>
                         <a
                           style={{ marginLeft: 20 }}
-                          onClick={e =>
+                          onClick={(e) =>
                             this.handleClickInsertFormat(e, data.rewardPlan)
                           }
                         >
@@ -390,9 +390,9 @@ export const CandidateForm = connect()(
                       rules: [
                         {
                           required: true,
-                          message: t("profile.reward_plan.required")
-                        }
-                      ]
+                          message: t("profile.reward_plan.required"),
+                        },
+                      ],
                     })(<Input.TextArea rows={6} />)}
                   </Form.Item>
 

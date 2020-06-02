@@ -5,7 +5,7 @@ const LEN = "100%";
 
 type PropTypes = {
   src: string;
-  className?: string,
+  className?: string;
   width?: string;
   height?: string;
   resizeWidth?: number;

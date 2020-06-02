@@ -1,4 +1,5 @@
 // @flow
+import React from "react";
 import { noopReducer } from "onefx/lib/iso-react-render/root/root-reducer";
 import { combineReducers } from "redux";
 import config from "config";
@@ -19,7 +20,7 @@ export function setProfileHandler(server: any) {
     server.auth.subFromMasterCookie,
     server.auth.authRequired,
     // @ts-ignore
-    async ctx => {
+    async (ctx) => {
       if (
         ctx.query.utm_source === "cobowallet" ||
         ctx.session.utm_source === "cobowallet"
@@ -27,56 +28,56 @@ export function setProfileHandler(server: any) {
         ctx.session.utm_source = "cobowallet";
         ctx.setState("base.isCobowallet", true);
       }
-      const registeredName = await server.gateways.nameRegistrationContract.getNameCache(
-        ctx.state.eth
-      );
-      const whitelist =
-        (await server.model.adminSettings.get("whitelist")) || [];
-      const enableMemberGiveaway =
-        // @ts-ignore
-        config.enableMemberGiveaway || whitelist.includes(ctx.state.eth);
+      // const registeredName = await server.gateways.nameRegistrationContract.getNameCache(
+      //   ctx.state.eth
+      // );
+      // const whitelist =
+      //   (await server.model.adminSettings.get("whitelist")) || [];
+      // const enableMemberGiveaway =
+      //   // @ts-ignore
+      //   config.enableMemberGiveaway || whitelist.includes(ctx.state.eth);
 
       ctx.setState("base.displayWarning", server.config.displayWarning);
       ctx.setState("base.env", server.config.env);
       ctx.setState("base.eth", ctx.state.eth);
       ctx.setState("base.faucetEnable", server.config.faucetEnable);
       ctx.setState("base.roles", ctx.state.roles);
-      ctx.setState("base.registeredName", registeredName);
+      // ctx.setState("base.registeredName", registeredName);
       ctx.setState("base.userId", ctx.state.userId);
       ctx.setState("base.epochSecondValue", server.config.epochSecondValue);
       ctx.setState(
         "base.stakingDurationSecond",
         server.config.stakingDurationSecond
       );
-      ctx.setState(
-        "smartContract.nameRegistrationContractAddr",
-        server.config.gateways.nameRegistrationContract.contractAddress
-      );
-      ctx.setState(
-        "smartContract.stakingContractAddr",
-        server.config.gateways.stakingContract.contractAddress
-      );
-      ctx.setState(
-        "smartContract.tokenContractAddr",
-        server.config.gateways.tokenContract.contractAddress
-      );
-      ctx.setState(
-        "smartContract.nativeTokenContractAddr",
-        server.config.gateways.nativeTokenContract.contractAddress
-      );
-      ctx.setState(
-        "smartContract.nativePatchTokenContractAddr",
-        server.config.gateways.nativePatchTokenContract.contractAddress
-      );
-      ctx.setState(
-        "smartContract.multiSendContractAddr",
-        server.config.gateways.multiSend.contractAddress
-      );
-      ctx.setState(
-        "smartContract.delegateProfileContractAddr",
-        server.config.gateways.delegateProfileContract.contractAddress
-      );
-      ctx.setState("base.enableMemberGiveaway", enableMemberGiveaway);
+      // ctx.setState(
+      //   "smartContract.nameRegistrationContractAddr",
+      //   server.config.gateways.nameRegistrationContract.contractAddress
+      // );
+      // ctx.setState(
+      //   "smartContract.stakingContractAddr",
+      //   server.config.gateways.stakingContract.contractAddress
+      // );
+      // ctx.setState(
+      //   "smartContract.tokenContractAddr",
+      //   server.config.gateways.tokenContract.contractAddress
+      // );
+      // ctx.setState(
+      //   "smartContract.nativeTokenContractAddr",
+      //   server.config.gateways.nativeTokenContract.contractAddress
+      // );
+      // ctx.setState(
+      //   "smartContract.nativePatchTokenContractAddr",
+      //   server.config.gateways.nativePatchTokenContract.contractAddress
+      // );
+      // ctx.setState(
+      //   "smartContract.multiSendContractAddr",
+      //   server.config.gateways.multiSend.contractAddress
+      // );
+      // ctx.setState(
+      //   "smartContract.delegateProfileContractAddr",
+      //   server.config.gateways.delegateProfileContract.contractAddress
+      // );
+      //ctx.setState("base.enableMemberGiveaway", enableMemberGiveaway);
       ctx.body = await apolloSSR(ctx, server.config.apiGatewayUrl, {
         // @ts-ignore
         VDom: <ProfileAppContainer />,
@@ -84,9 +85,9 @@ export function setProfileHandler(server: any) {
           base: noopReducer,
           //smartContract: smartContractReducer,
           apolloState: noopReducer,
-          webBpApolloState: noopReducer
+          webBpApolloState: noopReducer,
         }),
-        clientScript: "/profile-main.js"
+        clientScript: "/profile-main.js",
       });
     }
   );

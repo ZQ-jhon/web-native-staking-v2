@@ -1,6 +1,6 @@
 // @flow
 
-import { Component } from "react";
+import React, { Component } from "react";
 import { Modal } from "antd";
 import { CandidateProfileViewHeaderContainer } from "../home/candidate-view-header";
 import { CandidateProfileViewContentContainer } from "../home/candidate-view-content";
@@ -13,12 +13,12 @@ const customStyles = {
   left: "auto",
   position: "relative",
   height: "90vh",
-  overflow: "scroll"
+  overflow: "scroll",
 };
 type Props = {
-  data?: any,
-  visible?: any,
-  handleCloseModal?: any
+  data?: any;
+  visible?: any;
+  handleCloseModal?: any;
 };
 export class ProfileView extends Component<Props> {
   props: Props;
@@ -27,6 +27,7 @@ export class ProfileView extends Component<Props> {
     return (
       <Modal
         visible={visible}
+        // @ts-ignore
         style={customStyles}
         onCancel={handleCloseModal}
         width="80%"

@@ -36,9 +36,9 @@ class VoteNativePage extends Component<Props> {
             { name: "twitter:title", content: t("voting.tweet.summary.title") },
             {
               name: "twitter:description",
-              content: t("voting.tweet.summary.description")
+              content: t("voting.tweet.summary.description"),
             },
-            { name: "twitter:image", content: t("voting.tweet.summary.image") }
+            { name: "twitter:image", content: t("voting.tweet.summary.image") },
           ]}
           title={`${t("meta.title.voting")} - ${t(
             "meta.description.delegates"

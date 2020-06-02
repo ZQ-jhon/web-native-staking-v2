@@ -32,7 +32,7 @@ export class ModalWrapper extends Component<Props, State> {
       onCancel();
     } else {
       this.setState({
-        visible: false
+        visible: false,
       });
     }
   };

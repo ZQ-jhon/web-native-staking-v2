@@ -16,9 +16,9 @@ const { Content } = Layout;
 const Panel = Collapse.Panel;
 
 type Props = {
-  eth: string,
-  match?: any,
-  data: any
+  eth: string;
+  match?: any;
+  data: any;
 };
 
 const customPanelStyle = {
@@ -33,9 +33,9 @@ const customPanelStyle = {
 };
 
 type State = {
-  showVotingModal: boolean,
-  showMetaMaskReminder: boolean,
-  enableDetailedVote: boolean
+  showVotingModal: boolean;
+  showMetaMaskReminder: boolean;
+  enableDetailedVote: boolean;
 };
 
 class CandidateViewProfileContent extends Component<Props, State> {

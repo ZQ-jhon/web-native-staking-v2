@@ -31,10 +31,22 @@ module.exports = {
     staking: {
       // provider: "https://kovan.infura.io/v3/1d4b3ba280cb43678bb11eb272ea70f4",
       contractAddress: "io1zn9mn4v63jg3047ylqx9nqaqz0ev659777q3xc"
+    },
+    mongoose: {
+      enabled: true,
+      debug: false,
+      uri: process.env.MONGODB_URI,
+      connectTimeoutMS: 5000
     }
   },
   analytics: {
     googleTid: "TODO: replace with your googleTid"
+  },
+  auth: {
+    siteUrl: "http://localhost:5004",
+    cookieDomain: "localhost",
+    loginUrl: "https://iotex.fun/login/",
+    logoutUrl: "https://iotex.fun/logout/"
   },
   csp: {
     "default-src": ["none"],
