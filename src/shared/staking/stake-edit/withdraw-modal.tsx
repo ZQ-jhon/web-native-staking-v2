@@ -29,10 +29,10 @@ type Props = {
 
 export const WithdrawModal = connect(
   () => ({}),
-  dispatch => ({
+  (dispatch) => ({
     actionSmartContractCalled(payload: boolean): void {
       dispatch(actionSmartContractCalled(payload));
-    }
+    },
   })
 )(
   class WithdrawForm extends Component<Props> {
@@ -50,14 +50,14 @@ export const WithdrawModal = connect(
 
       window.console.log("Received values of Withdraw form: ", {
         bucketIndex,
-        ...values
+        ...values,
       });
 
       const txHash = await getStaking().withdraw({
         bucketIndex,
         payload: "",
         gasLimit: DEFAULT_STAKING_GAS_LIMIT,
-        gasPrice: toRau("1", "Qev")
+        gasPrice: toRau("1", "Qev"),
       });
 
       window.console.log("Withdraw txHash", txHash);
@@ -78,7 +78,7 @@ export const WithdrawModal = connect(
         <ModalWrapper
           clickable={clickable}
           title={t("my_stake.withdraw.title", {
-            bucketIndex: String(bucketIndex)
+            bucketIndex: String(bucketIndex),
           })}
           onOk={this.handleOk}
           okButtonProps={{ disabled: !isAvailable }}
@@ -91,16 +91,16 @@ export const WithdrawModal = connect(
                 <p
                   dangerouslySetInnerHTML={{
                     __html: t("my_stake.withdraw.confirm", {
-                      waitUntil: String(waitUntil)
-                    })
+                      waitUntil: String(waitUntil),
+                    }),
                   }}
                 />
               ) : (
                 <p
                   dangerouslySetInnerHTML={{
                     __html: t("my_stake.withdraw.wait", {
-                      waitUnti: String(waitUntil)
-                    })
+                      waitUnti: String(waitUntil),
+                    }),
                   }}
                 />
               )
@@ -108,8 +108,8 @@ export const WithdrawModal = connect(
               <p
                 dangerouslySetInnerHTML={{
                   __html: t("my_stake.withdraw.cannot", {
-                    color: colors.error
-                  })
+                    color: colors.error,
+                  }),
                 }}
               />
             )}

@@ -1,0 +1,26 @@
+{
+  "contractAddress": "0x81f85886749cbbf3c2ec742db7255c6b07c63c69",
+  "title": "Consensus Delegates Pool Expansion and Private Sale Token Distribution Schedule",
+  "description": "<p>Since the Mainnet was launched in April 2019, the IoTeX network has been fully run by IoTeX Delegates. We have closely monitored the performance and security of the Mainnet, which consistently exceeds our requirements. We are confident the IoTeX Mainnet will continue to operate smoothly.</p>     <p>Our goal is to make IoTeX as open, decentralized, and secure as possible. Since April 2019, the Consensus Delegates pool has grown from 12 to 24 and new Delegates are joining weekly. The original plan was to expand the Consensus Delegates pool to 36 and distribute the final tranche of private sale tokens in November 2019. Thanks to the excellent performance of IoTeX Mainnet, we believe this expansion can be executed ahead of schedule as early as July 2019.</p><p />     <p>The proposal, if passed, will</p>     <p>1. expand the Consensus Delegates pool from 24 to 36 to further improve the decentralization and security of IoTeX network;</p>     <p>2. distribute the 4th tranche of private sale tokens(~6% of total token supply, last distribution);</p>     <p>3. increase the epoch bonus reward to 18,750 IOTX</p>     <p>in July 2019.</p><p />     <p>The proposal won’t affect token vesting schedule for IoTeX Foundation, Team and Ecosystem.</p>     <p>Check full details and voting rules here: <a href=\"https://medium.com/@iotex/beacfc8903a7\">https://medium.com/@iotex/beacfc8903a7</a></p>",
+  "category": "General",
+  "proposer": "IoTeX",
+  "start": "2019-07-05T01:00:00.000Z",
+  "end": "2019-07-08T01:00:00.000Z",
+  "maxNumOfChoices": "1",
+  "status": "",
+  "result": [37032089, 828811169],
+  "options": [
+    {
+      "id": 0,
+      "description": "No",
+      "__typename": "Option"
+    },
+    {
+      "id": 1,
+      "description": "Yes",
+      "__typename": "Option"
+    }
+  ],
+  "votes": [],
+  "__typename": "Poll"
+}

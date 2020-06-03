@@ -6,7 +6,7 @@ import React from "react";
 import { IBucket } from "../../../server/gateway/staking";
 import {
   CommonMarginBottomStyle,
-  SmallMarginBottomStyle
+  SmallMarginBottomStyle,
 } from "../../common/common-margin";
 import { formItemLayout } from "../../common/form-item-layout";
 import { colors } from "../../common/styles/style-color2";
@@ -31,7 +31,7 @@ export function CommonStepControl({
   label,
   style,
   children,
-  isStakeControl = false
+  isStakeControl = false,
 }: CommonStepControlProps): JSX.Element {
   return (
     <Form.Item
@@ -59,7 +59,7 @@ type StakedAmountControlProps = {
 export function StakedAmountControl({
   amount,
   handleReEdit,
-  style = {}
+  style = {},
 }: StakedAmountControlProps): JSX.Element {
   return (
     <CommonStepControl
@@ -74,7 +74,7 @@ export function StakedAmountControl({
         style={{
           display: "inline-block",
           padding: "0 15px",
-          float: "right"
+          float: "right",
         }}
         // @ts-ignore
         onClick={handleReEdit}
@@ -91,7 +91,7 @@ type ConfirmStepWrapProps = {
 };
 
 export function ConfirmStepWrapper({
-  children
+  children,
 }: ConfirmStepWrapProps): JSX.Element {
   return (
     <div>
@@ -101,7 +101,7 @@ export function ConfirmStepWrapper({
           style={{
             backgroundColor: colors.black20,
             padding: "15px",
-            ...CommonMarginBottomStyle
+            ...CommonMarginBottomStyle,
           }}
           layout={"vertical"}
         >
@@ -138,7 +138,7 @@ export function ConfirmStep({ bucket, handleReEdit }: Props): JSX.Element {
       <CommonStepControl
         // @ts-ignore
         content={t("my_stake.stakeDuration.epochs", {
-          stakeDuration: bucket.stakedDuration || 0
+          stakeDuration: bucket.stakedDuration || 0,
         })}
         label={t("my_stake.stakeDuration")}
       />

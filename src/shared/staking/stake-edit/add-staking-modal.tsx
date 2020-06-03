@@ -13,19 +13,19 @@ import { formItemLayout } from "../../common/form-item-layout";
 import { getIoPayAddress, getIotxBalance } from "../../common/get-antenna";
 import { colors } from "../../common/styles/style-color2";
 import { DEFAULT_STAKING_GAS_LIMIT } from "../../common/token-utils";
-import {smallerOrEqualTo} from "../field-validators";
+import { smallerOrEqualTo } from "../field-validators";
 import { actionSmartContractCalled } from "../smart-contract-reducer";
 import {
   AutoStakeFormItem,
   FormItemText,
-  subTextStyle
+  subTextStyle,
 } from "../staking-form-item";
 import { ModalWrapper } from "./modal-wrapper";
 
 const inputNumberStyle = {
   flex: 1,
   background: "#f7f7f7",
-  border: "none"
+  border: "none",
 };
 
 type Props = {
@@ -47,14 +47,14 @@ type State = {
 };
 
 export const AddStakingModal = connect(
-  state => ({
+  (state) => ({
     // @ts-ignore
-    isIoPay: state.base.isIoPay
+    isIoPay: state.base.isIoPay,
   }),
-  dispatch => ({
+  (dispatch) => ({
     actionSmartContractCalled(payload: boolean): void {
       dispatch(actionSmartContractCalled(payload));
-    }
+    },
   })
 )(
   class AddStakingForm extends Component<Props, State> {
@@ -63,7 +63,7 @@ export const AddStakingModal = connect(
       unMountModalWrapper: false,
       confirmLoading: false,
       iotxBalance: 0,
-      ioAddress: ""
+      ioAddress: "",
     };
 
     async componentDidMount(): Promise<void> {
@@ -73,7 +73,7 @@ export const AddStakingModal = connect(
       this.setState({
         currentStakeAmount: this.props.stakedAmount,
         iotxBalance,
-        ioAddress
+        ioAddress,
       });
     }
 
@@ -98,7 +98,7 @@ export const AddStakingModal = connect(
             amount: toRau(addStaking, "Iotx"),
             payload: "",
             gasLimit: DEFAULT_STAKING_GAS_LIMIT,
-            gasPrice: toRau("1", "Qev")
+            gasPrice: toRau("1", "Qev"),
           });
         } catch (e) {
           // eslint-disable-next-line no-undef
@@ -122,13 +122,13 @@ export const AddStakingModal = connect(
 
     handleCancel = () => {
       this.setState({
-        unMountModalWrapper: true
+        unMountModalWrapper: true,
       });
     };
 
     modalUnMountFun = () => {
       this.setState({
-        unMountModalWrapper: false
+        unMountModalWrapper: false,
       });
     };
 
@@ -141,7 +141,7 @@ export const AddStakingModal = connect(
       const {
         currentStakeAmount,
         unMountModalWrapper,
-        iotxBalance
+        iotxBalance,
       } = this.state;
       const okText = this.state.confirmLoading
         ? t("my_stake.on_process_native_confirmation")
@@ -153,6 +153,7 @@ export const AddStakingModal = connect(
         // @ts-ignore
         <ModalWrapper
           clickable={clickable}
+          // @ts-ignore
           title={
             // @ts-ignore
             t("my_stake.add_staking.title", { bucketIndex })
@@ -187,8 +188,8 @@ export const AddStakingModal = connect(
                       message: t("my_stake.addStakingAmount.required"),
                     },
                     {
-                      validator: smallerOrEqualTo(iotxBalance, 1)
-                    }
+                      validator: smallerOrEqualTo(iotxBalance, 1),
+                    },
                   ]}
                 >
                   <Input
@@ -196,22 +197,22 @@ export const AddStakingModal = connect(
                     addonAfter="IOTX"
                     style={inputNumberStyle}
                     disabled={iotxBalance <= 0}
-                    onChange={event => {
+                    onChange={(event) => {
                       const value = Number(event.target.value);
                       this.setState({
                         currentStakeAmount: new BigNumber(
                           this.props.stakedAmount
-                        ).plus(value)
+                        ).plus(value),
                       });
                     }}
-                    onBlur={event => {
+                    onBlur={(event) => {
                       const value = Number(event.target.value);
                       const minValue = 1;
                       if (value < minValue) {
                         this.setState({
                           currentStakeAmount: new BigNumber(
                             this.props.stakedAmount
-                          ).plus(minValue)
+                          ).plus(minValue),
                         });
                       }
                     }}
@@ -225,7 +226,7 @@ export const AddStakingModal = connect(
                     style={{
                       ...subTextStyle,
                       opacity: Number(iotxBalance <= 0),
-                      color: colors.warning
+                      color: colors.warning,
                     }}
                   >
                     {t("my_stake.insufficient_balance")}

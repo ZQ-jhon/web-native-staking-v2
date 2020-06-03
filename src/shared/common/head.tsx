@@ -7,10 +7,16 @@ import React from "react";
 import { connect } from "react-redux";
 import { colors } from "./styles/style-color";
 
-function HeadInner({ locale }: { locale: string }): JSX.Element {
+function HeadInner({
+  locale,
+  title
+}: {
+  locale: string;
+  title?: string;
+}): JSX.Element {
   return (
     <Helmet
-      title={`${t("meta.title")} - ${t("meta.description")}`}
+      title={title || `${t("meta.title")} - ${t("meta.description")}`}
       meta={[
         { name: "viewport", content: mobileViewPortContent },
         { name: "description", content: t("meta.description") },

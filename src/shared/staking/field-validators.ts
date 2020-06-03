@@ -1,5 +1,5 @@
 // @ts-ignore
-import {t} from "onefx/lib/iso-i18n";
+import { t } from "onefx/lib/iso-i18n";
 
 export const STAKE_DURATION_MAX_VALUE = 14 * 24;
 
@@ -31,11 +31,13 @@ const isStakeDurationInvalid = (value: number, maxValue: number) => {
 };
 
 // tslint:disable-next-line:variable-name no-any
-export const validateStakeDuration = (maxValue: number, minValue?: number) => (_rule: any,
-                                                            value: number,
-                                                            // tslint:disable-next-line:unified-signatures
-                                                            callback: { (arg0: string): void; (): void; }) => {
-  if (minValue !== undefined && (value < minValue)) {
+export const validateStakeDuration = (maxValue: number, minValue?: number) => (
+  _rule: any,
+  value: number,
+  // tslint:disable-next-line:unified-signatures
+  callback: { (arg0: string): void; (): void }
+) => {
+  if (minValue !== undefined && value < minValue) {
     // @ts-ignore
     callback(t("my_stake.largerOrEqualTo.err", { num: minValue }));
   } else if (isStakeDurationInvalid(value, maxValue)) {

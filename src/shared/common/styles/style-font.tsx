@@ -3,6 +3,9 @@ import { StyleObject } from "styletron-standard";
 export const fontFamily =
   "Noto Sans,Helvetica Neue,sans-serif,Microsoft YaHei !important";
 
+export const secondFontFamily =
+  '"Chinese Quote", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"';
+
 export const fonts: { [key: string]: StyleObject } = {
   body: {
     fontFamily

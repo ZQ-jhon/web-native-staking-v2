@@ -319,3 +319,12 @@ my_votes.nativeStaking.open_ioPay_tip: 'If the page is loading for a long time, 
 my_stake.status.suffix.anytime: Anytime
 my_stake.status.suffix.not_applicable: 'Not applicable'
 my_stake.status.suffix.from: 'After ${time}'
+profile.welcome: Welcome
+profile.title: 'Delegate Profile'
+profile.welcome_text: "# If you are interested in becoming an IoTeX Delegate, complete the following registration items:\n1. Learn about the IoTeX Delegates Program by reading our all-in-one Delegate Handbook: https://v1.iotex.io/consensus-delegate-handbook.pdf\n2. Schedule a call with IoTeX so we can sync up and answer your questions (optional): https://calendly.com/iotex-delegates/delegateinterview\n3. Create a website and social media channels for your Delegate: In addition to your voting profile, these are the primary ways that voters will learn about you - highly recommended for all Delegates. See pg. 7-8 of the Delegate Handbook for more details.\n4. Register your Delegate node. Please see our step-by-step blog post for the full details:\n  * Install MetaMask and import an ETH address\n  * Login to the IoTeX voting website using MetaMask\n  * Create a voting profile\n  * Register your ETH name + address\n  * Self-stake at least 1.2 million IOTX-E tokens\n5. Campaign for votes and engage with voters! After completing all steps above, you will be eligible to receive votes. Introduce yourself to the IoTeX community in our official Telegram channel and explore / mine blocks on our Testnet.\n"
+profile.profile: Profile
+profile.technical: Technical
+profile.reward-distribution: Reward Distribution
+profile.received: Vote I Received
+profile.settings: Settings
+

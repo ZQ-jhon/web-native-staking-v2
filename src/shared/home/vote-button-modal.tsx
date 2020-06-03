@@ -1,9 +1,9 @@
 import Button from "antd/lib/button";
-import {t} from "onefx/lib/iso-i18n";
-import React, {PureComponent} from "react";
-import {CommonModal} from "../common/common-modal";
-import {Flex} from "../common/flex";
-import {VoteNowContainer} from "../staking/vote-now-steps/vote-now-container";
+import { t } from "onefx/lib/iso-i18n";
+import React, { PureComponent } from "react";
+import { CommonModal } from "../common/common-modal";
+import { Flex } from "../common/flex";
+import { VoteNowContainer } from "../staking/vote-now-steps/vote-now-container";
 
 type VotingModalProps = {
   visible: boolean;
@@ -46,12 +46,7 @@ export class VotingButton extends PureComponent<VotingButtonProps> {
   render(): JSX.Element {
     const { launch, disabled, children, extra = {} } = this.props;
     return (
-      <Button
-        disabled={disabled}
-        type={"primary"}
-        {...extra}
-        onClick={launch}
-      >
+      <Button disabled={disabled} type={"primary"} {...extra} onClick={launch}>
         {children}
       </Button>
     );
@@ -71,7 +66,7 @@ type State = {
   currentCandidate: any;
   displayMobileList: boolean;
   shouldDisplayMetaMaskReminder: boolean;
-  userConfirmedMetaMaskReminder: boolean
+  userConfirmedMetaMaskReminder: boolean;
 };
 
 export class VoteButtonModal extends PureComponent<Props, State> {
@@ -138,7 +133,9 @@ export class VoteButtonModal extends PureComponent<Props, State> {
             registeredName={this.state.currentCandidateName}
             displayOthers={false}
             forceDisplayModal={this.state.shouldDisplayVotingModal}
-            requestDismiss={() => this.setState({ shouldDisplayVotingModal: false })}
+            requestDismiss={() =>
+              this.setState({ shouldDisplayVotingModal: false })
+            }
           />
         }
       </Flex>

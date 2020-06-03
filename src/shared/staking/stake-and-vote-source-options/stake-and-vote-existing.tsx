@@ -16,7 +16,7 @@ import {
   AutoStakeFormItem,
   FormItemText,
   IconLabel,
-  subTextStyle
+  subTextStyle,
 } from "../staking-form-item";
 
 type Props = {
@@ -39,7 +39,7 @@ type State = {
 // @ts-ignore
 @connect((state: { buckets: Array<IBucket> }) => ({
   // @ts-ignore
-  buckets: state.buckets
+  buckets: state.buckets,
 }))
 class StakeAndVoteExisting extends Component<Props, State> {
   async componentDidMount(): Promise<void> {
@@ -48,13 +48,13 @@ class StakeAndVoteExisting extends Component<Props, State> {
     const buckets = await staking.getBucketsByVoter(address, 0, 999);
     this.setState({
       existingBuckets: buckets,
-      loading: false
+      loading: false,
     });
   }
 
   state: State = {
     existingBuckets: [],
-    loading: true
+    loading: true,
   };
 
   render(): JSX.Element {
@@ -91,7 +91,7 @@ class StakeAndVoteExisting extends Component<Props, State> {
                 // tslint:disable-next-line:react-no-dangerous-html
                 <span
                   dangerouslySetInnerHTML={{
-                    __html: t("my_stake.inMyVotes")
+                    __html: t("my_stake.inMyVotes"),
                   }}
                 />
               }
@@ -102,8 +102,8 @@ class StakeAndVoteExisting extends Component<Props, State> {
           rules={[
             {
               required: true,
-              message: t("my_stake.bucketId.required")
-            }
+              message: t("my_stake.bucketId.required"),
+            },
           ]}
           initialValue={defaultValue}
         >
@@ -113,9 +113,9 @@ class StakeAndVoteExisting extends Component<Props, State> {
             size="large"
             loading={loading}
             // @ts-ignore
-            onChange={bucketId => {
+            onChange={(bucketId) => {
               const bucket = existingBuckets.find(
-                b => String(b.index) === bucketId
+                (b) => String(b.index) === bucketId
               );
               handleRevote(bucket);
             }}

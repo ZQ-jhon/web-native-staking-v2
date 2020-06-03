@@ -4,49 +4,49 @@ export const NATIVE_TOKEN_ABI = [
     inputs: [
       {
         name: "_pyggIndex",
-        type: "uint256"
+        type: "uint256",
       },
       {
         name: "_data",
-        type: "bytes"
-      }
+        type: "bytes",
+      },
     ],
     name: "withdraw",
     outputs: [],
     payable: false,
     stateMutability: "nonpayable",
-    type: "function"
+    type: "function",
   },
   {
     constant: false,
     inputs: [
       {
         name: "_canName",
-        type: "bytes12"
+        type: "bytes12",
       },
       {
         name: "_stakeDuration",
-        type: "uint256"
+        type: "uint256",
       },
       {
         name: "_nonDecay",
-        type: "bool"
+        type: "bool",
       },
       {
         name: "_data",
-        type: "bytes"
-      }
+        type: "bytes",
+      },
     ],
     name: "createPygg",
     outputs: [
       {
         name: "",
-        type: "uint256"
-      }
+        type: "uint256",
+      },
     ],
     payable: true,
     stateMutability: "payable",
-    type: "function"
+    type: "function",
   },
   {
     constant: true,
@@ -55,69 +55,69 @@ export const NATIVE_TOKEN_ABI = [
     outputs: [
       {
         name: "",
-        type: "uint256"
-      }
+        type: "uint256",
+      },
     ],
     payable: false,
     stateMutability: "view",
-    type: "function"
+    type: "function",
   },
   {
     constant: false,
     inputs: [
       {
         name: "addrs",
-        type: "address[]"
-      }
+        type: "address[]",
+      },
     ],
     name: "removeAddressesFromWhitelist",
     outputs: [
       {
         name: "success",
-        type: "bool"
-      }
+        type: "bool",
+      },
     ],
     payable: false,
     stateMutability: "nonpayable",
-    type: "function"
+    type: "function",
   },
   {
     constant: false,
     inputs: [
       {
         name: "addr",
-        type: "address"
-      }
+        type: "address",
+      },
     ],
     name: "removeAddressFromWhitelist",
     outputs: [
       {
         name: "success",
-        type: "bool"
-      }
+        type: "bool",
+      },
     ],
     payable: false,
     stateMutability: "nonpayable",
-    type: "function"
+    type: "function",
   },
   {
     constant: true,
     inputs: [
       {
         name: "_address",
-        type: "address"
-      }
+        type: "address",
+      },
     ],
     name: "isOwner",
     outputs: [
       {
         name: "",
-        type: "bool"
-      }
+        type: "bool",
+      },
     ],
     payable: false,
     stateMutability: "view",
-    type: "function"
+    type: "function",
   },
   {
     constant: false,
@@ -126,30 +126,30 @@ export const NATIVE_TOKEN_ABI = [
     outputs: [],
     payable: false,
     stateMutability: "nonpayable",
-    type: "function"
+    type: "function",
   },
   {
     constant: true,
     inputs: [
       {
         name: "",
-        type: "address"
+        type: "address",
       },
       {
         name: "",
-        type: "uint256"
-      }
+        type: "uint256",
+      },
     ],
     name: "stakeholders",
     outputs: [
       {
         name: "",
-        type: "uint256"
-      }
+        type: "uint256",
+      },
     ],
     payable: false,
     stateMutability: "view",
-    type: "function"
+    type: "function",
   },
   {
     constant: true,
@@ -158,12 +158,12 @@ export const NATIVE_TOKEN_ABI = [
     outputs: [
       {
         name: "",
-        type: "bool"
-      }
+        type: "bool",
+      },
     ],
     payable: false,
     stateMutability: "view",
-    type: "function"
+    type: "function",
   },
   {
     constant: true,
@@ -172,12 +172,12 @@ export const NATIVE_TOKEN_ABI = [
     outputs: [
       {
         name: "",
-        type: "uint256"
-      }
+        type: "uint256",
+      },
     ],
     payable: false,
     stateMutability: "view",
-    type: "function"
+    type: "function",
   },
   {
     constant: true,
@@ -186,61 +186,61 @@ export const NATIVE_TOKEN_ABI = [
     outputs: [
       {
         name: "",
-        type: "uint256"
-      }
+        type: "uint256",
+      },
     ],
     payable: false,
     stateMutability: "view",
-    type: "function"
+    type: "function",
   },
   {
     constant: true,
     inputs: [
       {
         name: "_prevIndex",
-        type: "uint256"
+        type: "uint256",
       },
       {
         name: "_limit",
-        type: "uint256"
-      }
+        type: "uint256",
+      },
     ],
     name: "getActivePyggCreateTimes",
     outputs: [
       {
         name: "count",
-        type: "uint256"
+        type: "uint256",
       },
       {
         name: "indexes",
-        type: "uint256[]"
+        type: "uint256[]",
       },
       {
         name: "createTimes",
-        type: "uint256[]"
-      }
+        type: "uint256[]",
+      },
     ],
     payable: false,
     stateMutability: "view",
-    type: "function"
+    type: "function",
   },
   {
     constant: false,
     inputs: [
       {
         name: "_pyggIndex",
-        type: "uint256"
+        type: "uint256",
       },
       {
         name: "_data",
-        type: "bytes"
-      }
+        type: "bytes",
+      },
     ],
     name: "storeToPygg",
     outputs: [],
     payable: true,
     stateMutability: "payable",
-    type: "function"
+    type: "function",
   },
   {
     constant: true,
@@ -249,79 +249,79 @@ export const NATIVE_TOKEN_ABI = [
     outputs: [
       {
         name: "",
-        type: "uint256"
-      }
+        type: "uint256",
+      },
     ],
     payable: false,
     stateMutability: "view",
-    type: "function"
+    type: "function",
   },
   {
     constant: false,
     inputs: [
       {
         name: "_pyggIndex",
-        type: "uint256"
+        type: "uint256",
       },
       {
         name: "_stakeDuration",
-        type: "uint256"
+        type: "uint256",
       },
       {
         name: "_nonDecay",
-        type: "bool"
+        type: "bool",
       },
       {
         name: "_data",
-        type: "bytes"
-      }
+        type: "bytes",
+      },
     ],
     name: "restake",
     outputs: [],
     payable: false,
     stateMutability: "nonpayable",
-    type: "function"
+    type: "function",
   },
   {
     constant: false,
     inputs: [
       {
         name: "addr",
-        type: "address"
-      }
+        type: "address",
+      },
     ],
     name: "addAddressToWhitelist",
     outputs: [
       {
         name: "success",
-        type: "bool"
-      }
+        type: "bool",
+      },
     ],
     payable: false,
     stateMutability: "nonpayable",
-    type: "function"
+    type: "function",
   },
   {
     constant: false,
     inputs: [
       {
         name: "_pyggIndex",
-        type: "uint256"
+        type: "uint256",
       },
       {
         name: "_newOwner",
-        type: "address"
+        type: "address",
       },
       {
         name: "_data",
-        type: "bytes"
-      }
+        type: "bytes",
+      },
     ],
     name: "transferOwnershipOfPygg",
     outputs: [],
     payable: false,
     stateMutability: "nonpayable",
-    type: "function"
+    type: "function",
   },
   {
     constant: true,
@@ -330,12 +330,12 @@ export const NATIVE_TOKEN_ABI = [
     outputs: [
       {
         name: "",
-        type: "uint256"
-      }
+        type: "uint256",
+      },
     ],
     payable: false,
     stateMutability: "view",
-    type: "function"
+    type: "function",
   },
   {
     constant: false,
@@ -344,7 +344,7 @@ export const NATIVE_TOKEN_ABI = [
     outputs: [],
     payable: false,
     stateMutability: "nonpayable",
-    type: "function"
+    type: "function",
   },
   {
     constant: true,
@@ -353,58 +353,58 @@ export const NATIVE_TOKEN_ABI = [
     outputs: [
       {
         name: "",
-        type: "address"
-      }
+        type: "address",
+      },
     ],
     payable: false,
     stateMutability: "view",
-    type: "function"
+    type: "function",
   },
   {
     constant: true,
     inputs: [
       {
         name: "_prevIndex",
-        type: "uint256"
+        type: "uint256",
       },
       {
         name: "_limit",
-        type: "uint256"
-      }
+        type: "uint256",
+      },
     ],
     name: "getActivePyggIdx",
     outputs: [
       {
         name: "count",
-        type: "uint256"
+        type: "uint256",
       },
       {
         name: "indexes",
-        type: "uint256[]"
-      }
+        type: "uint256[]",
+      },
     ],
     payable: false,
     stateMutability: "view",
-    type: "function"
+    type: "function",
   },
   {
     constant: true,
     inputs: [
       {
         name: "",
-        type: "address"
-      }
+        type: "address",
+      },
     ],
     name: "whitelist",
     outputs: [
       {
         name: "",
-        type: "bool"
-      }
+        type: "bool",
+      },
     ],
     payable: false,
     stateMutability: "view",
-    type: "function"
+    type: "function",
   },
   {
     constant: true,
@@ -413,196 +413,196 @@ export const NATIVE_TOKEN_ABI = [
     outputs: [
       {
         name: "",
-        type: "uint256"
-      }
+        type: "uint256",
+      },
     ],
     payable: false,
     stateMutability: "view",
-    type: "function"
+    type: "function",
   },
   {
     constant: false,
     inputs: [
       {
         name: "_pyggIndex",
-        type: "uint256"
+        type: "uint256",
       },
       {
         name: "_data",
-        type: "bytes"
-      }
+        type: "bytes",
+      },
     ],
     name: "unstake",
     outputs: [],
     payable: false,
     stateMutability: "nonpayable",
-    type: "function"
+    type: "function",
   },
   {
     constant: true,
     inputs: [
       {
         name: "",
-        type: "uint256"
-      }
+        type: "uint256",
+      },
     ],
     name: "pyggs",
     outputs: [
       {
         name: "canName",
-        type: "bytes12"
+        type: "bytes12",
       },
       {
         name: "stakedAmount",
-        type: "uint256"
+        type: "uint256",
       },
       {
         name: "stakeDuration",
-        type: "uint256"
+        type: "uint256",
       },
       {
         name: "stakeStartTime",
-        type: "uint256"
+        type: "uint256",
       },
       {
         name: "nonDecay",
-        type: "bool"
+        type: "bool",
       },
       {
         name: "unstakeStartTime",
-        type: "uint256"
+        type: "uint256",
       },
       {
         name: "pyggOwner", // bucketOwner field of buckets method response in STAKING_ABI
-        type: "address"
+        type: "address",
       },
       {
         name: "createTime",
-        type: "uint256"
+        type: "uint256",
       },
       {
         name: "prev",
-        type: "uint256"
+        type: "uint256",
       },
       {
         name: "next",
-        type: "uint256"
-      }
+        type: "uint256",
+      },
     ],
     payable: false,
     stateMutability: "view",
-    type: "function"
+    type: "function",
   },
   {
     constant: true,
     inputs: [
       {
         name: "_owner",
-        type: "address"
-      }
+        type: "address",
+      },
     ],
     name: "getPyggIndexesByAddress",
     outputs: [
       {
         name: "",
-        type: "uint256[]"
-      }
+        type: "uint256[]",
+      },
     ],
     payable: false,
     stateMutability: "view",
-    type: "function"
+    type: "function",
   },
   {
     constant: false,
     inputs: [
       {
         name: "_pyggIndex",
-        type: "uint256"
+        type: "uint256",
       },
       {
         name: "_canName",
-        type: "bytes12"
+        type: "bytes12",
       },
       {
         name: "_data",
-        type: "bytes"
-      }
+        type: "bytes",
+      },
     ],
     name: "revote",
     outputs: [],
     payable: false,
     stateMutability: "nonpayable",
-    type: "function"
+    type: "function",
   },
   {
     constant: true,
     inputs: [
       {
         name: "_prevIndex",
-        type: "uint256"
+        type: "uint256",
       },
       {
         name: "_limit",
-        type: "uint256"
-      }
+        type: "uint256",
+      },
     ],
     name: "getActivePyggs",
     outputs: [
       {
         name: "count",
-        type: "uint256"
+        type: "uint256",
       },
       {
         name: "indexes",
-        type: "uint256[]"
+        type: "uint256[]",
       },
       {
         name: "stakeStartTimes",
-        type: "uint256[]"
+        type: "uint256[]",
       },
       {
         name: "stakeDurations",
-        type: "uint256[]"
+        type: "uint256[]",
       },
       {
         name: "decays",
-        type: "bool[]"
+        type: "bool[]",
       },
       {
         name: "stakedAmounts",
-        type: "uint256[]"
+        type: "uint256[]",
       },
       {
         name: "canNames",
-        type: "bytes12[]"
+        type: "bytes12[]",
       },
       {
         name: "owners",
-        type: "address[]"
-      }
+        type: "address[]",
+      },
     ],
     payable: false,
     stateMutability: "view",
-    type: "function"
+    type: "function",
   },
   {
     constant: false,
     inputs: [
       {
         name: "addrs",
-        type: "address[]"
-      }
+        type: "address[]",
+      },
     ],
     name: "addAddressesToWhitelist",
     outputs: [
       {
         name: "success",
-        type: "bool"
-      }
+        type: "bool",
+      },
     ],
     payable: false,
     stateMutability: "nonpayable",
-    type: "function"
+    type: "function",
   },
   {
     constant: true,
@@ -611,41 +611,41 @@ export const NATIVE_TOKEN_ABI = [
     outputs: [
       {
         name: "",
-        type: "uint256"
-      }
+        type: "uint256",
+      },
     ],
     payable: false,
     stateMutability: "view",
-    type: "function"
+    type: "function",
   },
   {
     constant: false,
     inputs: [
       {
         name: "_newOwner",
-        type: "address"
-      }
+        type: "address",
+      },
     ],
     name: "transferOwnership",
     outputs: [],
     payable: false,
     stateMutability: "nonpayable",
-    type: "function"
+    type: "function",
   },
   {
     inputs: [
       {
         name: "_minStakeAmount",
-        type: "uint256"
+        type: "uint256",
       },
       {
         name: "_maxPyggsPerAddr",
-        type: "uint256"
-      }
+        type: "uint256",
+      },
     ],
     payable: false,
     stateMutability: "nonpayable",
-    type: "constructor"
+    type: "constructor",
   },
   {
     anonymous: false,
@@ -653,46 +653,46 @@ export const NATIVE_TOKEN_ABI = [
       {
         indexed: false,
         name: "pyggIndex",
-        type: "uint256"
+        type: "uint256",
       },
       {
         indexed: false,
         name: "canName",
-        type: "bytes12"
+        type: "bytes12",
       },
       {
         indexed: false,
         name: "amount",
-        type: "uint256"
+        type: "uint256",
       },
       {
         indexed: false,
         name: "stakeDuration",
-        type: "uint256"
+        type: "uint256",
       },
       {
         indexed: false,
         name: "stakeStartTime",
-        type: "uint256"
+        type: "uint256",
       },
       {
         indexed: false,
         name: "nonDecay",
-        type: "bool"
+        type: "bool",
       },
       {
         indexed: false,
         name: "pyggOwner",
-        type: "address"
+        type: "address",
       },
       {
         indexed: false,
         name: "data",
-        type: "bytes"
-      }
+        type: "bytes",
+      },
     ],
     name: "PyggCreated",
-    type: "event"
+    type: "event",
   },
   {
     anonymous: false,
@@ -700,46 +700,46 @@ export const NATIVE_TOKEN_ABI = [
       {
         indexed: false,
         name: "pyggIndex",
-        type: "uint256"
+        type: "uint256",
       },
       {
         indexed: false,
         name: "canName",
-        type: "bytes12"
+        type: "bytes12",
       },
       {
         indexed: false,
         name: "amount",
-        type: "uint256"
+        type: "uint256",
       },
       {
         indexed: false,
         name: "stakeDuration",
-        type: "uint256"
+        type: "uint256",
       },
       {
         indexed: false,
         name: "stakeStartTime",
-        type: "uint256"
+        type: "uint256",
       },
       {
         indexed: false,
         name: "nonDecay",
-        type: "bool"
+        type: "bool",
       },
       {
         indexed: false,
         name: "pyggOwner",
-        type: "address"
+        type: "address",
       },
       {
         indexed: false,
         name: "data",
-        type: "bytes"
-      }
+        type: "bytes",
+      },
     ],
     name: "PyggUpdated",
-    type: "event"
+    type: "event",
   },
   {
     anonymous: false,
@@ -747,26 +747,26 @@ export const NATIVE_TOKEN_ABI = [
       {
         indexed: false,
         name: "pyggIndex",
-        type: "uint256"
+        type: "uint256",
       },
       {
         indexed: false,
         name: "canName",
-        type: "bytes12"
+        type: "bytes12",
       },
       {
         indexed: false,
         name: "amount",
-        type: "uint256"
+        type: "uint256",
       },
       {
         indexed: false,
         name: "data",
-        type: "bytes"
-      }
+        type: "bytes",
+      },
     ],
     name: "PyggUnstake",
-    type: "event"
+    type: "event",
   },
   {
     anonymous: false,
@@ -774,26 +774,26 @@ export const NATIVE_TOKEN_ABI = [
       {
         indexed: false,
         name: "pyggIndex",
-        type: "uint256"
+        type: "uint256",
       },
       {
         indexed: false,
         name: "canName",
-        type: "bytes12"
+        type: "bytes12",
       },
       {
         indexed: false,
         name: "amount",
-        type: "uint256"
+        type: "uint256",
       },
       {
         indexed: false,
         name: "data",
-        type: "bytes"
-      }
+        type: "bytes",
+      },
     ],
     name: "PyggWithdraw",
-    type: "event"
+    type: "event",
   },
   {
     anonymous: false,
@@ -801,11 +801,11 @@ export const NATIVE_TOKEN_ABI = [
       {
         indexed: false,
         name: "addr",
-        type: "address"
-      }
+        type: "address",
+      },
     ],
     name: "WhitelistedAddressAdded",
-    type: "event"
+    type: "event",
   },
   {
     anonymous: false,
@@ -813,22 +813,22 @@ export const NATIVE_TOKEN_ABI = [
       {
         indexed: false,
         name: "addr",
-        type: "address"
-      }
+        type: "address",
+      },
     ],
     name: "WhitelistedAddressRemoved",
-    type: "event"
+    type: "event",
   },
   {
     anonymous: false,
     inputs: [],
     name: "Pause",
-    type: "event"
+    type: "event",
   },
   {
     anonymous: false,
     inputs: [],
     name: "Unpause",
-    type: "event"
-  }
+    type: "event",
+  },
 ];

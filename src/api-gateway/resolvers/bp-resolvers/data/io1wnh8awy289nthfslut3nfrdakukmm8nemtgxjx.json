@@ -1,0 +1,24 @@
+{
+  "contractAddress": "io1wnh8awy289nthfslut3nfrdakukmm8nemtgxjx",
+  "title": "Probation for Unresponsive Delegates",
+  "description": "<p>This proposal introduces a way to enforce “probation” for unresponsive Delegates that are not producing blocks.</p><p>Proposal: Any Delegate that does not achieve 85% productivity (i.e., misses 5 or more blocks) for a given epoch will be put on probation – they will be ineligible to produce blocks for the next 6 epochs and will receive greatly reduced rewards. After the probation period, the Delegate will be re-eligible to produce blocks again.</p><p>Methodology: For Delegates on probation, the protocol will enforce a 10% reduction in voting power for six epochs, which will a) effectively remove them from being selected as a block producer, and b) greatly reduce their rewards (i.e., no block rewards or foundation bonus, 10% of epoch bonus reward).</p><p>Expected Benefits: 1) Minimize impact on overall quality of service (QoS); 2) Require all Delegates to provide consistently robust infrastructure; 3) Encourage proactive resolution of node downtime issues from Delegates.</p><p>Note: the parameters of this proposal (i.e., 85% productivity, 6 epoch probation, 10% intensity rate) are designed to be somewhat flexible for Delegates as IoTeX Mainnet continues to mature. These parameters may be updated via future community votes.</p>",
+  "category": "general",
+  "proposer": "IoTeX",
+  "start": "2020-03-17T17:00:00.000Z",
+  "end": "2020-03-26T04:00:00.000Z",
+  "maxNumOfChoices": "1",
+  "__typename": "Poll",
+  "status": 1,
+  "options": [
+    {
+      "id": 1,
+      "description": "Yes",
+      "__typename": "Option"
+    },
+    {
+      "id": 2,
+      "description": "No",
+      "__typename": "Option"
+    }
+  ]
+}

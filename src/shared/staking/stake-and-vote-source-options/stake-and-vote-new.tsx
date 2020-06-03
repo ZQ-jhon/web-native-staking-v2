@@ -16,7 +16,7 @@ import {
   AutoStakeFormItem,
   DurationFormItem,
   FormItemText,
-  subTextStyle
+  subTextStyle,
 } from "../staking-form-item";
 
 type Props = {
@@ -40,7 +40,7 @@ class StakeAndVoteNew extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      iotxBalance: 0
+      iotxBalance: 0,
     };
   }
 
@@ -65,7 +65,7 @@ class StakeAndVoteNew extends Component<Props, State> {
         form.setFieldsValue({
           nonDecay: bucket.autoStake,
           stakeDuration: bucket.stakedDuration,
-          stakedAmount: Number(bucket.stakedAmount)
+          stakedAmount: Number(bucket.stakedAmount),
         });
       }
     }
@@ -80,7 +80,7 @@ class StakeAndVoteNew extends Component<Props, State> {
       currentStakeAmount,
       handleSelectChange,
       handleDurationChange,
-      handleStakedAmountChange
+      handleStakedAmountChange,
     } = this.props;
 
     const { iotxBalance } = this.state;
@@ -103,11 +103,11 @@ class StakeAndVoteNew extends Component<Props, State> {
           rules={[
             {
               required: true,
-              message: t("my_stake.stakedAmount.required")
+              message: t("my_stake.stakedAmount.required"),
             },
             {
-              validator: smallerOrEqualTo(iotxBalance, 100)
-            }
+              validator: smallerOrEqualTo(iotxBalance, 100),
+            },
           ]}
         >
           <Input
@@ -115,11 +115,11 @@ class StakeAndVoteNew extends Component<Props, State> {
             size="large"
             addonAfter={tokenType}
             style={{ width: "100%", background: "#f7f7f7", border: "none" }}
-            onChange={event => {
+            onChange={(event) => {
               const numberValue = Number(event.target.value);
               handleStakedAmountChange(numberValue);
             }}
-            onBlur={event => {
+            onBlur={(event) => {
               const numberValue = Number(event.target.value);
               const minValue = 100;
               if (numberValue < minValue && formRef && formRef.current) {
@@ -153,7 +153,7 @@ class StakeAndVoteNew extends Component<Props, State> {
         {
           // @ts-ignore
           <DurationFormItem
-            onChange={numberValue => {
+            onChange={(numberValue) => {
               handleDurationChange(numberValue);
             }}
             validatorFactory={validateStakeDuration}

@@ -19,28 +19,28 @@ const ACTION_ROW_STYLE = {
     fontSize: "12px",
     height: "30px",
     display: "flex",
-    justifyContent: "space-between"
-  }
+    justifyContent: "space-between",
+  },
 };
 const ACTION_ROW_DISABLED = {
   style: {
     ...ACTION_ROW_STYLE.style,
     color: colors.black65,
-    cursor: "not-allowed"
+    cursor: "not-allowed",
   },
   // tslint:disable-next-line:no-any
-  onClick: (e: any) => e.stopPropagation()
+  onClick: (e: any) => e.stopPropagation(),
 };
 const menuInfoStyle = {
   color: colors.black80,
   width: "100px",
   marginLeft: "20px",
   display: "inline-block",
-  textAlign: "left"
+  textAlign: "left",
 };
 const menuInfoStyleDisabled = {
   ...menuInfoStyle,
-  color: colors.black65
+  color: colors.black65,
 };
 
 function renderRevote(record: IBucket): JSX.Element {

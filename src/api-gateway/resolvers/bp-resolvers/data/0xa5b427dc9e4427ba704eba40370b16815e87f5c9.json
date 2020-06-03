@@ -1,0 +1,76 @@
+{
+  "contractAddress": "0xa5b427dc9e4427ba704eba40370b16815e87f5c9",
+  "title": "IoTeX DOTM (Delegate of the Month) - July 2019",
+  "description": "<p>Over the past 3+ months of Mainnet, we have continuously enhanced the IoTeX Delegates Program. One of our main goals is to better connect the IoTeX community and Delegates — this involves providing more transparency regarding Delegate contributions, achievements, and commitments. We are excited to introduce the Delegate Badges Program as our next initiative!</p>  <p>To make Delegate activities more transparent for IoTeX voters, we will publicly display Delegate Badges on the <a href=\"http://member.iotex.io\">member.iotex.io</a> website starting in August. But first, we need the IoTeX Community's help to VOTE!</p>  <p>Delegate of the Month Badge: every month, IoTeX community will elect 5 “Delegates of the Month (DOTM)”. Each DOTM gets 5 million votes from IoTeX Foundation, prime top placement on <a href=\"http://member.iotex.io\">member.iotex.io</a>, and a permanent DOTM badge!</p>  <p>Before voting, review the DOTM candidates' contributions here: <a href=\"https://medium.com/@iotex/voting-for-july-dotm-via-smart-contract-is-live-vote-now-bf92de9ccb31\">https://medium.com/@iotex/voting-for-july-dotm-via-smart-contract-is-live-vote-now-bf92de9ccb31</a></p>  <p>Official Rules:</p>  <ul> <li><p>Any Delegate may submit an application to be on the DOTM ballot</p></li>  <li><p>All IoTeX Voters are eligible to vote for DOTM at <a href=\"http://member.iotex.io/polls\">member.iotex.io/polls</a></p></li>  <li><p>Each IoTeX Wallet can vote for 3 DOTM candidates. DOTM voting is not stake-weighted (1 Wallet = 3 votes for 3 different candidates)</p></li>  <li><p>Any signs of voting manipulation by Delegates will result in permanent ban from the DOTM program!</p></li> </ul>  <p>Check detailed voting rules here: <a href=\"https://medium.com/@iotex/iotex-delegate-of-the-month-dotm-july-2019-re-vote-ad220f3fdb07\">https://medium.com/@iotex/iotex-delegate-of-the-month-dotm-july-2019-re-vote-ad220f3fdb07</a></p>",
+  "category": "General",
+  "proposer": "IoTeX",
+  "start": "2019-08-14T05:00:00.000Z",
+  "end": "2019-08-21T05:00:00.000Z",
+  "maxNumOfChoices": "3",
+  "status": "1",
+  "result": [11, 7, 11, 14, 7, 12, 11, 22, 9, 9, 28, 11],
+  "options": [
+    {
+      "id": 0,
+      "description": "GameFantasy",
+      "__typename": "Option"
+    },
+    {
+      "id": 1,
+      "description": "Hashbuy",
+      "__typename": "Option"
+    },
+    {
+      "id": 2,
+      "description": "IOSG",
+      "__typename": "Option"
+    },
+    {
+      "id": 3,
+      "description": "IoTask",
+      "__typename": "Option"
+    },
+    {
+      "id": 4,
+      "description": "IoTeX Cobo Node",
+      "__typename": "Option"
+    },
+    {
+      "id": 5,
+      "description": "IoTeX Geeks",
+      "__typename": "Option"
+    },
+    {
+      "id": 6,
+      "description": "IoTeXTeam",
+      "__typename": "Option"
+    },
+    {
+      "id": 7,
+      "description": "IoTeX Lab",
+      "__typename": "Option"
+    },
+    {
+      "id": 8,
+      "description": "The Giving Block",
+      "__typename": "Option"
+    },
+    {
+      "id": 9,
+      "description": "LongZ",
+      "__typename": "Option"
+    },
+    {
+      "id": 10,
+      "description": "iotxplorer",
+      "__typename": "Option"
+    },
+    {
+      "id": 11,
+      "description": "IoTeX Union",
+      "__typename": "Option"
+    }
+  ],
+  "votes": [],
+  "__typename": "Poll"
+}

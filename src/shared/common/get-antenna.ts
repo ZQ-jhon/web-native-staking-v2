@@ -60,6 +60,18 @@ export function getXAppTokenContract(
   });
 }
 
+export function getRemoteAntenna(): Antenna {
+  // $FlowFixMe
+  const injectedWindow: Window & { remoteAntenna?: Antenna } = window;
+  if (injectedWindow.remoteAntenna) {
+    return injectedWindow.remoteAntenna;
+  }
+  injectedWindow.remoteAntenna = new Antenna("/iotex-core-proxy", {
+    signer: new WsSignerPlugin("wss://local.iotex.io:64102")
+  });
+  return injectedWindow.remoteAntenna;
+}
+
 export function getMobileNativeAntenna(): Antenna {
   // $FlowFixMe
   const injectedWindow: Window & { mobileNativeAntenna?: Antenna } = window;

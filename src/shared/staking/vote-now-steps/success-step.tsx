@@ -1,11 +1,16 @@
 // @flow
-import {Form} from "antd";
-import {t} from "onefx/lib/iso-i18n";
+import { Form } from "antd";
+import { t } from "onefx/lib/iso-i18n";
 import React from "react";
-import {Flex} from "../../common/flex";
-import {colors} from "../../common/styles/style-color2";
+import { Flex } from "../../common/flex";
+import { colors } from "../../common/styles/style-color2";
 
-export function SuccessStep({ txHash }: { txHash: string, siteUrl: string }): JSX.Element {
+export function SuccessStep({
+  txHash,
+}: {
+  txHash: string;
+  siteUrl: string;
+}): JSX.Element {
   return (
     // @ts-ignore
     <Form layout={"vertical"}>
@@ -16,13 +21,14 @@ export function SuccessStep({ txHash }: { txHash: string, siteUrl: string }): JS
         lineHeight={1.88}
         color={colors.black}
       >
-        { // tslint:disable-next-line:react-no-dangerous-html
+        {
+          // tslint:disable-next-line:react-no-dangerous-html
           <span
             dangerouslySetInnerHTML={{
               __html: t("my_stake.transaction_hash", {
                 txHash,
-                href: `https://iotexscan.io/action/${txHash}`
-              })
+                href: `https://iotexscan.io/action/${txHash}`,
+              }),
             }}
             style={{ wordBreak: "break-word" }}
           />
