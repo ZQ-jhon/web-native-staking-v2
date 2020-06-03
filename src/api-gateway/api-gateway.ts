@@ -76,7 +76,8 @@ export async function setApiGateway(server: MyServer): Promise<void> {
   };
   const defaultResolvers = [MetaResolver, ArticleResolver];
 
-  server.resolvers = [...defaultResolvers, BPResolver];
+  //server.resolvers = [...defaultResolvers, BPResolver];
+  server.resolvers = BPResolver;
 
   const sdlPath = path.resolve(__dirname, "api-gateway.graphql");
   const schema = await buildSchema({

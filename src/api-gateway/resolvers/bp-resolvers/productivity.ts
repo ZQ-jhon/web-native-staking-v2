@@ -1,6 +1,6 @@
 // @flow
-import type { TResolverCtx } from "../../types";
-import { lowercase } from "../../shared/common/lowercase";
+import  { TResolverCtx } from "../../../types/global";
+import { lowercase } from "../../../shared/common/lowercase";
 
 export async function bpCandidateProductivities(
   parent: any,
@@ -17,6 +17,7 @@ export async function getAndAddProductivityFn(
   parent: any,
   args: any,
   context: TResolverCtx
+  // @ts-ignore
 ): Function {
   const {
     gateways: { nameRegistrationContract }
@@ -30,9 +31,9 @@ export async function getAndAddProductivityFn(
     for (const bp of bps) {
       const ethLower = lowercase(bp.tempEthAddress);
       const regCandidate =
-        regCandidates.find(it => lowercase(it.address) === ethLower) || {};
+        regCandidates.find((it:any) => lowercase(it.address) === ethLower) || {};
       const productivity = productivities.find(
-        it => lowercase(it.address) === regCandidate.ioOperatorAddr
+        (it:any) => lowercase(it.address) === regCandidate.ioOperatorAddr
       );
       if (productivity) {
         bp.productivity = (productivity && productivity.production) || 0;

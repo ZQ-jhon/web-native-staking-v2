@@ -1,11 +1,14 @@
 /* eslint-disable no-invalid-this */
 // @flow
-import { AutoComplete, Form } from "antd";
+import { AutoComplete } from "antd";
+// @ts-ignore
 import window from "global/window";
+import { Form } from "@ant-design/compatible";
 import { t } from "onefx/lib/iso-i18n";
 import { Component } from "react";
 import { connect } from "react-redux";
 import React from "react";
+// @ts-ignore
 import { get } from "dotty";
 import { Query } from "react-apollo";
 import { formItemLayout } from "../../common/form-item-layout";
@@ -14,15 +17,15 @@ import {
   encodeCandidateHexName
 } from "../../common/token-utils";
 import { validateCanName } from "../field-validators";
-import { actionSmartContractCalled } from "../smart-contract-reducer";
-import { GET_ALL_CANDIDATE } from "../smart-contract-gql-queries";
+import { actionSmartContractCalled } from "../../staking/smart-contract-reducer"
+import { GET_ALL_CANDIDATE } from "../../staking/smart-contract-gql-queries";
 import { ModalWrapper } from "./modal-wrapper";
-import { getIoAddressFromRemote } from "../vote-now-steps/vote-now-container";
+import { getIoAddressFromRemote } from "../../staking/vote-now-steps/vote-now-container";
 import {
   getIoAddressFromIoPay,
   getXAppTokenContract
 } from "../../xapps/xapp-request";
-import { NATIVE_TOKEN_ABI } from "../native-token-abi";
+import { NATIVE_TOKEN_ABI } from "../../staking/native-token-abi";
 import { toRau } from "iotex-antenna/lib/account/utils";
 import { hasError } from "../field-validators";
 
@@ -48,7 +51,7 @@ type Props = {
 
 // $FlowFixMe
 export const RevoteModal = connect(
-  state => ({
+  (state:any) => ({
     isIoPay: state.base.isIoPay,
     nativeTokenContractAddr: state.smartContract.nativeTokenContractAddr,
     nativePatchTokenContractAddr:
@@ -61,6 +64,7 @@ export const RevoteModal = connect(
   })
 )(
   // $FlowFixMe
+  // @ts-ignore
   Form.create({ name: "revote" })(
     class RevoteForm extends Component<Props> {
       props: Props;
@@ -77,8 +81,8 @@ export const RevoteModal = connect(
           nativePatchTokenContractAddr,
           isPatchContract
         } = this.props;
-
-        this.props.form.validateFields(async (err, values: TRevote) => {
+           
+        this.props.form.validateFields(async (err: any, values: TRevote) => {
           if (!err) {
             window.console.log("Received values of Revote form: ", values);
 
@@ -130,6 +134,7 @@ export const RevoteModal = connect(
         return (
           <ModalWrapper
             clickable={clickable}
+            // @ts-ignore
             title={t("my_stake.revote.title", { bucketIndex })}
             onOk={this.handleOk}
             okButtonProps={{ disabled: hasError(getFieldsError()) }}
@@ -143,8 +148,8 @@ export const RevoteModal = connect(
                     }
                     const allCandidates = data.bpCandidatesOnContract || [];
                     const dataSource = allCandidates
-                      .map(item => item.name)
-                      .filter(item => Boolean(item));
+                      .map((item:any) => item.name)
+                      .filter((item:any) => Boolean(item));
                     return (
                       <div>
                         {getFieldDecorator("canName", {

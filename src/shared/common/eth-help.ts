@@ -1,19 +1,21 @@
 // @flow
+// @ts-ignore
 import EthContract from "ethjs-contract";
+// @ts-ignore
 import window from "global/window";
 import { STAKING_ABI } from "../smart-contract/staking-abi";
 import { calcStats } from "../smart-contract/my-votes-table";
-import Eth from "../../shared/common/ethjs-query";
+import { Eth } from "../../shared/common/ethjs-query";
 import { enableEthereum } from "./enable-ethereum";
 import { WeiToTokenValueFloor } from "./token-utils";
 import { TOKEN_ABI } from "../smart-contract/token-abi";
 
-export async function getStakedAmount(stakingContractAddr: any): any {
+export async function getStakedAmount(stakingContractAddr: any):any {
   const isMetaMaskInstalled = typeof window.web3 !== "undefined";
 
   if (isMetaMaskInstalled) {
     await enableEthereum();
-
+    // @ts-ignore
     const eth = new Eth(window.web3.currentProvider);
     const contract = new EthContract(eth);
     const stakingContract = contract(STAKING_ABI).at(stakingContractAddr);
@@ -25,10 +27,10 @@ export async function getStakedAmount(stakingContractAddr: any): any {
       let resp = await stakingContract.getBucketIndexesByAddress(addr, {
         from: addr
       });
-      const bucketIds = (resp && resp[0].map(id => id.toNumber())) || [];
+      const bucketIds = (resp && resp[0].map((id:any) => id.toNumber())) || [];
 
       resp = await Promise.all(
-        bucketIds.map(id => stakingContract.buckets(id, { from: addr }))
+        bucketIds.map((id: string)=> stakingContract.buckets(id, { from: addr }))
       );
       const stakeStatus = calcStats(addr, bucketIds, resp);
 
@@ -55,10 +57,11 @@ export function getEthworkAddress(provider: any): string {
   }
 }
 
-export async function getIotxEBalance(tokenContractAddr: any): any {
+export async function getIotxEBalance(tokenContractAddr: any){
   const isMetaMaskInstalled = typeof window.web3 !== "undefined";
 
   if (isMetaMaskInstalled) {
+    // @ts-ignore
     const eth = new Eth(window.web3.currentProvider);
     const tokenContractInstance = new EthContract(eth);
     const tokenContract = tokenContractInstance(TOKEN_ABI).at(

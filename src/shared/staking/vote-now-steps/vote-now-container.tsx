@@ -38,6 +38,7 @@ import BigNumber from "bignumber.js";
 import { toRau } from "iotex-antenna/lib/account/utils";
 import { getStaking, IBucket } from "../../../server/gateway/staking";
 import { webBpApolloClient } from "../../common/apollo-client";
+import { getRemoteAntenna } from "../../common/get-antenna";
 
 type TcanName = {
   value: string;
@@ -77,6 +78,25 @@ const ModalTitle = styled("b", (props) => ({
   fontSize: "24px",
   ...props,
 }));
+
+export async function getIoAddressFromRemote(): Promise<string> {
+  const antenna = getRemoteAntenna();
+  let sec = 1;
+  let address;
+  while (!address) {
+    // @ts-ignore
+    await sleepPromise(sec * 1000);
+    address =
+      antenna.iotx.accounts &&
+      antenna.iotx.accounts[0] &&
+      antenna.iotx.accounts[0].address;
+    sec = sec * 2;
+    if (sec >= 16) {
+      sec = 16;
+    }
+  }
+  return address;
+}
 
 const Confirmation = styled("div", () => ({
   color: colors.error,

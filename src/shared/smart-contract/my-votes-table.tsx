@@ -28,15 +28,16 @@ import {
   TimeSpan
 } from "../common/component-style";
 import { RevoteModal } from "./stake-edit/revote-modal";
-import { renderActionMenu } from "./stake-edit/modal-menu";
+import { renderActionMenu } from "../staking/stake-edit/modal-menu";
 import { GET_BP_CANDIDATES } from "../home/voting-gql-queries";
 import BigNumber from "bignumber.js";
 import { fromString } from "iotex-antenna/lib/crypto/address";
-import { NATIVE_TOKEN_ABI } from "./native-token-abi";
+import { NATIVE_TOKEN_ABI } from "../staking/native-token-abi";
+// @ts-ignore
 import EthContract from "ethjs-contract";
 import { STAKING_ABI } from "./staking-abi";
-import Eth from "../common/ethjs-query";
-import { getIoAddressFromRemote } from "./vote-now-steps/vote-now-container";
+import { Eth } from "../common/ethjs-query";
+import { getIoAddressFromRemote } from "../staking/vote-now-steps/vote-now-container";
 import {
   getIoAddressFromIoPay,
   getNativeNetworkEndpoint,

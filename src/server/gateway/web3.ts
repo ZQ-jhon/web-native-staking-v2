@@ -1,6 +1,8 @@
 // @flow
 import { Buffer } from "buffer";
+// @ts-ignore
 import EthContract from "ethjs-contract";
+// @ts-ignore
 import HttpProvider from "ethjs-provider-http";
 import BigNumber from "bignumber.js";
 // @ts-ignore

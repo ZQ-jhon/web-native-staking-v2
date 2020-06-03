@@ -4,9 +4,11 @@ const EthRPC = require("ethjs-rpc");
 const promiseToCallback = require("promise-to-callback");
 
 export function Eth(provider: any, options: any) {
+  // @ts-ignore
   const self = this;
   const optionsObject = options || {};
-
+  
+  // @ts-ignore
   if (!(this instanceof Eth)) {
     throw new Error(
       '[ethjs-query] the Eth object requires the "new" flag in order to function normally (i.e. `const eth = new Eth(provider);`).'
@@ -40,11 +42,13 @@ Object.keys(format.schema.methods).forEach(rpcMethodName => {
   });
 });
 
+// @ts-ignore
 function generateFnFor(rpcMethodName, methodObject) {
   return function outputMethod() {
     let callback = null; // eslint-disable-line
     let inputs = null; // eslint-disable-line
     let inputError = null; // eslint-disable-line
+    // @ts-ignore
     const self = this;
     const args = [].slice.call(arguments); // eslint-disable-line
     const protoMethodName = rpcMethodName.replace("eth_", ""); // eslint-disable-line
@@ -78,6 +82,7 @@ function generateFnFor(rpcMethodName, methodObject) {
         throw new Error(
           `[ethjs-query] method '${protoMethodName}' requires at most ${
             methodObject[0].length
+            // @ts-ignore
           } params, ${args.length} provided '${(args,
           null,
           self.options
@@ -87,32 +92,36 @@ function generateFnFor(rpcMethodName, methodObject) {
 
       // set default block
       if (methodObject[3] && args.length < methodObject[3]) {
+        // @ts-ignore
         args.push("latest");
       }
 
       // format inputs
+      // @ts-ignore
       this.log(
+        // @ts-ignore
         `attempting method formatting for '${protoMethodName}' with inputs ${(args,
         null,
+        // @ts-ignore
         this.options.jsonSpace)}`
       );
       try {
         inputs = format.formatInputs(rpcMethodName, args);
+        // @ts-ignore
         this.log(
-          `method formatting success for '${protoMethodName}' with formatted result: ${(inputs,
-          null,
-          this.options.jsonSpace)}`
+          // @ts-ignore
+          `method formatting success for '${protoMethodName}' with formatted result: ${(inputs,null, this.options.jsonSpace)}`
         );
       } catch (formattingError) {
         throw new Error(
-          `[ethjs-query] while formatting inputs '${(args,
-          null,
-          this.options
+          // @ts-ignore
+          `[ethjs-query] while formatting inputs '${(args, null, this.options
             .jsonSpace)}' for method '${protoMethodName}' error: ${formattingError}`
         );
       }
 
       // perform rpc call
+      // @ts-ignore
       const result = await this.rpc.sendAsync({
         method: rpcMethodName,
         params: inputs
@@ -120,23 +129,22 @@ function generateFnFor(rpcMethodName, methodObject) {
 
       // format result
       try {
+        // @ts-ignore
         this.log(
-          `attempting method formatting for '${protoMethodName}' with raw outputs: ${(result,
-          null,
-          this.options.jsonSpace)}`
+          // @ts-ignore
+          `attempting method formatting for '${protoMethodName}' with raw outputs: ${(result, null, this.options.jsonSpace)}`
         );
         const methodOutputs = format.formatOutputs(rpcMethodName, result);
+        // @ts-ignore
         this.log(
-          `method formatting success for '${protoMethodName}' formatted result: ${(methodOutputs,
-          null,
-          this.options.jsonSpace)}`
+          // @ts-ignore
+          `method formatting success for '${protoMethodName}' formatted result: ${(methodOutputs, null, this.options.jsonSpace)}`
         );
         return methodOutputs;
       } catch (outputFormattingError) {
         const outputError = new Error(
-          `[ethjs-query] while formatting outputs from RPC '${(result,
-          null,
-          this.options
+          // @ts-ignore
+          `[ethjs-query] while formatting outputs from RPC '${(result, null, this.options
             .jsonSpace)}' for method '${protoMethodName}' ${outputFormattingError}`
         );
         throw outputError;
