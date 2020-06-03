@@ -1,9 +1,11 @@
 // @flow
+// @ts-ignore
 import EthContract from "ethjs-contract";
+// @ts-ignore
 import window from "global/window";
 import { STAKING_ABI } from "../smart-contract/staking-abi";
 import { calcStats } from "../smart-contract/my-votes-table";
-import Eth from "../../shared/common/ethjs-query";
+import { Eth } from "../../shared/common/ethjs-query";
 import { enableEthereum } from "./enable-ethereum";
 import { WeiToTokenValueFloor } from "./token-utils";
 import { TOKEN_ABI } from "../smart-contract/token-abi";

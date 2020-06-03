@@ -1,11 +1,13 @@
 /* eslint-disable no-invalid-this */
 // @flow
-import { AutoComplete, Form } from "antd";
+import { AutoComplete } from "antd";
+import { Form } from "@ant-design/compatible";
+// @ts-ignore
 import window from "global/window";
 import { t } from "onefx/lib/iso-i18n";
-import { Component } from "react";
+import React, { Component } from "react";
 import { connect } from "react-redux";
-import React from "react";
+// @ts-ignore
 import { get } from "dotty";
 import { Query } from "react-apollo";
 import { formItemLayout } from "../../common/form-item-layout";
@@ -27,28 +29,34 @@ import { toRau } from "iotex-antenna/lib/account/utils";
 import { hasError } from "../field-validators";
 
 type TRevote = {
-  canName: string,
-  data: string
+  canName: string;
+  data: string;
 };
 
 type Props = {
-  clickable: any,
-  stakingContract: any,
-  addr?: string,
-  actionSmartContractCalled?: (payload: boolean) => void,
-  form: any,
-  bucketIndex: number,
-  canName: string,
-  isNative?: boolean,
-  isIoPay?: boolean,
-  nativeTokenContractAddr?: string,
-  nativePatchTokenContractAddr?: string,
-  isPatchContract?: boolean
+  clickable: any;
+  stakingContract: any;
+  addr?: string;
+  actionSmartContractCalled?: (payload: boolean) => void;
+  form: any;
+  bucketIndex: number;
+  canName: string;
+  isNative?: boolean;
+  isIoPay?: boolean;
+  nativeTokenContractAddr?: string;
+  nativePatchTokenContractAddr?: string;
+  isPatchContract?: boolean;
 };
 
 // $FlowFixMe
 export const RevoteModal = connect(
-  state => ({
+  (state: {
+    base: { isIoPay: boolean };
+    smartContract: {
+      nativeTokenContractAddr: string;
+      nativePatchTokenContractAddr: string;
+    };
+  }) => ({
     isIoPay: state.base.isIoPay,
     nativeTokenContractAddr: state.smartContract.nativeTokenContractAddr,
     nativePatchTokenContractAddr:
@@ -78,18 +86,20 @@ export const RevoteModal = connect(
           isPatchContract
         } = this.props;
 
-        this.props.form.validateFields(async (err, values: TRevote) => {
+        this.props.form.validateFields(async (err: any, values: TRevote) => {
           if (!err) {
             window.console.log("Received values of Revote form: ", values);
 
             const revote = isNative
               ? isIoPay
-                ? (await getXAppTokenContract(
-                    NATIVE_TOKEN_ABI,
-                    isPatchContract
-                      ? nativePatchTokenContractAddr
-                      : nativeTokenContractAddr
-                  )).methods.revote
+                ? (
+                    await getXAppTokenContract(
+                      NATIVE_TOKEN_ABI,
+                      isPatchContract
+                        ? nativePatchTokenContractAddr
+                        : nativeTokenContractAddr
+                    )
+                  ).methods.revote
                 : stakingContract.methods.revote
               : stakingContract.revote;
             const from = isNative
@@ -130,7 +140,9 @@ export const RevoteModal = connect(
         return (
           <ModalWrapper
             clickable={clickable}
-            title={t("my_stake.revote.title", { bucketIndex })}
+            title={t("my_stake.revote.title", {
+              bucketIndex: bucketIndex.toString()
+            })}
             onOk={this.handleOk}
             okButtonProps={{ disabled: hasError(getFieldsError()) }}
           >
@@ -143,8 +155,8 @@ export const RevoteModal = connect(
                     }
                     const allCandidates = data.bpCandidatesOnContract || [];
                     const dataSource = allCandidates
-                      .map(item => item.name)
-                      .filter(item => Boolean(item));
+                      .map((item: any) => item.name)
+                      .filter((item: any) => Boolean(item));
                     return (
                       <div>
                         {getFieldDecorator("canName", {
@@ -159,10 +171,10 @@ export const RevoteModal = connect(
                             }
                           ]
                         })(
+                          // @ts-ignore
                           <AutoComplete
-                            size="large"
                             dataSource={dataSource}
-                            filterOption={(inputValue, option) =>
+                            filterOption={(inputValue: any, option: any) =>
                               String(get(option, "props.children"))
                                 .toLowerCase()
                                 .indexOf(inputValue.toLowerCase()) !== -1

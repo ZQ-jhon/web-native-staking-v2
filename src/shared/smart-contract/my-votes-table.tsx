@@ -1,9 +1,10 @@
 /* eslint-disable no-invalid-this */
 // @flow
 // $FlowFixMe
-import { Avatar, Button, Dropdown, Icon, notification, Table } from "antd";
+import { Avatar, Button, Dropdown, notification, Table } from "antd";
 import { t } from "onefx/lib/iso-i18n";
 import React, { Component } from "react";
+// @ts-ignore
 import window from "global/window";
 import { connect } from "react-redux";
 import { Query } from "react-apollo";
@@ -33,9 +34,10 @@ import { GET_BP_CANDIDATES } from "../home/voting-gql-queries";
 import BigNumber from "bignumber.js";
 import { fromString } from "iotex-antenna/lib/crypto/address";
 import { NATIVE_TOKEN_ABI } from "./native-token-abi";
+// @ts-ignore
 import EthContract from "ethjs-contract";
 import { STAKING_ABI } from "./staking-abi";
-import Eth from "../common/ethjs-query";
+import { Eth } from "../common/ethjs-query";
 import { getIoAddressFromRemote } from "./vote-now-steps/vote-now-container";
 import {
   getIoAddressFromIoPay,
@@ -49,59 +51,55 @@ import { ABI as ERC20_ABI } from "./erc20/abi";
 import { Token } from "./erc20/token";
 import { Vita } from "./erc20/vita";
 import { Contract } from "iotex-antenna/lib/contract/contract";
-import { LoadingOutlined, CheckOutlined, MinusOutlined } from "@ant-design/icons";
+import {
+  LoadingOutlined,
+  CheckOutlined,
+  MinusOutlined,
+  DownOutlined
+} from "@ant-design/icons";
 
 const ACCOUNT_AREA_WIDTH = 290;
 
 export type TMyStakeStatus = {
-  addr: string,
-  buckets: Array<Bucket>,
-  totalStaking: number,
-  unStakePendingAmount: number,
-  withdrawableAmount: number,
-  totalVotesAmount: string,
-  patchArr?: string,
-  patchBuckets?: Array<Bucket>
+  addr: string;
+  buckets: Array<Bucket>;
+  totalStaking: number;
+  unStakePendingAmount: number;
+  withdrawableAmount: number;
+  totalVotesAmount: string;
+  patchArr?: string;
+  patchBuckets?: Array<Bucket>;
 };
 
 type Props = {
-  stakingContract: Contract,
-  patchStakingContract?: Contract,
-  addr?: string,
-  stakingDurationSecond?: any,
-  vitaContractAddr?: string,
-  onRef: (ref: any) => void,
-  isNative: boolean,
-  isIoPay?: boolean,
-  updateTotal?: (total: number) => void,
-  stakingContractAddr?: string
+  stakingContract: Contract;
+  patchStakingContract?: Contract;
+  addr?: string;
+  stakingDurationSecond?: any;
+  vitaContractAddr?: string;
+  onRef: (ref: any) => void;
+  isNative: boolean;
+  isIoPay?: boolean;
+  updateTotal?: (total: number) => void;
+  stakingContractAddr?: string;
 };
 
 type State = {
-  stakeStatus: ?TMyStakeStatus,
-  loaded: boolean,
-  invalidNames: Array<string>,
-  bucketsExceeded: boolean,
-  expandedRowKeys: any,
-  showMore: any,
-  net: string,
-  ioAddress: string,
-  claimAble?: boolean,
-  txHash?: string
+  stakeStatus: TMyStakeStatus | undefined;
+  loaded: boolean;
+  invalidNames: Array<string>;
+  bucketsExceeded: boolean;
+  expandedRowKeys: any;
+  showMore: any;
+  net: string;
+  ioAddress: string | undefined;
+  claimAble?: boolean;
+  txHash?: string;
 };
 
 const CustomExpandIcon = () => null;
 
-@connect(state => ({
-  stakingDurationSecond: state.base.stakingDurationSecond,
-  vitaContractAddr: state.smartContract.vitaContractAddr,
-  stakingContractAddr: state.smartContract.stakingContractAddr,
-  isIoPay: state.base.isIoPay
-}))
-class MyVotesTable extends Component<Props, State> {
-  state: State;
-  props: Props;
-
+class MyVotesTableInner extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -614,9 +612,7 @@ class MyVotesTable extends Component<Props, State> {
               style={{ color: colors.VERIFYING, fontSize: "20px" }}
             />
           ) : (
-            <MinusOutlined
-              style={{ color: colors.MISSED, fontSize: "24px" }}
-            />
+            <MinusOutlined style={{ color: colors.MISSED, fontSize: "24px" }} />
           );
         }
       },
@@ -690,7 +686,7 @@ class MyVotesTable extends Component<Props, State> {
           return (
             <Dropdown overlay={menu} trigger={["click"]}>
               <Button>
-                {t("my_stake.edit.row")} <Icon type="down" />
+                {t("my_stake.edit.row")} <DownOutlined />
               </Button>
             </Dropdown>
           );
@@ -914,7 +910,7 @@ function getOffset(el) {
 }
 
 export async function getStakeStatus(
-  stakingContractAddr: string,
+  stakingContractAddr: string | undefined,
   stakingDurationSecond: number
 ): Promise<TMyStakeStatus> {
   const web3 = window.web3;
@@ -983,4 +979,14 @@ function nativeResponseMap(response: Array<Array<any>>) {
   );
 }
 
-export { MyVotesTable };
+export const MyVotesTable = connect(
+  (state: {
+    base: { stakingDurationSecond: number; isIoPay: boolean };
+    smartContract: { stakingContractAddr: string; vitaContractAddr: string };
+  }) => ({
+    stakingDurationSecond: state.base.stakingDurationSecond,
+    vitaContractAddr: state.smartContract.vitaContractAddr,
+    stakingContractAddr: state.smartContract.stakingContractAddr,
+    isIoPay: state.base.isIoPay
+  })
+)(MyVotesTableInner);
