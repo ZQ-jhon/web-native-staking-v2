@@ -172,7 +172,7 @@
     "markdown-it-toc-and-anchor": "4.2.0",
     "mongoose": "5.9.17",
     "nodemailer": "5.1.1",
-    "nodemailer-mailgun-transport": "1.4.0",
+    "nodemailer-mailgun-transport": "2.0.0",
     "onefx": "1.8.9",
     "process": "0.11.10",
     "promise-to-callback": "1.0.0",
