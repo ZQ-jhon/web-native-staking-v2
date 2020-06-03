@@ -4,11 +4,15 @@ import React, { Component } from "react";
 import { CommonModal } from "../../common/common-modal";
 
 type Props = {
-  clickable: any,
-  children: any,
-  onOk: (cb: () => void) => void,
-  onCancel?: any,
-  modalUnMountFun?: any
+  clickable: any;
+  children: any;
+  onOk: (cb: () => void) => void;
+  onCancel?: any;
+  modalUnMountFun?: any;
+  title?: string;
+  okButtonProps?: {
+    disabled: boolean;
+  };
 };
 type State = { visible: boolean };
 
@@ -42,7 +46,7 @@ export class ModalWrapper extends Component<Props, State> {
 
   render() {
     // eslint-disable-next-line no-unused-vars
-    const { clickable, children, onOk, ...otherProps } = this.props;
+    const { clickable, children, onOk, title, ...otherProps } = this.props;
     const { visible } = this.state;
 
     return (
@@ -52,6 +56,7 @@ export class ModalWrapper extends Component<Props, State> {
           onCancel={() => this.onCancel()}
           onOk={() => this.onOk()}
           visible={visible}
+          title={title}
           {...otherProps}
         >
           {children}

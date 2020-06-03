@@ -1,6 +1,7 @@
 /* eslint-disable no-invalid-this */
 // @flow
-import { Form } from "antd";
+import { Form } from "@ant-design/compatible";
+// @ts-ignore
 import window from "global/window";
 import React, { Component } from "react";
 import { connect } from "react-redux";
@@ -24,39 +25,45 @@ import { hasError } from "../field-validators";
 import { DEFAULT_STAKING_GAS_LIMIT } from "../../common/token-utils";
 
 type TRestake = {
-  stakeDuration: number,
-  nonDecay: boolean,
-  data: string
+  stakeDuration: number;
+  nonDecay: boolean;
+  data: string;
 };
 
 type State = {
-  currentStakeDuration: number,
-  currentStakeAmount: number,
-  unMountModalWrapper: boolean,
-  confirmLoading: boolean
+  currentStakeDuration: number;
+  currentStakeAmount: number;
+  unMountModalWrapper: boolean;
+  confirmLoading: boolean;
 };
 
 type Props = {
-  clickable: any,
-  stakingContract: any,
-  addr: string,
-  actionSmartContractCalled: (payload: boolean) => void,
-  form: any,
-  bucketIndex: number,
-  stakedAmount: number,
-  stakeDuration: number,
-  nonDecay: boolean,
-  stakeTime: number,
-  isNative: boolean,
-  isIoPay?: boolean,
-  nativeTokenContractAddr: string,
-  nativePatchTokenContractAddr: string,
-  isPatchContract?: boolean
+  clickable: any;
+  stakingContract: any;
+  addr: string;
+  actionSmartContractCalled: (payload: boolean) => void;
+  form: any;
+  bucketIndex: number;
+  stakedAmount: number;
+  stakeDuration: number;
+  nonDecay: boolean;
+  stakeTime: number;
+  isNative: boolean;
+  isIoPay?: boolean;
+  nativeTokenContractAddr: string;
+  nativePatchTokenContractAddr: string;
+  isPatchContract?: boolean;
 };
 
 // $FlowFixMe
 export const RestakeModal = connect(
-  state => ({
+  (state: {
+    base: { isIoPay: boolean };
+    smartContract: {
+      nativeTokenContractAddr: string;
+      nativePatchTokenContractAddr: string;
+    };
+  }) => ({
     isIoPay: state.base.isIoPay,
     nativeTokenContractAddr: state.smartContract.nativeTokenContractAddr,
     nativePatchTokenContractAddr:
@@ -114,17 +121,19 @@ export const RestakeModal = connect(
         } = this.props;
         this.setState({ confirmLoading: true });
 
-        this.props.form.validateFields(async (err, values: TRestake) => {
+        this.props.form.validateFields(async (err: any, values: TRestake) => {
           if (!err) {
             window.console.log("Received values of restake form: ", values);
             const restake = isNative
               ? isIoPay
-                ? (await getXAppTokenContract(
-                    NATIVE_TOKEN_ABI,
-                    isPatchContract
-                      ? nativePatchTokenContractAddr
-                      : nativeTokenContractAddr
-                  )).methods.restake
+                ? (
+                    await getXAppTokenContract(
+                      NATIVE_TOKEN_ABI,
+                      isPatchContract
+                        ? nativePatchTokenContractAddr
+                        : nativeTokenContractAddr
+                    )
+                  ).methods.restake
                 : stakingContract.methods.restake
               : stakingContract.restake;
             const from = isNative
@@ -187,14 +196,17 @@ export const RestakeModal = connect(
                 : "my_stake.on_process_confirmation"
             )
           : "ok";
-        const validatorFactory = max =>
+        const validatorFactory = (max: any) =>
           validateRestakeDuration(stakeDuration, stakeTime, nonDecay, max);
 
         return (
           !unMountModalWrapper && (
+            // @ts-ignore
             <ModalWrapper
               clickable={clickable}
-              title={t("my_stake.restake.title", { bucketIndex })}
+              title={t("my_stake.restake.title", {
+                bucketIndex: bucketIndex.toString()
+              })}
               onOk={this.handleOk}
               onCancel={this.handleCancel}
               style={{ top: "40px" }}
@@ -207,13 +219,17 @@ export const RestakeModal = connect(
                 isAvailable ? (
                   <p
                     dangerouslySetInnerHTML={{
-                      __html: t("my_stake.restake.desc", { stakeTime })
+                      __html: t("my_stake.restake.desc", {
+                        stakeTime: stakeTime.toLocaleString()
+                      })
                     }}
                   />
                 ) : (
                   <p
                     dangerouslySetInnerHTML={{
-                      __html: t("my_stake.restake.cannot", { stakeTime })
+                      __html: t("my_stake.restake.cannot", {
+                        stakeTime: stakeTime.toLocaleString()
+                      })
                     }}
                   />
                 )
@@ -231,7 +247,8 @@ export const RestakeModal = connect(
                     initialValue={stakeDuration}
                     validatorFactory={validatorFactory}
                     form={form}
-                    onChange={number =>
+                    // @ts-ignore
+                    onChange={(number: number) =>
                       this.setState({ currentStakeDuration: number })
                     }
                   />

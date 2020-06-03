@@ -44,32 +44,32 @@ const inputNumberStyle = {
 };
 
 type TAddStaking = {
-  addStaking: number,
-  nonDecay: boolean
+  addStaking: number;
+  nonDecay: boolean;
 };
 
 type Props = {
-  bucketIndex: number,
-  stakingContract: any,
-  addr: string,
-  clickable: any,
-  nonDecay: boolean,
-  stakedAmount: number,
-  stakeDuration: number,
-  form: any,
-  isIoPay?: boolean,
-  nativeTokenContractAddr: string,
-  nativePatchTokenContractAddr: string,
-  actionSmartContractCalled: (payload: boolean) => void,
-  isPatchContract?: boolean
+  bucketIndex: number;
+  stakingContract: any;
+  addr: string;
+  clickable: any;
+  nonDecay: boolean;
+  stakedAmount: number;
+  stakeDuration: number;
+  form: any;
+  isIoPay?: boolean;
+  nativeTokenContractAddr: string;
+  nativePatchTokenContractAddr: string;
+  actionSmartContractCalled: (payload: boolean) => void;
+  isPatchContract?: boolean;
 };
 
 type State = {
-  currentStakeAmount: number,
-  unMountModalWrapper: boolean,
-  confirmLoading: boolean,
-  iotxBalance: number,
-  ioAddress: string
+  currentStakeAmount: number;
+  unMountModalWrapper: boolean;
+  confirmLoading: boolean;
+  iotxBalance: number;
+  ioAddress: string;
 };
 
 // $FlowFixMe

@@ -1,8 +1,9 @@
 /* eslint-disable no-invalid-this */
 // @flow
-import { Form } from "antd";
+import { Form } from "@ant-design/compatible";
+// @ts-ignore
 import window from "global/window";
-import { Component } from "react";
+import React, { Component } from "react";
 import { connect } from "react-redux";
 import { t } from "onefx/lib/iso-i18n";
 import { actionSmartContractCalled } from "../smart-contract-reducer";
@@ -28,6 +29,7 @@ type Props = {
   actionSmartContractCalled: (payload: boolean) => void,
   form: any,
   bucketIndex: number,
+  // @ts-ignore
   waitUntil: ?string,
   epochSecondValue?: number,
   isNative: boolean,
@@ -39,7 +41,13 @@ type Props = {
 
 // $FlowFixMe
 export const WithdrawModal = connect(
-  state => ({
+  (state: {
+    base: { isIoPay: boolean; epochSecondValue: number };
+    smartContract: {
+      nativeTokenContractAddr: string;
+      nativePatchTokenContractAddr: string;
+    };
+  }) => ({
     epochSecondValue: state.base.epochSecondValue,
     isIoPay: state.base.isIoPay,
     nativeTokenContractAddr: state.smartContract.nativeTokenContractAddr,
@@ -70,7 +78,7 @@ export const WithdrawModal = connect(
           isPatchContract
         } = this.props;
 
-        this.props.form.validateFields(async (err, values: TWithdraw) => {
+        this.props.form.validateFields(async (err: any, values: TWithdraw) => {
           if (!err) {
             window.console.log("Received values of Withdraw form: ", {
               bucketIndex,
@@ -119,7 +127,7 @@ export const WithdrawModal = connect(
         return (
           <ModalWrapper
             clickable={clickable}
-            title={t("my_stake.withdraw.title", { bucketIndex })}
+            title={t("my_stake.withdraw.title", { bucketIndex: bucketIndex.toString() })}
             onOk={this.handleOk}
             okButtonProps={{ disabled: !isAvailable }}
           >

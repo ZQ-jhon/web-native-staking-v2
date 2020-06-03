@@ -1,8 +1,9 @@
 /* eslint-disable no-invalid-this */
 // @flow
-import { Form } from "antd";
+import { Form } from "@ant-design/compatible";
+// @ts-ignore
 import window from "global/window";
-import { Component } from "react";
+import React, { Component } from "react";
 import { connect } from "react-redux";
 import { t } from "onefx/lib/iso-i18n";
 import { actionSmartContractCalled } from "../smart-contract-reducer";
@@ -21,30 +22,36 @@ import { NATIVE_TOKEN_ABI } from "../native-token-abi";
 import { toRau } from "iotex-antenna/lib/account/utils";
 
 type TUnstake = {
-  data: string
+  data: string;
 };
 
 type Props = {
-  clickable: any,
-  stakingContract: any,
-  addr: string,
-  actionSmartContractCalled: (payload: boolean) => void,
-  form: any,
-  bucketIndex: number,
-  stakeStartTime: any,
-  stakeDuration: number,
-  nonDecay: boolean,
-  epochSecondValue?: number,
-  isNative: boolean,
-  isIoPay?: boolean,
-  nativeTokenContractAddr: string,
-  nativePatchTokenContractAddr: string,
-  isPatchContract?: boolean
+  clickable: any;
+  stakingContract: any;
+  addr: string;
+  actionSmartContractCalled: (payload: boolean) => void;
+  form: any;
+  bucketIndex: number;
+  stakeStartTime: any;
+  stakeDuration: number;
+  nonDecay: boolean;
+  epochSecondValue?: number;
+  isNative: boolean;
+  isIoPay?: boolean;
+  nativeTokenContractAddr: string;
+  nativePatchTokenContractAddr: string;
+  isPatchContract?: boolean;
 };
 
 // $FlowFixMe
 export const UnstakeModal = connect(
-  state => ({
+  (state: {
+    base: { isIoPay: boolean; epochSecondValue: number };
+    smartContract: {
+      nativeTokenContractAddr: string;
+      nativePatchTokenContractAddr: string;
+    };
+  }) => ({
     epochSecondValue: state.base.epochSecondValue,
     isIoPay: state.base.isIoPay,
     nativeTokenContractAddr: state.smartContract.nativeTokenContractAddr,
@@ -77,7 +84,7 @@ export const UnstakeModal = connect(
           nativePatchTokenContractAddr,
           isPatchContract
         } = this.props;
-        this.props.form.validateFields(async (err, values: TUnstake) => {
+        this.props.form.validateFields(async (err: any, values: TUnstake) => {
           if (!err) {
             window.console.log("Received values of Unstake form: ", {
               bucketIndex,
@@ -88,12 +95,14 @@ export const UnstakeModal = connect(
             if (!nonDecay && isAvailable) {
               const unstake = isNative
                 ? isIoPay
-                  ? (await getXAppTokenContract(
-                      NATIVE_TOKEN_ABI,
-                      isPatchContract
-                        ? nativePatchTokenContractAddr
-                        : nativeTokenContractAddr
-                    )).methods.unstake
+                  ? (
+                      await getXAppTokenContract(
+                        NATIVE_TOKEN_ABI,
+                        isPatchContract
+                          ? nativePatchTokenContractAddr
+                          : nativeTokenContractAddr
+                      )
+                    ).methods.unstake
                   : stakingContract.methods.unstake
                 : stakingContract.unstake;
               const from = isNative
@@ -146,7 +155,9 @@ export const UnstakeModal = connect(
         return (
           <ModalWrapper
             clickable={clickable}
-            title={t("my_stake.unstake.title", { bucketIndex })}
+            title={t("my_stake.unstake.title", {
+              bucketIndex: bucketIndex.toString()
+            })}
             onOk={this.handleOk}
           >
             <Form>
