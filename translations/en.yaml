@@ -116,9 +116,9 @@ topbar.staking: STAKING
 topbar.support: SUPPORT
 topbar.vita: VITA
 topbar.voting: VOTING
+contract.called: 'Succeeded! Please wait for a few minutes and refresh this page to see the result.'
 topbar.poll: POLL
 topbar.tool: TOOL
-contract.called: 'Smart contract interaction succeeded! Please wait for a few minutes and refresh this page to see the result.'
 contract.install: 'Please use ioPay desktop, import & unlock your wallet, and then refresh this page to continue.'
 contract.please_unlock: 'To continue, please unlock your wallet in MetaMask.'
 migration.success: You have successfully submitted the migration request. Please wait a while for it to take effects.

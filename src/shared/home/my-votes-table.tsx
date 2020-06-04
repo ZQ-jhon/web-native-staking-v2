@@ -120,7 +120,7 @@ class MyVotesTable extends Component<Props, State> {
         <Flex column={true} alignItems={"baseline"} color={colors.black}>
           <span
             className="ellipsis-text"
-            style={{ maxWidth: "9vw", minWidth: 70 }}
+            style={{ maxWidth: "9vw", minWidth: 110 }}
           >
             {/* tslint:disable-next-line:use-simple-attributes */}
             <AddressName
@@ -343,7 +343,7 @@ class MyVotesTable extends Component<Props, State> {
           render(text: any, record: IBucket): JSX.Element {
             return (
               <Dropdown overlay={renderActionMenu(record)} trigger={["click"]}>
-                <Button>
+                <Button style={{paddingLeft: "10px", paddingRight: "10px"}}>
                   {t("my_stake.edit.row")} <DownOutlined />
                 </Button>
               </Dropdown>
