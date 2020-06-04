@@ -47,10 +47,11 @@ export function calcStats(
     );
     stakeStatus.buckets.push(bucket);
     const totalVotes = getPowerEstimation(
-      bucket.stakedAmount,
+      new BigNumber(bucket.stakedAmount),
       bucket.stakeDuration,
-      0
-    ).total;
+      bucket.nonDecay,
+      false // TODO: read actual value if this function is still in use
+    );
     bigTotalVotesAmount = bigTotalVotesAmount.plus(totalVotes);
     if (bucket.getStatus() === "staking") {
       stakeStatus.totalStaking += bucket.stakedAmount;

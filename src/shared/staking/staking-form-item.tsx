@@ -1,4 +1,5 @@
 // @flow
+import InfoCircleOutlined from "@ant-design/icons/InfoCircleOutlined";
 import RetweetOutlined from "@ant-design/icons/RetweetOutlined";
 import { Form, InputNumber, Switch } from "antd";
 import { FormInstance } from "antd/lib/form";
@@ -11,6 +12,7 @@ import {
   CommonMarginTop,
   NoMarginBottomStyle
 } from "../common/common-margin";
+import { Flex } from "../common/flex";
 import { formItemLayout } from "../common/form-item-layout";
 import { colors } from "../common/styles/style-color2";
 import { fontFamily, fonts } from "../common/styles/style-font";
@@ -28,6 +30,7 @@ type Props = {
   style?: any;
   fieldName?: string;
   initialValue?: boolean;
+  selfStaking?: boolean;
   stakeAmount?: BigNumber;
   stakeDuration?: number;
   forceDisable?: boolean;
@@ -113,16 +116,17 @@ export class AutoStakeFormItem extends Component<Props, State> {
         });
       }
     }
+    this.setState({ nonDecay: this.props.initialValue || false });
   }
 
   getPowerEstimation(
-    amount: number,
+    amount: BigNumber,
     duration: number,
-    dayFromToday: number
-    // tslint:disable-next-line:no-any
-  ): any {
-    const resp = getPowerEstimation(amount, duration, dayFromToday);
-    return { total: resp.total.toFormat(0), date: resp.date };
+    nonDecay: boolean,
+    selfStaking: boolean
+  ): string {
+    const resp = getPowerEstimation(amount, duration, nonDecay, selfStaking);
+    return resp.toFormat(0);
   }
 
   // tslint:disable-next-line:max-func-body-length
@@ -131,9 +135,17 @@ export class AutoStakeFormItem extends Component<Props, State> {
       fieldName = "nonDecay",
       showAutoStack = true,
       children,
+      stakeAmount = new BigNumber(0),
+      stakeDuration = 0,
       forceDisable = false,
       initialValue
     } = this.props;
+    const votingPower = this.getPowerEstimation(
+      stakeAmount,
+      stakeDuration,
+      this.state.nonDecay,
+      this.props.selfStaking || false
+    );
     return (
       <div>
         {showAutoStack ? (
@@ -174,7 +186,7 @@ export class AutoStakeFormItem extends Component<Props, State> {
           </div>
         ) : null}
         <CommonMarginTop />
-        {/*
+
         <div style={{ marginTop: "26px" }}>
           <IconLabel
             iconType={<InfoCircleOutlined style={{ color: colors.deltaUp }} />}
@@ -182,12 +194,13 @@ export class AutoStakeFormItem extends Component<Props, State> {
           />
         </div>
         <div style={{ marginBottom: "18px", marginTop: "10px" }}>
-          {// @ts-ignore}
+          {/*
+              // @ts-ignore */}
           <span style={subTextStyle}>{t("my_stake.voting_power_explain")}</span>
         </div>
 
         <Flex backgroundColor={colors.black10} padding={"15px"}>
-          {this.state.nonDecay ? (
+          {
             // tslint:disable-next-line:react-no-dangerous-html
             <p
               // @ts-ignore
@@ -198,68 +211,13 @@ export class AutoStakeFormItem extends Component<Props, State> {
                   // @ts-ignore
                   {
                     duration: stakeDuration,
-                    votes: this.getPowerEstimation(
-                      stakeAmount.toNumber(),
-                      stakeDuration,
-                      0
-                    ).total
+                    votes: votingPower
                   }
                 )
               }}
             />
-          ) : (
-            <Flex margin={"0 auto"} alignItems={"baseline"}>
-              {// tslint:disable-next-line:react-no-dangerous-html}
-              <p
-                // @ts-ignore
-                style={centerTextStyle}
-                dangerouslySetInnerHTML={{
-                  __html: t(
-                    "my_stake.nonDecay.calculate_estimate",
-                    this.getPowerEstimation(
-                      stakeAmount.toNumber(),
-                      stakeDuration,
-                      0
-                    )
-                  )
-                }}
-              />
-              <span>...</span>
-              {// tslint:disable-next-line:react-no-dangerous-html}
-              <p
-                // @ts-ignore
-                style={centerTextStyle}
-                dangerouslySetInnerHTML={{
-                  __html: t(
-                    "my_stake.nonDecay.calculate_estimate",
-                    this.getPowerEstimation(
-                      stakeAmount.toNumber(),
-                      stakeDuration,
-                      Math.round(Number(stakeDuration) / 3)
-                    )
-                  )
-                }}
-              />
-              <span>...</span>
-              {// tslint:disable-next-line:react-no-dangerous-html}
-              <p
-                // @ts-ignore
-                style={centerTextStyle}
-                dangerouslySetInnerHTML={{
-                  __html: t(
-                    "my_stake.nonDecay.calculate_estimate",
-                    this.getPowerEstimation(
-                      stakeAmount.toNumber(),
-                      stakeDuration,
-                      stakeDuration
-                    )
-                  )
-                }}
-              />
-            </Flex>
-          )}
+          }
         </Flex>
-*/}
         {children}
       </div>
     );

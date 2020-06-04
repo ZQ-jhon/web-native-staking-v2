@@ -17,6 +17,7 @@ import { AddressName } from "../common/address-name";
 import { Flex } from "../common/flex";
 import { colors } from "../common/styles/style-color";
 import { media } from "../common/styles/style-media";
+import { getPowerEstimationForBucket } from "../common/token-utils";
 import { renderActionMenu } from "../staking/stake-edit/modal-menu";
 import { AccountMeta } from "./account-meta";
 
@@ -209,18 +210,18 @@ class MyVotesTable extends Component<Props, State> {
                     </BoldText>
                   </Flex>
                 </Flex>
-                {/*
                 <Flex width={"100%"} padding={"1px 0 1px 0"}>
                   <StatisticSpan style={{ width: "50%" }}>
                     {t("my_stake.staking_power")}
                   </StatisticSpan>
                   <StatisticValue style={{ width: "50%" }}>
                     {t("my_stake.staking_power.estimate", {
-                      total: "0"
+                      total: getPowerEstimationForBucket(
+                        record
+                      ).toLocaleString()
                     })}
                   </StatisticValue>
                 </Flex>
-                */}
               </Flex>
             );
           }
@@ -402,7 +403,14 @@ class MyVotesTable extends Component<Props, State> {
 }
 
 export { MyVotesTable };
-
+const StatisticSpan = styled("span", {
+  fontSize: "10px",
+  color: colors.black80
+});
+const StatisticValue = styled("span", {
+  fontSize: "10px",
+  color: colors.black95
+});
 const BoldText = styled("b", {
   fontSize: "12px"
 });

@@ -265,6 +265,10 @@ const VoteNowContainer = connect(
       this.setState({ votingSource: e.target.value });
       if (e.target.value === "VOTING_FROM_WALLET") {
         delete this.bucket;
+        this.setState({
+          currentStakeAmount: 0,
+          currentStakeDuration: 0
+        });
       }
     };
     // tslint:disable-next-line:no-any
@@ -550,6 +554,13 @@ const VoteNowContainer = connect(
                   currentStakeDuration={currentStakeDuration}
                   currentStakeAmount={new BigNumber(currentStakeAmount)}
                   defaultValue={this.bucket && this.bucket.index}
+                  nonDecay={this.bucket && this.bucket.autoStake}
+                  selfStaking={
+                    this.bucket &&
+                    this.bucket.selfStakingBucket &&
+                    (this.bucket.canName === this.state.canName.value ||
+                      this.state.canName.value === "")
+                  }
                 />
               )}
             </Form>

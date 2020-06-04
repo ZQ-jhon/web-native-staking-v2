@@ -30,6 +30,7 @@ type Props = {
   addr: string;
   actionSmartContractCalled(payload: boolean): void;
   bucketIndex: number;
+  selfStaking: boolean;
   stakedAmount: BigNumber;
   stakeDuration: number;
   nonDecay: boolean;
@@ -190,6 +191,7 @@ export const RestakeModal = connect(
                 // @ts-ignore
                 <AutoStakeFormItem
                   initialValue={nonDecay}
+                  selfStaking={this.props.selfStaking}
                   stakeAmount={this.state.currentStakeAmount}
                   stakeDuration={this.state.currentStakeDuration}
                   formRef={this.formRef}

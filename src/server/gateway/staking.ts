@@ -58,6 +58,7 @@ export type IBucket = {
   unstakeStartTime: Date | undefined;
   createTime: Date | undefined;
   stakedAmount: BigNumber; // iotx
+  selfStakingBucket: boolean;
   status: Status;
   withdrawWaitUntil: Date | undefined;
 
@@ -86,7 +87,14 @@ function daysLater(p: Date, days: number): Date {
   return cur;
 }
 
-function toBuckets(buffer: Buffer | {}): Array<IBucket> {
+function toBuckets(
+  buffer: Buffer | {},
+  candidates: Array<Candidate>
+): Array<IBucket> {
+  const selfStakingIndexes: Record<number, boolean> = {};
+  candidates.forEach(candidate => {
+    selfStakingIndexes[candidate.selfStakeBucketIdx] = true;
+  });
   // @ts-ignore
   const buckets = VoteBucketList.deserializeBinary(buffer);
   return buckets.getBucketsList().map((b: VoteBucket) => {
@@ -108,6 +116,7 @@ function toBuckets(buffer: Buffer | {}): Array<IBucket> {
       unstakeStartTime,
       createTime,
       stakedAmount: new BigNumber(fromRau(b.getStakedamount(), "Iotx")),
+      selfStakingBucket: b.getIndex() in selfStakingIndexes,
       withdrawWaitUntil,
       status: getStatus(withdrawWaitUntil, unstakeStartTime, stakeStartTime),
       canName: ownersToNames[b.getCandidateaddress()]
@@ -208,22 +217,25 @@ export class Staking {
     limit: number,
     height: string = ""
   ): Promise<Array<IBucket>> {
-    const state = await this.antenna.iotx.readState({
-      protocolID: Buffer.from("staking"),
-      methodName: IReadStakingDataMethodToBuffer({
-        method: IReadStakingDataMethodName.BUCKETS_BY_VOTER
+    const [state, candidates] = await Promise.all([
+      this.antenna.iotx.readState({
+        protocolID: Buffer.from("staking"),
+        methodName: IReadStakingDataMethodToBuffer({
+          method: IReadStakingDataMethodName.BUCKETS_BY_VOTER
+        }),
+        arguments: [
+          IReadStakingDataRequestToBuffer({
+            bucketsByVoter: {
+              voterAddress: voterAddr,
+              pagination: { offset, limit }
+            }
+          })
+        ],
+        height
       }),
-      arguments: [
-        IReadStakingDataRequestToBuffer({
-          bucketsByVoter: {
-            voterAddress: voterAddr,
-            pagination: { offset, limit }
-          }
-        })
-      ],
-      height
-    });
-    return toBuckets(state.data);
+      this.getAllCandidates(0, 1000, height)
+    ]);
+    return toBuckets(state.data, candidates);
   }
 
   async getBucketsByCandidate(
@@ -232,22 +244,25 @@ export class Staking {
     limit: number,
     height: string = ""
   ): Promise<Array<IBucket>> {
-    const state = await this.antenna.iotx.readState({
-      protocolID: Buffer.from("staking"),
-      methodName: IReadStakingDataMethodToBuffer({
-        method: IReadStakingDataMethodName.BUCKETS_BY_CANDIDATE
+    const [state, candidates] = await Promise.all([
+      this.antenna.iotx.readState({
+        protocolID: Buffer.from("staking"),
+        methodName: IReadStakingDataMethodToBuffer({
+          method: IReadStakingDataMethodName.BUCKETS_BY_CANDIDATE
+        }),
+        arguments: [
+          IReadStakingDataRequestToBuffer({
+            bucketsByCandidate: {
+              candName,
+              pagination: { offset, limit }
+            }
+          })
+        ],
+        height
       }),
-      arguments: [
-        IReadStakingDataRequestToBuffer({
-          bucketsByCandidate: {
-            candName,
-            pagination: { offset, limit }
-          }
-        })
-      ],
-      height
-    });
-    return toBuckets(state.data);
+      this.getCandidate(candName)
+    ]);
+    return toBuckets(state.data, candidates);
   }
 
   async getAllBuckets(
@@ -255,21 +270,24 @@ export class Staking {
     limit: number,
     height: string = ""
   ): Promise<Array<IBucket>> {
-    const state = await this.antenna.iotx.readState({
-      protocolID: Buffer.from("staking"),
-      methodName: IReadStakingDataMethodToBuffer({
-        method: IReadStakingDataMethodName.BUCKETS
+    const [state, candidates] = await Promise.all([
+      this.antenna.iotx.readState({
+        protocolID: Buffer.from("staking"),
+        methodName: IReadStakingDataMethodToBuffer({
+          method: IReadStakingDataMethodName.BUCKETS
+        }),
+        arguments: [
+          IReadStakingDataRequestToBuffer({
+            buckets: {
+              pagination: { offset, limit }
+            }
+          })
+        ],
+        height
       }),
-      arguments: [
-        IReadStakingDataRequestToBuffer({
-          buckets: {
-            pagination: { offset, limit }
-          }
-        })
-      ],
-      height
-    });
-    return toBuckets(state.data);
+      this.getAllCandidates(0, 999)
+    ]);
+    return toBuckets(state.data, candidates);
   }
 
   public async createStake(req: StakeCreate): Promise<string> {

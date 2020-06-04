@@ -13,7 +13,7 @@ import { formItemLayout } from "../../common/form-item-layout";
 import { getIoPayAddress, getIotxBalance } from "../../common/get-antenna";
 import { colors } from "../../common/styles/style-color2";
 import { DEFAULT_STAKING_GAS_LIMIT } from "../../common/token-utils";
-import {smallerOrEqualTo} from "../field-validators";
+import { smallerOrEqualTo } from "../field-validators";
 import { actionSmartContractCalled } from "../smart-contract-reducer";
 import {
   AutoStakeFormItem,
@@ -33,6 +33,7 @@ type Props = {
   // tslint:disable-next-line:no-any
   clickable: any;
   nonDecay: boolean;
+  selfStaking: boolean;
   stakedAmount: BigNumber;
   stakeDuration: number;
   actionSmartContractCalled(payload: boolean): void;
@@ -184,7 +185,7 @@ export const AddStakingModal = connect(
                   rules={[
                     {
                       required: true,
-                      message: t("my_stake.addStakingAmount.required"),
+                      message: t("my_stake.addStakingAmount.required")
                     },
                     {
                       validator: smallerOrEqualTo(iotxBalance, 1)
@@ -262,6 +263,7 @@ export const AddStakingModal = connect(
                   initialValue={nonDecay}
                   stakeAmount={this.state.currentStakeAmount}
                   stakeDuration={this.props.stakeDuration}
+                  selfStaking={this.props.selfStaking}
                   formRef={this.formRef}
                   showAutoStack={false}
                   forceDisable={!nonDecay}

@@ -22,6 +22,8 @@ import {
 type Props = {
   currentStakeDuration: number;
   currentStakeAmount: BigNumber;
+  nonDecay: boolean;
+  selfStaking: boolean;
   handleRevote: Function;
   defaultValue?: number;
   epochSecondValue?: number;
@@ -61,7 +63,12 @@ class StakeAndVoteExisting extends Component<Props, State> {
     const { handleRevote, defaultValue } = this.props;
     const { existingBuckets, loading } = this.state;
 
-    const { currentStakeDuration, currentStakeAmount } = this.props;
+    const {
+      currentStakeDuration,
+      currentStakeAmount,
+      nonDecay,
+      selfStaking
+    } = this.props;
     return (
       <div>
         <div style={{ marginTop: "26px" }}>
@@ -79,7 +86,7 @@ class StakeAndVoteExisting extends Component<Props, State> {
           }
         </div>
         {/*
-              // @ts-ignore */}
+           // @ts-ignore */}
         <Form.Item
           {...formItemLayout}
           labelAlign={"left"}
@@ -108,7 +115,7 @@ class StakeAndVoteExisting extends Component<Props, State> {
           initialValue={defaultValue}
         >
           {/*
-              // @ts-ignore */}
+             // @ts-ignore */}
           <Select
             size="large"
             loading={loading}
@@ -140,12 +147,12 @@ class StakeAndVoteExisting extends Component<Props, State> {
         ) : (
           <></>
         )}
-        {/*
-              // @ts-ignore */}
+        {/* // @ts-ignore */}
         <AutoStakeFormItem
           formRef={this.props.formRef}
           showAutoStack={false}
-          initialValue={false}
+          initialValue={nonDecay}
+          selfStaking={selfStaking}
           stakeAmount={currentStakeAmount}
           stakeDuration={currentStakeDuration}
         />

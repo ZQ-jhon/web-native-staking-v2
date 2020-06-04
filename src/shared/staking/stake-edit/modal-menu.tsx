@@ -338,6 +338,7 @@ export function renderActionMenu(record: IBucket): JSX.Element {
           <AddStakingModal
             bucketIndex={record.index}
             clickable={renderAddStaking()}
+            selfStaking={record.selfStakingBucket}
             stakeDuration={record.stakedDuration}
             stakedAmount={record.stakedAmount}
             nonDecay={record.autoStake}
@@ -355,6 +356,7 @@ export function renderActionMenu(record: IBucket): JSX.Element {
             nonDecay={record.autoStake}
             stakeTime={record.stakeStartTime}
             stakedAmount={record.stakedAmount}
+            selfStaking={record.selfStakingBucket}
             clickable={renderRestake(record)}
           />
         }
