@@ -216,9 +216,9 @@ class MyVotesTable extends Component<Props, State> {
                   </StatisticSpan>
                   <StatisticValue style={{ width: "50%" }}>
                     {t("my_stake.staking_power.estimate", {
-                      total: getPowerEstimationForBucket(
-                        record
-                      ).toLocaleString()
+                      total: getPowerEstimationForBucket(record)
+                        .dp(1, 1)
+                        .toLocaleString()
                     })}
                   </StatisticValue>
                 </Flex>
@@ -344,7 +344,7 @@ class MyVotesTable extends Component<Props, State> {
           render(text: any, record: IBucket): JSX.Element {
             return (
               <Dropdown overlay={renderActionMenu(record)} trigger={["click"]}>
-                <Button style={{paddingLeft: "10px", paddingRight: "10px"}}>
+                <Button style={{ paddingLeft: "10px", paddingRight: "10px" }}>
                   {t("my_stake.edit.row")} <DownOutlined />
                 </Button>
               </Dropdown>
