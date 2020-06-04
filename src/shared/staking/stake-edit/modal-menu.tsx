@@ -9,6 +9,7 @@ import { DEFAULT_STAKING_DURATION_SECOND } from "../../common/token-utils";
 import { AddStakingModal } from "./add-staking-modal";
 import { RestakeModal } from "./restake-modal";
 import { RevoteModal } from "./revote-modal";
+import { TransferModal } from "./transfer-modal";
 import { UnstakeModal } from "./unstake-modal";
 import { WithdrawModal } from "./withdraw-modal";
 
@@ -42,6 +43,55 @@ const menuInfoStyleDisabled = {
   ...menuInfoStyle,
   color: colors.black65
 };
+
+function renderTransfer(record: IBucket): JSX.Element {
+  const status = getStatus(
+    record.withdrawWaitUntil,
+    record.unstakeStartTime,
+    record.stakeStartTime
+  );
+
+  switch (status) {
+    case "staking":
+      return (
+        <div {...ACTION_ROW_STYLE}>
+          <span>{t("my_stake.edit.transfer")}</span>
+          {
+            // @ts-ignore
+            <span style={menuInfoStyle}>
+              {t("my_stake.status.suffix.anytime")}
+            </span>
+          }
+        </div>
+      );
+    case "unstaking":
+      return (
+        <div {...ACTION_ROW_DISABLED}>
+          <span>{t("my_stake.edit.transfer")}</span>
+          {
+            // @ts-ignore
+            <span style={menuInfoStyleDisabled}>
+              {t("my_stake.status.suffix.not_applicable")}
+            </span>
+          }
+        </div>
+      );
+    case "withdrawable":
+      return (
+        <div {...ACTION_ROW_DISABLED}>
+          <span>{t("my_stake.edit.transfer")}</span>
+          {
+            // @ts-ignore
+            <span style={menuInfoStyleDisabled}>
+              {t("my_stake.status.suffix.anytime")}
+            </span>
+          }
+        </div>
+      );
+    default:
+      return <></>;
+  }
+}
 
 function renderRevote(record: IBucket): JSX.Element {
   const status = getStatus(
@@ -332,6 +382,18 @@ export function renderActionMenu(record: IBucket): JSX.Element {
             bucketIndex={record.index}
             waitUntil={record.withdrawWaitUntil}
             clickable={renderWithdraw(record)}
+          />
+        }
+      </Menu.Item>
+      <Menu.Item key="">
+        {
+          // @ts-ignore
+          <TransferModal
+            autoStake={record.autoStake}
+            stakedDuration={record.stakedDuration}
+            bucketIndex={record.index}
+            canName={canName}
+            clickable={renderTransfer(record)}
           />
         }
       </Menu.Item>

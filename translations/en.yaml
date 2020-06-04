@@ -176,10 +176,13 @@ my_stake.bucketOwner: Owner
 my_stake.canName.err: 'Name is invalid.'
 my_stake.canName.required: 'Please enter the delegate name.'
 my_stake.canName: 'Delegate Name'
+my_stake.tranferOwnership.required: 'Please enter the Transfer address.'
+my_stake.tranferOwnership: 'Transfer Address'
 my_stake.data: Data
 my_stake.edit.add_staking: Add Votes
 my_stake.edit.restake: Restake
 my_stake.edit.revote: 'Change Delegate'
+my_stake.edit.transfer: 'Transfer'
 my_stake.edit.row: Action
 my_stake.edit.unstake: Unstake
 my_stake.edit.withdraw: Withdraw
@@ -193,6 +196,7 @@ my_stake.restake.desc: 'Are you sure to re-stake your vote? <div style="color: $
 my_stake.restake.err: '<div style="color: ${color};">Please set stakeStartTime before restake.</div>'
 my_stake.restake.title: 'Restake My Vote (ID ${bucketIndex})'
 my_stake.revote.title: 'Revote My Vote (ID ${bucketIndex})'
+my_stake.transfer.title: 'Transfer My Vote (ID ${bucketIndex})'
 my_stake.stakedAmount.required: 'Please enter the amount.'
 my_stake.stakedAmount: Amount
 my_stake.bucketId: 'Bucket ID'

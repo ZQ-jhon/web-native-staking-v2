@@ -1,3 +1,4 @@
+import { validateAddress } from "iotex-antenna/lib/account/utils";
 // @ts-ignore
 import { t } from "onefx/lib/iso-i18n";
 
@@ -8,6 +9,14 @@ export const validateCanName = (rule, value, callback) => {
   const reg = /^[a-z\d#]+$/;
   if (String(value).length > 12 || !reg.test(value)) {
     callback(t("my_stake.canName.err"));
+  } else {
+    callback();
+  }
+};
+//@ts-ignore
+export const validateIoAddress = (rule, value, callback) => {
+  if (!validateAddress(value)) {
+    callback(t("my_stake.ioAddress.err"));
   } else {
     callback();
   }
