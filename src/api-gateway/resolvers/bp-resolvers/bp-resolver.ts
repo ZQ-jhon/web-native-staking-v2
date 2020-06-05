@@ -9,6 +9,8 @@ import {
     Query,
     Resolver,
     ObjectType,
+    Ctx,
+    Int,
   } from "type-graphql";
   //import { Gateways, setGateways } from "../../../server/gateway/gateway";
   import { cdnImg } from "../../../shared/common/cdn-img";
@@ -47,11 +49,12 @@ export type TServerStatus = "ONLINE" | "OFFLINE" | "NOT_EQUIPPED" | "CHECKING";
 
 
 @ObjectType()
-class TResolverCtx  {
+class Context  {
   @Field(_ => String)
   userId?: string
   @Field(_ => String)
-  requestIp?: string;
+  @Field(_ => String)
+  requestIp?: string
   @Field(_ => String)
   session: any;
   model: {
@@ -87,25 +90,17 @@ class TResolverCtx  {
 };
 
 @ArgsType()
-class BpCandidateTechDetail {
-  @Field(_ => String)
-  _parent: any
+class BpCandidateTechDetailQuery {
   @Field(_ => String)
   parent: any
   @Field(_ => String)
-  _args: any
-  @Field(_ => String)
   args: any
-  @Field(_ => String)
-  context: TResolverCtx
-  @Field(_=> String)
-  _info: any
   @Field(_=> String)
   info: any
 }
 
 @ObjectType()
-class BpCandidateTechDetailList {
+class BpCandidateTechDetail {
   @Field(_ => String)
   serverEndpoint: string
   @Field(_ => String)
@@ -116,14 +111,8 @@ class BpCandidateTechDetailList {
   serverHealthEndpoint: string
 }
 
- @ObjectType()
- class BpCandidatesValues {
-  @Field(_ => String)
-  valStr: string
-}
-
 @ObjectType() 
-class BpCandidatesValue {
+class BpCandidateDetail {
   @Field(_ => String)
   rank: string
   @Field(_ => String)
@@ -148,9 +137,13 @@ class BpCandidatesValue {
   techSetup: string
   @Field(_ => String)
   communityPlan: string
+  @Field(_ => Int)
   blockRewardPortion: number | undefined
+  @Field(_ => Int)
   epochRewardPortion: number | undefined
+  @Field(_ => Int)
   foundationRewardPortion: number | undefined
+  @Field(_ => String)
   rewardPlan: string
   @Field(_ => String)
   shareCardImage: string
@@ -161,7 +154,23 @@ class BpCandidatesValue {
 }
 
 @ObjectType()
- class  TNewBpCandidate {
+class BpCandidateRewardDistVal {
+  @Field(_ => Int) 
+  blockRewardPortion: number | undefined
+  @Field(_ => Int)
+  epochRewardPortion: number | undefined
+  @Field(_ => Int)
+  foundationRewardPortion : number | undefined
+}
+
+@ObjectType()
+class BpCandidateList {
+ @Field(_ => String)
+ valStr: string
+}
+
+@ObjectType()
+class TNewBpCandidate {
   @Field(_ => String)
   rank: string
   @Field(_ => String)
@@ -177,7 +186,7 @@ class BpCandidatesValue {
   @Field(_ => String)
   bannerUrl: string
   @Field(_ => String)
-  socialMedia: Array<string>;
+  socialMedia: Array<string>
   @Field(_ => String)
   location: string
   @Field(_ => String)
@@ -200,19 +209,13 @@ class BpCandidatesValue {
   discordName: string
   @Field(_ => String)
   email: string
-  @Field(_ => Number)
+  @Field(_ => Int)
   annualReward?: number
+  @Field(_ => String)
   badges?: Array<string>
   @Field(_ => String)
   tempEthAddress?: string
 };
-
-@ObjectType()
-class BpCandidateRewardDistVal {
-  blockRewardPortion: number | undefined
-  epochRewardPortion: number | undefined
-  foundationRewardPortion : number | undefined
-}
 
 @ObjectType()
 class  TBpCandidate extends TNewBpCandidate  {
@@ -222,29 +225,35 @@ class  TBpCandidate extends TNewBpCandidate  {
   registeredName: string
   @Field(_ => String)
   liveVotes: string
-  liveVotesDelta: string
   @Field(_ => String)
+  liveVotesDelta: string
   status: "ELECTED" | "NOT_ELECTED" | "UNQUALIFIED";
   category: "CONSENSUS_DELEGATE" | "DELEGATE" | "DELEGATE_CANDIDATE";
   serverStatus: TServerStatus;
   @Field(_ => String)
   percent: string
-  @Field(_ => Number)
-  blockRewardPortion: number;
-  epochRewardPortion: number;
-  founationRewardPortion: number;
-  annualReward: number;
+  @Field(_ => Int)
+  blockRewardPortion: number
+  @Field(_ => Int)
+  epochRewardPortion: number
+  @Field(_ => Int)
+  founationRewardPortion: number
+  @Field(_ => Int)
+  annualReward: number
+  @Field(_ => String)
   badges: Array<string>
+  @Field(_ => String)
   createAt: string
-  eth: string
+  @Field(_ => String)
+  updateAt: string
 };
 
 @Resolver()
-export class BpCandidatesTechResolver {
-  @Query(_ => [BpCandidateTechDetailList])
-  public async bpCandidateTechResolver(
-    @Args() { context }: BpCandidateTechDetail,
-  ): Promise<BpCandidateTechDetailList> {
+export class BPResolver {
+  @Query(_ => BpCandidateTechDetail)
+  public async bpCandidateTechDetail(
+    @Ctx() context: Context,
+  ): Promise<BpCandidateTechDetail> {
     const {
       model: { bpCandidate }
     } = context;
@@ -270,25 +279,20 @@ export class BpCandidatesTechResolver {
     };
   }
   
-  @Query(_ => [BpCandidatesValues])
+  @Query(_ => BpCandidateList)
   public async bpCandidates(
-    // _parent: any,
-    // _args: any,
-    // context: TResolverCtx
-    @Args() { context }: BpCandidateTechDetail,
-  ): Promise <BpCandidatesValues> {
+    @Ctx() context: Context
+  ): Promise <BpCandidateList> {
     // @ts-ignore
     const valStr = await context.model.cache.get(`bpCandidates_${config.env}`);
     return JSON.parse(valStr);
   }
   
-  @Query(_ => [BpCandidateTechDetail])
+  @Query(_ => BpCandidateDetail)
   public async bpCandidate(
-    // _parent: any,
-    // args: any,
-    // context: TResolverCtx
-    @Args() { context, args }: BpCandidateTechDetail,
-  ): Promise <BpCandidatesValue> {
+    @Args() { args }: BpCandidateTechDetailQuery,
+    @Ctx() context: Context
+  ): Promise <BpCandidateDetail> {
     const {
       model: { bpCandidate },
       gateways: { delegateProfileContract, nameRegistrationContract }
@@ -372,13 +376,10 @@ export class BpCandidatesTechResolver {
     };
   }
   
-  @Mutation(_ => [TBpCandidate])
+  @Mutation(_ => TBpCandidate)
   async upsertBpCandidate(
-    // _parent: any,
-    // args: any,
-    // context: TResolverCtx,
-    // _info: any
-    @Args() { context, args }: BpCandidateTechDetail,
+    @Args() { args }: BpCandidateTechDetailQuery,
+    @Ctx() context: Context
   ): Promise<TBpCandidate> {
     if (!context.userId) {
       throw new AuthenticationError("please login");
@@ -397,13 +398,10 @@ export class BpCandidatesTechResolver {
     );
   }
   
-  @Mutation(_ => [TBpCandidate])
+  @Mutation(_ => TBpCandidate)
   async upsertBpCandidateTechDetail(
-    // _parent: any,
-    // args: any,
-    // context: TResolverCtx,
-    // _info: any
-    @Args() { context, args }: BpCandidateTechDetail,
+    @Args() { args }: BpCandidateTechDetailQuery,
+    @Ctx() context: Context
   ): Promise<TBpCandidate> {
     if (!context.userId) {
       throw new AuthenticationError("please login");
@@ -421,13 +419,9 @@ export class BpCandidatesTechResolver {
     );
   }
   
-  @Query(_ => [BpCandidateRewardDistVal])
+  @Query(_ => BpCandidateRewardDistVal)
   async bpCandidateRewardDistribution(
-    // _parent: any,
-    // _args: any,
-    // context: TResolverCtx,
-    // _info: any
-    @Args() { context }: BpCandidateTechDetail,
+    @Ctx() context: Context
   ): Promise<BpCandidateRewardDistVal>{
     const {
       model: { bpCandidate },
@@ -448,38 +442,33 @@ export class BpCandidatesTechResolver {
     return getBpCandidateRewardDistribution(delegateProfileContract, eth);
   }
   
-  @Query(_ => [BpCandidateTechDetail])
-  async bpCandidatesOnContract(
-    // _parent: any,
-    // args: any,
-    // context: TResolverCtx,
-    // _info: any
-    @Args() { context, args}: BpCandidateTechDetail,
-  ){
-    const {
-      gateways: { nameRegistrationContract }
-    } = context;
-    const [allCandidates = [], blacklist] = await Promise.all([
-      await nameRegistrationContract.getAllCandidatesCache(),
-      await context.model.adminSettings.get(BP_BLACKLIST)
-    ]);
-    if (blacklist && Array.isArray(blacklist) && Array.isArray(allCandidates)) {
-      const { address } = args;
-      // $FlowFixMe
-      return allCandidates.filter(
-        c =>
-          blacklist.indexOf(c.name) === -1 &&
-          blacklist.indexOf(c.address) === -1 &&
-          (!address || address === c.address)
-      );
-    }
-    return allCandidates;
-  }
-
-
+  // @Query(_ => [])
+  // async bpCandidatesOnContract(
+  //   @Args() { args }: BpCandidateTechDetailQuery,
+  //   @Ctx() context: Context
+  // ){
+  //   const {
+  //     gateways: { nameRegistrationContract }
+  //   } = context;
+  //   const [allCandidates = [], blacklist] = await Promise.all([
+  //     await nameRegistrationContract.getAllCandidatesCache(),
+  //     await context.model.adminSettings.get(BP_BLACKLIST)
+  //   ]);
+  //   if (blacklist && Array.isArray(blacklist) && Array.isArray(allCandidates)) {
+  //     const { address } = args;
+  //     // $FlowFixMe
+  //     return allCandidates.filter(
+  //       c =>
+  //         blacklist.indexOf(c.name) === -1 &&
+  //         blacklist.indexOf(c.address) === -1 &&
+  //         (!address || address === c.address)
+  //     );
+  //   }
+  //   return allCandidates;
+  // }
 }
 
-async function getUserEthAddress(context: TResolverCtx): Promise<string> {
+async function getUserEthAddress(context: Context): Promise<string> {
   // @ts-ignore
   const user = await context.auth.user.getById(context.userId);
   let eth = await context.gateways.iotexMono.getLoginEthByIotexId(user.iotexId);

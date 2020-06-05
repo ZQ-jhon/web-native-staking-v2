@@ -15,10 +15,123 @@ type ArticleResponse {
   filename: String!
 }
 
+type BpCandidateDetail {
+  rank: String!
+  name: String!
+  blurb: String!
+  website: String!
+  logo: String!
+  bannerUrl: String!
+  socialMedia: [String!]!
+  location: String!
+  introduction: String!
+  team: String!
+  techSetup: String!
+  communityPlan: String!
+  blockRewardPortion: Int!
+  epochRewardPortion: Int!
+  foundationRewardPortion: Int!
+  rewardPlan: String!
+  shareCardImage: String!
+  tempEthAddress: String!
+  registeredName: String!
+}
+
+type BpCandidateList {
+  valStr: String!
+}
+
+type BpCandidateRewardDistVal {
+  blockRewardPortion: Int!
+  epochRewardPortion: Int!
+  foundationRewardPortion: Int!
+}
+
+type BpCandidateTechDetail {
+  serverEndpoint: String!
+  discordName: String!
+  email: String!
+  serverHealthEndpoint: String!
+}
+
+type Context {
+  userId: String!
+  requestIp: String!
+  session: String!
+}
+
+type Mutation {
+  upsertBpCandidate(parent: String!, args: String!, info: String!): TBpCandidate!
+  upsertBpCandidateTechDetail(parent: String!, args: String!, info: String!): TBpCandidate!
+}
+
 type Query {
   # get the article
   articles(id: String): [ArticleResponse!]
+  bpCandidateTechDetail: BpCandidateTechDetail!
+  bpCandidates: BpCandidateList!
+  bpCandidate(parent: String!, args: String!, info: String!): BpCandidateDetail!
+  bpCandidateRewardDistribution: BpCandidateRewardDistVal!
 
   # is the server healthy?
   health: String!
+}
+
+type TBpCandidate {
+  rank: String!
+  id: String!
+  name: String!
+  blurb: String!
+  website: String!
+  logo: String!
+  bannerUrl: String!
+  socialMedia: [String!]!
+  location: String!
+  introduction: String!
+  team: String!
+  techSetup: String!
+  communityPlan: String!
+  rewardPlan: String!
+  shareCardImage: String!
+  serverEndpoint: String!
+  serverHealthEndpoint: String!
+  discordName: String!
+  email: String!
+  annualReward: Int!
+  badges: [String!]!
+  tempEthAddress: String!
+  registeredName: String!
+  liveVotes: String!
+  liveVotesDelta: String!
+  percent: String!
+  blockRewardPortion: Int!
+  epochRewardPortion: Int!
+  founationRewardPortion: Int!
+  createAt: String!
+  updateAt: String!
+}
+
+type TNewBpCandidate {
+  rank: String!
+  id: String!
+  name: String!
+  blurb: String!
+  website: String!
+  logo: String!
+  bannerUrl: String!
+  socialMedia: [String!]!
+  location: String!
+  introduction: String!
+  team: String!
+  techSetup: String!
+  communityPlan: String!
+  rewardPlan: String!
+  shareCardImage: String!
+  serverEndpoint: String!
+  serverHealthEndpoint: String!
+  discordName: String!
+  email: String!
+  annualReward: Int!
+  badges: [String!]!
+  tempEthAddress: String!
 }
