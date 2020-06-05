@@ -51,7 +51,9 @@ class MyVotesTable extends Component<Props, State> {
   }
 
   setRowClassName = (record: IBucket) => {
-    return record.canName && this.state.invalidNames.includes(record.canName)
+    return record.canName &&
+      this.state.invalidNames &&
+      this.state.invalidNames.includes(record.canName)
       ? "BorderRowWarning"
       : "";
   };
@@ -131,6 +133,7 @@ class MyVotesTable extends Component<Props, State> {
           </span>
           <TimeSpan>{record.roleName || ""}</TimeSpan>
           {record.canName &&
+          this.state.invalidNames &&
           this.state.invalidNames.includes(record.canName) ? (
             <TimeSpan style={{ color: colors.voteWarning }}>
               Invalid voting name.

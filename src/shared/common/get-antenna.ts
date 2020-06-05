@@ -2,6 +2,7 @@
 import window from "global/window";
 import Antenna from "iotex-antenna/lib";
 import { fromRau } from "iotex-antenna/lib/account/utils";
+import { SignerPlugin } from "iotex-antenna/lib/action/method";
 import { Contract } from "iotex-antenna/lib/contract/contract";
 import { WsSignerPlugin } from "iotex-antenna/lib/plugin/ws";
 import isBrowser from "is-browser";
@@ -22,9 +23,13 @@ export function getAntenna(): Antenna {
   if (injectedWindow.antenna) {
     return injectedWindow.antenna;
   }
-  const signer = isIoPay
-    ? new WvSigner()
-    : new WsSignerPlugin("wss://local.iotex.io:64102");
+  let signer: SignerPlugin | undefined;
+  if (isIoPay) {
+    signer = new WvSigner();
+  }
+  if (isBrowser) {
+    signer = new WsSignerPlugin("wss://local.iotex.io:64102");
+  }
   injectedWindow.antenna = new Antenna("https://api.iotex.one", {
     signer
   });

@@ -48,10 +48,12 @@ export function setServerRoutes(server: MyServer): void {
 }
 
 export function checkingAppSource(ctx: koa.Context): void {
+  const ua = ctx.header["user-agent"];
   if (
-    ctx.header["user-agent"].includes("IoPayAndroid") ||
-    ctx.header["user-agent"].includes("IoPayiOs") ||
-    ctx.session.app_source === "IoPay"
+    ua &&
+    (ua.includes("IoPayAndroid") ||
+      ua.includes("IoPayiOs") ||
+      ctx.session.app_source === "IoPay")
   ) {
     ctx.session.app_source = "IoPay";
     ctx.setState("base.isIoPay", true);

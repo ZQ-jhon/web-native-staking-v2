@@ -20,12 +20,11 @@ export function convertToString(objQuery: any): string {
     .join("&");
 }
 
-
 // tslint:disable-next-line:no-any
 export function getTwitterAccount(delegate: any): string {
   if (delegate && delegate.socialMedia) {
-    const twitterUrl = delegate.socialMedia.find((url: string) =>
-      url.includes("twitter.com")
+    const twitterUrl = delegate.socialMedia.find(
+      (url: string) => url && url.includes("twitter.com")
     );
     if (twitterUrl) {
       const matches = twitterUrl.match(
