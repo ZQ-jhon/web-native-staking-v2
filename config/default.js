@@ -38,7 +38,7 @@ module.exports = {
   },
   csp: {
     "default-src": ["none"],
-    "manifest-src": ["self"],
+    "manifest-src": ["self", "https://web-native-staking-v2.b-cdn.net/"],
     "style-src": [
       "self",
       "unsafe-inline",
