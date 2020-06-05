@@ -63,6 +63,7 @@ export class StakingContract {
 
   constructor(cfg: Cfg) {
     try {
+      // @ts-ignore
       const eth = new Eth(new HttpProvider(cfg.provider));
       this.stakingContract = new EthContract(eth)(STAKING_ABI).at(
         cfg.contractAddress
@@ -179,6 +180,7 @@ export class NameRegistrationContract {
   constructor(cfg: NameRegistrationCfg) {
     try {
       this.cacheTtl = cfg.cacheTtl;
+      // @ts-ignore
       const eth = new Eth(new HttpProvider(cfg.provider));
       this.nameRegistration = new EthContract(eth)(NAME_REGISTRATION_ABI).at(
         cfg.contractAddress
@@ -339,6 +341,7 @@ export class DelegateProfileContract {
     timeout: number
   }) {
     try {
+      // @ts-ignore
       this.contract = new EthContract(new Eth(new HttpProvider(provider)))(
         DELEGATE_PROFILE_ABI
       ).at(contractAddress);
@@ -480,6 +483,7 @@ export class PollManager {
     if (!tpoll) {
       throw new Error(`poll ${address} does not exist`);
     }
+    // @ts-ignore
     const eth = new Eth(new HttpProvider(this.provider));
     return await this.populatePoll({ context, tpoll, eth, fetchOptions: true });
   }
@@ -493,6 +497,7 @@ export class PollManager {
   }: {
     context: TResolverCtx,
     tpoll: TPoll,
+    // @ts-ignore
     eth: Eth,
     fetchOptions?: boolean,
     contractAddress: string
@@ -536,6 +541,7 @@ export class PollManager {
   }: {
     context: TResolverCtx,
     tpoll: TPoll,
+    // @ts-ignore
     eth: Eth,
     fetchOptions?: boolean
   }) {
@@ -621,6 +627,7 @@ export class PollManager {
     context: TResolverCtx,
     tpolls: Array<TPoll>
   }) {
+    // @ts-ignore
     const eth = new Eth(new HttpProvider(this.provider));
 
     return await Promise.all(

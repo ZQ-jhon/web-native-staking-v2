@@ -2,7 +2,7 @@
 import cacheManager from "cache-manager";
 import { logger } from "onefx/lib/integrated-gateways/logger";
 import axios from "axios";
-import { TserverCache, TServerStatus } from "../../types/global";
+import { TserverCache } from "../../types/global";
 
 export const SERVER_STATUS_TTL = 5 * 60; // sec
 const axiosInstance = axios.create({ timeout: 10000 });

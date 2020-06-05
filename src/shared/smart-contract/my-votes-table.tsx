@@ -475,7 +475,7 @@ class MyVotesTableInner extends Component<Props, State> {
         ),
         dataIndex: "id",
         className: "BorderTop BorderLeft BorderBottom",
-        render(text, record) {
+        render(text: any, record: any) {
           // Can not use index here because of antd table will reset the index as soon as pagination changed
           const no =
             record.patchDummyId !== undefined ? record.patchDummyId : record.id;
@@ -577,6 +577,7 @@ class MyVotesTableInner extends Component<Props, State> {
         ),
         dataIndex: "stakeDuration",
         className: "BorderTop BorderBottom",
+        // @ts-ignore
         render(text, record) {
           return (
             <Flex column={true} alignItems={"baseline"}>
@@ -676,9 +677,8 @@ class MyVotesTableInner extends Component<Props, State> {
           const contract = record.isPatch
             ? patchStakingContract
             : stakingContract;
-          const menu = renderActionMenu(
-            record,
-            contract,
+            // @ts-ignore
+          const menu = renderActionMenu(record, contract,
             addr || "",
             networkStakeDuringSeconds,
             isNative
@@ -763,7 +763,7 @@ class MyVotesTableInner extends Component<Props, State> {
                 (stakeStatus && stakeStatus.patchBuckets) || [];
 
               // use to distinct bucket
-              patchBuckets.forEach(bucket => {
+              patchBuckets.forEach((bucket: any) => {
                 bucket.isPatch = true;
               });
 
@@ -787,6 +787,7 @@ class MyVotesTableInner extends Component<Props, State> {
                   expandedRowRender={record =>
                     this.renderReward(bpCandidates, record)
                   }
+                  // @ts-ignore
                   expandIconAsCell={false}
                   expandedRowKeys={expandedRowKeys}
                   rowKey="id"
@@ -914,6 +915,7 @@ export async function getStakeStatus(
   stakingDurationSecond: number
 ): Promise<TMyStakeStatus> {
   const web3 = window.web3;
+  // @ts-ignore
   const eth = new Eth(web3 && web3.currentProvider);
   const contract = new EthContract(eth)(STAKING_ABI).at(stakingContractAddr);
 
@@ -940,9 +942,9 @@ export async function getNativeStakeStatus(
     from: addr,
     gas: 600000
   });
-  const bucketIds = resp.map(id => id.toNumber()) || [];
+  const bucketIds = resp.map((id: any) => id.toNumber()) || [];
   resp = await Promise.all(
-    bucketIds.map(id =>
+    bucketIds.map((id: any) =>
       contract.methods.pyggs(id, {
         from: addr,
         gas: 600000
@@ -954,9 +956,11 @@ export async function getNativeStakeStatus(
 }
 
 function nativeResponseMap(response: Array<Array<any>>) {
+  // @ts-ignore
   const fields = NATIVE_TOKEN_ABI.find(item => item.name === "pyggs").outputs;
   return response.map(ary =>
     ary.reduce((acc, cur, index) => {
+      // @ts-ignore
       const key = fields[index].name;
       let value = cur;
 

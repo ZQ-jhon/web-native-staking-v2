@@ -117,6 +117,7 @@ export type TBpCandidate = TNewBpCandidate & {
 
   createAt: string;
   updateAt: string;
+  eth: string;
 };
 
 export type THistory = {

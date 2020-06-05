@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 import { TNewBpCandidate, TBpCandidate } from "../types/global"
 
 const Schema = mongoose.Schema;
-const BaseModel = require("./base-model.js");
+const BaseModel = require("./base-model.ts");
 
 type Opts = {
   mongoose: any,
