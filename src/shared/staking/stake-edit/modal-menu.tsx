@@ -305,9 +305,9 @@ function renderWithdraw(record: IBucket): JSX.Element {
   }
 }
 
-function renderAddStaking(): JSX.Element {
+function renderAddStaking(disabled: boolean): JSX.Element {
   return (
-    <div {...ACTION_ROW_STYLE}>
+    <div {...(disabled ? ACTION_ROW_DISABLED : ACTION_ROW_STYLE)}>
       <span>{t("my_stake.edit.add_staking")}</span>
       {
         // @ts-ignore
@@ -337,7 +337,7 @@ export function renderActionMenu(record: IBucket): JSX.Element {
           // @ts-ignore
           <AddStakingModal
             bucketIndex={record.index}
-            clickable={renderAddStaking()}
+            clickable={renderAddStaking(!record.autoStake)}
             selfStaking={record.selfStakingBucket}
             stakeDuration={record.stakedDuration}
             stakedAmount={record.stakedAmount}
