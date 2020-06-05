@@ -16,6 +16,9 @@ type ArticleResponse {
 }
 
 type BpCandidateDetail {
+  id: String!
+  annualReward: Int!
+  nodeVersion: String!
   rank: String!
   name: String!
   blurb: String!
@@ -70,7 +73,7 @@ type Query {
   articles(id: String): [ArticleResponse!]
   bpCandidateTechDetail: BpCandidateTechDetail!
   bpCandidates: BpCandidateList!
-  bpCandidate(parent: String!, args: String!, info: String!): BpCandidateDetail!
+  bpCandidate: BpCandidateDetail!
   bpCandidateRewardDistribution: BpCandidateRewardDistVal!
 
   # is the server healthy?
@@ -109,6 +112,7 @@ type TBpCandidate {
   founationRewardPortion: Int!
   createAt: String!
   updateAt: String!
+  nodeVersion: String!
 }
 
 type TNewBpCandidate {

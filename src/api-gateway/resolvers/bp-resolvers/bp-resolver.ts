@@ -44,6 +44,7 @@ import { BpServerStatus } from "../../../server/gateway/bp-server-status";
 import { IotxAirdrop } from "../../../server/gateway/iotx-airdrop";
 import { Mailchimp } from "../../../server/gateway/mailchimp"
 import { ReadState } from "../../../server/gateway/readstate/readstate"
+import { string } from "prop-types";
 
 export type TServerStatus = "ONLINE" | "OFFLINE" | "NOT_EQUIPPED" | "CHECKING";
 
@@ -92,11 +93,17 @@ class Context  {
 @ArgsType()
 class BpCandidateTechDetailQuery {
   @Field(_ => String)
-  parent: any
+  parent?: any
   @Field(_ => String)
-  args: any
+  args?: {
+    candidateProfileId?: string
+    eth?: string
+    ioOperatorAddress?: string
+    bpCandidateInput?: any
+    bpCandidateTechDetailInput?: any
+  }
   @Field(_=> String)
-  info: any
+  info?: any
 }
 
 @ObjectType()
@@ -113,6 +120,12 @@ class BpCandidateTechDetail {
 
 @ObjectType() 
 class BpCandidateDetail {
+  @Field(_ => String)
+  id: string
+  @Field(_ => Int)
+  annualReward: number
+  @Field(_ => String)
+  nodeVersion?: string
   @Field(_ => String)
   rank: string
   @Field(_ => String)
@@ -246,7 +259,16 @@ class  TBpCandidate extends TNewBpCandidate  {
   createAt: string
   @Field(_ => String)
   updateAt: string
+  @Field(_ => String)
+  nodeVersion?: string
 };
+
+@ArgsType()
+export class CandidateQuery {
+  ioOperatorAddress: string;
+  candidateProfileId: string;
+  eth: string;
+}
 
 @Resolver()
 export class BPResolver {
@@ -290,7 +312,7 @@ export class BPResolver {
   
   @Query(_ => BpCandidateDetail)
   public async bpCandidate(
-    @Args() { args }: BpCandidateTechDetailQuery,
+    @Args() { ioOperatorAddress, candidateProfileId, eth }: CandidateQuery,
     @Ctx() context: Context
   ): Promise <BpCandidateDetail> {
     const {
@@ -299,22 +321,21 @@ export class BPResolver {
     } = context;
     const blacklist = (await context.model.adminSettings.get(BP_BLACKLIST)) || [];
     let found;
-    if (args.candidateProfileId) {
-      if (blacklist.includes(args.candidateProfileId)) {
+    if (candidateProfileId) {
+      if (blacklist.includes(candidateProfileId)) {
         // @ts-ignore
         return null;
       }
-      found = await getBpCandidateById(args.candidateProfileId, bpCandidate);
-    } else if (args.ioOperatorAddress) {
+      found = await getBpCandidateById(candidateProfileId, bpCandidate);
+    } else if (ioOperatorAddress) {
       // query by iotex address
       const regCandidate = await nameRegistrationContract.getCandidateByIoOperatorAddress(
-        args.ioOperatorAddress
+        ioOperatorAddress
       );
       if (regCandidate) {
         found = await getBpCandidateByEth(regCandidate.address, bpCandidate);
       }
     } else {
-      let eth = args.eth;
       if (!eth) {
         if (!context.userId) {
           // @ts-ignore
@@ -355,6 +376,9 @@ export class BPResolver {
     return {
       // @ts-ignore
       rank: ranksByEth[lowercase(found.tempEthAddress)],
+      id: found.id,
+      nodeVersion: found.nodeVersion,
+      annualReward: found.annualReward,
       name: found.name,
       blurb: found.blurb,
       website: found.website,
@@ -388,14 +412,18 @@ export class BPResolver {
     if (!eth) {
       throw new AuthenticationError("please login with metamask");
     }
-  
-    return await context.model.bpCandidate.findOneAndUpdate(
-      {
-        ...args.bpCandidateInput,
-        tempEthAddress: eth
-      },
-      eth
-    );
+    if (args) {
+      return await context.model.bpCandidate.findOneAndUpdate(
+        {
+          ...args.bpCandidateInput,
+          tempEthAddress: eth
+        },
+        eth
+      );
+    }
+    else {
+      throw "can not find args"
+    }
   }
   
   @Mutation(_ => TBpCandidate)
@@ -410,13 +438,17 @@ export class BPResolver {
     if (!eth) {
       throw new AuthenticationError("please login with metamask");
     }
-  
-    return await context.model.bpCandidate.findOneAndUpdate(
-      {
-        ...args.bpCandidateTechDetailInput
-      },
-      eth
-    );
+    if (args) {
+      return await context.model.bpCandidate.findOneAndUpdate(
+        {
+          ...args.bpCandidateTechDetailInput
+        },
+        eth
+      );
+    }
+    else {
+      throw "can not find args"
+    }
   }
   
   @Query(_ => BpCandidateRewardDistVal)

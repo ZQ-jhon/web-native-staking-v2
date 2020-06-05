@@ -61,7 +61,7 @@ export const GET_BP_INFO = gql`
   }
 `;
 export const GET_BP_CANDIDATE = gql`
-  query bpCandidate($candidateProfileId: ID, $eth: ID) {
+  query bpCandidate($candidateProfileId: String!, $eth: String!) {
     bpCandidate(candidateProfileId: $candidateProfileId, eth: $eth) {
       rank
       id

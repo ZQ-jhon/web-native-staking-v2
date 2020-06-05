@@ -1,5 +1,5 @@
 // $FlowFixMe
-import { ApolloServer, AuthenticationError } from "apollo-server-koa";
+import { ApolloServer } from "apollo-server-koa";
 import path from "path";
 import "reflect-metadata";
 import { buildSchema } from "type-graphql";
@@ -8,10 +8,9 @@ import { ArticleResolver } from "../shared/article/article-resolver";
 import { BPResolver } from "./resolvers/bp-resolvers/bp-resolver";
 import { MetaResolver } from "./resolvers/meta-resolver";
 import { logger } from "onefx/lib/integrated-gateways/logger";
-import { Gateways } from "../server/gateway/gateway";
 
 export type Context = {
-  gateways: Gateways;
+  gateways: MyServer["gateways"];
   userId: string;
   session: any;
   model: any;

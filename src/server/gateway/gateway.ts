@@ -3,13 +3,6 @@ import { MyServer } from "../start-server";
 import { BpServerStatus } from "./bp-server-status";
 import { IotexMono } from "../gateway/iotex-mono";
 
-export type Gateways = {
-  mongoose: mongoose.Mongoose;
-  bpServerStatus: BpServerStatus;
-  expMins: number;
-  iotexMono: IotexMono;
-};
-
 export function setGateways(server: MyServer): void {
   server.gateways = server.gateways || {};
 
