@@ -243,7 +243,7 @@ my_stake.back: Okay
 my_stake.remain_balance: 'After sending this, your account balance will be <b>${remain}</b> IOTX-E'
 my_stake.u_sure: 'Are you sure you want to do this?'
 my_stake.transaction_hash: 'Your voting transaction hash is <span style="color: #0b8de3;"><a href="${href}">${txHash}</a></span>'
-my_stake.check_few_seconds: 'Please check a few seconds later in <a href="/my-votes"><b style="color: #0b8de3;">My Votes</b></a>'
+my_stake.check_few_seconds: 'Please check a few seconds later in <a href="${href}"><b style="color: #0b8de3;">My Votes</b></a>'
 my_stake.unstake.nondecay_flag: 'Cannot unstake when the bucket is autostaked. You need to disable auto-stake first.'
 my_stake.nonDecay.calculate_auto: 'You will retain the same voting power until you disable Auto-Stake. The stake duration of <b>${duration}</b> days will begin to elapse once you have disabled Auto-Stake. <br/><b style="font-size: 16px">${votes}</b><br/>VOTES'
 my_stake.nonDecay.calculate_estimate: '<small>${date}</small><br/><b style="font-size: 16px">${total}</b><br/>VOTES'

@@ -1,5 +1,6 @@
 // @flow
 import {Form} from "antd";
+import {assetURL} from "onefx/lib/asset-url";
 import {t} from "onefx/lib/iso-i18n";
 import React from "react";
 import {Flex} from "../../common/flex";
@@ -28,7 +29,7 @@ export function SuccessStep({ txHash }: { txHash: string, siteUrl: string }): JS
           />
         }
         <span
-          dangerouslySetInnerHTML={{ __html: t("my_stake.check_few_seconds") }}
+          dangerouslySetInnerHTML={{ __html: t("my_stake.check_few_seconds", {href: assetURL("my-votes")}) }}
         />
       </Flex>
     </Form>
