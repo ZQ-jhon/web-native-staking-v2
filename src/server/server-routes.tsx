@@ -1,6 +1,7 @@
 import Antenna from "iotex-antenna/lib";
 import koa from "koa";
 import { noopReducer } from "onefx/lib/iso-react-render/root/root-reducer";
+import { Context } from "onefx/lib/types";
 import * as React from "react";
 import { setApiGateway } from "../api-gateway/api-gateway";
 import { AppContainer } from "../shared/app-container";
@@ -20,7 +21,7 @@ export function setServerRoutes(server: MyServer): void {
   server.get(
     "SPA",
     /^(?!\/?tools\/token-migration\/api-gateway\/).+$/,
-    async (ctx: koa.Context) => {
+    async (ctx: Context) => {
       const st = new Staking({
         antenna: new Antenna("https://api.iotex.one")
       });
@@ -37,11 +38,10 @@ export function setServerRoutes(server: MyServer): void {
         server.config.gateways.staking.contractAddress
       );
       checkingAppSource(ctx);
-      // @ts-ignore
-      ctx.body = await apolloSSR(ctx, server.config.apiGatewayUrl, {
+      ctx.body = await apolloSSR(ctx, {
         VDom: <AppContainer />,
         reducer: noopReducer,
-        clientScript: "/main.js"
+        clientScript: "main.js"
       });
     }
   );

@@ -39,7 +39,12 @@ module.exports = {
   csp: {
     "default-src": ["none"],
     "manifest-src": ["self"],
-    "style-src": ["self", "unsafe-inline", "https://fonts.googleapis.com/css"],
+    "style-src": [
+      "self",
+      "unsafe-inline",
+      "https://fonts.googleapis.com/css",
+      "https://web-native-staking-v2.b-cdn.net/"
+    ],
     "frame-src": [
       "https://wvjb-queue-message/",
       "https://bridge-loaded/",
@@ -61,7 +66,12 @@ module.exports = {
     "img-src": ["*", "data:"],
     "media-src": ["self"],
     "object-src": ["self"],
-    "script-src": ["self", "https://www.google-analytics.com/", "unsafe-eval"]
+    "script-src": [
+      "self",
+      "https://www.google-analytics.com/",
+      "unsafe-eval",
+      "https://web-native-staking-v2.b-cdn.net/"
+    ]
   },
   apiGatewayUrl:
     process.env.API_GATEWAY_URL || "http://localhost:5004/nsv2/api-gateway/"

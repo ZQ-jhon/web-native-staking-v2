@@ -55,7 +55,6 @@ module.exports = {
   },
   plugins: [
     new ManifestPlugin({
-      basePath: "/",
       fileName: "asset-manifest.json"
     }),
     ...(ANALYZE ? [new BundleAnalyzerPlugin()] : []),
