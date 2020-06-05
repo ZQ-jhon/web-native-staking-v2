@@ -46,24 +46,26 @@ export const TransferModal = connect(
       if (!this.formRef.current) {
         return;
       }
-      const { address } = this.state;
+      this.formRef.current.validateFields().then(async () => {
+        const { address } = this.state;
 
-      const txHash = await getStaking().transferOwnership({
-        bucketIndex: bucketIndex,
-        voterAddress: address,
-        payload: "",
-        gasLimit: DEFAULT_STAKING_GAS_LIMIT,
-        gasPrice: toRau("1", "Qev")
+        const txHash = await getStaking().transferOwnership({
+          bucketIndex: bucketIndex,
+          voterAddress: address,
+          payload: "",
+          gasLimit: DEFAULT_STAKING_GAS_LIMIT,
+          gasPrice: toRau("1", "Qev")
+        });
+
+        window.console.log("Revote txHash", txHash);
+
+        if (actionSmartContractCalled) {
+          actionSmartContractCalled(true);
+        }
+        if (cb) {
+          cb();
+        }
       });
-
-      window.console.log("Revote txHash", txHash);
-
-      if (actionSmartContractCalled) {
-        actionSmartContractCalled(true);
-      }
-      if (cb) {
-        cb();
-      }
     };
 
     render(): JSX.Element {
@@ -87,6 +89,7 @@ export const TransferModal = connect(
                 <Form.Item
                   {...formItemLayout}
                   label={t("my_stake.tranferOwnership")}
+                  name="address"
                   rules={[
                     {
                       required: true,
