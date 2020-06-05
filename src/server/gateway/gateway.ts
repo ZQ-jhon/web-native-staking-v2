@@ -1,18 +1,20 @@
 import mongoose from "mongoose";
 import { MyServer } from "../start-server";
 import { BpServerStatus } from "./bp-server-status";
+import { IotexMono } from "../gateway/iotex-mono";
 
 export type Gateways = {
   mongoose: mongoose.Mongoose;
   bpServerStatus: BpServerStatus;
   expMins: number;
-
+  iotexMono: IotexMono;
 };
 
 export function setGateways(server: MyServer): void {
   server.gateways = server.gateways || {};
 
   server.gateways.bpServerStatus = new BpServerStatus(server);
+  server.gateways.iotexMono = new IotexMono(server.config.gateways.iotexMono);
   if (
     // @ts-ignore
     !(server.config.gateways.mongoose && server.config.gateways.mongoose.uri)

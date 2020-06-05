@@ -21,7 +21,7 @@ export type Context = {
 
 export async function setApiGateway(server: MyServer): Promise<void> {
   const resolvers = [MetaResolver, ArticleResolver, BPResolver];
-  server.resolvers = resolvers
+  server.resolvers = resolvers;
   const sdlPath = path.resolve(__dirname, "api-gateway.graphql");
   try {
     const schema = await buildSchema({
@@ -32,18 +32,18 @@ export async function setApiGateway(server: MyServer): Promise<void> {
       },
       validate: false
     });
-  
+
     const apollo = new ApolloServer({
       schema,
       introspection: true,
       playground: true,
       context: async ({ ctx }): Promise<Context> => {
-        const clientId = ctx.req.headers["x-iotex-client-id"];
-        if (!clientId) {
-          throw new AuthenticationError("unauthorized");
-        }
-        server.logger.info(`x-iotex-client-id: ${clientId}`);
-  
+        // const clientId = ctx.req.headers["x-iotex-client-id"];
+        // if (!clientId) {
+        //   throw new AuthenticationError("unauthorized");
+        // }
+        // server.logger.info(`x-iotex-client-id: ${clientId}`);
+
         let requestIp;
         try {
           requestIp =
@@ -54,7 +54,7 @@ export async function setApiGateway(server: MyServer): Promise<void> {
         } catch (e) {
           logger.warn("can not get requestIp");
         }
-  
+
         const token = server.auth.tokenFromCtx(ctx);
         const userId = await server.auth.jwt.verify(token);
         return {
@@ -69,8 +69,7 @@ export async function setApiGateway(server: MyServer): Promise<void> {
     });
     const gPath = `${server.config.server.routePrefix || ""}/api-gateway/`;
     apollo.applyMiddleware({ app: server.app, path: gPath });
-  }
-  catch (e) {
-    console.log('error=====================', e)
+  } catch (e) {
+    console.log("error=====================", e);
   }
 }

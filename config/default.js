@@ -37,6 +37,11 @@ module.exports = {
       debug: false,
       uri: process.env.MONGODB_URI,
       connectTimeoutMS: 5000
+    },
+    iotexMono: {
+      endpoint: "https://iotex.fun/internal-api/",
+      healthEndpoint: "https://iotex.fun/health/",
+      timeout: 8000
     }
   },
   analytics: {
