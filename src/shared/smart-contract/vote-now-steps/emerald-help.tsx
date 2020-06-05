@@ -1,5 +1,6 @@
 // @flow
 import axios from "axios";
+// @ts-ignore
 import window from "global/window";
 // $FlowFixMe
 import { notification } from "antd";
