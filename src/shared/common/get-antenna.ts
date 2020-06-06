@@ -24,11 +24,9 @@ export function getAntenna(): Antenna {
     return injectedWindow.antenna;
   }
   let signer: SignerPlugin | undefined;
+  signer = new WsSignerPlugin("wss://local.iotex.io:64102");
   if (isIoPay) {
     signer = new WvSigner();
-  }
-  if (isBrowser) {
-    signer = new WsSignerPlugin("wss://local.iotex.io:64102");
   }
   injectedWindow.antenna = new Antenna("https://api.iotex.one", {
     signer
