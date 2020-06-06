@@ -323,5 +323,6 @@ my_stake.addStakingAmount.required: "Please enter an amount."
 my_votes.nativeStaking.open_ioPay_alert: "Make sure your ioPay desktop application is in opening state"
 my_votes.nativeStaking.open_ioPay_tip: 'If the page is loading for a long time, make sure that the ioPay desktop wallet is unlocked, then refresh the page.'
 my_stake.status.suffix.anytime: Anytime
+my_stake.status.suffix.autostake_only: AutoStake Only
 my_stake.status.suffix.not_applicable: 'Not applicable'
 my_stake.status.suffix.from: 'After ${time}'

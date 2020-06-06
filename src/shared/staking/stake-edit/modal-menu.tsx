@@ -311,7 +311,7 @@ function renderAddStaking(disabled: boolean): JSX.Element {
       <span>{t("my_stake.edit.add_staking")}</span>
       {
         // @ts-ignore
-        <span style={menuInfoStyle}>{t("my_stake.status.suffix.anytime")}</span>
+        <span style={menuInfoStyle}>{t("my_stake.status.suffix.autostake_only")}</span>
       }
     </div>
   );
