@@ -13,7 +13,7 @@ import sleepPromise from "sleep-promise";
 import { WvSigner } from "./wv-signer";
 
 const state = isBrowser && JsonGlobal("state");
-const isIoPay = state.base.isIoPay;
+const isIoPay = isBrowser && state.base.isIoPay;
 
 const contractsByAddrs: Record<string, Contract> = {};
 
@@ -24,9 +24,9 @@ export function getAntenna(): Antenna {
     return injectedWindow.antenna;
   }
   let signer: SignerPlugin | undefined;
-  signer = new WvSigner();
-  if (isBrowser) {
-    signer = new WsSignerPlugin("wss://local.iotex.io:64102");
+  signer = new WsSignerPlugin("wss://local.iotex.io:64102");
+  if (isIoPay) {
+    signer = new WvSigner();
   }
   injectedWindow.antenna = new Antenna("https://api.iotex.one", {
     signer
