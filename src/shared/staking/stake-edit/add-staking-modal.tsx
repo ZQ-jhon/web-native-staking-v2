@@ -163,7 +163,6 @@ export const AddStakingModal = connect(
           modalUnMountFun={this.modalUnMountFun}
           confirmLoading={this.state.confirmLoading}
           okText={okText}
-          // okButtonProps={{ disabled: hasError(getFieldsError()) }}
         >
           <p>{t("my_stake.add_staking.desc")}</p>
           {
