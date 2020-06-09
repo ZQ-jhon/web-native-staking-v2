@@ -28,6 +28,51 @@ meta.title: Delegates
 not_found.bar: Not Found
 not_found.info: We cannot find the page for you...
 not_found.title: Oops!
+profile.name : Delegate Name (20 words limit)
+profile.name.required: Please enter the delegate name.
+profile.blurb: One-sentence statement (100 words limit)
+profile.blurb.required: Please enter your one-sentence statement.
+profile.website: Website URL
+profile.website.required: Please enter your website URL. '' is an invalid URL.
+profile.logo: Logo URL
+profile.logo.required: Please enter your logo URL.
+profile.banner_url: Banner URL
+profile.banner_url.required: Please enter your banner URL.
+profile.annual_reward: Annual Reward
+profile.annual_reward.required: Please enter the annual reward.
+profile.social_media: Social Media link (at least one link and separated by space)
+profile.social_media.required: Please enter your social media URLs. '' is an invalid URL.
+profile.location: Location
+profile.location.required: Please enter your location.
+profile.introduction: Introduction (500 words limit) in markdown
+profile.introduction.required: Please enter your introduction.
+profile.team: Team (1000 words limit) in markdown
+profile.team.required: Please enter your team background.
+profile.tech_setupL: Server Configuration (1000 words limit) in markdown
+profile.tech_setup.required: Please enter your server configuration.
+profile.community_plan: Community Plan (1000 words limit) in markdown
+profile.community_plan.required: Please enter your community plan.
+profile.reward_plan: Reward Distribution Plan (1000 words limit)
+profile.reward_plan.required: Please enter your reward plan.
+profile.reward_plan.insertCancel: Insert Cancel
+profile.reward_plan.insertFormat: Insert Format
+profile.update: Update My Profile
+profile.preview: Preview
+profile.serverEndpoint: API Endpoint. e.g. your.domainOrIp:14014. Leave it empty if you do not know what it is.
+profile.serverHealthEndpoint: Server Health Endpoint. e.g. http://your.domainOrIp:8080/health. It returns OK if visited via browser.
+profile.serverHealthEndpoint.required: Please enter your server endpoint. server endpoint is invalid.
+profile.discordName: Discord Name
+profile.DiscordName.required: Please enter your discord name.
+profile.email: Email
+profile.Email.required: Please enter your email. email is invalid.
+delegate.votesreceived.download: Download All Votes
+delegate.votesreceived.voter: Voter
+delegate.votesreceived.token_amount: Amount
+delegate.votesreceived.token_type: Token 
+delegate.votesreceived.native: IOTX
+delegate.votesreceived.iotx: IOTX-E
+delegate.votesreceived.votes: Votes
+delegate.votesreceived.remaining_duration: Remaining Stake Duration
 tools.address_convert: 'Address Convert'
 tools.address_required: 'Address required'
 tools.another_eth_addr: 'Another ETH address'
@@ -323,7 +368,7 @@ profile.welcome: Welcome
 profile.title: 'Delegate Profile'
 profile.welcome_text: "# If you are interested in becoming an IoTeX Delegate, complete the following registration items:\n1. Learn about the IoTeX Delegates Program by reading our all-in-one Delegate Handbook: https://v1.iotex.io/consensus-delegate-handbook.pdf\n2. Schedule a call with IoTeX so we can sync up and answer your questions (optional): https://calendly.com/iotex-delegates/delegateinterview\n3. Create a website and social media channels for your Delegate: In addition to your voting profile, these are the primary ways that voters will learn about you - highly recommended for all Delegates. See pg. 7-8 of the Delegate Handbook for more details.\n4. Register your Delegate node. Please see our step-by-step blog post for the full details:\n  * Install MetaMask and import an ETH address\n  * Login to the IoTeX voting website using MetaMask\n  * Create a voting profile\n  * Register your ETH name + address\n  * Self-stake at least 1.2 million IOTX-E tokens\n5. Campaign for votes and engage with voters! After completing all steps above, you will be eligible to receive votes. Introduce yourself to the IoTeX community in our official Telegram channel and explore / mine blocks on our Testnet.\n"
 profile.profile: Profile
-profile.technical: Technical
+profile.technical: Technical Information
 profile.reward-distribution: Reward Distribution
 profile.received: Vote I Received
 profile.settings: Settings

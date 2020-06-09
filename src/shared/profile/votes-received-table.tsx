@@ -56,14 +56,14 @@ class VotesReceivedTable extends PureComponent<Props, State> {
       });
   };
   render() {
-    const { registeredName, isPublic } = this.props;
+    const {  isPublic } = this.props;
     const { offset, limit } = this.state;
-    const variables = {
-      name: registeredName,
-      // name: 'robotbp00000', // use for dev
-      offset,
-      limit,
-    };
+    // const variables = {
+    //   name: registeredName,
+    //   // name: 'robotbp00000', // use for dev
+    //   offset,
+    //   limit,
+    // };
     const columns = [
       {
         title: t("delegate.votesreceived.voter"),
@@ -117,22 +117,23 @@ class VotesReceivedTable extends PureComponent<Props, State> {
         key: "remainingDuration",
       },
     ];
+    const { buckets = [] } = {};
     return (
       // @ts-ignore
-      <Query ssr={false} query={GET_VOTES_REVEIVED} variables={variables}>
-        {/* tslint:disable-next-line:no-any */}
-        {({ loading, error, data }: any) => {
-          if (error) {
-            notification.error({
-              message: "Error",
-              description: `failed to get votes recieved: ${error.message}`,
-              duration: 3,
-            });
-            return null;
-          }
-          const { buckets = [] } = data || {};
-          return (
-            <SpinPreloader spinning={loading}>
+      // <Query ssr={false} query={GET_VOTES_REVEIVED} variables={variables}>
+      //   {/* tslint:disable-next-line:no-any */}
+      //   {({ loading, error, data }: any) => {
+      //     if (error) {
+      //       notification.error({
+      //         message: "Error",
+      //         description: `failed to get votes recieved: ${error.message}`,
+      //         duration: 3,
+      //       });
+      //       return null;
+      //     }
+          
+          // return (
+            <SpinPreloader spinning={false}>
               <Flex
                 display={isPublic ? "none" : "flex"}
                 width="100%"
@@ -140,7 +141,7 @@ class VotesReceivedTable extends PureComponent<Props, State> {
                 alignItems="flex-end"
               >
                 <Button
-                  loading={loading}
+                  loading={false}
                   type={"primary"}
                   onClick={this.downloadVotes}
                 >
@@ -170,9 +171,9 @@ class VotesReceivedTable extends PureComponent<Props, State> {
               />
             </SpinPreloader>
           );
-        }}
-      </Query>
-    );
+        // }}
+      // </Query>
+    //);
   }
 }
 

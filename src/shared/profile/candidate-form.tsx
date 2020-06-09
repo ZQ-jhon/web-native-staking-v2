@@ -62,7 +62,6 @@ const validateUrls = (rule, value, callback) => {
   }
   callback();
 };
-
 // $FlowFixMe
 export const CandidateForm = connect()(
   // $FlowFixMe
@@ -189,12 +188,12 @@ export const CandidateForm = connect()(
                   style={{ padding: "1em" }}
                 >
                   <h1>{t("profile.profile")}</h1>
-
+                   
                   {getFieldDecorator("id", {
                     initialValue: data.id,
-                  })(<input name="id" type="hidden" />)}
+                  })(<Input name="id" type="hidden" />)}
 
-                  <Form.Item label={t("profile.name")}>
+                  <Form.Item label={t("profile.name")} className={"group-floating-label"}>
                     {getFieldDecorator("name", {
                       initialValue: data.name,
                       rules: [
@@ -215,7 +214,8 @@ export const CandidateForm = connect()(
                           message: t("profile.blurb.required"),
                         },
                       ],
-                    })(<Input />)}
+                    })(<Input style={{marginTop: "25px",left: "-245px",width: "211%",
+                        }}/>)}
                   </Form.Item>
 
                   <Form.Item label={t("profile.website")}>
@@ -228,7 +228,8 @@ export const CandidateForm = connect()(
                         },
                         { validator: validateUrls },
                       ],
-                    })(<Input />)}
+                    })(<Input style = {{marginTop: "25px",left: "-67px",width: "211%",
+                  }}/>)}
                   </Form.Item>
 
                   <Form.Item label={t("profile.logo")}>

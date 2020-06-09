@@ -155,45 +155,44 @@ export const Technical = connect()(
       render() {
         const { getFieldDecorator } = this.props.form;
 
-        const { candidateProfileId = "", eth = "" } = this.props;
-        const request = { candidateProfileId, eth };
+        // const { candidateProfileId = "", eth = "" } = this.props;
+        // const request = { candidateProfileId, eth };
         return (
-          // @ts-ignore
-          <Query
-            ssr={false}
-            query={GET_BP_CANDIDATE_TECH_DETAIL}
-            variables={request}
-          >
-            {/* tslint:disable-next-line:no-any */}
-            {({ loading, error, data }: any) => {
-              if (error && !loading) {
-                notification.error({
-                  message: "Error",
-                  description: error.message,
-                  duration: 3,
-                });
-                return "error when load data";
-              }
-              const bpCandidateTechDetail =
-                (data && data.bpCandidateTechDetail) || {};
-              return (
-                // @ts-ignore
+          // // @ts-ignore
+          // <Query
+          //   ssr={false}
+          //   query={GET_BP_CANDIDATE_TECH_DETAIL}
+          //   variables={request}
+          // >
+          //   {/* tslint:disable-next-line:no-any */}
+          //   {({ loading, error, data }: any) => {
+          //     if (error && !loading) {
+          //       notification.error({
+          //         message: "Error",
+          //         description: error.message,
+          //         duration: 3,
+          //       });
+          //       return "error when load data";
+          //     }
+          //     const bpCandidateTechDetail =
+          //       (data && data.bpCandidateTechDetail) || {};
+          //     return (
+               // @ts-ignore
                 <Mutation mutation={UPSERT_BP_CANDIDATE_TECH_DETAIL}>
                   {/* tslint:disable-next-line:no-any */}
                   {(upsertBpCandidateTechDetail: any, resp: any) => {
                     const newData =
                       (resp &&
                         resp.data &&
-                        resp.data.upsertBpCandidateTechDetail) ||
-                      bpCandidateTechDetail;
+                        resp.data.upsertBpCandidateTechDetail);
                     return (
                       <Form
                         onSubmit={this.onSubmit(upsertBpCandidateTechDetail)}
                       >
                         <h1>{t("profile.technical")}</h1>
-                        <Form.Item label={t("profile.serverEndpoint")}>
+                      <Form.Item label={t("profile.serverEndpoint")}>
                           {getFieldDecorator("serverEndpoint", {
-                            initialValue: newData.serverEndpoint,
+                            initialValue: newData && newData.serverEndpoint,
                             rules: [
                               { message: t("profile.serverEndpoint.required") },
                               { validator: validateServerEndpoint },
@@ -202,11 +201,11 @@ export const Technical = connect()(
                         </Form.Item>
                         <Form.Item label={t("profile.serverHealthEndpoint")}>
                           {getFieldDecorator("serverHealthEndpoint", {
-                            initialValue: newData.serverHealthEndpoint,
+                            initialValue: newData && newData.serverHealthEndpoint,
                             rules: [
                               {
                                 required: true,
-                                message: t("profile.serverEndpoint.required"),
+                                message: t("profile.serverHealthEndpoint.required"),
                               },
                               { validator: validateServerHealthEndpoint },
                             ],
@@ -214,7 +213,7 @@ export const Technical = connect()(
                         </Form.Item>
                         <Form.Item label={t("profile.discordName")}>
                           {getFieldDecorator("discordName", {
-                            initialValue: newData.discordName,
+                            initialValue: newData && newData.discordName,
                             rules: [
                               {
                                 required: true,
@@ -225,7 +224,7 @@ export const Technical = connect()(
                         </Form.Item>
                         <Form.Item label={t("profile.email")}>
                           {getFieldDecorator("email", {
-                            initialValue: newData.email,
+                            initialValue: newData && newData.email,
                             rules: [
                               {
                                 required: true,
@@ -252,10 +251,10 @@ export const Technical = connect()(
                   }}
                 </Mutation>
               );
-            }}
-          </Query>
-        );
-      }
+      //       }}
+      //     </Query>
+      //   );
+       }
     }
   )
 );

@@ -128,3 +128,155 @@ $border-warning: #e44837;
   font-weight: bold;
   line-height: 1.36;
 }
+
+.group-floating-label {
+  position: relative;
+  margin-bottom: 30px !important;
+
+  .input-control {
+      .ant-input {
+          display: block;
+          width: 100%;
+          line-height: 1.25;
+          color: #000;
+          background-color: #fff;
+          background-image: none;
+          background-clip: padding-box;
+          border: 1px solid rgba(0, 0, 0, .15);
+          border-radius: .25rem;
+          transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+          border: 0;
+          box-shadow: none;
+          border-bottom: 1px solid #e8e8e8;
+          border-radius: 0;
+          .font-size(1.6);
+          padding: 0;
+
+          &.ant-input-disabled {
+              background-color: rgba(245, 245, 245, 0.36);
+              color: rgba(0, 0, 0, 0.36);
+          }
+
+          &:focus, &:hover {
+              box-shadow: none;
+              border-color: #4285f4;
+          }
+
+          &::-webkit-input-placeholder {
+              color: #fff;
+
+          }
+
+          &::-moz-placeholder {
+              color: #fff;
+          }
+
+          &:-ms-input-placeholder {
+              color: #fff;
+          }
+
+          &:focus + .ant-input-suffix, &:not(:placeholder-shown) + .ant-input-suffix {
+              .floating-label {
+                  font-size: 85%;
+                  transform: translate3d(0, -25px, 0);
+                  color: rgba(0, 0, 0, .7);
+                  padding-left: 0;
+              }
+          }
+      }
+
+      @supports (-ms-ime-align:auto) {
+          .ant-input-suffix {
+              .floating-label {
+                  font-size: 85%;
+                  transform: translate3d(0, -25px, 0);
+                  color: rgba(0, 0, 0, .7);
+                  padding-left: 0;
+              }
+          }
+      }
+
+      &.show-placeholder {
+          .ant-input {
+              &:focus {
+                  &::-webkit-input-placeholder {
+                      color: #ccc;
+                      .font-size(1.3);
+                  }
+
+                  &::-moz-placeholder {
+                      color: #ccc;
+                      .font-size(1.3);
+                  }
+
+                  &:-ms-input-placeholder {
+                      color: #ccc;
+                      .font-size(1.3);
+                  }
+              }
+          }
+      }
+  }
+
+  &.input-prefix {
+      .prefix {
+          display: inline-block;
+          border: 1px solid #e8e8e8;
+          border-radius: 20px;
+          padding: 5px 10px;
+          line-height: 10px;
+          margin-right: 20px;
+          position: absolute;
+          left: 0;
+          top: 4px;
+          .font-size(1.6);
+          text-align: center;
+          z-index: 9;
+          color: #000;
+      }
+
+      .input-control {
+          .ant-input {
+              padding-left: 70px;
+          }
+      }
+
+      .ant-input-suffix {
+          .floating-label {
+              padding-left: 70px;
+          }
+      }
+
+      .ant-input-prefix {
+          left: 0;
+          top: 0;
+      }
+  }
+
+  .ant-input-suffix {
+      left: 0;
+      right: 0;
+      top: 0;
+
+      .floating-label {
+          position: absolute !important;
+          top: 0;
+          padding: 0px;
+          transition: all 200ms;
+          color: rgba(0, 0, 0, 0.5);
+          line-height: 30px;
+          transform: translate3d(0, 0, 0);
+      }
+  }
+
+  .has-error {
+      .ant-input {
+          box-shadow: none !important;
+      }
+
+      .input-control {
+          .ant-input {
+              border-bottom: 2px solid red;
+          }
+      }
+  }

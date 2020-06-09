@@ -44,15 +44,15 @@ class CandidateProfile extends Component<Props> {
   }
 
   render() {
-    const { candidateProfileId = "", eth = "" } = this.props;
+    //const { candidateProfileId = "", eth = "" } = this.props;
 
-    const request = { candidateProfileId, eth };
+    // const request = { candidateProfileId, eth };
     return (
       <div>
-        // @ts-ignore
-        <Query ssr={false} query={GET_BP_CANDIDATE} variables={request}>
+        {/* <Query ssr={false} query={GET_BP_CANDIDATE} variables={request}> */}
           {/* tslint:disable-next-line:no-any */}
-          {({ loading, error, data }) => {
+          {/* {({ loading, error, data }) => {
+            console.log("we are seeing the data here", data)
             if (error && !loading) {
               notification.error({
                 message: "Error",
@@ -76,7 +76,10 @@ class CandidateProfile extends Component<Props> {
               </SpinPreloader>
             );
           }}
-        </Query>
+        </Query> */}
+        <SpinPreloader spinning={false}>
+                <CandidateForm data={DEFAULT_BP_CANDIDATE} />
+              </SpinPreloader>
       </div>
     );
   }
@@ -84,7 +87,8 @@ class CandidateProfile extends Component<Props> {
 
 // $FlowFixMe
 export const CandidateProfileContainer = connect(
-  (state: { base: { eth: string } }) => ({
-    eth: state.base.eth
+  (state: { base: { eth: string, candidateProfileId: string } }) => ({
+    eth: state.base.eth,
+    candidateProfileId: state.base.candidateProfileId
   })
 )(CandidateProfile);
