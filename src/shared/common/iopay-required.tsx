@@ -9,6 +9,7 @@ import React, { PureComponent } from "react";
 import { connect } from "react-redux";
 // @ts-ignore
 import sleepPromise from "sleep-promise";
+import { Flex } from "./flex";
 import { getAntenna } from "./get-antenna";
 
 type State = {
@@ -104,7 +105,11 @@ export const IopayRequired = (InnerComponent: any) => {
       }
       switch (isIopayConnected) {
         case undefined:
-          return <LoadingOutlined />;
+          return (
+            <Flex center={true} width={"100%"}>
+              <LoadingOutlined />
+            </Flex>
+          );
         case false:
           return <DownloadButton />;
         case true:

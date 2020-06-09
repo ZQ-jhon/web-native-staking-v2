@@ -326,3 +326,5 @@ my_stake.status.suffix.anytime: Anytime
 my_stake.status.suffix.autostake_only: AutoStake Only
 my_stake.status.suffix.not_applicable: 'Not applicable'
 my_stake.status.suffix.from: 'After ${time}'
+auth/sign_in.title: Becoming an IoTeX block producer
+auth/button_submit: Login or Sign Up with IoPay

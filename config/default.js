@@ -4,6 +4,7 @@ config();
 module.exports = {
   project: "web-native-staking-v2",
   server: {
+    proxy: true,
     routePrefix: "/v2",
     port: process.env.PORT || 5004,
     staticDir: "./dist",

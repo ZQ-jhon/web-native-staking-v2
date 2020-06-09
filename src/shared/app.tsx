@@ -12,6 +12,7 @@ import { colors } from "./common/styles/style-color";
 import { fonts } from "./common/styles/style-font";
 import { TopBar } from "./common/top-bar";
 import { VotingContainer } from "./home/voting-container";
+import { SignIn } from "./onefx-auth-provider/email-password-identity-provider/view/sign-in";
 import { VoteNativePage } from "./staking/voting-native-page";
 
 type Props = {
@@ -33,6 +34,7 @@ export class App extends Component<Props> {
           <ScrollToTop>
             <Switch>
               <Route exact={true} path="/" component={VotingContainer} />
+              <Route exact={true} path="/login" component={SignIn} />
               <Route
                 exact={true}
                 path="/my-votes"
