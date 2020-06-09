@@ -379,18 +379,16 @@ class MyVotesTable extends Component<Props, State> {
         >
           {/*
         // @ts-ignore */}
-          {
-            <Table
-              className={"MyStakeInfo"}
-              rowClassName={this.setRowClassName}
-              style={{ width: "100%" }}
-              pagination={{ pageSize: 6 }}
-              columns={DisplayMyStakeCols(bpCandidates)}
-              dataSource={dataSource}
-              showHeader={!!(dataSource && dataSource.length > 0)}
-              rowKey="index"
-            />
-          }
+          <Table
+            className={"MyStakeInfo"}
+            rowClassName={this.setRowClassName}
+            style={{ width: "100%" }}
+            pagination={{ pageSize: 6 }}
+            columns={DisplayMyStakeCols(bpCandidates)}
+            dataSource={dataSource}
+            showHeader={!!(dataSource && dataSource.length > 0)}
+            rowKey="index"
+          />
         </Flex>
         <Flex
           column={true}
