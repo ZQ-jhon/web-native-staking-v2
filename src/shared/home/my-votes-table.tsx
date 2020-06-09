@@ -386,6 +386,7 @@ class MyVotesTable extends Component<Props, State> {
             pagination={{ pageSize: 6 }}
             columns={DisplayMyStakeCols(bpCandidates)}
             dataSource={dataSource}
+            showHeader={!!(dataSource && dataSource.length > 0)}
             rowKey="index"
           />
         </Flex>
