@@ -20,7 +20,7 @@ import { AddressName } from "../common/address-name";
 import { Flex } from "../common/flex";
 import { colors } from "../common/styles/style-color";
 import { media } from "../common/styles/style-media";
-import { Bucket, getPowerEstimationForBucket } from "../common/token-utils";
+import { getPowerEstimationForBucket } from "../common/token-utils";
 import { renderActionMenu } from "../staking/stake-edit/modal-menu";
 import { AccountMeta } from "./account-meta";
 
@@ -483,8 +483,8 @@ class MyVotesTable extends Component<Props, State> {
           }}
         >
           {/*
-        // @ts-ignore */}
-          {(!isIoPay || !!(dataSource && dataSource.length === 0)) && (
+        // @ts-ignore */ (!isIoPay ||
+            !!(dataSource && dataSource.length === 0)) && (
             <Table
               className={"MyStakeInfo"}
               rowClassName={this.setRowClassName}
