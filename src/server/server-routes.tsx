@@ -57,6 +57,6 @@ export function checkingAppSource(ctx: koa.Context): void {
     ctx.session.app_source === "IoPay"
   ) {
     ctx.session.app_source = "IoPay";
-    ctx.setState("base.isIoPay", true);
+    ctx.setState("base.isIoPayMobile", true);
   }
 }

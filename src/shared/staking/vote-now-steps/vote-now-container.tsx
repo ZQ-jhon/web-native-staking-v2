@@ -67,7 +67,7 @@ type Props = {
   // tslint:disable-next-line:no-any
   currentCandidate?: any;
   disableModal?: boolean;
-  isIoPay?: boolean;
+  isIoPayMobile?: boolean;
 };
 
 const CONFIRM_STEP = "CONFIRM";
@@ -85,9 +85,9 @@ const Confirmation = styled("div", () => ({
 }));
 
 const VoteNowContainer = connect(
-  (state: { base: { siteUrl: string; isIoPay: boolean } }) => ({
+  (state: { base: { siteUrl: string; isIoPayMobile: boolean } }) => ({
     siteUrl: state.base.siteUrl,
-    isIoPay: state.base.isIoPay
+    isIoPayMobile: state.base.isIoPayMobile
   }),
   dispatch => ({
     // tslint:disable-next-line:no-any

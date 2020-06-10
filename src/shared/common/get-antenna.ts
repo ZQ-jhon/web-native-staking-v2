@@ -13,7 +13,7 @@ import sleepPromise from "sleep-promise";
 import { WvSigner } from "./wv-signer";
 
 const state = isBrowser && JsonGlobal("state");
-const isIoPay = isBrowser && state.base.isIoPay;
+const isIoPayMobile = isBrowser && state.base.isIoPayMobile;
 
 const contractsByAddrs: Record<string, Contract> = {};
 
@@ -24,7 +24,7 @@ export function getAntenna(): Antenna {
     return injectedWindow.antenna;
   }
   let signer: SignerPlugin | undefined;
-  if (isIoPay) {
+  if (isIoPayMobile) {
     signer = new WvSigner();
   } else if (isBrowser) {
     signer = new WsSignerPlugin("wss://local.iotex.io:64102");
@@ -40,7 +40,7 @@ export function lazyGetContract(address: string, abi: any): Contract {
   if (contractsByAddrs[address]) {
     return contractsByAddrs[address];
   }
-  if (isIoPay) {
+  if (isIoPayMobile) {
     const contract = getXAppTokenContract(abi, address);
     contractsByAddrs[address] = contract;
   } else {
@@ -78,7 +78,7 @@ export function getMobileNativeAntenna(): Antenna {
 
 export async function getIoPayAddress(): Promise<string> {
   const antenna = getAntenna();
-  if (isIoPay) {
+  if (isIoPayMobile) {
     // tslint:disable-next-line:no-unnecessary-local-variable
     const address = await getIoAddressFromIoPay();
     return address;

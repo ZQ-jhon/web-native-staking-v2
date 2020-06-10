@@ -50,7 +50,7 @@ type State = {
 export const AddStakingModal = connect(
   state => ({
     // @ts-ignore
-    isIoPay: state.base.isIoPay
+    isIoPayMobile: state.base.isIoPayMobile
   }),
   dispatch => ({
     actionSmartContractCalled(payload: boolean): void {

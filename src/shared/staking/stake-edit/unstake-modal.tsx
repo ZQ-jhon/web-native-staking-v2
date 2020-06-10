@@ -26,7 +26,7 @@ type Props = {
   nonDecay: boolean;
   epochSecondValue?: number;
   isNative: boolean;
-  isIoPay?: boolean;
+  isIoPayMobile?: boolean;
   nativeTokenContractAddr: string;
   nativePatchTokenContractAddr: string;
   isPatchContract?: boolean;

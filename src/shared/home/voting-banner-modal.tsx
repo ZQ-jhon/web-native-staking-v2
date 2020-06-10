@@ -1,14 +1,14 @@
-import React, {PureComponent} from "react";
-import {connect} from "react-redux";
-import {VoteNowContainer} from "../staking/vote-now-steps/vote-now-container";
-import {VotingModal} from "./vote-button-modal";
-import {VotingBanner} from "./voting-banner";
+import React, { PureComponent } from "react";
+import { connect } from "react-redux";
+import { VoteNowContainer } from "../staking/vote-now-steps/vote-now-container";
+import { VotingModal } from "./vote-button-modal";
+import { VotingBanner } from "./voting-banner";
 
 type Props = {
   isMobile: boolean;
   // tslint:disable-next-line:no-any
   history: any;
-  isIoPay?: boolean;
+  isIoPayMobile?: boolean;
 };
 
 type State = {
@@ -24,7 +24,7 @@ type State = {
 
 // @ts-ignore
 // tslint:disable-next-line:no-any
-@connect(state => ({ isIoPay: state.base.isIoPay }))
+@connect(state => ({ isIoPayMobile: state.base.isIoPayMobile }))
 class VotingBannerModal extends PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
@@ -35,7 +35,7 @@ class VotingBannerModal extends PureComponent<Props, State> {
       shouldDisplayMetaMaskReminder: false,
       userConfirmedMetaMaskReminder: false,
       currentCandidate: null,
-      displayMobileList: false,
+      displayMobileList: false
     };
   }
 
@@ -49,7 +49,7 @@ class VotingBannerModal extends PureComponent<Props, State> {
   };
   // tslint:disable-next-line:no-any
   showVotingModal = (record: any) => {
-    const { isIoPay } = this.props;
+    const { isIoPayMobile } = this.props;
 
     if (this.state.userConfirmedMetaMaskReminder) {
       this.setState({
@@ -60,19 +60,19 @@ class VotingBannerModal extends PureComponent<Props, State> {
     } else {
       this.setState({
         currentCandidateName: record && record.registeredName,
-        shouldDisplayMetaMaskReminder: !isIoPay,
-        shouldDisplayVotingModal: !!isIoPay,
+        shouldDisplayMetaMaskReminder: !isIoPayMobile,
+        shouldDisplayVotingModal: !!isIoPayMobile,
         currentCandidate: record
       });
     }
   };
 
   render(): JSX.Element {
-    const { isMobile, history, isIoPay } = this.props;
+    const { isMobile, history, isIoPayMobile } = this.props;
     const showVotingModal =
-      isMobile && !isIoPay
+      isMobile && !isIoPayMobile
         ? () => {
-            history.push(isIoPay ? "/vote-native/" : "/vote/");
+            history.push(isIoPayMobile ? "/vote-native/" : "/vote/");
           }
         : this.showVotingModal;
     return (
@@ -90,15 +90,17 @@ class VotingBannerModal extends PureComponent<Props, State> {
             this.setState({ shouldDisplayMetaMaskReminder: false })
           }
         />
-        {(
+        {
           // @ts-ignore
           <VoteNowContainer
             registeredName={this.state.currentCandidateName}
             displayOthers={false}
             forceDisplayModal={this.state.shouldDisplayVotingModal}
-            requestDismiss={() => this.setState({ shouldDisplayVotingModal: false })}
+            requestDismiss={() =>
+              this.setState({ shouldDisplayVotingModal: false })
+            }
           />
-        )}
+        }
       </>
     );
   }
