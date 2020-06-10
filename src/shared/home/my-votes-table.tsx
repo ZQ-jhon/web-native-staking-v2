@@ -2,22 +2,25 @@
 import CheckOutlined from "@ant-design/icons/CheckOutlined";
 import DownOutlined from "@ant-design/icons/DownOutlined";
 import MinusOutlined from "@ant-design/icons/MinusOutlined";
-import { Button, Dropdown } from "antd";
+import { Button, Dropdown, List } from "antd";
 import Avatar from "antd/lib/avatar";
 import Table from "antd/lib/table";
 import dateformat from "dateformat";
 import Antenna from "iotex-antenna/lib";
+import isBrowser from "is-browser";
 import { assetURL } from "onefx/lib/asset-url";
 import { t } from "onefx/lib/iso-i18n";
 import React, { Component } from "react";
 import { connect } from "react-redux";
+// @ts-ignore
+import JsonGlobal from "safe-json-globals/get";
 import { styled } from "styletron-react";
 import { IBucket } from "../../server/gateway/staking";
 import { AddressName } from "../common/address-name";
 import { Flex } from "../common/flex";
 import { colors } from "../common/styles/style-color";
 import { media } from "../common/styles/style-media";
-import { getPowerEstimationForBucket } from "../common/token-utils";
+import { Bucket, getPowerEstimationForBucket } from "../common/token-utils";
 import { renderActionMenu } from "../staking/stake-edit/modal-menu";
 import { AccountMeta } from "./account-meta";
 
@@ -33,6 +36,9 @@ type State = {
   showMore: Record<any, any>;
   address?: string;
 };
+
+const state = isBrowser && JsonGlobal("state");
+const isIoPay = isBrowser && state.base.isIoPay;
 
 // @ts-ignore
 @connect((state: { buckets: Array<IBucket> }) => {
@@ -144,6 +150,109 @@ class MyVotesTable extends Component<Props, State> {
     }
 
     return null;
+  };
+
+  renderMobileTable = (item: any) => {
+    // tslint:disable-next-line:no-console
+    console.log(item);
+    const no = String(item.index);
+    const header = (
+      <Flex
+        minWidth={"186px"}
+        alignContent={""}
+        justifyContent={"space-between"}
+        flexDirection={"row"}
+      >
+        <Avatar
+          shape="square"
+          src={assetURL("my-staking/box.png")}
+          size={40}
+          style={{ margin: "14px 10px 8px 0" }}
+        />
+        <Flex
+          column={true}
+          alignItems={"baseline"}
+          color={colors.black}
+          width={"100px"}
+          padding={"7px 0"}
+        >
+          <BoldText>
+            {// @ts-ignore
+            t("my_stake.order_no", { no })}
+          </BoldText>
+          <BoldText style={{ whiteSpace: "nowrap" }}>
+            {t("my_stake.native_staked_amount_format", {
+              amountText: item.stakedAmount.toNumber().toLocaleString()
+            })}
+          </BoldText>
+        </Flex>
+        <Flex>
+          <Dropdown overlay={renderActionMenu(item)} trigger={["click"]}>
+            <Button style={{ paddingLeft: "10px", paddingRight: "10px" }}>
+              {t("my_stake.edit.row")} <DownOutlined />
+            </Button>
+          </Dropdown>
+        </Flex>
+      </Flex>
+    );
+
+    const data = [
+      {
+        title: t("my_stake.vote_for"),
+        value: <span style={{ color: "#00B4A0" }}>{item.canName}</span>
+      },
+      {
+        title: t("my_stake.stake_duration"),
+        value: (
+          <Flex column={true} alignItems={"baseline"}>
+            <span style={{ float: "right" }}>
+              {t("my_stake.duration_epochs", {
+                stakeDuration: item.stakedDuration
+              })}
+            </span>
+            <TimeSpan>
+              {t("my_stake.from_time", {
+                startTime: item.stakeStartTime
+                  ? dateformat(item.stakeStartTime, "yyyy/mm/dd")
+                  : "-"
+              })}
+            </TimeSpan>
+          </Flex>
+        )
+      },
+      {
+        title: t("my_stake.nonDecay"),
+        value: item.autoStake ? (
+          <CheckOutlined
+            style={{ color: colors.VERIFYING, fontSize: "20px" }}
+          />
+        ) : (
+          <MinusOutlined style={{ color: colors.MISSED, fontSize: "24px" }} />
+        )
+      },
+      {
+        title: t("my_stake.bucket_status"),
+        value: item.status
+      }
+    ];
+
+    return (
+      <List
+        style={{ width: "100%", marginTop: 20 }}
+        size="small"
+        header={header}
+        bordered={true}
+        dataSource={data}
+        renderItem={item => (
+          <List.Item>
+            <span style={{ color: "#333333", fontWeight: "bold" }}>
+              {item.title}
+            </span>
+            <span style={{ float: "right" }}>{item.value}</span>
+          </List.Item>
+        )}
+      />
+    );
   };
 
   // tslint:disable-next-line:max-func-body-length
@@ -379,16 +488,27 @@ class MyVotesTable extends Component<Props, State> {
         >
           {/*
         // @ts-ignore */}
-          <Table
-            className={"MyStakeInfo"}
-            rowClassName={this.setRowClassName}
-            style={{ width: "100%" }}
-            pagination={{ pageSize: 6 }}
-            columns={DisplayMyStakeCols(bpCandidates)}
-            dataSource={dataSource}
-            showHeader={!!(dataSource && dataSource.length > 0)}
-            rowKey="index"
-          />
+          {(!isIoPay || !!(dataSource && dataSource.length === 0)) && (
+            <Table
+              className={"MyStakeInfo"}
+              rowClassName={this.setRowClassName}
+              style={{ width: "100%" }}
+              pagination={{ pageSize: 6 }}
+              columns={DisplayMyStakeCols(bpCandidates)}
+              dataSource={dataSource}
+              showHeader={!!(dataSource && dataSource.length > 0)}
+              rowKey="index"
+            />
+          )}
+          {isIoPay && (
+            <div style={{ marginBottom: 20 }}>
+              {dataSource &&
+                dataSource.length > 0 &&
+                dataSource.map(item => {
+                  return this.renderMobileTable(item);
+                })}
+            </div>
+          )}
         </Flex>
         <Flex
           column={true}
