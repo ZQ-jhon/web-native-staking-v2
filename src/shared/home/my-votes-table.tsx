@@ -482,9 +482,11 @@ class MyVotesTable extends Component<Props, State> {
             }
           }}
         >
-          {/*
-        // @ts-ignore */ (!isIoPay ||
-            !!(dataSource && dataSource.length === 0)) && (
+          {(!isIoPay ||
+            !!(
+              dataSource && dataSource.length === 0
+            )) /*
+            // @ts-ignore */ && (
             <Table
               className={"MyStakeInfo"}
               rowClassName={this.setRowClassName}
