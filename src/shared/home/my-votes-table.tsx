@@ -155,11 +155,7 @@ class MyVotesTable extends Component<Props, State> {
   renderMobileTable = (item: any) => {
     const no = String(item.index);
     const header = (
-      <Flex
-        minWidth={"186px"}
-        justifyContent={"space-between"}
-        flexDirection={"row"}
-      >
+      <Flex justifyContent={"space-between"} flexDirection={"row"}>
         <div>
           <Avatar
             shape="square"
@@ -501,7 +497,10 @@ class MyVotesTable extends Component<Props, State> {
             />
           )}
           {isIoPay && (
-            <div style={{ width: "100%", marginBottom: 40 }}>
+            <div
+              className="mobileVotes"
+              style={{ width: "100%", marginBottom: 40 }}
+            >
               {dataSource &&
                 dataSource.length > 0 &&
                 dataSource.map(item => {
