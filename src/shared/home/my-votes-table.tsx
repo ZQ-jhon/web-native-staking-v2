@@ -170,9 +170,7 @@ class MyVotesTable extends Component<Props, State> {
           <Flex
             float={"right"}
             column={true}
-            alignItems={"flex-start"}
             color={colors.black}
-            width={"100px"}
             padding={"7px 0"}
           >
             <BoldText>
@@ -199,7 +197,7 @@ class MyVotesTable extends Component<Props, State> {
     const data = [
       {
         title: t("my_stake.vote_for"),
-        value: <span style={{ color: "#00B4A0" }}>{item.canName}</span>
+        value: <span style={{ color: colors.primary }}>{item.canName}</span>
       },
       {
         title: t("my_stake.stake_duration"),
@@ -245,7 +243,7 @@ class MyVotesTable extends Component<Props, State> {
         dataSource={data}
         renderItem={item => (
           <List.Item style={{ minHeight: 50 }}>
-            <span style={{ color: "#333333", fontWeight: "bold" }}>
+            <span style={{ color: colors.text01, fontWeight: "bold" }}>
               {item.title}
             </span>
             <span style={{ float: "right" }}>{item.value}</span>
