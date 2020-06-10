@@ -153,39 +153,39 @@ class MyVotesTable extends Component<Props, State> {
   };
 
   renderMobileTable = (item: any) => {
-    // tslint:disable-next-line:no-console
-    console.log(item);
     const no = String(item.index);
     const header = (
       <Flex
         minWidth={"186px"}
-        alignContent={""}
         justifyContent={"space-between"}
         flexDirection={"row"}
       >
-        <Avatar
-          shape="square"
-          src={assetURL("my-staking/box.png")}
-          size={40}
-          style={{ margin: "14px 10px 8px 0" }}
-        />
-        <Flex
-          column={true}
-          alignItems={"baseline"}
-          color={colors.black}
-          width={"100px"}
-          padding={"7px 0"}
-        >
-          <BoldText>
-            {// @ts-ignore
-            t("my_stake.order_no", { no })}
-          </BoldText>
-          <BoldText style={{ whiteSpace: "nowrap" }}>
-            {t("my_stake.native_staked_amount_format", {
-              amountText: item.stakedAmount.toNumber().toLocaleString()
-            })}
-          </BoldText>
-        </Flex>
+        <div>
+          <Avatar
+            shape="square"
+            src={assetURL("my-staking/box.png")}
+            size={40}
+            style={{ margin: "8px 10px 8px 0" }}
+          />
+          <Flex
+            float={"right"}
+            column={true}
+            alignItems={"flex-start"}
+            color={colors.black}
+            width={"100px"}
+            padding={"7px 0"}
+          >
+            <BoldText>
+              {// @ts-ignore
+              t("my_stake.order_no", { no })}
+            </BoldText>
+            <BoldText style={{ whiteSpace: "nowrap" }}>
+              {t("my_stake.native_staked_amount_format", {
+                amountText: item.stakedAmount.toNumber().toLocaleString()
+              })}
+            </BoldText>
+          </Flex>
+        </div>
         <Flex>
           <Dropdown overlay={renderActionMenu(item)} trigger={["click"]}>
             <Button style={{ paddingLeft: "10px", paddingRight: "10px" }}>
@@ -204,7 +204,7 @@ class MyVotesTable extends Component<Props, State> {
       {
         title: t("my_stake.stake_duration"),
         value: (
-          <Flex column={true} alignItems={"baseline"}>
+          <Flex column={true} alignItems={"flex-end"}>
             <span style={{ float: "right" }}>
               {t("my_stake.duration_epochs", {
                 stakeDuration: item.stakedDuration
@@ -244,7 +244,7 @@ class MyVotesTable extends Component<Props, State> {
         bordered={true}
         dataSource={data}
         renderItem={item => (
-          <List.Item>
+          <List.Item style={{ minHeight: 50 }}>
             <span style={{ color: "#333333", fontWeight: "bold" }}>
               {item.title}
             </span>
@@ -464,6 +464,8 @@ class MyVotesTable extends Component<Props, State> {
           }
         }
       ];
+    // @ts-ignore
+    // @ts-ignore
     return (
       <Flex
         alignItems={"flex-start"}
@@ -501,7 +503,7 @@ class MyVotesTable extends Component<Props, State> {
             />
           )}
           {isIoPay && (
-            <div style={{ marginBottom: 20 }}>
+            <div style={{ width: "100%", marginBottom: 40 }}>
               {dataSource &&
                 dataSource.length > 0 &&
                 dataSource.map(item => {
