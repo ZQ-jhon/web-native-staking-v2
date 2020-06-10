@@ -48,7 +48,7 @@ profile.introduction: Introduction (500 words limit) in markdown
 profile.introduction.required: Please enter your introduction.
 profile.team: Team (1000 words limit) in markdown
 profile.team.required: Please enter your team background.
-profile.tech_setupL: Server Configuration (1000 words limit) in markdown
+profile.tech_setup: Server Configuration (1000 words limit) in markdown
 profile.tech_setup.required: Please enter your server configuration.
 profile.community_plan: Community Plan (1000 words limit) in markdown
 profile.community_plan.required: Please enter your community plan.
@@ -58,11 +58,12 @@ profile.reward_plan.insertCancel: Insert Cancel
 profile.reward_plan.insertFormat: Insert Format
 profile.update: Update My Profile
 profile.preview: Preview
+profile.invalid_url: Url is invalid.
 profile.serverEndpoint: API Endpoint. e.g. your.domainOrIp:14014. Leave it empty if you do not know what it is.
 profile.serverHealthEndpoint: Server Health Endpoint. e.g. http://your.domainOrIp:8080/health. It returns OK if visited via browser.
 profile.serverHealthEndpoint.required: Please enter your server endpoint. server endpoint is invalid.
 profile.discordName: Discord Name
-profile.DiscordName.required: Please enter your discord name.
+profile.discordName.required: Please enter your discord name.
 profile.email: Email
 profile.Email.required: Please enter your email. email is invalid.
 delegate.votesreceived.download: Download All Votes
