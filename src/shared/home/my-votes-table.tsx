@@ -2,15 +2,18 @@
 import CheckOutlined from "@ant-design/icons/CheckOutlined";
 import DownOutlined from "@ant-design/icons/DownOutlined";
 import MinusOutlined from "@ant-design/icons/MinusOutlined";
-import { Button, Dropdown } from "antd";
+import { Button, Dropdown, List } from "antd";
 import Avatar from "antd/lib/avatar";
 import Table from "antd/lib/table";
 import dateformat from "dateformat";
 import Antenna from "iotex-antenna/lib";
+import isBrowser from "is-browser";
 import { assetURL } from "onefx/lib/asset-url";
 import { t } from "onefx/lib/iso-i18n";
 import React, { Component } from "react";
 import { connect } from "react-redux";
+// @ts-ignore
+import JsonGlobal from "safe-json-globals/get";
 import { styled } from "styletron-react";
 import { IBucket } from "../../server/gateway/staking";
 import { AddressName } from "../common/address-name";
@@ -33,6 +36,9 @@ type State = {
   showMore: Record<any, any>;
   address?: string;
 };
+
+const state = isBrowser && JsonGlobal("state");
+const isIoPay = isBrowser && state.base.isIoPay;
 
 // @ts-ignore
 @connect((state: { buckets: Array<IBucket> }) => {
@@ -144,6 +150,103 @@ class MyVotesTable extends Component<Props, State> {
     }
 
     return null;
+  };
+
+  renderMobileTable = (item: any) => {
+    const no = String(item.index);
+    const header = (
+      <Flex justifyContent={"space-between"} flexDirection={"row"}>
+        <div>
+          <Avatar
+            shape="square"
+            src={assetURL("my-staking/box.png")}
+            size={40}
+            style={{ margin: "8px 10px 8px 0" }}
+          />
+          <Flex
+            float={"right"}
+            column={true}
+            color={colors.black}
+            padding={"7px 0"}
+          >
+            <BoldText>
+              {// @ts-ignore
+              t("my_stake.order_no", { no })}
+            </BoldText>
+            <BoldText style={{ whiteSpace: "nowrap" }}>
+              {t("my_stake.native_staked_amount_format", {
+                amountText: item.stakedAmount.toNumber().toLocaleString()
+              })}
+            </BoldText>
+          </Flex>
+        </div>
+        <Flex>
+          <Dropdown overlay={renderActionMenu(item)} trigger={["click"]}>
+            <Button style={{ paddingLeft: "10px", paddingRight: "10px" }}>
+              {t("my_stake.edit.row")} <DownOutlined />
+            </Button>
+          </Dropdown>
+        </Flex>
+      </Flex>
+    );
+
+    const data = [
+      {
+        title: t("my_stake.vote_for"),
+        value: <span style={{ color: colors.primary }}>{item.canName}</span>
+      },
+      {
+        title: t("my_stake.stake_duration"),
+        value: (
+          <Flex column={true} alignItems={"flex-end"}>
+            <span style={{ float: "right" }}>
+              {t("my_stake.duration_epochs", {
+                stakeDuration: item.stakedDuration
+              })}
+            </span>
+            <TimeSpan>
+              {t("my_stake.from_time", {
+                startTime: item.stakeStartTime
+                  ? dateformat(item.stakeStartTime, "yyyy/mm/dd")
+                  : "-"
+              })}
+            </TimeSpan>
+          </Flex>
+        )
+      },
+      {
+        title: t("my_stake.nonDecay"),
+        value: item.autoStake ? (
+          <CheckOutlined
+            style={{ color: colors.VERIFYING, fontSize: "20px" }}
+          />
+        ) : (
+          <MinusOutlined style={{ color: colors.MISSED, fontSize: "24px" }} />
+        )
+      },
+      {
+        title: t("my_stake.bucket_status"),
+        value: item.status
+      }
+    ];
+
+    return (
+      <List
+        style={{ width: "100%", marginTop: 20 }}
+        size="small"
+        header={header}
+        bordered={true}
+        dataSource={data}
+        renderItem={item => (
+          <List.Item style={{ minHeight: 50 }}>
+            <span style={{ color: colors.text01, fontWeight: "bold" }}>
+              {item.title}
+            </span>
+            <span style={{ float: "right" }}>{item.value}</span>
+          </List.Item>
+        )}
+      />
+    );
   };
 
   // tslint:disable-next-line:max-func-body-length
@@ -355,6 +458,8 @@ class MyVotesTable extends Component<Props, State> {
           }
         }
       ];
+    // @ts-ignore
+    // @ts-ignore
     return (
       <Flex
         alignItems={"flex-start"}
@@ -377,18 +482,34 @@ class MyVotesTable extends Component<Props, State> {
             }
           }}
         >
-          {/*
-        // @ts-ignore */}
-          <Table
-            className={"MyStakeInfo"}
-            rowClassName={this.setRowClassName}
-            style={{ width: "100%" }}
-            pagination={{ pageSize: 6 }}
-            columns={DisplayMyStakeCols(bpCandidates)}
-            dataSource={dataSource}
-            showHeader={!!(dataSource && dataSource.length > 0)}
-            rowKey="index"
-          />
+          {(!isIoPay ||
+            !!(
+              dataSource && dataSource.length === 0
+            )) /*
+            // @ts-ignore */ && (
+            <Table
+              className={"MyStakeInfo"}
+              rowClassName={this.setRowClassName}
+              style={{ width: "100%" }}
+              pagination={{ pageSize: 6 }}
+              columns={DisplayMyStakeCols(bpCandidates)}
+              dataSource={dataSource}
+              showHeader={!!(dataSource && dataSource.length > 0)}
+              rowKey="index"
+            />
+          )}
+          {isIoPay && (
+            <div
+              className="mobileVotes"
+              style={{ width: "100%", marginBottom: 40 }}
+            >
+              {dataSource &&
+                dataSource.length > 0 &&
+                dataSource.map(item => {
+                  return this.renderMobileTable(item);
+                })}
+            </div>
+          )}
         </Flex>
         <Flex
           column={true}
