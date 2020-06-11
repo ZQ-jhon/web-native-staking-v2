@@ -1,5 +1,5 @@
 // @flow
-import React, { Component } from "react";
+import React, { useState } from "react";
 // @ts-ignore
 import window from "global/window";
 import gql from "graphql-tag";
@@ -7,8 +7,8 @@ import { Query, Mutation } from "react-apollo";
 import { connect } from "react-redux";
 import { t } from "onefx/lib/iso-i18n";
 // $FlowFixMe
-import { Button, Input, notification } from "antd";
-import { Form } from "@ant-design/compatible";
+import { Button, Input, notification, Form } from "antd";
+// import { Form } from "@ant-design/compatible";
 import axios from "axios";
 
 const GET_BP_CANDIDATE_TECH_DETAIL = gql`
@@ -66,16 +66,16 @@ const validateServerEndpoint = (_rule: any, value: any, callback: any) => {
     .post("/api-gateway/", {
       operationName: "validateIotexEndpoint",
       variables: { endpoint: String(value) },
-      query: VALIDATE_ENDPOINT,
+      query: VALIDATE_ENDPOINT
     })
-    .then((resp) => {
+    .then(resp => {
       if (resp.data.data.validateIotexEndpoint.ok) {
         callback();
       } else {
         callback(resp.data.data.validateIotexEndpoint.message);
       }
     })
-    .catch((err) => {
+    .catch(err => {
       callback(`cannot connect to server ${err}`);
     });
 };
@@ -105,156 +105,158 @@ const validateEmail = (_rule: any, value: any, callback: Function) => {
 };
 
 // $FlowFixMe
-export const Technical = connect()(
+const TechnicalInner = (props: Props) => {
   // $FlowFixMe
-  Form.create({ name: "technical-form" })(
-    class Technical extends Component<Props, State> {
-      props: Props;
-      state: State;
+  // Form.create({ name: "technical-form" })(
+  // class Technical extends Component<Props, State> {
+  // props: Props;
+  // state: State;
 
-      constructor(props: Props) {
-        super(props);
-        this.state = {
-          loading: false,
-        };
-      }
-      /* tslint:disable-next-line:no-any */
-      onSubmit = (upsertBpCandidate: Function) => (e: any) => {
-        e.preventDefault();
-        /* eslint-disable no-invalid-this */
-        /* tslint:disable-next-line:no-any */
-        this.props.form.validateFields(async (err: any, values: any) => {
-          if (!err) {
-            window.console.log("Received values of Candidate form: ", values);
+  // constructor(props: Props) {
+  //   super(props);
+  //   this.state = {
+  //     loading: false,
+  //   };
+  // }
+  /* tslint:disable-next-line:no-any */
+  const [loading, setLoading] = useState(false);
+  const [form] = Form.useForm();
 
-            this.setState({ loading: true });
-            upsertBpCandidate({
-              variables: {
-                bpCandidateTechDetailInput: {
-                  ...values,
-                },
-              },
-            })
-              .then(() => {
-                this.setState({ loading: false });
-                notification.success({
-                  message: t("profile.change_saved"),
-                });
-              })
-              .catch((err: string) => {
-                // server error
-                this.setState({ loading: false });
-                notification.error({
-                  message: `${t("profile.change_not_saved")}: ${err}`,
-                });
-              });
+  const onSubmit = (upsertBpCandidate: Function) => (e: any) => {
+    e.preventDefault();
+    /* eslint-disable no-invalid-this */
+    /* tslint:disable-next-line:no-any */
+    form.validateFields().then((values: any) => {
+      setLoading(true);
+      upsertBpCandidate({
+        variables: {
+          bpCandidateTechDetailInput: {
+            ...values
           }
+        }
+      })
+        .then(() => {
+          setLoading(false);
+          notification.success({
+            message: t("profile.change_saved")
+          });
+        })
+        .catch((err: string) => {
+          // server error
+          setLoading(false);
+          notification.error({
+            message: `${t("profile.change_not_saved")}: ${err}`
+          });
         });
-      };
+    });
+  };
 
-      render() {
-        const { getFieldDecorator } = this.props.form;
+  // const { getFieldDecorator } = this.props.form;
 
-        // const { candidateProfileId = "", eth = "" } = this.props;
-        // const request = { candidateProfileId, eth };
+  // const { candidateProfileId = "", eth = "" } = this.props;
+  // const request = { candidateProfileId, eth };
+  return (
+    // // @ts-ignore
+    // <Query
+    //   ssr={false}
+    //   query={GET_BP_CANDIDATE_TECH_DETAIL}
+    //   variables={request}
+    // >
+    //   {/* tslint:disable-next-line:no-any */}
+    //   {({ loading, error, data }: any) => {
+    //     if (error && !loading) {
+    //       notification.error({
+    //         message: "Error",
+    //         description: error.message,
+    //         duration: 3,
+    //       });
+    //       return "error when load data";
+    //     }
+    //     const bpCandidateTechDetail =
+    //       (data && data.bpCandidateTechDetail) || {};
+    //     return (
+    // @ts-ignore
+    <Mutation mutation={UPSERT_BP_CANDIDATE_TECH_DETAIL}>
+      {/* tslint:disable-next-line:no-any */}
+      {(upsertBpCandidateTechDetail: any, resp: any) => {
+        const newData =
+          resp && resp.data && resp.data.upsertBpCandidateTechDetail;
         return (
-          // // @ts-ignore
-          // <Query
-          //   ssr={false}
-          //   query={GET_BP_CANDIDATE_TECH_DETAIL}
-          //   variables={request}
-          // >
-          //   {/* tslint:disable-next-line:no-any */}
-          //   {({ loading, error, data }: any) => {
-          //     if (error && !loading) {
-          //       notification.error({
-          //         message: "Error",
-          //         description: error.message,
-          //         duration: 3,
-          //       });
-          //       return "error when load data";
-          //     }
-          //     const bpCandidateTechDetail =
-          //       (data && data.bpCandidateTechDetail) || {};
-          //     return (
-               // @ts-ignore
-                <Mutation mutation={UPSERT_BP_CANDIDATE_TECH_DETAIL}>
-                  {/* tslint:disable-next-line:no-any */}
-                  {(upsertBpCandidateTechDetail: any, resp: any) => {
-                    const newData =
-                      (resp &&
-                        resp.data &&
-                        resp.data.upsertBpCandidateTechDetail);
-                    return (
-                      <Form
-                        onSubmit={this.onSubmit(upsertBpCandidateTechDetail)}
-                      >
-                        <h1>{t("profile.technical")}</h1>
-                      <Form.Item label={t("profile.serverEndpoint")}>
-                          {getFieldDecorator("serverEndpoint", {
-                            initialValue: newData && newData.serverEndpoint,
-                            rules: [
-                              { message: t("profile.serverEndpoint.required") },
-                              { validator: validateServerEndpoint },
-                            ],
-                          })(<Input />)}
-                        </Form.Item>
-                        <Form.Item label={t("profile.serverHealthEndpoint")}>
-                          {getFieldDecorator("serverHealthEndpoint", {
-                            initialValue: newData && newData.serverHealthEndpoint,
-                            rules: [
-                              {
-                                required: true,
-                                message: t("profile.serverHealthEndpoint.required"),
-                              },
-                              { validator: validateServerHealthEndpoint },
-                            ],
-                          })(<Input />)}
-                        </Form.Item>
-                        <Form.Item label={t("profile.discordName")}>
-                          {getFieldDecorator("discordName", {
-                            initialValue: newData && newData.discordName,
-                            rules: [
-                              {
-                                required: true,
-                                message: t("profile.discordName.required"),
-                              },
-                            ],
-                          })(<Input />)}
-                        </Form.Item>
-                        <Form.Item label={t("profile.email")}>
-                          {getFieldDecorator("email", {
-                            initialValue: newData && newData.email,
-                            rules: [
-                              {
-                                required: true,
-                                message: t("profile.email.required"),
-                              },
-                              { validator: validateEmail },
-                            ],
-                          })(<Input />)}
-                        </Form.Item>
+          <Form
+            form={form}
+            layout="vertical"
+            name="technical-form"
+            onSubmit={onSubmit(upsertBpCandidateTechDetail)}
+          >
+            <h1>{t("profile.technical")}</h1>
+            <Form.Item
+              label={t("profile.serverEndpoint")}
+              initialValue={newData && newData.serverEndpoint}
+              rules={[
+                { message: t("profile.serverEndpoint.required") },
+                { validator: validateServerEndpoint }
+              ]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              label={t("profile.serverHealthEndpoint")}
+              initialValue={newData && newData.serverHealthEndpoint}
+              rules={[
+                {
+                  required: true,
+                  message: t("profile.serverHealthEndpoint.required")
+                },
+                { validator: validateServerHealthEndpoint }
+              ]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              label={t("profile.discordName")}
+              initialValue={newData && newData.discordName}
+              rules={[
+                {
+                  required: true,
+                  message: t("profile.discordName.required")
+                }
+              ]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              label={t("profile.email")}
+              initialValue={newData && newData.email}
+              rules={[
+                {
+                  required: true,
+                  message: t("profile.email.required")
+                },
+                { validator: validateEmail }
+              ]}
+            >
+              <Input />
+            </Form.Item>
 
-                        <Form.Item>
-                          <Button
-                            type="primary"
-                            htmlType="submit"
-                            style={{ marginRight: "10px" }}
-                            loading={this.state.loading}
-                            onClick={this.onSubmit(upsertBpCandidateTechDetail)}
-                          >
-                            {t("profile.update")}
-                          </Button>
-                        </Form.Item>
-                      </Form>
-                    );
-                  }}
-                </Mutation>
-              );
-      //       }}
-      //     </Query>
-      //   );
-       }
-    }
-  )
-);
+            <Form.Item>
+              <Button
+                type="primary"
+                htmlType="submit"
+                style={{ marginRight: "10px" }}
+                loading={loading}
+                onClick={onSubmit(upsertBpCandidateTechDetail)}
+              >
+                {t("profile.update")}
+              </Button>
+            </Form.Item>
+          </Form>
+        );
+      }}
+    </Mutation>
+  );
+  //       }}
+  //     </Query>
+  //   );
+};
+
+export const Technical = connect()(TechnicalInner);
