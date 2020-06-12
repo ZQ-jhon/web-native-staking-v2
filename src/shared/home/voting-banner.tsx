@@ -68,15 +68,15 @@ const buyIotxList = [
     src: "voting-website/elitex.png"
   },
   {
-    href: "https://changelly.com/",
+    href: "https://changelly.com/exchange/btc/iotx",
     src: "voting-website/changelly.svg"
   },
   {
-    href: "https://swapspace.co/",
+    href: "https://swapspace.co/?from=btc&to=iotx&amount=0.1",
     src: "voting-website/swapspace.svg"
   },
   {
-    href: "https://simpleswap.io/",
+    href: "https://www.mxc.com/trade/easy#IOTX_USDT",
     src: "voting-website/simpleswap.svg"
   }
 ];
