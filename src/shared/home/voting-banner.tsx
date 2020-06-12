@@ -36,7 +36,7 @@ const buyIotxList = [
     src: "voting-website/bittrex.png"
   },
   {
-    href: "https://www.mxc.com",
+    href: "https://www.mxc.com/trade/easy#IOTX_USDT",
     src: "voting-website/MXC.png"
   },
   {
@@ -44,7 +44,7 @@ const buyIotxList = [
     src: "voting-website/coindcx_white.svg"
   },
   {
-    href: "https://bilaxy.com",
+    href: "https://bilaxy.com/trade/IOTX_ETH",
     src: "voting-website/bilaxy.png"
   },
   {
@@ -56,11 +56,11 @@ const buyIotxList = [
     src: "voting-website/coinone.png"
   },
   {
-    href: "https://hitbtc.com",
+    href: "https://hitbtc.com/exchange/IOTX-to-BTC",
     src: "voting-website/HitBTC.png"
   },
   {
-    href: "https://www.hotbit.io",
+    href: "https://www.hotbit.io/exchange?symbol=IOTX_USDT",
     src: "voting-website/Hotbit.png"
   },
   {
@@ -76,7 +76,7 @@ const buyIotxList = [
     src: "voting-website/swapspace.svg"
   },
   {
-    href: "https://www.mxc.com/trade/easy#IOTX_USDT",
+    href: "https://simpleswap.io/",
     src: "voting-website/simpleswap.svg"
   }
 ];
