@@ -50,6 +50,12 @@ function HeadInner({ locale }: { locale: string }): JSX.Element {
           type: "text/css"
         }
       ]}
+      script={[
+        {
+          src: assetURL("jsbridge.js"),
+          type: "text/javascript"
+        }
+      ]}
     >
       <html lang={locale} />
     </Helmet>
