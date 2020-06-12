@@ -10,7 +10,8 @@ import { logger } from "onefx/lib/integrated-gateways/logger";
 import { configureStore } from "onefx/lib/iso-react-render/root/configure-store";
 import { noopReducer } from "onefx/lib/iso-react-render/root/root-reducer";
 import { RootServer } from "onefx/lib/iso-react-render/root/root-server";
-import { Context, ViewState } from "onefx/lib/types";
+import koa from 'koa';
+import { ViewState } from "onefx/lib/types";
 import React from "react";
 import { ApolloProvider } from "react-apollo";
 import { getDataFromTree } from "react-apollo";
@@ -27,7 +28,7 @@ type Opts = {
 };
 
 export async function apolloSSR(
-  ctx: Context,
+  ctx: koa.Context,
   { VDom, reducer, clientScript }: Opts
 ): Promise<string> {
   ctx.setState(

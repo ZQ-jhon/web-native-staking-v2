@@ -1,126 +1,184 @@
-import { Server } from "onefx";
+/* eslint-disable no-invalid-this */
+// @flow
+import { promisify } from "util";
 import { logger } from "onefx/lib/integrated-gateways/logger";
-import { Context } from "onefx/lib/types";
-import { MyServer } from "../../server/start-server";
-import {
-  allowedLoginNext,
-  allowedLogoutNext,
-  AuthConfig,
-  authConfig
-} from "./auth-config";
-import { Mailgun } from "./mailgun";
-import { EmailTokenModel } from "./model/email-token-model";
-import { JwtModel } from "./model/jwt-model";
+// $FlowFixMe
+import jwt from "jsonwebtoken";
 import { UserModel } from "./model/user-model";
+import koa from 'koa';
+import { JwtModel } from "./model/jwt-model";
+import { allowedLoginNext, authConfig } from "./auth-config";
 import { getExpireEpochDays } from "./utils/expire-epoch";
+import { EmailTokenModel } from "./model/email-token-model";
+
+const verify = promisify(jwt.verify);
 
 export class OnefxAuth {
-  public config: AuthConfig;
-  public server: Server;
-  public user: UserModel;
-  public jwt: JwtModel;
-  public emailToken: EmailTokenModel;
-  public mailgun: Mailgun;
+  config: any;
+  server: any;
+  user: UserModel;
+  jwt: JwtModel;
+  emailToken: EmailTokenModel;
 
-  constructor(server: MyServer, config: AuthConfig) {
+  constructor(server: any, config: any) {
     this.config = config || authConfig;
     this.server = server;
-    // @ts-ignore
-    const mongoose = server.gateways.mongoose;
-    this.user = new UserModel({ mongoose });
+    this.user = new UserModel({ mongoose: server.gateways.mongoose });
     this.jwt = new JwtModel({
-      mongoose,
+      mongoose: server.gateways.mongoose,
       secret: this.config.secret,
-      expDays: this.config.ttl
+      expDays: this.config.ttl,
     });
     this.emailToken = new EmailTokenModel({
-      mongoose,
-      expMins: config.emailTokenTtl
+      mongoose: server.gateways.mongoose,
+      expMins: config.emailTokenTtl,
     });
-    this.mailgun = new Mailgun(config.mailgun);
     this.config.cookieOpts = {
       ...this.config.cookieOpts,
-      expires: new Date(getExpireEpochDays(this.config.ttl))
+      expires: new Date(getExpireEpochDays(this.config.ttl)),
     };
   }
 
-  public async sendResetPasswordLink(
-    userId: string,
-    email: string,
-    t: Function
-  ): Promise<void> {
-    const { token } = await this.emailToken.newAndSave(userId);
-    const link = `${this.config.emailTokenLink}${token}`;
-    logger.debug(`sending out password reset email ${link}`);
-
-    const emailContent = t("auth/forgot_password.email_content", { link });
-    await this.mailgun.sendMail({
-      from: `"${t("meta.title")}" <noreply@${this.config.mailgun.domain}>`,
-      to: email,
-      subject: t("auth/forgot_password.email_title"),
-      html: emailContent
-    });
-  }
-
-  public authRequired = async (ctx: Context, next: Function) => {
-    await this.authOptionalContinue(ctx, () => undefined);
+  authRequired = async (ctx: koa.Context, next: any) => {
+    await this.authOptionalContinue(ctx, () => null);
     const userId = ctx.state.userId;
     if (!userId) {
       logger.debug("user is not authenticated but auth is required");
       return ctx.redirect(
-        `${this.config.loginUrl}?next=${encodeURIComponent(ctx.url)}`
+        `/logout/?next=${encodeURIComponent(
+          `${this.config.loginUrl}?next=${encodeURIComponent(
+            this.config.siteUrl + ctx.url
+          )}`
+        )}`
       );
     }
+    // if (!ctx.state.eth) {
+    //   const eth = await this.server.gateways.iotexMono.getLoginEthByIotexId(
+    //     ctx.state.iotexId
+    //   );
+    //   if (!eth) {
+    //     return ctx.redirect(
+    //       `/logout/?next=${encodeURIComponent(
+    //         `${this.config.siteUrl}/?error=please_login_with_metamask`
+    //       )}`
+    //     );
+    //   }
+    //   ctx.state.eth = eth;
+    // }
 
     logger.debug(`user is authenticated ${userId}`);
     await next();
   };
 
-  public authOptionalContinue = async (ctx: Context, next: Function) => {
+  authOptionalContinue = async (ctx: koa.Context, next: any) => {
     const token = this.tokenFromCtx(ctx);
-    if (!token) {
-      return next();
-    }
-
     ctx.state.userId = await this.jwt.verify(token);
     ctx.state.jwt = token;
+    if (ctx.state.userId) {
+      const user = await this.user.getById(ctx.state.userId);
+      const roles = user && user.roles;
+      if (roles && roles.indexOf("admin") !== -1) {
+        ctx.state.roles = roles;
+      }
+      ctx.state.eth = user && user.eth;
+      ctx.state.iotexId = user && user.iotexId;
+    }
+    if (this.server.config.displayInternal) {
+      // TODO split admin role and internal display
+      ctx.state.roles = ["admin"];
+    }
     await next();
   };
 
-  public logout = async (ctx: Context) => {
-    ctx.cookies.set(this.config.cookieName, "", this.config.cookieOpts);
+  logout = async (ctx: koa.Context) => {
+    ctx.cookies.set(this.config.cookieName, null, this.config.cookieOpts);
     const token = this.tokenFromCtx(ctx);
-    if (token) {
-      this.jwt.revoke(token);
-    }
-    ctx.redirect(allowedLogoutNext(ctx.query.next));
+    this.jwt.revoke(token);
+    const next = ctx.query.next || `${this.config.siteUrl}/`;
+    const appendNext = `?next=${encodeURIComponent(next)}`;
+    ctx.redirect(`${this.config.logoutUrl}${appendNext}`);
   };
 
-  public postAuthentication = async (ctx: Context) => {
+  subFromMasterCookie = async (ctx: koa.Context, next: any) => {
+    // logged-in users
+    const subToken = await this.tokenFromCtx(ctx);
+    if (subToken) {
+      const userId = await this.jwt.verify(subToken);
+      if (userId) {
+        return await next();
+      }
+    }
+
+    // un-logged-in users
+    const masterToken =
+      this.config.masterDevToken ||
+      ctx.cookies.get(
+        this.config.masterCookieName,
+        this.config.masterCookieOpts
+      );
+    if (!masterToken) {
+      return await next();
+    }
+
+    // invalid users from iotex.io
+    let decoded;
+    try {
+      decoded = await verify(masterToken, this.config.masterSecret);
+    } catch (e) {
+      if (this.config.masterDevToken) {
+        decoded = jwt.decode(this.config.masterDevToken);
+      }
+    }
+    // no valid master token from iotex.io
+    // @ts-ignore
+    if (!decoded || !decoded.sub) {
+      return await next();
+    }
+
+    const eth = await this.server.gateways.iotexMono.getLoginEthByIotexId(
+      // @ts-ignore
+      decoded.sub
+    );
+    // valid users from iotex.io
+    //@ts-ignore
+    const user = await this.user.getOrAddByIotexId(decoded.sub, eth);
+
+    logger.debug(`user ${user.id} is in post authentication status`);
+    const token = await this.jwt.create(user.id);
+    ctx.cookies.set(this.config.cookieName, token, this.config.cookieOpts);
+    ctx.state.jwt = token;
+
+    await next();
+  };
+  // @ts-ignore
+  postAuthentication = async (ctx: koa.Context) => {
     if (!ctx.state.userId) {
       return;
     }
 
     logger.debug(`user ${ctx.state.userId} is in post authentication status`);
-
-    const token = await this.jwt.create(ctx.state.userId);
+    const user = await this.user.getById(ctx.state.userId);
+    const roles = user.roles;
+    const token = await this.jwt.create(ctx.state.userId, roles);
     ctx.cookies.set(this.config.cookieName, token, this.config.cookieOpts);
     ctx.state.jwt = token;
     const nextUrl = allowedLoginNext(
       ctx.query.next || (ctx.request.body && ctx.request.body.next)
     );
     if (ctx.is("json")) {
-      ctx.body = { shouldRedirect: true, ok: true, next: nextUrl };
-      return;
+      return (ctx.body = { shouldRedirect: true, ok: true, next: nextUrl });
     }
+
     ctx.redirect(nextUrl);
   };
 
-  public tokenFromCtx = (ctx: Context) => {
-    let token = ctx.cookies.get(this.config.cookieName, this.config.cookieOpts);
+  tokenFromCtx = (ctx: koa.Context) => {
+    let token =
+      ctx.state.jwt ||
+      ctx.cookies.get(this.config.cookieName, this.config.cookieOpts);
     if (!token && ctx.headers.authorization) {
       token = String(ctx.headers.authorization).replace("Bearer ", "");
     }
-    return token || "";
+    return token;
   };
 }

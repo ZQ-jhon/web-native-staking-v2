@@ -3,7 +3,7 @@ import { noopReducer } from "onefx/lib/iso-react-render/root/root-reducer";
 import * as React from "react";
 import { setApiGateway } from "../api-gateway/api-gateway";
 import { setProfileHandler } from "../shared/profile/profile-handler";
-import { Context } from "onefx/lib/types";
+import koa from 'koa'
 import { AppContainer } from "../shared/app-container";
 import { apolloSSR } from "../shared/common/apollo-ssr";
 import { setEmailPasswordIdentityProviderRoutes } from "../shared/onefx-auth-provider/email-password-identity-provider/email-password-identity-provider-handler";
@@ -12,7 +12,7 @@ import { MyServer } from "./start-server";
 
 export function setServerRoutes(server: MyServer): void {
   // Health checks
-  server.get("health", "/health", (ctx: Context) => {
+  server.get("health", "/health", (ctx: koa.Context) => {
     ctx.body = "OK";
   });
 
@@ -25,7 +25,7 @@ export function setServerRoutes(server: MyServer): void {
   server.get(
     "SPA",
     /^(?!\/?tools\/token-migration\/api-gateway\/|\/profile\/.*).+$/,
-    async (ctx: Context) => {
+    async (ctx: koa.Context) => {
       const st = new Staking({
         antenna: new Antenna("https://api.iotex.one")
       });
@@ -51,7 +51,7 @@ export function setServerRoutes(server: MyServer): void {
   );
 }
 
-export function checkingAppSource(ctx: Context): void {
+export function checkingAppSource(ctx: koa.Context): void {
   const ua = ctx.header["user-agent"];
   if (
     (ua && (ua.includes("IoPayAndroid") || ua.includes("IoPayiOs"))) ||

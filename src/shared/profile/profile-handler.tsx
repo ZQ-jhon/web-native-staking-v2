@@ -1,5 +1,6 @@
 // @flow
 import React from "react";
+import koa from 'koa'
 import { noopReducer } from "onefx/lib/iso-react-render/root/root-reducer";
 import { combineReducers } from "redux";
 import config from "config";
@@ -10,7 +11,7 @@ import { ProfileAppContainer } from "./profile-app";
 export function setProfileHandler(server: any) {
   server.get(
     "/profile/*",
-    async (ctx: any, next: any) => {
+    async (ctx: koa.Context, next: any) => {
       // @ts-ignore
       if (config.profileIsMaintenance) {
         return ctx.redirect(`/page-maintenance`);
@@ -20,7 +21,7 @@ export function setProfileHandler(server: any) {
     server.auth.subFromMasterCookie,
     server.auth.authRequired,
     // @ts-ignore
-    async (ctx) => {
+    async (ctx: koa.Context) => {
       if (
         ctx.query.utm_source === "cobowallet" ||
         ctx.session.utm_source === "cobowallet"
@@ -78,8 +79,7 @@ export function setProfileHandler(server: any) {
       //   server.config.gateways.delegateProfileContract.contractAddress
       // );
       //ctx.setState("base.enableMemberGiveaway", enableMemberGiveaway);
-      ctx.body = await apolloSSR(ctx, server.config.apiGatewayUrl, {
-        // @ts-ignore
+      ctx.body = await apolloSSR(ctx, {
         VDom: <ProfileAppContainer />,
         reducer: combineReducers({
           base: noopReducer,

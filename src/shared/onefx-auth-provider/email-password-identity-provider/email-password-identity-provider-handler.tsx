@@ -1,12 +1,12 @@
-import { Context } from "onefx/lib/types";
+import koa from 'koa';
 import { v4 as uuidv4 } from "uuid";
 import validator from "validator";
 import { MyServer } from "../../../server/start-server";
 
-type Handler = (ctx: Context, next: Function) => Promise<{}>;
+type Handler = (ctx: koa.Context, next: Function) => Promise<{}>;
 
 export function emailValidator(): Handler {
-  return async (ctx: Context, next: Function) => {
+  return async (ctx: koa.Context, next: Function) => {
     let { email } = ctx.request.body;
     email = String(email).toLowerCase();
     email = validator.trim(email);
@@ -42,7 +42,7 @@ export function setEmailPasswordIdentityProviderRoutes(server: MyServer): void {
     "api-sign-in",
     "/api/sign-in/",
     emailValidator(),
-    async (ctx: Context, next: Function) => {
+    async (ctx: koa.Context, next: Function) => {
       const { email, password } = ctx.request.body;
       const user = await server.auth.user.getByMail(email);
       if (!user) {
