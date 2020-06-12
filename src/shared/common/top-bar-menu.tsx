@@ -29,9 +29,11 @@ export const TopBarMenu = ({ hideMobileMenu, faucetEnable }: any) => {
       : inactived;
   const activeStyle = { ...actived, ...profileStyle };
   const inactiveStyle = { ...inactived, ...profileStyle };
-  const a1Style = String(pathname).startsWith("/profile/")
-    ? activeStyle
-    : inactiveStyle;
+  const a1Style =
+    String(pathname).startsWith("/profile/") ||
+    String(pathname).startsWith("/v2/profile/")
+      ? activeStyle
+      : inactiveStyle;
   const a3Style = String(pathname).startsWith("/polls/")
     ? activeStyle
     : inactiveStyle;
