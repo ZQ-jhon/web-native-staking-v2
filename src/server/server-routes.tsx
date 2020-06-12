@@ -6,6 +6,7 @@ import { setApiGateway } from "../api-gateway/api-gateway";
 import { setProfileHandler } from "../shared/profile/profile-handler";
 import { AppContainer } from "../shared/app-container";
 import { apolloSSR } from "../shared/common/apollo-ssr";
+import { setEmailPasswordIdentityProviderRoutes } from "../shared/onefx-auth-provider/email-password-identity-provider/email-password-identity-provider-handler";
 import { Staking } from "./gateway/staking";
 import { MyServer } from "./start-server";
 
@@ -18,13 +19,15 @@ export function setServerRoutes(server: MyServer): void {
   setApiGateway(server);
   setProfileHandler(server);
 
+  setEmailPasswordIdentityProviderRoutes(server);
+
   // @ts-ignore
   server.get(
     "SPA",
     /^(?!\/?tools\/token-migration\/api-gateway\/|\/profile\/.*).+$/,
     async (ctx: koa.Context) => {
       const st = new Staking({
-        antenna: new Antenna("https://api.testnet.iotex.one")
+        antenna: new Antenna("https://api.iotex.one")
       });
       const height = await st.getHeight();
       const resp = await st.getAllCandidates(0, 1000, height);
@@ -40,22 +43,22 @@ export function setServerRoutes(server: MyServer): void {
       );
       checkingAppSource(ctx);
       // @ts-ignore
-      ctx.body = await apolloSSR(ctx, server.config.apiGatewayUrl, {
+      ctx.body = await apolloSSR(ctx, {
         VDom: <AppContainer />,
         reducer: noopReducer,
-        clientScript: "/main.js"
+        clientScript: "main.js"
       });
     }
   );
 }
 
 export function checkingAppSource(ctx: koa.Context): void {
+  const ua = ctx.header["user-agent"];
   if (
-    ctx.header["user-agent"].includes("IoPayAndroid") ||
-    ctx.header["user-agent"].includes("IoPayiOs") ||
+    (ua && (ua.includes("IoPayAndroid") || ua.includes("IoPayiOs"))) ||
     ctx.session.app_source === "IoPay"
   ) {
     ctx.session.app_source = "IoPay";
-    ctx.setState("base.isIoPay", true);
+    ctx.setState("base.isIoPayMobile", true);
   }
 }

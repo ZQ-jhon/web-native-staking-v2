@@ -8,7 +8,7 @@ type Props = {
   isMobile: boolean;
   // tslint:disable-next-line:no-any
   history: any;
-  isIoPay?: boolean;
+  isIoPayMobile?: boolean;
 };
 
 type State = {
@@ -24,7 +24,7 @@ type State = {
 
 // @ts-ignore
 // tslint:disable-next-line:no-any
-@connect(state => ({ isIoPay: state.base.isIoPay }))
+@connect(state => ({ isIoPayMobile: state.base.isIoPayMobile }))
 class VotingBannerModal extends PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
@@ -49,7 +49,7 @@ class VotingBannerModal extends PureComponent<Props, State> {
   };
   // tslint:disable-next-line:no-any
   showVotingModal = (record: any) => {
-    const { isIoPay } = this.props;
+    const { isIoPayMobile } = this.props;
 
     if (this.state.userConfirmedMetaMaskReminder) {
       this.setState({
@@ -60,19 +60,19 @@ class VotingBannerModal extends PureComponent<Props, State> {
     } else {
       this.setState({
         currentCandidateName: record && record.registeredName,
-        shouldDisplayMetaMaskReminder: !isIoPay,
-        shouldDisplayVotingModal: !!isIoPay,
+        shouldDisplayMetaMaskReminder: !isIoPayMobile,
+        shouldDisplayVotingModal: !!isIoPayMobile,
         currentCandidate: record
       });
     }
   };
 
   render(): JSX.Element {
-    const { isMobile, history, isIoPay } = this.props;
+    const { isMobile, history, isIoPayMobile } = this.props;
     const showVotingModal =
-      isMobile && !isIoPay
+      isMobile && !isIoPayMobile
         ? () => {
-            history.push(isIoPay ? "/vote-native/" : "/vote/");
+            history.push(isIoPayMobile ? "/vote-native/" : "/vote/");
           }
         : this.showVotingModal;
     return (

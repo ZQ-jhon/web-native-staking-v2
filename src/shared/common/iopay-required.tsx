@@ -9,10 +9,11 @@ import React, { PureComponent } from "react";
 import { connect } from "react-redux";
 // @ts-ignore
 import sleepPromise from "sleep-promise";
+import { Flex } from "./flex";
 import { getAntenna } from "./get-antenna";
 
 type State = {
-  isIopayConnected?: boolean;
+  isIoPayMobileConnected?: boolean;
 };
 
 export function DownloadButton(): JSX.Element {
@@ -46,14 +47,14 @@ export function DownloadButton(): JSX.Element {
 type Props = {
   // tslint:disable-next-line:no-any
   forwardedRef: any;
-  isIoPay?: boolean;
+  isIoPayMobile?: boolean;
 };
 
 // tslint:disable-next-line:no-any
 export const IopayRequired = (InnerComponent: any) => {
   // @ts-ignore
   @connect((state: any) => ({
-    isIoPay: state.base.isIoPay
+    isIoPayMobile: state.base.isIoPayMobile
   }))
   class HOC extends PureComponent<Props, State> {
     static displayName: string = `HOC(${InnerComponent.displayName ||
@@ -61,17 +62,17 @@ export const IopayRequired = (InnerComponent: any) => {
       "Component"})`;
 
     state: State = {
-      isIopayConnected: undefined
+      isIoPayMobileConnected: undefined
     };
 
     async componentDidMount(): Promise<void> {
-      const { isIoPay = false } = this.props;
-      if (!isIoPay) {
-        await this.setMetaMask();
+      const { isIoPayMobile = false } = this.props;
+      if (!isIoPayMobile) {
+        await this.connectIoPayDesktop();
       }
     }
 
-    setMetaMask = async (): Promise<void> => {
+    connectIoPayDesktop = async (): Promise<void> => {
       const antenna = getAntenna();
       // tslint:disable-next-line:no-typeof-undefined
       let iopayConnected =
@@ -87,13 +88,13 @@ export const IopayRequired = (InnerComponent: any) => {
           antenna.iotx.accounts &&
           antenna.iotx.accounts[0];
       }
-      this.setState({ isIopayConnected: Boolean(iopayConnected) });
+      this.setState({ isIoPayMobileConnected: Boolean(iopayConnected) });
     };
 
     render(): JSX.Element {
-      const { forwardedRef, isIoPay, ...props } = this.props;
-      const { isIopayConnected } = this.state;
-      if (isIoPay) {
+      const { forwardedRef, isIoPayMobile, ...props } = this.props;
+      const { isIoPayMobileConnected } = this.state;
+      if (isIoPayMobile) {
         return (
           <InnerComponent
             antenna={getAntenna()}
@@ -102,9 +103,13 @@ export const IopayRequired = (InnerComponent: any) => {
           />
         );
       }
-      switch (isIopayConnected) {
+      switch (isIoPayMobileConnected) {
         case undefined:
-          return <LoadingOutlined />;
+          return (
+            <Flex center={true} width={"100%"}>
+              <LoadingOutlined />
+            </Flex>
+          );
         case false:
           return <DownloadButton />;
         case true:

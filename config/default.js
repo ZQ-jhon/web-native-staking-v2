@@ -4,6 +4,7 @@ config();
 module.exports = {
   project: "web-native-staking-v2",
   server: {
+    proxy: true,
     routePrefix: "/v2",
     port: process.env.PORT || 5004,
     staticDir: "./dist",
@@ -55,8 +56,13 @@ module.exports = {
   },
   csp: {
     "default-src": ["none"],
-    "manifest-src": ["self"],
-    "style-src": ["self", "unsafe-inline", "https://fonts.googleapis.com/css"],
+    "manifest-src": ["self", "https://web-native-staking-v2.b-cdn.net/"],
+    "style-src": [
+      "self",
+      "unsafe-inline",
+      "https://fonts.googleapis.com/css",
+      "https://web-native-staking-v2.b-cdn.net/"
+    ],
     "frame-src": [
       "https://wvjb-queue-message/",
       "https://bridge-loaded/",
@@ -70,6 +76,7 @@ module.exports = {
       "https://member.iotex.io/iotex-core-proxy/",
       "https://api.nightly-cluster-2.iotex.one/",
       "https://api.testnet.iotex.one/",
+      "https://api.iotex.one/",
       ...(process.env.API_GATEWAY_URL ? [process.env.API_GATEWAY_URL] : [])
     ],
     "child-src": ["self"],
@@ -77,7 +84,12 @@ module.exports = {
     "img-src": ["*", "data:"],
     "media-src": ["self"],
     "object-src": ["self"],
-    "script-src": ["self", "https://www.google-analytics.com/", "unsafe-eval"]
+    "script-src": [
+      "self",
+      "https://www.google-analytics.com/",
+      "unsafe-eval",
+      "https://web-native-staking-v2.b-cdn.net/"
+    ]
   },
   apiGatewayUrl:
     process.env.API_GATEWAY_URL || "http://localhost:5004/nsv2/api-gateway/"

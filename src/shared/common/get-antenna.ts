@@ -2,6 +2,7 @@
 import window from "global/window";
 import Antenna from "iotex-antenna/lib";
 import { fromRau } from "iotex-antenna/lib/account/utils";
+import { SignerPlugin } from "iotex-antenna/lib/action/method";
 import { Contract } from "iotex-antenna/lib/contract/contract";
 import { WsSignerPlugin } from "iotex-antenna/lib/plugin/ws";
 import isBrowser from "is-browser";
@@ -12,7 +13,7 @@ import sleepPromise from "sleep-promise";
 import { WvSigner } from "./wv-signer";
 
 const state = isBrowser && JsonGlobal("state");
-const isIoPay = isBrowser && state.base.isIoPay;
+const isIoPayMobile = isBrowser && state.base.isIoPayMobile;
 
 const contractsByAddrs: Record<string, Contract> = {};
 
@@ -22,10 +23,13 @@ export function getAntenna(): Antenna {
   if (injectedWindow.antenna) {
     return injectedWindow.antenna;
   }
-  const signer = isIoPay
-    ? new WvSigner()
-    : new WsSignerPlugin("wss://local.iotex.io:64102");
-  injectedWindow.antenna = new Antenna("https://api.testnet.iotex.one", {
+  let signer: SignerPlugin | undefined;
+  if (isIoPayMobile) {
+    signer = new WvSigner();
+  } else if (isBrowser) {
+    signer = new WsSignerPlugin("wss://local.iotex.io:64102");
+  }
+  injectedWindow.antenna = new Antenna("https://api.iotex.one", {
     signer
   });
   return injectedWindow.antenna;
@@ -36,7 +40,7 @@ export function lazyGetContract(address: string, abi: any): Contract {
   if (contractsByAddrs[address]) {
     return contractsByAddrs[address];
   }
-  if (isIoPay) {
+  if (isIoPayMobile) {
     const contract = getXAppTokenContract(abi, address);
     contractsByAddrs[address] = contract;
   } else {
@@ -77,19 +81,16 @@ export function getMobileNativeAntenna(): Antenna {
   const injectedWindow: Window & { mobileNativeAntenna?: Antenna } = window;
   if (!injectedWindow.mobileNativeAntenna) {
     const signer = new WvSigner();
-    injectedWindow.mobileNativeAntenna = new Antenna(
-      "https://api.testnet.iotex.one",
-      {
-        signer
-      }
-    );
+    injectedWindow.mobileNativeAntenna = new Antenna("https://api.iotex.one", {
+      signer
+    });
   }
   return injectedWindow.mobileNativeAntenna;
 }
 
 export async function getIoPayAddress(): Promise<string> {
   const antenna = getAntenna();
-  if (isIoPay) {
+  if (isIoPayMobile) {
     // tslint:disable-next-line:no-unnecessary-local-variable
     const address = await getIoAddressFromIoPay();
     return address;

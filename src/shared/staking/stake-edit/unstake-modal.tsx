@@ -9,7 +9,7 @@ import { getStaking } from "../../../server/gateway/staking";
 import { colors } from "../../common/styles/style-color2";
 import {
   DEFAULT_EPOCH_SECOND,
-  DEFAULT_STAKING_GAS_LIMIT,
+  DEFAULT_STAKING_GAS_LIMIT
 } from "../../common/token-utils";
 import { actionSmartContractCalled } from "../smart-contract-reducer";
 import { ModalWrapper } from "./modal-wrapper";
@@ -26,7 +26,7 @@ type Props = {
   nonDecay: boolean;
   epochSecondValue?: number;
   isNative: boolean;
-  isIoPay?: boolean;
+  isIoPayMobile?: boolean;
   nativeTokenContractAddr: string;
   nativePatchTokenContractAddr: string;
   isPatchContract?: boolean;
@@ -35,10 +35,10 @@ type Props = {
 // $FlowFixMe
 export const UnstakeModal = connect(
   () => ({}),
-  (dispatch) => ({
+  dispatch => ({
     actionSmartContractCalled(payload: boolean): void {
       dispatch(actionSmartContractCalled(payload));
-    },
+    }
   })
 )(
   class UnstakeForm extends Component<Props> {
@@ -55,19 +55,19 @@ export const UnstakeModal = connect(
         actionSmartContractCalled,
         stakeStartTime,
         stakeDuration,
-        nonDecay,
+        nonDecay
       } = this.props;
       const values = await this.formRef.current.validateFields();
       window.console.log("Received values of Unstake form: ", {
         bucketIndex,
-        ...values,
+        ...values
       });
 
       window.console.log({
         stakeStartTime,
         stakeDuration,
         isAvailable: this.isAvailable(stakeStartTime, stakeDuration),
-        "!nonDecay": !nonDecay,
+        "!nonDecay": !nonDecay
       });
 
       const isAvailable = this.isAvailable(stakeStartTime, stakeDuration);
@@ -76,7 +76,7 @@ export const UnstakeModal = connect(
           bucketIndex,
           payload: "",
           gasLimit: DEFAULT_STAKING_GAS_LIMIT,
-          gasPrice: toRau("1", "Qev"),
+          gasPrice: toRau("1", "Qev")
         });
 
         window.console.log("Unstake txHash", txHash);
@@ -103,7 +103,7 @@ export const UnstakeModal = connect(
         bucketIndex,
         stakeStartTime,
         stakeDuration,
-        nonDecay,
+        nonDecay
       } = this.props;
 
       const isAvailable = this.isAvailable(stakeStartTime, stakeDuration);
@@ -112,7 +112,7 @@ export const UnstakeModal = connect(
         <ModalWrapper
           clickable={clickable}
           title={t("my_stake.unstake.title", {
-            bucketIndex: String(bucketIndex),
+            bucketIndex: String(bucketIndex)
           })}
           onOk={this.handleOk}
         >
@@ -126,21 +126,21 @@ export const UnstakeModal = connect(
                 ) : (
                   <p
                     dangerouslySetInnerHTML={{
-                      __html: t("my_stake.unstake.desc", { stakeStartTime }),
+                      __html: t("my_stake.unstake.desc", { stakeStartTime })
                     }}
                   />
                 )
               ) : (
                 <p
                   dangerouslySetInnerHTML={{
-                    __html: t("my_stake.unstake.cannot", { stakeStartTime }),
+                    __html: t("my_stake.unstake.cannot", { stakeStartTime })
                   }}
                 />
               )
             ) : (
               <p
                 dangerouslySetInnerHTML={{
-                  __html: t("my_stake.unstake.err", { color: colors.error }),
+                  __html: t("my_stake.unstake.err", { color: colors.error })
                 }}
               />
             )}

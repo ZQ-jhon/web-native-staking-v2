@@ -10,7 +10,7 @@ import React, { Component, RefObject } from "react";
 import {
   CommonMarginBottomStyle,
   CommonMarginTop,
-  NoMarginBottomStyle,
+  NoMarginBottomStyle
 } from "../common/common-margin";
 import { Flex } from "../common/flex";
 import { formItemLayout } from "../common/form-item-layout";
@@ -19,7 +19,7 @@ import { fontFamily, fonts } from "../common/styles/style-font";
 import { getPowerEstimation } from "../common/token-utils";
 import {
   getStakeDurationMaxValue,
-  validateStakeDuration,
+  validateStakeDuration
 } from "./field-validators";
 
 type Props = {
@@ -30,6 +30,7 @@ type Props = {
   style?: any;
   fieldName?: string;
   initialValue?: boolean;
+  selfStaking?: boolean;
   stakeAmount?: BigNumber;
   stakeDuration?: number;
   forceDisable?: boolean;
@@ -54,7 +55,7 @@ export function IconLabel({ iconType, text = "" }: IconLabelType): JSX.Element {
           ...fonts.inputLabel,
           fontFamily,
           fontSize: "15px",
-          marginLeft: "9px",
+          marginLeft: "9px"
         }}
       >
         {text}{" "}
@@ -68,14 +69,14 @@ export const subTextStyle = {
   fontSize: "12px",
   fontFamily,
   color: colors.black80,
-  whiteSpace: "break-spaces",
+  whiteSpace: "break-spaces"
 };
 
 export const centerTextStyle = {
   ...subTextStyle,
   textAlign: "center",
   color: colors.black,
-  margin: "0 18px",
+  margin: "0 18px"
 };
 
 type FormItemTextTypes = {
@@ -85,7 +86,7 @@ type FormItemTextTypes = {
 
 export function FormItemText({
   text = "",
-  sub = "",
+  sub = ""
 }: FormItemTextTypes): JSX.Element {
   return (
     <>
@@ -101,7 +102,7 @@ export function FormItemText({
 
 export class AutoStakeFormItem extends Component<Props, State> {
   state: State = {
-    nonDecay: false,
+    nonDecay: false
   };
   props: Props;
 
@@ -111,20 +112,21 @@ export class AutoStakeFormItem extends Component<Props, State> {
       const form = formRef.current;
       if (form) {
         form.setFieldsValue({
-          nonDecay: this.props.initialValue,
+          nonDecay: this.props.initialValue
         });
       }
     }
+    this.setState({ nonDecay: this.props.initialValue || false });
   }
 
   getPowerEstimation(
-    amount: number,
+    amount: BigNumber,
     duration: number,
-    dayFromToday: number
-    // tslint:disable-next-line:no-any
-  ): any {
-    const resp = getPowerEstimation(amount, duration, dayFromToday);
-    return { total: resp.total.toFormat(0), date: resp.date };
+    nonDecay: boolean,
+    selfStaking: boolean
+  ): string {
+    const resp = getPowerEstimation(amount, duration, nonDecay, selfStaking);
+    return resp.toFormat(0);
   }
 
   // tslint:disable-next-line:max-func-body-length
@@ -136,8 +138,14 @@ export class AutoStakeFormItem extends Component<Props, State> {
       stakeAmount = new BigNumber(0),
       stakeDuration = 0,
       forceDisable = false,
-      initialValue,
+      initialValue
     } = this.props;
+    const votingPower = this.getPowerEstimation(
+      stakeAmount,
+      stakeDuration,
+      this.state.nonDecay,
+      this.props.selfStaking || false
+    );
     return (
       <div>
         {showAutoStack ? (
@@ -163,7 +171,7 @@ export class AutoStakeFormItem extends Component<Props, State> {
             >
               <Switch
                 style={{ textAlign: "right" }}
-                onChange={(checked) => {
+                onChange={checked => {
                   if (!forceDisable) {
                     this.setState({ nonDecay: checked });
                   }
@@ -192,7 +200,7 @@ export class AutoStakeFormItem extends Component<Props, State> {
         </div>
 
         <Flex backgroundColor={colors.black10} padding={"15px"}>
-          {this.state.nonDecay ? (
+          {
             // tslint:disable-next-line:react-no-dangerous-html
             <p
               // @ts-ignore
@@ -203,66 +211,12 @@ export class AutoStakeFormItem extends Component<Props, State> {
                   // @ts-ignore
                   {
                     duration: stakeDuration,
-                    votes: this.getPowerEstimation(
-                      stakeAmount.toNumber(),
-                      stakeDuration,
-                      0
-                    ).total,
+                    votes: votingPower
                   }
-                ),
+                )
               }}
             />
-          ) : (
-            <Flex margin={"0 auto"} alignItems={"baseline"}>
-              {/* tslint:disable-next-line:react-no-dangerous-html */}
-              <p
-                // @ts-ignore
-                style={centerTextStyle}
-                dangerouslySetInnerHTML={{
-                  __html: t(
-                    "my_stake.nonDecay.calculate_estimate",
-                    this.getPowerEstimation(
-                      stakeAmount.toNumber(),
-                      stakeDuration,
-                      0
-                    )
-                  ),
-                }}
-              />
-              <span>...</span>
-              {/* tslint:disable-next-line:react-no-dangerous-html */}
-              <p
-                // @ts-ignore
-                style={centerTextStyle}
-                dangerouslySetInnerHTML={{
-                  __html: t(
-                    "my_stake.nonDecay.calculate_estimate",
-                    this.getPowerEstimation(
-                      stakeAmount.toNumber(),
-                      stakeDuration,
-                      Math.round(Number(stakeDuration) / 3)
-                    )
-                  ),
-                }}
-              />
-              <span>...</span>
-              {/* tslint:disable-next-line:react-no-dangerous-html */}
-              <p
-                // @ts-ignore
-                style={centerTextStyle}
-                dangerouslySetInnerHTML={{
-                  __html: t(
-                    "my_stake.nonDecay.calculate_estimate",
-                    this.getPowerEstimation(
-                      stakeAmount.toNumber(),
-                      stakeDuration,
-                      stakeDuration
-                    )
-                  ),
-                }}
-              />
-            </Flex>
-          )}
+          }
         </Flex>
         {children}
       </div>
@@ -290,7 +244,7 @@ export class DurationFormItem extends Component<DurationFormItemProps> {
       fieldName = "stakeDuration",
       initialValue = 0,
       onChange,
-      validatorFactory = validateStakeDuration,
+      validatorFactory = validateStakeDuration
     } = this.props;
     const minDuration = initialValue;
 
@@ -314,18 +268,17 @@ export class DurationFormItem extends Component<DurationFormItemProps> {
           rules={[
             {
               required: true,
-              message: t("my_stake.stakeDuration.required"),
+              message: t("my_stake.stakeDuration.required")
             },
             {
-              validator: validatorFactory(maxDuration, minDuration),
-            },
+              validator: validatorFactory(maxDuration, minDuration)
+            }
           ]}
           initialValue={initialValue}
         >
           <InputNumber
             type="number"
             size="large"
-            step={7}
             min={0}
             max={maxDuration}
             style={{ width: "100%", background: "#f7f7f7", border: "none" }}

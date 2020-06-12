@@ -6,6 +6,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { getStaking } from "../../server/gateway/staking";
 import { getIoPayAddress } from "../common/get-antenna";
+import { getPowerEstimation } from "../common/token-utils";
 import {
   actionUpdateAccountMeta,
   actionUpdateBuckets
@@ -49,8 +50,15 @@ export const BucketsLoader = connect(
       let withdrawableAmount = new BigNumber(0);
       for (const b of buckets) {
         const stakedAmount = b.stakedAmount;
-        totalVotes = totalVotes.plus(stakedAmount);
         if (b.status === "staking") {
+          totalVotes = totalVotes.plus(
+            getPowerEstimation(
+              stakedAmount,
+              b.stakedDuration,
+              b.autoStake,
+              b.selfStakingBucket
+            )
+          );
           totalStaked = totalStaked.plus(stakedAmount);
         } else if (b.status === "unstaking") {
           pendingUnstaked = pendingUnstaked.plus(stakedAmount);

@@ -162,7 +162,9 @@ topbar.staking: STAKING
 topbar.support: SUPPORT
 topbar.vita: VITA
 topbar.voting: VOTING
-contract.called: 'Smart contract interaction succeeded! Please wait for a few minutes and refresh this page to see the result.'
+contract.called: 'Succeeded! Please wait for a few minutes and refresh this page to see the result.'
+topbar.poll: POLL
+topbar.tool: TOOL
 contract.install: 'Please use ioPay desktop, import & unlock your wallet, and then refresh this page to continue.'
 contract.please_unlock: 'To continue, please unlock your wallet in MetaMask.'
 migration.success: You have successfully submitted the migration request. Please wait a while for it to take effects.
@@ -174,8 +176,8 @@ voting.tweet.content: '#VOTING for IoTeX Delegates is NOW LIVE - vote today!%0a 
 voting.progress-bar.circulating.supply: 'Circulating Supply'
 voting.buy_iotx: 'Buy IOTX'
 voting.metamask-reminder.content: 'To proceed with the voting process, please make sure you have unlocked your MetaMask and linked to IoTex. <a target="_blank" href="https://support.iotex.io/hc/en-us/articles/360020614094">Learn more.</a> '
-voting.banner_title: Earn Passive Income With IoTeX
-voting.banner_content: IoTeX member portal is the leading platform for proof-of-staking experiences. 72 nodes has ditributed 4,35B IOTX rewards
+voting.banner_title: Stake IOTX to Help Secure the IoTeX Network
+voting.banner_content: The IoTeX Network is maintained by 55 Decentralized Delegates. By voting for a Delegate, you can participate in network governance and earn IOTX rewards!
 button.understand: 'I understand. Continue.'
 button.cancel: Cancel
 candidates.vote_now: 'Vote Now!'
@@ -220,10 +222,13 @@ my_stake.bucketOwner: Owner
 my_stake.canName.err: 'Name is invalid.'
 my_stake.canName.required: 'Please enter the delegate name.'
 my_stake.canName: 'Delegate Name'
+my_stake.tranferOwnership.required: 'Please enter the Transfer address.'
+my_stake.tranferOwnership: 'Transfer Address'
 my_stake.data: Data
 my_stake.edit.add_staking: Add Votes
 my_stake.edit.restake: Restake
 my_stake.edit.revote: 'Change Delegate'
+my_stake.edit.transfer: 'Transfer'
 my_stake.edit.row: Action
 my_stake.edit.unstake: Unstake
 my_stake.edit.withdraw: Withdraw
@@ -237,11 +242,12 @@ my_stake.restake.desc: 'Are you sure to re-stake your vote? <div style="color: $
 my_stake.restake.err: '<div style="color: ${color};">Please set stakeStartTime before restake.</div>'
 my_stake.restake.title: 'Restake My Vote (ID ${bucketIndex})'
 my_stake.revote.title: 'Revote My Vote (ID ${bucketIndex})'
+my_stake.transfer.title: 'Transfer My Vote (ID ${bucketIndex})'
 my_stake.stakedAmount.required: 'Please enter the amount.'
 my_stake.stakedAmount: Amount
 my_stake.bucketId: 'Bucket ID'
 my_stake.bucketId.required: 'Please select the Bucket'
-my_stake.stakeDuration.err: 'stake duration must be within 0 and ${maxValue} and in multiples of 7'
+my_stake.stakeDuration.err: 'stake duration must be within 0 and ${maxValue}'
 my_stake.largerOrEqualTo.err: 'must be larger or equal to ${num}.'
 my_stake.smallerOrEqualTo.err0: 'your balance is ${num}. smaller than ${min}'
 my_stake.smallerOrEqualTo.err: 'must be smaller or equal to ${num}.'
@@ -283,7 +289,7 @@ my_stake.back: Okay
 my_stake.remain_balance: 'After sending this, your account balance will be <b>${remain}</b> IOTX-E'
 my_stake.u_sure: 'Are you sure you want to do this?'
 my_stake.transaction_hash: 'Your voting transaction hash is <span style="color: #0b8de3;"><a href="${href}">${txHash}</a></span>'
-my_stake.check_few_seconds: 'Please check a few seconds later in <a href="/my-votes"><b style="color: #0b8de3;">My Votes</b></a>'
+my_stake.check_few_seconds: 'Please check a few seconds later in <a href="${href}"><b style="color: #0b8de3;">My Votes</b></a>'
 my_stake.unstake.nondecay_flag: 'Cannot unstake when the bucket is autostaked. You need to disable auto-stake first.'
 my_stake.nonDecay.calculate_auto: 'You will retain the same voting power until you disable Auto-Stake. The stake duration of <b>${duration}</b> days will begin to elapse once you have disabled Auto-Stake. <br/><b style="font-size: 16px">${votes}</b><br/>VOTES'
 my_stake.nonDecay.calculate_estimate: '<small>${date}</small><br/><b style="font-size: 16px">${total}</b><br/>VOTES'
@@ -363,6 +369,7 @@ my_stake.addStakingAmount.required: "Please enter an amount."
 my_votes.nativeStaking.open_ioPay_alert: "Make sure your ioPay desktop application is in opening state"
 my_votes.nativeStaking.open_ioPay_tip: 'If the page is loading for a long time, make sure that the ioPay desktop wallet is unlocked, then refresh the page.'
 my_stake.status.suffix.anytime: Anytime
+my_stake.status.suffix.autostake_only: AutoStake Only
 my_stake.status.suffix.not_applicable: 'Not applicable'
 my_stake.status.suffix.from: 'After ${time}'
 profile.welcome: Welcome
@@ -373,4 +380,5 @@ profile.technical: Technical Information
 profile.reward-distribution: Reward Distribution
 profile.received: Vote I Received
 profile.settings: Settings
-
+auth/sign_in.title: Becoming an IoTeX block producer
+auth/button_submit: Login or Sign Up with IoPay

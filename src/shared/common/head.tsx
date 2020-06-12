@@ -1,7 +1,6 @@
 import { assetURL } from "onefx/lib/asset-url";
 import { t } from "onefx/lib/iso-i18n";
 import { mobileViewPortContent } from "onefx/lib/iso-react-render/root/mobile-view-port-content";
-// @ts-ignore
 import Helmet from "onefx/lib/react-helmet";
 import React from "react";
 import { connect } from "react-redux";

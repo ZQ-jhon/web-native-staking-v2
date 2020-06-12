@@ -105,7 +105,7 @@ topbar.support: 帮助
 topbar.vita: VITA
 topbar.voting: 投票
 contract.called: 合同签订成功！请稍候几分钟，刷新此页以查看结果。
-contract.install: 请使用chrome，安装metamask扩展，导入和解锁您的钱包，然后刷新此页面以继续
+contract.install: 请安装ioPay桌面版钱包，导入、解锁您的钱包后刷新试试。
 contract.please_unlock: 若要继续，请在Metamask中解锁您的钱包
 my_stake.ioAddress.err: 'Invalid IoTeX Address'
 migration.success: You have successfully submitted the migration request. Please wait a while for it to take effects.

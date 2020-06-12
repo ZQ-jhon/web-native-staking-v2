@@ -20,7 +20,7 @@ export function DownloadButton(): JSX.Element {
               <img
                 style={{ height: "60px" }}
                 alt="download"
-                src={assetURL("/download-metamask.png")}
+                src={assetURL("download-metamask.png")}
               />
             </a>
           </div>

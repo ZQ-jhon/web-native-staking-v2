@@ -9,7 +9,7 @@ type Props = {
   children: any;
   // tslint:disable-next-line:no-any
   style?: any;
-  isIoPay?: boolean;
+  isIoPayMobile?: boolean;
   title?: JSX.Element;
   okText?: string;
   cancelText?: string;
@@ -19,18 +19,25 @@ type Props = {
 type State = {};
 
 // @ts-ignore
-@connect(state => ({ isIoPay: state.base.isIoPay }))
+@connect(state => ({ isIoPayMobile: state.base.isIoPayMobile }))
 class CommonModal extends Component<Props, State> {
   state: State;
   props: Props;
 
   render(): JSX.Element {
-    const { children, style, isIoPay = false, ...otherProps } = this.props;
+    const {
+      children,
+      style,
+      isIoPayMobile = false,
+      ...otherProps
+    } = this.props;
     return (
       <Modal
         width={677}
         style={{
-          top: isIoPay ? `${TOP_BAR_HEIGHT}px` : `${TOP_BAR_HEIGHT + 50}px`,
+          top: isIoPayMobile
+            ? `${TOP_BAR_HEIGHT}px`
+            : `${TOP_BAR_HEIGHT + 50}px`,
           // tslint:disable-next-line:binary-expression-operand-order
           marginBottom: `${2 * TOP_BAR_HEIGHT}px`,
           ...style

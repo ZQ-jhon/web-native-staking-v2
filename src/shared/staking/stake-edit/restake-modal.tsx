@@ -11,7 +11,7 @@ import { colors } from "../../common/styles/style-color2";
 import { DEFAULT_STAKING_GAS_LIMIT } from "../../common/token-utils";
 import {
   getStakeDurationMaxValue,
-  validateStakeDuration,
+  validateStakeDuration
 } from "../field-validators";
 import { actionSmartContractCalled } from "../smart-contract-reducer";
 import { AutoStakeFormItem, DurationFormItem } from "../staking-form-item";
@@ -30,6 +30,7 @@ type Props = {
   addr: string;
   actionSmartContractCalled(payload: boolean): void;
   bucketIndex: number;
+  selfStaking: boolean;
   stakedAmount: BigNumber;
   stakeDuration: number;
   nonDecay: boolean;
@@ -38,10 +39,10 @@ type Props = {
 
 export const RestakeModal = connect(
   () => ({}),
-  (dispatch) => ({
+  dispatch => ({
     actionSmartContractCalled(payload: boolean): void {
       dispatch(actionSmartContractCalled(payload));
-    },
+    }
   })
 )(
   class RestakeForm extends Component<Props, State> {
@@ -53,26 +54,26 @@ export const RestakeModal = connect(
       currentStakeAmount: new BigNumber(0),
       currentStakeDuration: 0,
       unMountModalWrapper: false,
-      confirmLoading: false,
+      confirmLoading: false
     };
 
     componentDidMount(): void {
       this.setState({
         currentStakeAmount: this.props.stakedAmount,
-        currentStakeDuration: this.props.stakeDuration,
+        currentStakeDuration: this.props.stakeDuration
       });
     }
 
     handleCancel = () => {
       this.setState({
-        unMountModalWrapper: true,
+        unMountModalWrapper: true
       });
     };
 
     modalUnMountFun = () => {
       this.setState({
         unMountModalWrapper: false,
-        confirmLoading: false,
+        confirmLoading: false
       });
     };
 
@@ -92,7 +93,7 @@ export const RestakeModal = connect(
           autoStake: values.nonDecay,
           payload: "",
           gasLimit: DEFAULT_STAKING_GAS_LIMIT,
-          gasPrice: toRau("1", "Qev"),
+          gasPrice: toRau("1", "Qev")
         });
         const txHash = await getStaking().restake({
           bucketIndex,
@@ -100,7 +101,7 @@ export const RestakeModal = connect(
           autoStake: values.nonDecay,
           payload: "",
           gasLimit: DEFAULT_STAKING_GAS_LIMIT,
-          gasPrice: toRau("1", "Qev"),
+          gasPrice: toRau("1", "Qev")
         });
         window.console.log("restake txHash", txHash);
       } catch (e) {
@@ -121,7 +122,7 @@ export const RestakeModal = connect(
         stakeDuration,
         nonDecay,
         bucketIndex,
-        stakeTime,
+        stakeTime
       } = this.props;
 
       const isAvailable = stakeTime && stakeTime <= new Date();
@@ -138,7 +139,7 @@ export const RestakeModal = connect(
           <ModalWrapper
             clickable={clickable}
             title={t("my_stake.restake.title", {
-              bucketIndex: String(bucketIndex),
+              bucketIndex: String(bucketIndex)
             })}
             onOk={this.handleOk}
             onCancel={this.handleCancel}
@@ -152,23 +153,23 @@ export const RestakeModal = connect(
                 <p
                   dangerouslySetInnerHTML={{
                     __html: t("my_stake.restake.desc", {
-                      stakeTime: String(stakeTime),
-                    }),
+                      stakeTime: String(stakeTime)
+                    })
                   }}
                 />
               ) : (
                 <p
                   dangerouslySetInnerHTML={{
                     __html: t("my_stake.restake.cannot", {
-                      stakeTime: String(stakeTime),
-                    }),
+                      stakeTime: String(stakeTime)
+                    })
                   }}
                 />
               )
             ) : (
               <p
                 dangerouslySetInnerHTML={{
-                  __html: t("my_stake.restake.err", { color: colors.error }),
+                  __html: t("my_stake.restake.err", { color: colors.error })
                 }}
               />
             )}
@@ -182,7 +183,7 @@ export const RestakeModal = connect(
                   initialValue={stakeDuration}
                   validatorFactory={validateStakeDuration}
                   formRef={this.formRef}
-                  onChange={(n) => this.setState({ currentStakeDuration: n })}
+                  onChange={n => this.setState({ currentStakeDuration: n })}
                 />
               )}
 
@@ -190,6 +191,7 @@ export const RestakeModal = connect(
                 // @ts-ignore
                 <AutoStakeFormItem
                   initialValue={nonDecay}
+                  selfStaking={this.props.selfStaking}
                   stakeAmount={this.state.currentStakeAmount}
                   stakeDuration={this.state.currentStakeDuration}
                   formRef={this.formRef}

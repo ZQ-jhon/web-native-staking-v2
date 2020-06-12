@@ -2,9 +2,9 @@
 import config from "config";
 import { Config, Server } from "onefx/lib/server";
 import { setModel } from "../model";
-import { setGateways } from "./gateway/gateway";
-import { OnefxAuth } from "../shared/onefx-auth/onefx-auth";
+import { OnefxAuth } from "../shared/onefx-auth";
 import { authConfig } from "../shared/onefx-auth/auth-config";
+import { setGateways } from "./gateway/gateway";
 import { setMiddleware } from "./middleware";
 import { setServerRoutes } from "./server-routes";
 import { MetaResolver } from "../api-gateway/resolvers/meta-resolver";
@@ -19,7 +19,7 @@ export type MyConfig = Config & {
       endpoint: string;
       healthEndpoint: string;
       timeout: number;
-    }
+    };
   };
 };
 
@@ -56,14 +56,12 @@ const serverConfig: Config = {
 
 export type MyServer = Server & {
   resolvers: Array<
-    | typeof MetaResolver
-    | typeof ArticleResolver
-    | typeof BPResolver
+    typeof MetaResolver | typeof ArticleResolver | typeof BPResolver
   >;
   model: {};
   gateways: {
-    iotexMono: IotexMono
-    bpServerStatus: BpServerStatus
+    iotexMono: IotexMono;
+    bpServerStatus: BpServerStatus;
   };
   config: MyConfig;
   // tslint:disable-next-line:no-any
@@ -72,7 +70,9 @@ export type MyServer = Server & {
 
 export async function startServer(): Promise<Server> {
   const server: MyServer = new Server(serverConfig as MyConfig) as MyServer;
+  server.app.proxy = Boolean(config.get("server.proxy"));
   setGateways(server);
+  server.auth = new OnefxAuth(server, authConfig);
   setMiddleware(server);
   server.auth = new OnefxAuth(server, authConfig);
   setModel(server);

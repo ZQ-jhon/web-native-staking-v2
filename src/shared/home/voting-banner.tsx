@@ -24,6 +24,10 @@ const buyIotxList = [
     src: "voting-website/gate.png"
   },
   {
+    href: "https://upbit.com/exchange?code=CRIX.UPBIT.BTC-IOTX",
+    src: "voting-website/upbit.svg"
+  },
+  {
     href: "https://www.kucoin.com/#/trade/IOTX-BTC",
     src: "voting-website/kucoin.png"
   },
@@ -32,15 +36,15 @@ const buyIotxList = [
     src: "voting-website/bittrex.png"
   },
   {
-    href: "https://upbit.com/exchange?code=CRIX.UPBIT.BTC-IOTX",
-    src: "voting-website/upbit.svg"
+    href: "https://www.mxc.com/trade/easy#IOTX_USDT",
+    src: "voting-website/MXC.png"
   },
   {
-    href: "https://bgogo.com/exchange/IOTX/BTC",
-    src: "voting-website/bgogo.png"
+    href: "https://coindcx.com/trade/IOTXBTC",
+    src: "voting-website/coindcx_white.svg"
   },
   {
-    href: "https://bilaxy.com",
+    href: "https://bilaxy.com/trade/IOTX_ETH",
     src: "voting-website/bilaxy.png"
   },
   {
@@ -52,20 +56,28 @@ const buyIotxList = [
     src: "voting-website/coinone.png"
   },
   {
-    href: "https://www.gopax.com",
-    src: "voting-website/gopax.png"
-  },
-  {
-    href: "https://hitbtc.com",
+    href: "https://hitbtc.com/exchange/IOTX-to-BTC",
     src: "voting-website/HitBTC.png"
   },
   {
-    href: "https://www.hotbit.io",
+    href: "https://www.hotbit.io/exchange?symbol=IOTX_USDT",
     src: "voting-website/Hotbit.png"
   },
   {
-    href: "https://www.mxc.com",
-    src: "voting-website/MXC.png"
+    href: "https://www.elitex.io/#/en-US/trade/home?symbol=IOTX_BTC",
+    src: "voting-website/elitex.png"
+  },
+  {
+    href: "https://changelly.com/exchange/btc/iotx",
+    src: "voting-website/changelly.svg"
+  },
+  {
+    href: "https://swapspace.co/?from=btc&to=iotx&amount=0.1",
+    src: "voting-website/swapspace.svg"
+  },
+  {
+    href: "https://simpleswap.io/",
+    src: "voting-website/simpleswap.svg"
   }
 ];
 interface AdminSettingItem {

@@ -4,6 +4,7 @@ import { Buffer } from "buffer";
 import dateformat from "dateformat";
 // $FlowFixMe
 import leftPad from "left-pad";
+import { IBucket } from "../../server/gateway/staking";
 
 export const DEFAULT_EPOCH_SECOND = 24 * 3600;
 export const DEFAULT_STAKING_DURATION_SECOND = 24 * 3600;
@@ -50,23 +51,35 @@ export function encodeCandidateHexName(utf8: string): string {
 }
 
 export function getPowerEstimation(
-  amount: number,
+  amount: BigNumber,
   duration: number,
-  dayFromToday: number
-): { total: BigNumber; date: string } {
-  const daysLeft = duration - dayFromToday;
+  nonDecay: boolean,
+  selfStaking: boolean
+): BigNumber {
   let total = new BigNumber(0);
-  if (amount > 0) {
-    const percent =
-      // tslint:disable-next-line:binary-expression-operand-order
-      1 + (daysLeft > 0 ? Math.log(daysLeft) / Math.log(1.2) / 100 : 0);
-    total = new BigNumber(amount).multipliedBy(percent);
+  if (amount.isPositive()) {
+    let percent = 1;
+    if (duration > 0) {
+      percent += Math.log(duration * (nonDecay ? 2 : 1)) / Math.log(1.2) / 100;
+    }
+    if (selfStaking && nonDecay && duration >= 91) {
+      percent *= 1.06;
+    }
+    total = amount.multipliedBy(percent);
   }
-  const aDate = new Date();
-  aDate.setDate(aDate.getDate() + dayFromToday);
-  const date = aDate.toLocaleDateString();
-  return { total, date };
+
+  return total;
 }
+
+export function getPowerEstimationForBucket(bucket: IBucket): BigNumber {
+  return getPowerEstimation(
+    bucket.stakedAmount,
+    bucket.stakedDuration,
+    bucket.autoStake,
+    bucket.selfStakingBucket
+  );
+}
+
 export function getPowerEstimationForKovan(
   amount: number,
   duration: number,

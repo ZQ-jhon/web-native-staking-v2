@@ -1,13 +1,22 @@
+import { validateAddress } from "iotex-antenna/lib/account/utils";
 // @ts-ignore
 import { t } from "onefx/lib/iso-i18n";
 
-export const STAKE_DURATION_MAX_VALUE = 14 * 24;
+export const STAKE_DURATION_MAX_VALUE = 1050;
 
 // @ts-ignore
 export const validateCanName = (rule, value, callback) => {
   const reg = /^[a-z\d#]+$/;
   if (String(value).length > 12 || !reg.test(value)) {
     callback(t("my_stake.canName.err"));
+  } else {
+    callback();
+  }
+};
+//@ts-ignore
+export const validateIoAddress = (rule, value, callback) => {
+  if (!validateAddress(value)) {
+    callback(t("my_stake.ioAddress.err"));
   } else {
     callback();
   }
@@ -27,7 +36,7 @@ export const smallerOrEqualTo = (num, min) => (rule, value, callback) => {
 };
 
 const isStakeDurationInvalid = (value: number, maxValue: number) => {
-  return value < 0 || value > maxValue || value % 7 !== 0;
+  return value < 0 || value > maxValue;
 };
 
 // tslint:disable-next-line:variable-name no-any

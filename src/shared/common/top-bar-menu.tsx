@@ -12,11 +12,9 @@ import { media } from "./styles/style-media";
 import { contentPadding } from "./styles/style-padding";
 
 export const TOP_BAR_HEIGHT = 75;
-export const TOP_BAR_MARGIN = 32;
 
-const minWitdh = { minWidth: 60 };
-const actived = { color: colors.white, ...minWitdh };
-const inactived = { ...minWitdh, textDecoration: "none" };
+const actived = { color: colors.white };
+const inactived = { textDecoration: "none" };
 
 // tslint:disable-next-line:no-any
 export const TopBarMenu = ({ hideMobileMenu, faucetEnable }: any) => {
@@ -24,42 +22,34 @@ export const TopBarMenu = ({ hideMobileMenu, faucetEnable }: any) => {
   const profileStyle = { minWitdh: "30px" };
   const aStyle =
     String(pathname) === "/" ||
+    String(pathname) === "/v1" ||
     String(pathname) === "/my-votes" ||
     String(pathname) === "/my-referrals"
       ? actived
       : inactived;
+  const activeStyle = { ...actived, ...profileStyle };
+  const inactiveStyle = { ...inactived, ...profileStyle };
   const a1Style = String(pathname).startsWith("/profile/")
-    ? { ...actived, ...profileStyle }
-    : { ...inactived, ...profileStyle };
-  const a2Style = String(pathname).startsWith("/v2/")
-    ? { ...actived, ...profileStyle }
-    : { ...inactived, ...profileStyle };
-
+    ? activeStyle
+    : inactiveStyle;
+  const a3Style = String(pathname).startsWith("/polls/")
+    ? activeStyle
+    : inactiveStyle;
+  const a4Style = String(pathname).startsWith("/tools/")
+    ? activeStyle
+    : inactiveStyle;
   const menu = [
-    <A key={0} href="/" style={aStyle} onClick={hideMobileMenu}>
-      V1
-    </A>,
-    <A key={4} href="/v2/" style={a2Style} onClick={hideMobileMenu}>
-      V2
+    <A key={4} href="/v2/" style={aStyle} onClick={hideMobileMenu}>
+      {t("topbar.home")}
     </A>,
     <A key={1} href="/profile/" style={a1Style} onClick={hideMobileMenu}>
       {t("topbar.i_am_a_delegate")}
     </A>,
-    <A
-      key={2}
-      href="https://www.iotex.io/vita"
-      target="_blank"
-      style={inactived}
-    >
-      {t("topbar.vita")}
+    <A key={2} href="/polls/" style={a3Style}>
+      {t("topbar.poll")}
     </A>,
-    <A
-      key={3}
-      href="https://support.iotex.io/"
-      target="_blank"
-      style={inactived}
-    >
-      {t("topbar.support")}
+    <A key={3} href="/tools/multi-send/" style={a4Style}>
+      {t("topbar.tool")}
     </A>
   ];
 

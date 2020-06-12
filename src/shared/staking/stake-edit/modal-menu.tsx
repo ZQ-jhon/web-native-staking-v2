@@ -9,6 +9,7 @@ import { DEFAULT_STAKING_DURATION_SECOND } from "../../common/token-utils";
 import { AddStakingModal } from "./add-staking-modal";
 import { RestakeModal } from "./restake-modal";
 import { RevoteModal } from "./revote-modal";
+import { TransferModal } from "./transfer-modal";
 import { UnstakeModal } from "./unstake-modal";
 import { WithdrawModal } from "./withdraw-modal";
 
@@ -19,29 +20,78 @@ const ACTION_ROW_STYLE = {
     fontSize: "12px",
     height: "30px",
     display: "flex",
-    justifyContent: "space-between",
-  },
+    justifyContent: "space-between"
+  }
 };
 const ACTION_ROW_DISABLED = {
   style: {
     ...ACTION_ROW_STYLE.style,
     color: colors.black65,
-    cursor: "not-allowed",
+    cursor: "not-allowed"
   },
   // tslint:disable-next-line:no-any
-  onClick: (e: any) => e.stopPropagation(),
+  onClick: (e: any) => e.stopPropagation()
 };
 const menuInfoStyle = {
   color: colors.black80,
   width: "100px",
   marginLeft: "20px",
   display: "inline-block",
-  textAlign: "left",
+  textAlign: "left"
 };
 const menuInfoStyleDisabled = {
   ...menuInfoStyle,
-  color: colors.black65,
+  color: colors.black65
 };
+
+function renderTransfer(record: IBucket): JSX.Element {
+  const status = getStatus(
+    record.withdrawWaitUntil,
+    record.unstakeStartTime,
+    record.stakeStartTime
+  );
+
+  switch (status) {
+    case "staking":
+      return (
+        <div {...ACTION_ROW_STYLE}>
+          <span>{t("my_stake.edit.transfer")}</span>
+          {
+            // @ts-ignore
+            <span style={menuInfoStyle}>
+              {t("my_stake.status.suffix.anytime")}
+            </span>
+          }
+        </div>
+      );
+    case "unstaking":
+      return (
+        <div {...ACTION_ROW_DISABLED}>
+          <span>{t("my_stake.edit.transfer")}</span>
+          {
+            // @ts-ignore
+            <span style={menuInfoStyleDisabled}>
+              {t("my_stake.status.suffix.not_applicable")}
+            </span>
+          }
+        </div>
+      );
+    case "withdrawable":
+      return (
+        <div {...ACTION_ROW_DISABLED}>
+          <span>{t("my_stake.edit.transfer")}</span>
+          {
+            // @ts-ignore
+            <span style={menuInfoStyleDisabled}>
+              {t("my_stake.status.suffix.anytime")}
+            </span>
+          }
+        </div>
+      );
+    default:
+      return <></>;
+  }
+}
 
 function renderRevote(record: IBucket): JSX.Element {
   const status = getStatus(
@@ -255,13 +305,15 @@ function renderWithdraw(record: IBucket): JSX.Element {
   }
 }
 
-function renderAddStaking(): JSX.Element {
+function renderAddStaking(disabled: boolean): JSX.Element {
   return (
-    <div {...ACTION_ROW_STYLE}>
+    <div {...(disabled ? ACTION_ROW_DISABLED : ACTION_ROW_STYLE)}>
       <span>{t("my_stake.edit.add_staking")}</span>
       {
         // @ts-ignore
-        <span style={menuInfoStyle}>{t("my_stake.status.suffix.anytime")}</span>
+        <span style={menuInfoStyle}>
+          {t("my_stake.status.suffix.autostake_only")}
+        </span>
       }
     </div>
   );
@@ -287,7 +339,8 @@ export function renderActionMenu(record: IBucket): JSX.Element {
           // @ts-ignore
           <AddStakingModal
             bucketIndex={record.index}
-            clickable={renderAddStaking()}
+            clickable={renderAddStaking(!record.autoStake)}
+            selfStaking={record.selfStakingBucket}
             stakeDuration={record.stakedDuration}
             stakedAmount={record.stakedAmount}
             nonDecay={record.autoStake}
@@ -305,6 +358,7 @@ export function renderActionMenu(record: IBucket): JSX.Element {
             nonDecay={record.autoStake}
             stakeTime={record.stakeStartTime}
             stakedAmount={record.stakedAmount}
+            selfStaking={record.selfStakingBucket}
             clickable={renderRestake(record)}
           />
         }
@@ -332,6 +386,18 @@ export function renderActionMenu(record: IBucket): JSX.Element {
             bucketIndex={record.index}
             waitUntil={record.withdrawWaitUntil}
             clickable={renderWithdraw(record)}
+          />
+        }
+      </Menu.Item>
+      <Menu.Item key="">
+        {
+          // @ts-ignore
+          <TransferModal
+            autoStake={record.autoStake}
+            stakedDuration={record.stakedDuration}
+            bucketIndex={record.index}
+            canName={canName}
+            clickable={renderTransfer(record)}
           />
         }
       </Menu.Item>
