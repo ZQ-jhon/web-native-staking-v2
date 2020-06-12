@@ -24,6 +24,10 @@ const buyIotxList = [
     src: "voting-website/gate.png"
   },
   {
+    href: "https://upbit.com/exchange?code=CRIX.UPBIT.BTC-IOTX",
+    src: "voting-website/upbit.svg"
+  },
+  {
     href: "https://www.kucoin.com/#/trade/IOTX-BTC",
     src: "voting-website/kucoin.png"
   },
@@ -32,12 +36,12 @@ const buyIotxList = [
     src: "voting-website/bittrex.png"
   },
   {
-    href: "https://upbit.com/exchange?code=CRIX.UPBIT.BTC-IOTX",
-    src: "voting-website/upbit.svg"
+    href: "https://www.mxc.com",
+    src: "voting-website/MXC.png"
   },
   {
-    href: "https://bgogo.com/exchange/IOTX/BTC",
-    src: "voting-website/bgogo.png"
+    href: "https://coindcx.com/trade/IOTXBTC",
+    src: "voting-website/coindcx_white.svg"
   },
   {
     href: "https://bilaxy.com",
@@ -52,10 +56,6 @@ const buyIotxList = [
     src: "voting-website/coinone.png"
   },
   {
-    href: "https://www.gopax.com",
-    src: "voting-website/gopax.png"
-  },
-  {
     href: "https://hitbtc.com",
     src: "voting-website/HitBTC.png"
   },
@@ -64,8 +64,20 @@ const buyIotxList = [
     src: "voting-website/Hotbit.png"
   },
   {
-    href: "https://www.mxc.com",
-    src: "voting-website/MXC.png"
+    href: "https://www.elitex.io/#/en-US/trade/home?symbol=IOTX_BTC",
+    src: "voting-website/elitex.png"
+  },
+  {
+    href: "https://changelly.com/",
+    src: "voting-website/changelly.svg"
+  },
+  {
+    href: "https://swapspace.co/",
+    src: "voting-website/swapspace.svg"
+  },
+  {
+    href: "https://simpleswap.io/",
+    src: "voting-website/simpleswap.svg"
   }
 ];
 interface AdminSettingItem {
