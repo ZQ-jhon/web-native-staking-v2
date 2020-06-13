@@ -1,4 +1,5 @@
 import { Account } from "iotex-antenna/lib/account/account";
+import { fromString } from "iotex-antenna/lib/crypto/address";
 import { Context } from "onefx/lib/types";
 import { v4 as uuidv4 } from "uuid";
 import { MyServer } from "../../../server/start-server";
@@ -39,6 +40,15 @@ export function setEmailPasswordIdentityProviderRoutes(server: MyServer): void {
         };
         return;
       }
+      const eth = fromString(String(recovered))
+        .stringEth()
+        .toLowerCase();
+      let user = await server.auth.user.getByEth(eth);
+      if (!user) {
+        // sign up
+        user = await server.auth.user.newAndSave({ eth });
+      }
+      ctx.state.userId = user.id;
       await next();
     },
     server.auth.postAuthentication

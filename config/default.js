@@ -13,11 +13,11 @@ module.exports = {
       secrets: ["insecure plain text", "insecure secret here"]
     },
     noSecurityHeadersRoutes: {
-      "/nsv2/api-gateway/": true,
+      "/v2/api-gateway/": true,
       "/api/": true
     },
     noCsrfRoutes: {
-      "/nsv2/api-gateway/": true,
+      "/v2/api-gateway/": true,
       "/api/": true
     }
   },
@@ -28,6 +28,12 @@ module.exports = {
     logger: {
       enabled: true,
       level: "debug"
+    },
+    mongoose: {
+      enabled: true,
+      debug: false,
+      uri: process.env.MONGODB_URI,
+      connectTimeoutMS: 5000
     },
     staking: {
       contractAddress: "io1zn9mn4v63jg3047ylqx9nqaqz0ev659777q3xc",

@@ -21,38 +21,34 @@ export function setServerRoutes(server: MyServer): void {
   setEmailPasswordIdentityProviderRoutes(server);
 
   // @ts-ignore
-  server.get(
-    "SPA",
-    /^(?!\/?tools\/token-migration\/api-gateway\/).+$/,
-    async (ctx: Context) => {
-      const st = new Staking({
-        antenna: new Antenna("https://api.iotex.one")
-      });
-      const height = await st.getHeight();
-      const resp = await st.getAllCandidates(0, 1000, height);
-      const ownersToNames: Record<string, string> = {};
-      for (const c of resp) {
-        ownersToNames[c.ownerAddress] = c.name;
-      }
-      ctx.setState("base.ownersToNames", ownersToNames);
-      ctx.setState(
-        "staking.contractAddress",
-        // @ts-ignore
-        server.config.gateways.staking.contractAddress
-      );
-      ctx.setState(
-        "staking.delegateProfileContractAddr",
-        // @ts-ignore
-        server.config.gateways.staking.delegateProfileContractAddr
-      );
-      checkingAppSource(ctx);
-      ctx.body = await apolloSSR(ctx, {
-        VDom: <AppContainer />,
-        reducer: noopReducer,
-        clientScript: "main.js"
-      });
+  server.get("SPA", /^(?!\/?v2\/api-gateway\/).+$/, async (ctx: Context) => {
+    const st = new Staking({
+      antenna: new Antenna("https://api.iotex.one")
+    });
+    const height = await st.getHeight();
+    const resp = await st.getAllCandidates(0, 1000, height);
+    const ownersToNames: Record<string, string> = {};
+    for (const c of resp) {
+      ownersToNames[c.ownerAddress] = c.name;
     }
-  );
+    ctx.setState("base.ownersToNames", ownersToNames);
+    ctx.setState(
+      "staking.contractAddress",
+      // @ts-ignore
+      server.config.gateways.staking.contractAddress
+    );
+    ctx.setState(
+      "staking.delegateProfileContractAddr",
+      // @ts-ignore
+      server.config.gateways.staking.delegateProfileContractAddr
+    );
+    checkingAppSource(ctx);
+    ctx.body = await apolloSSR(ctx, {
+      VDom: <AppContainer />,
+      reducer: noopReducer,
+      clientScript: "main.js"
+    });
+  });
 }
 
 export function checkingAppSource(ctx: koa.Context): void {

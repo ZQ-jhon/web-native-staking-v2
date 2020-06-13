@@ -8,7 +8,11 @@ import { Gateways, setGateways } from "./gateway/gateway";
 import { setMiddleware } from "./middleware";
 import { setServerRoutes } from "./server-routes";
 
-export type MyServer = Server & { [key: string]: any; gateways: Gateways };
+export type MyServer = Server & {
+  [key: string]: any;
+  gateways: Gateways;
+  auth: OnefxAuth;
+};
 
 export async function startServer(): Promise<Server> {
   const server: MyServer = new Server((config as any) as Config) as MyServer;
