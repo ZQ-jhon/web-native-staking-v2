@@ -427,3 +427,4 @@ profile.rewards.send: '${sendAmount} IOTX sent ! Check transaction hash to view 
 profile.calculate_rewards: 'Calculate Rewards'
 auth/sign_in.title: Becoming an IoTeX block producer
 auth/button_submit: Login or Sign Up with IoPay
+auth/failed_to_login: Failed to login
