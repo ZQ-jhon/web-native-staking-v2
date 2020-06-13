@@ -41,6 +41,11 @@ export function setServerRoutes(server: MyServer): void {
         // @ts-ignore
         server.config.gateways.staking.contractAddress
       );
+      ctx.setState(
+        "staking.delegateProfileContractAddr",
+        // @ts-ignore
+        server.config.gateways.staking.delegateProfileContractAddr
+      );
       checkingAppSource(ctx);
       ctx.body = await apolloSSR(ctx, {
         VDom: <AppContainer />,

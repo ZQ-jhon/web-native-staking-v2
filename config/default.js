@@ -30,8 +30,8 @@ module.exports = {
       level: "debug"
     },
     staking: {
-      // provider: "https://kovan.infura.io/v3/1d4b3ba280cb43678bb11eb272ea70f4",
-      contractAddress: "io1zn9mn4v63jg3047ylqx9nqaqz0ev659777q3xc"
+      contractAddress: "io1zn9mn4v63jg3047ylqx9nqaqz0ev659777q3xc",
+      delegateProfileContractAddr: "io1lfl4ppn2c3wcft04f0rk0jy9lyn4pcjcm7638u"
     },
     mongoose: {
       enabled: true,

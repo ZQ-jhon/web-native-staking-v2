@@ -40,52 +40,12 @@ export function lazyGetContract(address: string, abi: any): Contract {
   if (contractsByAddrs[address]) {
     return contractsByAddrs[address];
   }
-  if (isIoPayMobile) {
-    const contract = getXAppTokenContract(abi, address);
-    contractsByAddrs[address] = contract;
-  } else {
-    contractsByAddrs[address] = new Contract(abi, address, {
-      provider: getAntenna().currentProvider(),
-      signer: new WsSignerPlugin("wss://local.iotex.io:64102")
-    });
-  }
+  const antenna = getAntenna();
+  contractsByAddrs[address] = new Contract(abi, address, {
+    provider: antenna.iotx,
+    signer: antenna.iotx.signer
+  });
   return contractsByAddrs[address];
-}
-
-export function getXAppTokenContract(
-  // tslint:disable-next-line:no-any
-  abi: any,
-  contractAddr?: string
-): Contract {
-  const mobileNativeAntenna = getMobileNativeAntenna();
-  return new Contract(abi, contractAddr, {
-    provider: mobileNativeAntenna.iotx,
-    signer: mobileNativeAntenna.iotx.signer
-  });
-}
-
-export function getRemoteAntenna(): Antenna {
-  // $FlowFixMe
-  const injectedWindow: Window & { remoteAntenna?: Antenna } = window;
-  if (injectedWindow.remoteAntenna) {
-    return injectedWindow.remoteAntenna;
-  }
-  injectedWindow.remoteAntenna = new Antenna("/iotex-core-proxy", {
-    signer: new WsSignerPlugin("wss://local.iotex.io:64102")
-  });
-  return injectedWindow.remoteAntenna;
-}
-
-export function getMobileNativeAntenna(): Antenna {
-  // $FlowFixMe
-  const injectedWindow: Window & { mobileNativeAntenna?: Antenna } = window;
-  if (!injectedWindow.mobileNativeAntenna) {
-    const signer = new WvSigner();
-    injectedWindow.mobileNativeAntenna = new Antenna("https://api.iotex.one", {
-      signer
-    });
-  }
-  return injectedWindow.mobileNativeAntenna;
 }
 
 export async function getIoPayAddress(): Promise<string> {
@@ -159,7 +119,7 @@ async function getIoAddressFromIoPay(): Promise<string> {
 
 export async function getIotxBalance(address: string): Promise<number> {
   const antenna = getAntenna();
-  const { accountMeta } = await antenna.iotx.getAccount({ address });
+  const {accountMeta} = await antenna.iotx.getAccount({address});
   // @ts-ignore
   return Number(fromRau(accountMeta.balance, "Iotx"));
 }

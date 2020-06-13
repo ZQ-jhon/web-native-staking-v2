@@ -10,7 +10,10 @@ type State = {
   isLoading: boolean;
   message: string;
   nonce: string;
-  error: string;
+  error: {
+    code: string;
+    message: string;
+  } | null;
 };
 
 // @ts-ignore
@@ -20,7 +23,7 @@ export class LoginOrSignUp extends Component<{}, State> {
     isLoading: true,
     message: "",
     nonce: "",
-    error: ""
+    error: null
   };
 
   async componentDidMount(): Promise<void> {
@@ -34,21 +37,24 @@ export class LoginOrSignUp extends Component<{}, State> {
     } catch (e) {
       this.setState({
         isLoading: false,
-        error: "failed to initalize"
+        error: {
+          code: "FAILED_TO_INIT",
+          message: "failed to initalize"
+        }
       });
     }
   }
 
   onSubmit = async (e: Event) => {
+    const { nonce } = this.state;
     e.preventDefault();
     const acct = getAntenna().iotx.accounts[0];
-    const sig = acct.sign(
-      JSON.stringify({
-        message: this.state.message,
-        nonce: this.state.nonce
-      })
-    );
-    const { data } = await axiosInstance.post("/api/sign-in/", { sig });
+    const msg = `Login with ${acct.address} and the nonce of ${nonce}`;
+    const sig = await acct.sign(msg);
+    const { data } = await axiosInstance.post("/api/sign-in/", {
+      sig: sig.toString("hex"),
+      address: acct.address
+    });
     if (data.ok && data.shouldRedirect) {
       return (window.location.href = data.next);
     } else if (data.error) {
@@ -70,7 +76,9 @@ export class LoginOrSignUp extends Component<{}, State> {
         >
           {t("auth/button_submit")}
         </Button>
-        {this.state.error && <InputError>{this.state.error}</InputError>}
+        {this.state.error && (
+          <InputError>{this.state.error.message}</InputError>
+        )}
       </>
     );
   }

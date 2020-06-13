@@ -11,6 +11,7 @@ import { ScrollToTop } from "./common/scroll-top";
 import { colors } from "./common/styles/style-color";
 import { fonts } from "./common/styles/style-font";
 import { TopBar } from "./common/top-bar";
+import { ProfileContainer } from "./delegate/profile-container";
 import { VotingContainer } from "./home/voting-container";
 import { SignIn } from "./onefx-auth-provider/email-password-identity-provider/view/sign-in";
 import { VoteNativePage } from "./staking/voting-native-page";
@@ -55,6 +56,11 @@ export class App extends Component<Props> {
                 exact={true}
                 path="/vote-native/"
                 component={VoteNativePage}
+              />
+              <Route
+                exact={true}
+                path="/profile/*"
+                component={ProfileContainer}
               />
               <Route component={NotFound} />
             </Switch>

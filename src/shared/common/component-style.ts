@@ -1,6 +1,7 @@
 // @flow
 import { styled } from "onefx/lib/styletron-react";
 import { colors } from "./styles/style-color2";
+import { fonts } from "./styles/style-font";
 
 export const KeySpan = styled("span", {
   fontSize: "12px",
@@ -66,4 +67,11 @@ export const Title = styled("span", props => ({
 
 export const BannerImg = styled("img", () => ({
   width: "100%"
+}));
+                                              
+export const RootStyle = styled("div", () => ({
+  ...fonts.body,
+  backgroundColor: colors.white,
+  color: colors.text01,
+  textRendering: "optimizeLegibility"
 }));

@@ -1,29 +1,7 @@
-import koa from 'koa';
+import { Account } from "iotex-antenna/lib/account/account";
+import { Context } from "onefx/lib/types";
 import { v4 as uuidv4 } from "uuid";
-import validator from "validator";
 import { MyServer } from "../../../server/start-server";
-
-type Handler = (ctx: koa.Context, next: Function) => Promise<{}>;
-
-export function emailValidator(): Handler {
-  return async (ctx: koa.Context, next: Function) => {
-    let { email } = ctx.request.body;
-    email = String(email).toLowerCase();
-    email = validator.trim(email);
-    if (!validator.isEmail(email)) {
-      return (ctx.response.body = {
-        ok: false,
-        error: {
-          code: "auth/invalid-email",
-          message: ctx.t("auth/invalid-email")
-        }
-      });
-    }
-
-    ctx.request.body.email = email;
-    return next(ctx);
-  };
-}
 
 // tslint:disable-next-line
 export function setEmailPasswordIdentityProviderRoutes(server: MyServer): void {
@@ -41,45 +19,26 @@ export function setEmailPasswordIdentityProviderRoutes(server: MyServer): void {
   server.post(
     "api-sign-in",
     "/api/sign-in/",
-    emailValidator(),
-    async (ctx: koa.Context, next: Function) => {
-      const { email, password } = ctx.request.body;
-      const user = await server.auth.user.getByMail(email);
-      if (!user) {
-        ctx.response.body = {
-          ok: false,
-          error: {
-            code: "auth/user-not-found",
-            message: ctx.t("auth/user-not-found")
-          }
-        };
-        return;
-      }
-      const isPasswordVerified = await server.auth.user.verifyPassword(
-        user._id,
-        password
+    async (ctx: Context, next: Function) => {
+      const { sig, address } = ctx.request.body;
+      const msg = `Login with ${address} and the nonce of ${ctx.session.nonce}`;
+      ctx.session.nonce = null;
+
+      const recovered = new Account().recover(
+        msg,
+        Buffer.from(sig, "hex"),
+        false
       );
-      if (!isPasswordVerified) {
+      if (recovered !== address) {
         ctx.response.body = {
           ok: false,
           error: {
-            code: "auth/wrong-password",
-            message: ctx.t("auth/wrong-password")
+            code: "auth/failed_to_login",
+            message: ctx.t("auth/failed_to_login")
           }
         };
         return;
       }
-      if (user.isBlocked) {
-        ctx.response.body = {
-          ok: false,
-          error: {
-            code: "auth/user-disabled",
-            message: ctx.t("auth/user-disabled")
-          }
-        };
-        return;
-      }
-      ctx.state.userId = user._id;
       await next();
     },
     server.auth.postAuthentication
