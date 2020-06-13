@@ -2,7 +2,16 @@ import { Account } from "iotex-antenna/lib/account/account";
 import { fromString } from "iotex-antenna/lib/crypto/address";
 import { Context } from "onefx/lib/types";
 import { v4 as uuidv4 } from "uuid";
+import ethToIotx from "../../../../config/eth-to-iotx.json";
 import { MyServer } from "../../../server/start-server";
+const ethByIotx: Record<string, string> = (ethToIotx || []).reduce(
+  (pre: Record<string, string>, cur: { eth: string; iotx: string }) => {
+    const iotx = cur.iotx.toLowerCase();
+    pre[iotx] = cur.eth.toLowerCase();
+    return pre;
+  },
+  {}
+);
 
 // tslint:disable-next-line
 export function setEmailPasswordIdentityProviderRoutes(server: MyServer): void {
@@ -40,9 +49,13 @@ export function setEmailPasswordIdentityProviderRoutes(server: MyServer): void {
         };
         return;
       }
-      const eth = fromString(String(recovered))
-        .stringEth()
-        .toLowerCase();
+      const rec = String(recovered).toLowerCase();
+      // check mappings first and then convert by ourselves
+      const eth =
+        ethByIotx[rec] ||
+        fromString(rec)
+          .stringEth()
+          .toLowerCase();
       let user = await server.auth.user.getByEth(eth);
       if (!user) {
         // sign up

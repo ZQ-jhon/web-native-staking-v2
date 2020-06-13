@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import tools from "../utils/tools";
 import { baseModel } from "./base-model";
 
 const Schema = mongoose.Schema;
@@ -40,28 +39,10 @@ export class UserModel {
       updateAt: { type: Date, default: Date.now }
     });
 
-    UserSchema.virtual("id").get(function onId(): void {
+    UserSchema.virtual("id").get(function onId(): string {
       // @ts-ignore
       return this._id;
     });
-    UserSchema.virtual("avatarUrl").get(function onAvatarUrl(): void {
-      // @ts-ignore
-      let url = this.avatar || tools.makeGravatar(this.email.toLowerCase());
-
-      // tslint:disable-next-line
-      if (url.indexOf("http:") === 0) {
-        url = url.slice(5);
-      }
-
-      // 如果是 github 的头像，则限制大小
-      if (url.indexOf("githubusercontent") !== -1) {
-        url += "&s=120";
-      }
-
-      return url;
-    });
-
-    UserSchema.index({ email: 1 }, { unique: true });
 
     UserSchema.plugin(baseModel);
     UserSchema.pre("save", function onSave(next: Function): void {
