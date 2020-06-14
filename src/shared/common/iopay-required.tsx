@@ -46,7 +46,7 @@ export function DownloadButton(): JSX.Element {
 
 type Props = {
   // tslint:disable-next-line:no-any
-  forwardedRef: any;
+  forwardedRef?: any;
   isIoPayMobile?: boolean;
 };
 

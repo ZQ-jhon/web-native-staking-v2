@@ -44,7 +44,7 @@ export const TopBarMenu = ({ hideMobileMenu, faucetEnable }: any) => {
     <A key={4} href="/v2/" style={aStyle} onClick={hideMobileMenu}>
       {t("topbar.home")}
     </A>,
-    <A key={1} href="/profile/" style={a1Style} onClick={hideMobileMenu}>
+    <A key={1} href="/v2/profile/" style={a1Style} onClick={hideMobileMenu}>
       {t("topbar.i_am_a_delegate")}
     </A>,
     <A key={2} href="/polls/" style={a3Style}>

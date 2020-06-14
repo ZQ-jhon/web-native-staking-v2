@@ -12,8 +12,8 @@ import Layout from "antd/lib/layout";
 import Menu from "antd/lib/menu";
 import { t } from "onefx/lib/iso-i18n";
 import { RouteComponentProps } from "onefx/lib/react-router";
+import { Route, Switch } from "onefx/lib/react-router";
 import React, { PureComponent } from "react";
-import { Route, Switch } from "react-router";
 import { CommonMargin } from "../common/common-margin";
 import { RootStyle } from "../common/component-style";
 import { NotFound } from "../common/not-found";
@@ -21,6 +21,7 @@ import { secondFontFamily } from "../common/styles/style-font";
 import { ContentPadding } from "../common/styles/style-padding";
 import { TOP_BAR_HEIGHT } from "../common/top-bar";
 import { RewardDistributionContainer } from "./reward-distribution-container";
+import { Settings } from "./settings";
 import { Welcome } from "./welcome";
 
 type Props = {} & RouteComponentProps;
@@ -192,7 +193,7 @@ export class ProfileContainer extends PureComponent<Props, State> {
             <span className="nav-text">{t("profile.settings")}</span>
           </span>
         ),
-        component: NotFound
+        component: Settings
       }
     ];
 

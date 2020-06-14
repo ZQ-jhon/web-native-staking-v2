@@ -21,7 +21,45 @@ export function setServerRoutes(server: MyServer): void {
   setEmailPasswordIdentityProviderRoutes(server);
 
   // @ts-ignore
+  server.get(
+    "delegate-profile",
+    "/profile*",
+    server.auth.authRequired,
+    async (ctx: Context) => {
+      const user = await server.auth.user.getById(ctx.state.userId);
+      ctx.setState("base.eth", user!.eth);
+      ctx.setState("base.next", ctx.query.next);
+      const st = new Staking({
+        antenna: new Antenna("https://api.iotex.one")
+      });
+      const height = await st.getHeight();
+      const resp = await st.getAllCandidates(0, 1000, height);
+      const ownersToNames: Record<string, string> = {};
+      for (const c of resp) {
+        ownersToNames[c.ownerAddress] = c.name;
+      }
+      ctx.setState("base.ownersToNames", ownersToNames);
+      ctx.setState(
+        "staking.contractAddress",
+        // @ts-ignore
+        server.config.gateways.staking.contractAddress
+      );
+      ctx.setState(
+        "staking.delegateProfileContractAddr",
+        // @ts-ignore
+        server.config.gateways.staking.delegateProfileContractAddr
+      );
+      checkingAppSource(ctx);
+      ctx.body = await apolloSSR(ctx, {
+        VDom: <AppContainer />,
+        reducer: noopReducer,
+        clientScript: "main.js"
+      });
+    }
+  );
+
   server.get("SPA", /^(?!\/?v2\/api-gateway\/).+$/, async (ctx: Context) => {
+    ctx.setState("base.next", ctx.query.next);
     const st = new Staking({
       antenna: new Antenna("https://api.iotex.one")
     });
@@ -36,11 +74,6 @@ export function setServerRoutes(server: MyServer): void {
       "staking.contractAddress",
       // @ts-ignore
       server.config.gateways.staking.contractAddress
-    );
-    ctx.setState(
-      "staking.delegateProfileContractAddr",
-      // @ts-ignore
-      server.config.gateways.staking.delegateProfileContractAddr
     );
     checkingAppSource(ctx);
     ctx.body = await apolloSSR(ctx, {
