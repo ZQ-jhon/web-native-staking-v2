@@ -52,8 +52,7 @@ function HeadInner({ locale }: { locale: string }): JSX.Element {
       ]}
       script={[
         {
-          src:
-            "https://cdn.jsdelivr.net/npm/iotex-antenna@0.29.1/lib/iotex-antenna.browser.min.js"
+          src: assetURL("vendors~main.js")
         }
       ]}
     >

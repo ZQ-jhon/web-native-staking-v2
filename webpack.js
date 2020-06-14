@@ -23,6 +23,11 @@ module.exports = {
       }),
     {}
   ),
+  optimization: {
+    splitChunks: {
+      chunks: "all"
+    }
+  },
   output: {
     filename: PROD ? "[name]-[chunkhash].js" : "[name].js",
     path: path.resolve(__dirname, OUTPUT_DIR)
