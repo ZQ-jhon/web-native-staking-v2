@@ -23,6 +23,7 @@ import { TOP_BAR_HEIGHT } from "../common/top-bar";
 import { CandidateProfileContainer } from "./candidate-profile";
 import { RewardDistributionContainer } from "./reward-distribution-container";
 import { Settings } from "./settings";
+import { Technical } from "./technical";
 import { Welcome } from "./welcome";
 
 type Props = {} & RouteComponentProps;
@@ -80,7 +81,7 @@ export class ProfileContainer extends PureComponent<Props, State> {
             <span className="nav-text">{t("profile.technical")}</span>
           </span>
         ),
-        component: NotFound
+        component: Technical
       },
       {
         path: "/profile/name-registration/",
