@@ -24,7 +24,7 @@ const Settings = connect((state: { base: { eth: string } }) => ({
           <pre>{addr}</pre>
           <CommonMargin />
           <div>
-            <Button secondary={true} href="/logout">
+            <Button secondary={true} href="/v2/logout">
               {t("auth/sign_out")}
             </Button>
           </div>

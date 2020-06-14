@@ -6,7 +6,7 @@ import * as React from "react";
 import { setApiGateway } from "../api-gateway/api-gateway";
 import { AppContainer } from "../shared/app-container";
 import { apolloSSR } from "../shared/common/apollo-ssr";
-import { setEmailPasswordIdentityProviderRoutes } from "../shared/onefx-auth-provider/email-password-identity-provider/email-password-identity-provider-handler";
+import { setIdentityProviderRoutes } from "../shared/onefx-auth-provider/identity-provider/identity-provider-handler";
 import { Staking } from "./gateway/staking";
 import { MyServer } from "./start-server";
 
@@ -18,7 +18,7 @@ export function setServerRoutes(server: MyServer): void {
 
   setApiGateway(server);
 
-  setEmailPasswordIdentityProviderRoutes(server);
+  setIdentityProviderRoutes(server);
 
   // @ts-ignore
   server.get(
@@ -29,6 +29,7 @@ export function setServerRoutes(server: MyServer): void {
       const user = await server.auth.user.getById(ctx.state.userId);
       ctx.setState("base.eth", user!.eth);
       ctx.setState("base.next", ctx.query.next);
+      ctx.setState("base.apiToken", ctx.state.jwt);
       const st = new Staking({
         antenna: new Antenna("https://api.iotex.one")
       });

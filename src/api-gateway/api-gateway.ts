@@ -1,3 +1,5 @@
+import { GraphQLRequest } from "apollo-link";
+import { setContext } from "apollo-link-context";
 import { HttpLink } from "apollo-link-http";
 import {
   ApolloServer,
@@ -6,6 +8,7 @@ import {
   mergeSchemas
 } from "apollo-server-koa";
 import config from "config";
+import dottie from "dottie";
 import path from "path";
 import "reflect-metadata";
 import { buildSchema } from "type-graphql";
@@ -28,13 +31,28 @@ export async function setApiGateway(server: MyServer): Promise<void> {
   });
   const schemas = [localSchema];
 
-  const remoteLink = new HttpLink({
-    uri: "https://member.iotex.io/api-gateway/",
-    fetch,
-    headers: {
-      "x-iotex-client-id": config.get("project")
+  const remoteLink = setContext(
+    // tslint:disable-next-line:no-any
+    (_: GraphQLRequest, prevContext: any) => {
+      const auth = dottie.get(
+        prevContext,
+        "graphqlContext.headers.authorization"
+      );
+      return {
+        headers: {
+          Authorization: auth
+        }
+      };
     }
-  });
+  ).concat(
+    new HttpLink({
+      uri: "https://member.iotex.io/api-gateway/",
+      fetch,
+      headers: {
+        "x-iotex-client-id": config.get("project")
+      }
+    })
+  );
   const remoteSchema = makeRemoteExecutableSchema({
     schema: await introspectSchema(remoteLink),
     link: remoteLink
@@ -49,8 +67,10 @@ export async function setApiGateway(server: MyServer): Promise<void> {
     schema,
     introspection: true,
     playground: true,
-    context: async _ => {
-      return {};
+    context: async ({ ctx }) => {
+      return {
+        headers: ctx.headers
+      };
     }
   });
   const gPath = `${server.config.server.routePrefix || ""}/api-gateway/`;

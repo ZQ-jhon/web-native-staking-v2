@@ -385,7 +385,7 @@ profile.title: 'Delegate Profile'
 profile.update: 'Update My Profile'
 profile.preview: Preview
 profile.change_saved: 'Your changes have been saved'
-profile.change_not_saved: 'Your changes have not been saved'
+profile.change_not_saved: 'Your changes have not been saved. Please validate all of your fields'
 profile.website.required: 'Please enter your website URL.'
 profile.website: 'Website URL'
 profile.technical: 'TECHNICAL INFORMATION'

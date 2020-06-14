@@ -12,6 +12,7 @@ import JsonGlobal from "safe-json-globals/get";
 const state = isBrowser && JsonGlobal("state");
 const apolloState = isBrowser && state.apolloState;
 const apiGatewayUrl = isBrowser && state.base.apiGatewayUrl;
+const apiToken = isBrowser && state.base.apiToken;
 const csrfToken = isBrowser && state.base.csrfToken;
 export const ownersToNames = isBrowser && state.base.ownersToNames;
 
@@ -20,7 +21,7 @@ const myHttpLink = new HttpLink({
   uri: apiGatewayUrl,
   fetch,
   credentials: "same-origin",
-  headers: { "x-csrf-token": csrfToken }
+  headers: { "x-csrf-token": csrfToken, Authorization: `Bearer ${apiToken}` }
 });
 const timeoutHttpLink = timeoutLink.concat(myHttpLink);
 

@@ -14,8 +14,9 @@ const ethByIotx: Record<string, string> = (ethToIotx || []).reduce(
 );
 
 // tslint:disable-next-line
-export function setEmailPasswordIdentityProviderRoutes(server: MyServer): void {
+export function setIdentityProviderRoutes(server: MyServer): void {
   // API routes
+  server.get("logout", "/logout", server.auth.logout);
 
   server.post("api-sign-in-meta", "/api/sign-in/meta", async ctx => {
     const nonce = uuidv4();

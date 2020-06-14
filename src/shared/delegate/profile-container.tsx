@@ -20,6 +20,7 @@ import { NotFound } from "../common/not-found";
 import { secondFontFamily } from "../common/styles/style-font";
 import { ContentPadding } from "../common/styles/style-padding";
 import { TOP_BAR_HEIGHT } from "../common/top-bar";
+import { CandidateProfileContainer } from "./candidate-profile";
 import { RewardDistributionContainer } from "./reward-distribution-container";
 import { Settings } from "./settings";
 import { Welcome } from "./welcome";
@@ -59,7 +60,7 @@ export class ProfileContainer extends PureComponent<Props, State> {
             <span className="nav-text">{t("profile.profile")}</span>
           </span>
         ),
-        component: NotFound
+        component: CandidateProfileContainer
       },
       {
         path: "/profile/reward-distribution",
