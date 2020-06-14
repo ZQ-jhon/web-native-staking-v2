@@ -1,4 +1,4 @@
-import { Breadcrumb } from "antd";
+import Breadcrumb from "antd/lib/breadcrumb";
 import { t } from "onefx/lib/iso-i18n";
 import Helmet from "onefx/lib/react-helmet";
 import { withRouter } from "onefx/lib/react-router";

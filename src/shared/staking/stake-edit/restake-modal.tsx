@@ -1,5 +1,5 @@
 // tslint:disable:no-any
-import { Form } from "antd";
+import Form from "antd/lib/form";
 import { FormInstance } from "antd/lib/form";
 import BigNumber from "bignumber.js";
 import { toRau } from "iotex-antenna/lib/account/utils";

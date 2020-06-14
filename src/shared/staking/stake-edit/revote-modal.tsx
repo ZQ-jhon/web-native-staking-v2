@@ -1,5 +1,6 @@
 // @flow
-import { AutoComplete, Form } from "antd";
+import AutoComplete from "antd/lib/auto-complete";
+import Form from "antd/lib/form";
 import { FormInstance } from "antd/lib/form";
 import { get } from "dottie";
 import { toRau } from "iotex-antenna/lib/account/utils";

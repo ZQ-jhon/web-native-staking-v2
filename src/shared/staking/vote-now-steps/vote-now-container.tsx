@@ -1,8 +1,11 @@
 // @flow
 import PlusCircleFilled from "@ant-design/icons/PlusCircleFilled";
 import SnippetsFilled from "@ant-design/icons/SnippetsFilled";
-import { AutoComplete, Button, Form, Radio } from "antd";
+import AutoComplete from "antd/lib/auto-complete";
+import Button from "antd/lib/button";
+import Form from "antd/lib/form";
 import { FormInstance } from "antd/lib/form";
+import Radio from "antd/lib/radio";
 import { get } from "dottie";
 // @ts-ignore
 import window from "global/window";

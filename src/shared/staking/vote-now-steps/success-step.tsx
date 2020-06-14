@@ -1,12 +1,17 @@
 // @flow
-import {Form} from "antd";
-import {assetURL} from "onefx/lib/asset-url";
-import {t} from "onefx/lib/iso-i18n";
+import Form from "antd/lib/form";
+import { assetURL } from "onefx/lib/asset-url";
+import { t } from "onefx/lib/iso-i18n";
 import React from "react";
-import {Flex} from "../../common/flex";
-import {colors} from "../../common/styles/style-color2";
+import { Flex } from "../../common/flex";
+import { colors } from "../../common/styles/style-color2";
 
-export function SuccessStep({ txHash }: { txHash: string, siteUrl: string }): JSX.Element {
+export function SuccessStep({
+  txHash
+}: {
+  txHash: string;
+  siteUrl: string;
+}): JSX.Element {
   return (
     // @ts-ignore
     <Form layout={"vertical"}>
@@ -17,7 +22,8 @@ export function SuccessStep({ txHash }: { txHash: string, siteUrl: string }): JS
         lineHeight={1.88}
         color={colors.black}
       >
-        { // tslint:disable-next-line:react-no-dangerous-html
+        {
+          // tslint:disable-next-line:react-no-dangerous-html
           <span
             dangerouslySetInnerHTML={{
               __html: t("my_stake.transaction_hash", {
@@ -29,7 +35,11 @@ export function SuccessStep({ txHash }: { txHash: string, siteUrl: string }): JS
           />
         }
         <span
-          dangerouslySetInnerHTML={{ __html: t("my_stake.check_few_seconds", {href: assetURL("my-votes")}) }}
+          dangerouslySetInnerHTML={{
+            __html: t("my_stake.check_few_seconds", {
+              href: assetURL("my-votes")
+            })
+          }}
         />
       </Flex>
     </Form>

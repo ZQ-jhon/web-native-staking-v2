@@ -2,8 +2,10 @@
 import CheckOutlined from "@ant-design/icons/CheckOutlined";
 import DownOutlined from "@ant-design/icons/DownOutlined";
 import MinusOutlined from "@ant-design/icons/MinusOutlined";
-import { Button, Dropdown, List } from "antd";
 import Avatar from "antd/lib/avatar";
+import Button from "antd/lib/button";
+import Dropdown from "antd/lib/dropdown";
+import List from "antd/lib/list";
 import Table from "antd/lib/table";
 import dateformat from "dateformat";
 import Antenna from "iotex-antenna/lib";

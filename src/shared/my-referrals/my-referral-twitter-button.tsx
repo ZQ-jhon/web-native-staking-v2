@@ -1,5 +1,5 @@
 // @flow
-import { Button } from "antd";
+import Button from "antd/lib/button";
 // @ts-ignore
 import window from "global/window";
 import { t } from "onefx/lib/iso-i18n";

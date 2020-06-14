@@ -1,8 +1,8 @@
 // @flow
 import InfoCircleFilled from "@ant-design/icons/InfoCircleFilled";
-import { Select } from "antd";
-import { Form } from "antd";
+import Form from "antd/lib/form";
 import { FormInstance } from "antd/lib/form";
+import Select from "antd/lib/select";
 import BigNumber from "bignumber.js";
 import { t } from "onefx/lib/iso-i18n";
 import React, { Component, RefObject } from "react";

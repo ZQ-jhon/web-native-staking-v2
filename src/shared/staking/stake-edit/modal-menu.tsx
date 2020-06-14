@@ -1,6 +1,6 @@
 // @flow
 // $FlowFixMe
-import { Menu } from "antd";
+import Menu from "antd/lib/menu";
 import { t } from "onefx/lib/iso-i18n";
 import React from "react";
 import { getStatus, IBucket } from "../../../server/gateway/staking";
@@ -311,7 +311,9 @@ function renderAddStaking(disabled: boolean): JSX.Element {
       <span>{t("my_stake.edit.add_staking")}</span>
       {
         // @ts-ignore
-        <span style={menuInfoStyle}>{t("my_stake.status.suffix.autostake_only")}</span>
+        <span style={menuInfoStyle}>
+          {t("my_stake.status.suffix.autostake_only")}
+        </span>
       }
     </div>
   );

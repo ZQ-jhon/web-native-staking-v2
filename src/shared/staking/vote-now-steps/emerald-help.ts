@@ -1,5 +1,5 @@
 // @flow
-import { notification } from "antd";
+import notification from "antd/lib/notification";
 import axios from "axios";
 // @ts-ignore
 import window from "global/window";

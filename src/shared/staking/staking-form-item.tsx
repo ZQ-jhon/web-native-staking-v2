@@ -1,8 +1,10 @@
 // @flow
 import InfoCircleOutlined from "@ant-design/icons/InfoCircleOutlined";
 import RetweetOutlined from "@ant-design/icons/RetweetOutlined";
-import { Form, InputNumber, Switch } from "antd";
+import Form from "antd/lib/form";
 import { FormInstance } from "antd/lib/form";
+import InputNumber from "antd/lib/input-number";
+import Switch from "antd/lib/switch";
 import BigNumber from "bignumber.js";
 // @ts-ignore
 import { t } from "onefx/lib/iso-i18n";

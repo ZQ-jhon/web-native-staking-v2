@@ -1,7 +1,7 @@
 /* tslint:disable:no-any */
 // @flow
 import LoadingOutlined from "@ant-design/icons/LoadingOutlined";
-import { Alert } from "antd";
+import Alert from "antd/lib/alert";
 // @ts-ignore
 import { assetURL } from "onefx/lib/asset-url";
 import { t } from "onefx/lib/iso-i18n";
