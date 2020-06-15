@@ -39,7 +39,7 @@ export const authConfig = {
     signed: false
   },
   ttl: 90, // days
-  loginUrl: "/login",
+  loginUrl: "/v2/login",
   allowedLoginNext: ["/", "/settings/reset-password/"],
   allowedLogoutNext: ["/"],
   secret,

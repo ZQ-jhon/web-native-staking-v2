@@ -1,5 +1,5 @@
 // @flow
-import { Modal } from "antd";
+import Modal from "antd/lib/modal";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { TOP_BAR_HEIGHT } from "./top-bar";

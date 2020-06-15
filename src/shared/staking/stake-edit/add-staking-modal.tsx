@@ -1,6 +1,8 @@
 // @flow
-import { Form, Input, InputNumber } from "antd";
+import Form from "antd/lib/form";
 import { FormInstance } from "antd/lib/form";
+import Input from "antd/lib/input";
+import InputNumber from "antd/lib/input";
 import BigNumber from "bignumber.js";
 import { toRau } from "iotex-antenna/lib/account/utils";
 import { t } from "onefx/lib/iso-i18n";

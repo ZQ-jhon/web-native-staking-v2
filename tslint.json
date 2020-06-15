@@ -109,7 +109,8 @@
     "react-unused-props-and-state": false,
     "jsx-no-lambda": false,
     "member-access": false,
-    "no-http-string": false
+    "no-http-string": false,
+    "no-non-null-assertion": false
   },
   "jsRules": {
     "quotemark": [true, "double", "jsx-double"],

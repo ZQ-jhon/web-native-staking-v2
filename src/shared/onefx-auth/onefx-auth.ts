@@ -81,7 +81,7 @@ export class OnefxAuth {
         ctx.state.roles = roles;
       }
       ctx.state.eth = user && user.eth;
-      ctx.state.iotexId = user && user.iotexId;
+      // ctx.state.iotexId = user && user.iotexId;
     }
     if (this.server.config.displayInternal) {
       // TODO split admin role and internal display
@@ -91,7 +91,7 @@ export class OnefxAuth {
   };
 
   logout = async (ctx: koa.Context) => {
-    ctx.cookies.set(this.config.cookieName, null, this.config.cookieOpts);
+    ctx.cookies.set(this.config.cookieName, '', this.config.cookieOpts);
     const token = this.tokenFromCtx(ctx);
     this.jwt.revoke(token);
     const next = ctx.query.next || `${this.config.siteUrl}/`;
@@ -157,9 +157,7 @@ export class OnefxAuth {
     }
 
     logger.debug(`user ${ctx.state.userId} is in post authentication status`);
-    const user = await this.user.getById(ctx.state.userId);
-    const roles = user.roles;
-    const token = await this.jwt.create(ctx.state.userId, roles);
+    const token = await this.jwt.create(ctx.state.userId);
     ctx.cookies.set(this.config.cookieName, token, this.config.cookieOpts);
     ctx.state.jwt = token;
     const nextUrl = allowedLoginNext(

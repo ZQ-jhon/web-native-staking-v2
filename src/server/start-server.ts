@@ -65,7 +65,7 @@ export type MyServer = Server & {
   };
   config: MyConfig;
   // tslint:disable-next-line:no-any
-  auth: any;
+  auth: OnefxAuth;
 };
 
 export async function startServer(): Promise<Server> {

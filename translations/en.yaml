@@ -439,11 +439,12 @@ profile.title: 'Delegate Profile'
 profile.update: 'Update My Profile'
 profile.preview: Preview
 profile.change_saved: 'Your changes have been saved'
-profile.change_not_saved: 'Your changes have not been saved'
+profile.change_not_saved: 'Your changes have not been saved. Please validate all of your fields'
 profile.website.required: 'Please enter your website URL.'
 profile.website: 'Website URL'
 profile.technical: 'TECHNICAL INFORMATION'
 profile.serverEndpoint: 'API Endpoint. e.g. your.domainOrIp:14014. Leave it empty if you do not know what it is.'
+profile.serverHealthEndpoint: 'Health Endpoint. e.g. https://your.domainOrIp:14014/health.'
 profile.serverEndpoint.required: 'Please enter your server endpoint.'
 profile.invalid_endpoint: 'server endpoint is invalid.'
 profile.discordName: 'Discord Name'
@@ -481,4 +482,5 @@ profile.rewards.send: '${sendAmount} IOTX sent ! Check transaction hash to view 
 profile.calculate_rewards: 'Calculate Rewards'
 auth/sign_in.title: Becoming an IoTeX block producer
 auth/button_submit: Login or Sign Up with IoPay
-auth/failed_to_login: Failed to login
+auth/failed_to_login: Failed to login. Please refresh the page and login again.
+auth/sign_out: Sign Out

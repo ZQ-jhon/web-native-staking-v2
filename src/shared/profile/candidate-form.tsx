@@ -142,14 +142,15 @@ const CandidateFormInner = (props: Props) => {
   const beforeUpload = (file: any, title: any) => {
     return upload(file, title).then((data) => {
       // @ts-ignore
+      const { secure_url } = data
       if (title === 'logo'){
-        setLogo(data.secure_url)
+        setLogo(secure_url)
       }
       else {
-        setBannerUrl(data.secure_url) 
+        setBannerUrl(secure_url) 
       }
       form.setFieldsValue({
-        [title]: data.secure_url,
+        [title]: secure_url,
       });
       return Promise.reject();
     });

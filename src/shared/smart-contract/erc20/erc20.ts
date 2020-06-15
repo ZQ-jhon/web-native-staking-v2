@@ -93,26 +93,28 @@ export class ERC20 implements IERC20 {
     });
 
     const methods = {};
-    // @ts-ignore
-    for (const fnName of Object.keys(erc20.contract.getABI())) {
+    if (erc20.contract.getABI()){
       // @ts-ignore
-      const fnAbi = erc20.contract.getABI()[fnName];
-      if (fnAbi.type === "constructor") {
-        continue;
+      for (const fnName of Object.keys(erc20.contract.getABI())) {
+        // @ts-ignore
+        const fnAbi = erc20.contract.getABI()[fnName];
+        if (fnAbi.type === "constructor") {
+          continue;
+        }
+  
+        const args = getArgTypes(fnAbi);
+        const header = getHeaderHash(fnAbi, args);
+        // @ts-ignore
+        methods[header] = {
+          name: fnName,
+          inputsNames: args.map(i => {
+            return `${i.name}`;
+          }),
+          inputsTypes: args.map(i => {
+            return `${i.type}`;
+          })
+        };
       }
-
-      const args = getArgTypes(fnAbi);
-      const header = getHeaderHash(fnAbi, args);
-      // @ts-ignore
-      methods[header] = {
-        name: fnName,
-        inputsNames: args.map(i => {
-          return `${i.name}`;
-        }),
-        inputsTypes: args.map(i => {
-          return `${i.type}`;
-        })
-      };
     }
     erc20.methods = methods;
     return erc20;

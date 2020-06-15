@@ -3,14 +3,16 @@
 import React from "react";
 // $FlowFixMe
 import { assetURL } from "onefx/lib/asset-url";
-import { Avatar, Icon, Popover } from "antd";
+import { Avatar, Popover } from "antd";
 import { t } from "onefx/lib/iso-i18n";
 import isBrowser from "is-browser";
+// @ts-ignore
 import JsonGlobal from "safe-json-globals/get";
 import { colors } from "../common/styles/style-color2";
 import { Image } from "../common/image";
+import { MinusOutlined, ArrowUpOutlined, ArrowDownOutlined } from "@ant-design/icons";
 
-export function renderDelegateName(text: any, record: any, index: any) {
+export function renderDelegateName(text: any, record: any, _index: any) {
   return (
     <a href={`/delegate/${record.id}`} style={{ display: "flex" }}>
       <Image
@@ -48,7 +50,7 @@ const state = isBrowser && JsonGlobal("state");
 const ENABLE_DETAILED_STATUS =
   state && state.base && state.base.enableDetailedServerStatus;
 
-export function renderStatus(text: any, record: any, index: any) {
+export function renderStatus(_text: any, record: any, _index: any) {
   const status = record.status ? record.status : "UNQUALIFIED";
   const serverStatus = record.serverStatus
     ? record.serverStatus
@@ -78,7 +80,7 @@ export function renderStatus(text: any, record: any, index: any) {
           <Avatar
             shape="square"
             size={14}
-            style={{ backgroundColor: colors[status] }}
+            style={{ backgroundColor: colors[status as keyof(typeof colors)] }}
           />
           <span style={{ padding: "0.5em" }}>
             {t(`candidates.election.${status}`)}
@@ -89,7 +91,7 @@ export function renderStatus(text: any, record: any, index: any) {
   );
 }
 
-export function renderLiveVotes(text: any, record: any, index: any) {
+export function renderLiveVotes(text: any, record: any, _index: any) {
   let iconType = "minus";
   if (record.liveVotesDelta > 0) {
     iconType = "arrow-up";
@@ -111,13 +113,24 @@ export function renderLiveVotes(text: any, record: any, index: any) {
           {Math.abs(text).toLocaleString()}
         </span>
       }
-      <Icon
-        type={iconType}
-        style={{
+      {
+        iconType == 'minus' && <MinusOutlined style={{
           color,
           fontSize: "11px"
-        }}
-      />
+        }} />
+      }
+      {
+        iconType == 'arrow-up' && <ArrowUpOutlined style={{
+          color,
+          fontSize: "11px"
+        }} />
+      }
+      {
+        iconType == 'arrow-down' && <ArrowDownOutlined style={{
+          color,
+          fontSize: "11px"
+        }} />
+      }
       <span
         style={{ padding: "0.5em", fontSize: "11px", color: colors.black80 }}
       >
@@ -148,7 +161,7 @@ export function getIconType(url: string) {
 
 export function getTwitterAccount(delegate: any) {
   if (delegate && delegate.socialMedia) {
-    const twitterUrl = delegate.socialMedia.find(url =>
+    const twitterUrl = delegate.socialMedia.find((url: any) =>
       url.includes("twitter.com")
     );
     if (twitterUrl) {

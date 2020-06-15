@@ -1,7 +1,8 @@
 // @flow
 /* tslint:disable:no-any */
-import { Form, Input } from "antd";
+import Form from "antd/lib/form";
 import { FormInstance } from "antd/lib/form";
+import Input from "antd/lib/input";
 import { toRau } from "iotex-antenna/lib/account/utils";
 import { t } from "onefx/lib/iso-i18n";
 import React, { Component } from "react";

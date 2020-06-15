@@ -1,8 +1,7 @@
 // @flow
 import React, { Component } from "react";
 // $FlowFixMe
-import Icon from "antd/lib/icon";
-//import { t } from "onefx/lib/iso-i18n";
+import { t } from "onefx/lib/iso-i18n";
 import { CopyButtonClipboardComponent } from "./copy-button-clipboard";
 import { colors } from "./styles/style-color2";
 // @ts-ignore
@@ -11,6 +10,7 @@ import Web3Utils from "web3-utils";
 import { getEthworkAddress } from "./eth-help";
 import { getNativeNetworkEndpoint } from "../xapps/xapp-request";
 import { getMobileNativeAntenna } from "./get-antenna";
+import { CheckCircleOutlined, LoadingOutlined, CloseCircleOutlined } from "@ant-design/icons";
 
 const TX_INTERVAL = 6000;
 
@@ -50,7 +50,7 @@ export class BroadcastStatus extends Component<
     this.setState({ status: -1 });
     const broadcastStatus = this;
     broadcastStatus.timer = window.setInterval(() => {
-      window.web3.eth.getTransactionReceipt(txHash, function(error, result) {
+      window.web3.eth.getTransactionReceipt(txHash, function(error: any, result: any) {
         window.console.log("getTransactionReceipt");
         if (!error) {
           window.console.log(result);
@@ -77,9 +77,6 @@ export class BroadcastStatus extends Component<
   render() {
     const { txHash, isNative = false } = this.props;
     const { status } = this.state;
-    const iconType =
-      status >= 1 ? "check-circle" : status < 0 ? "loading" : "close-circle";
-    const iconColor = status == 0 ? colors.error : colors.success;
     const href = isNative
       ? `https://${getNativeNetworkEndpoint(
           getMobileNativeAntenna().currentProvider()
@@ -92,14 +89,20 @@ export class BroadcastStatus extends Component<
       <div>
         <div style={{ marginTop: "30px" }} />
         <p style={{ fontSize: "24px", fontWeight: "bold" }}>
-          <Icon type="check-circle" style={{ color: colors.success }} />
+
+          <CheckCircleOutlined type="check-circle" style={{ color: colors.success }} />
           <span style={{ marginLeft: "10px" }}>{t("broadcast.success")}</span>
         </p>
         <p>
           {t("broadcast.txhash")}
           <span>
             {"   "}
-            <Icon type={iconType} style={{ color: iconColor }} />{" "}
+            {
+              status >= 1 ? 
+              <CheckCircleOutlined style= {{color: colors.success}} /> :
+              status < 0 ? <LoadingOutlined style={{color: colors.success}} /> :
+              <CloseCircleOutlined style={{color: colors.error}} />
+            }{" "}
           </span>
         </p>
         <p>

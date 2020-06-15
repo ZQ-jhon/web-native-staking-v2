@@ -53,9 +53,6 @@ type Props = {
   form: any;
 };
 
-type State = {
-  loading: boolean;
-};
 /* tslint:disable-next-line:no-any */
 const validateServerEndpoint = (_rule: any, value: any, callback: any) => {
   if (!value) {

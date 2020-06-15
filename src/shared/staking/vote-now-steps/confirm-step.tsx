@@ -1,5 +1,5 @@
 // @flow
-import { Form } from "antd";
+import Form from "antd/lib/form";
 // @ts-ignore
 import { t } from "onefx/lib/iso-i18n";
 import React from "react";

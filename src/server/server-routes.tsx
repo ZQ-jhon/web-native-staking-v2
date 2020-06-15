@@ -6,7 +6,7 @@ import { setProfileHandler } from "../shared/profile/profile-handler";
 import koa from "koa";
 import { AppContainer } from "../shared/app-container";
 import { apolloSSR } from "../shared/common/apollo-ssr";
-import { setEmailPasswordIdentityProviderRoutes } from "../shared/onefx-auth-provider/email-password-identity-provider/email-password-identity-provider-handler";
+import { setIdentityProviderRoutes } from "../shared/onefx-auth-provider/identity-provider/identity-provider-handler";
 import { Staking } from "./gateway/staking";
 import { MyServer } from "./start-server";
 
@@ -19,13 +19,18 @@ export function setServerRoutes(server: MyServer): void {
   setApiGateway(server);
   setProfileHandler(server);
 
-  setEmailPasswordIdentityProviderRoutes(server);
+  setIdentityProviderRoutes(server);
 
   // @ts-ignore
   server.get(
-    "SPA",
-    /^(?!\/?tools\/token-migration\/api-gateway\/|\/profile\/.*).+$/,
+    "delegate-profile",
+    "/profile*",
+    server.auth.authRequired,
     async (ctx: koa.Context) => {
+      const user = await server.auth.user.getById(ctx.state.userId);
+      ctx.setState("base.eth", user!.eth);
+      ctx.setState("base.next", ctx.query.next);
+      ctx.setState("base.apiToken", ctx.state.jwt);
       const st = new Staking({
         antenna: new Antenna("https://api.iotex.one")
       });
@@ -54,6 +59,31 @@ export function setServerRoutes(server: MyServer): void {
       });
     }
   );
+
+  server.get("SPA", /^(?!\/?v2\/api-gateway\/).+$/, async (ctx: koa.Context) => {
+    ctx.setState("base.next", ctx.query.next);
+    const st = new Staking({
+      antenna: new Antenna("https://api.iotex.one")
+    });
+    const height = await st.getHeight();
+    const resp = await st.getAllCandidates(0, 1000, height);
+    const ownersToNames: Record<string, string> = {};
+    for (const c of resp) {
+      ownersToNames[c.ownerAddress] = c.name;
+    }
+    ctx.setState("base.ownersToNames", ownersToNames);
+    ctx.setState(
+      "staking.contractAddress",
+      // @ts-ignore
+      server.config.gateways.staking.contractAddress
+    );
+    checkingAppSource(ctx);
+    ctx.body = await apolloSSR(ctx, {
+      VDom: <AppContainer />,
+      reducer: noopReducer,
+      clientScript: "main.js"
+    });
+  });
 }
 
 export function checkingAppSource(ctx: koa.Context): void {

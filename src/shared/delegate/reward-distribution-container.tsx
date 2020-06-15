@@ -1,7 +1,10 @@
 /* tslint:disable:no-any */
 // @flow
-import { Alert, Button, Form, InputNumber, notification } from "antd";
-import { FormInstance } from "antd/lib/form";
+import Alert from "antd/lib/alert";
+import Button from "antd/lib/button";
+import Form, { FormInstance } from "antd/lib/form";
+import InputNumber from "antd/lib/input-number";
+import notification from "antd/lib/notification";
 // @ts-ignore
 import window from "global/window";
 import { SpinPreloader } from "iotex-react-block-producers/lib/spin-preloader";

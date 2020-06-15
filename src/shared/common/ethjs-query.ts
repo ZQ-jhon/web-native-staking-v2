@@ -29,7 +29,7 @@ export function Eth(provider: any, options: any) {
   self.setProvider = self.rpc.setProvider;
 }
 
-Eth.prototype.log = function log(message) {
+Eth.prototype.log = function log(message: any) {
   const self = this;
   if (self.options.debug)
     self.options.logger.log(`[ethjs-query log] ${message}`);
@@ -47,7 +47,7 @@ function generateFnFor(rpcMethodName, methodObject) {
   return function outputMethod() {
     let callback = null; // eslint-disable-line
     let inputs = null; // eslint-disable-line
-    let inputError = null; // eslint-disable-line
+    // let inputError = null; // eslint-disable-line
     // @ts-ignore
     const self = this;
     const args = [].slice.call(arguments); // eslint-disable-line
@@ -56,7 +56,7 @@ function generateFnFor(rpcMethodName, methodObject) {
     if (args.length > 0 && typeof args[args.length - 1] === "function") {
       callback = args.pop();
     }
-
+    // @ts-ignore
     const promise = performCall.call(this);
 
     // if callback provided, convert promise to callback

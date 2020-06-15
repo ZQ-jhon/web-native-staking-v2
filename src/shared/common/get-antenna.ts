@@ -35,6 +35,18 @@ export function getAntenna(): Antenna {
   return injectedWindow.antenna;
 }
 
+export function getMobileNativeAntenna(): Antenna {
+  // $FlowFixMe
+  const injectedWindow: Window & { mobileNativeAntenna?: Antenna } = window;
+  if (!injectedWindow.mobileNativeAntenna) {
+    const signer = new WvSigner();
+    injectedWindow.mobileNativeAntenna = new Antenna("/iotex-core-proxy", {
+      signer
+    });
+  }
+  return injectedWindow.mobileNativeAntenna;
+}
+
 // tslint:disable-next-line:no-any
 export function lazyGetContract(address: string, abi: any): Contract {
   if (contractsByAddrs[address]) {

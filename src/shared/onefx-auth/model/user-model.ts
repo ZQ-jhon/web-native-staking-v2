@@ -1,13 +1,13 @@
 import mongoose from "mongoose";
-import tools from "../utils/tools";
 import { baseModel } from "./base-model";
 
 const Schema = mongoose.Schema;
 
 type TNewUser = {
-  password: string;
-  email: string;
-  ip: string;
+  email?: string;
+  ip?: string;
+  roles?: Array<String>;
+  eth: string;
 };
 
 export type TUser = mongoose.Document &
@@ -25,10 +25,13 @@ export class UserModel {
 
   constructor({ mongoose }: { mongoose: mongoose.Mongoose }) {
     const UserSchema = new Schema({
-      password: { type: String },
       email: { type: String },
+      name: { type: String },
       ip: { type: String },
       avatar: { type: String },
+      roles: { type: Array },
+      iotexId: { type: Number },
+      eth: { type: String },
 
       isBlocked: { type: Boolean, default: false },
 
@@ -36,28 +39,10 @@ export class UserModel {
       updateAt: { type: Date, default: Date.now }
     });
 
-    UserSchema.virtual("id").get(function onId(): void {
+    UserSchema.virtual("id").get(function onId(): string {
       // @ts-ignore
       return this._id;
     });
-    UserSchema.virtual("avatarUrl").get(function onAvatarUrl(): void {
-      // @ts-ignore
-      let url = this.avatar || tools.makeGravatar(this.email.toLowerCase());
-
-      // tslint:disable-next-line
-      if (url.indexOf("http:") === 0) {
-        url = url.slice(5);
-      }
-
-      // 如果是 github 的头像，则限制大小
-      if (url.indexOf("githubusercontent") !== -1) {
-        url += "&s=120";
-      }
-
-      return url;
-    });
-
-    UserSchema.index({ email: 1 }, { unique: true });
 
     UserSchema.plugin(baseModel);
     UserSchema.pre("save", function onSave(next: Function): void {
@@ -78,38 +63,11 @@ export class UserModel {
     return this.Model.findOne({ _id: id });
   }
 
-  public async getByMail(email: string): Promise<TUser | null> {
-    return this.Model.findOne({ email });
+  public async newAndSave(user: TNewUser): Promise<TUser> {
+    return new this.Model(user).save();
   }
 
-  public async newAndSave(user: TNewUser): Promise<TUser | null> {
-    const hashed = {
-      ...user,
-      password: await tools.bhash(user.password)
-    };
-    return new this.Model(hashed).save();
-  }
-
-  public async updatePassword(
-    userId: string,
-    password: string
-  ): Promise<TUser | null> {
-    return this.Model.update(
-      { _id: userId },
-      { password: await tools.bhash(password) }
-    );
-  }
-
-  public async verifyPassword(
-    userId: string,
-    password: string
-  ): Promise<boolean> {
-    let resp;
-    try {
-      resp = await this.Model.findOne({ _id: userId }).select("password");
-    } catch (err) {
-      return false;
-    }
-    return Boolean(resp && (await tools.bcompare(password, resp.password)));
+  async getByEth(eth: string): Promise<TUser | null> {
+    return this.Model.findOne({ eth });
   }
 }

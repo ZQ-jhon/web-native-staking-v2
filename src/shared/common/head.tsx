@@ -56,6 +56,11 @@ function HeadInner({
           type: "text/css"
         }
       ]}
+      script={[
+        {
+          src: assetURL("vendors~main.js")
+        }
+      ]}
     >
       <html lang={locale} />
     </Helmet>

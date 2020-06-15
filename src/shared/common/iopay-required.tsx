@@ -1,7 +1,7 @@
 /* tslint:disable:no-any */
 // @flow
 import LoadingOutlined from "@ant-design/icons/LoadingOutlined";
-import { Alert } from "antd";
+import Alert from "antd/lib/alert";
 // @ts-ignore
 import { assetURL } from "onefx/lib/asset-url";
 import { t } from "onefx/lib/iso-i18n";
@@ -46,7 +46,7 @@ export function DownloadButton(): JSX.Element {
 
 type Props = {
   // tslint:disable-next-line:no-any
-  forwardedRef: any;
+  forwardedRef?: any;
   isIoPayMobile?: boolean;
 };
 
