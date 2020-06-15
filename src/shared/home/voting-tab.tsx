@@ -49,7 +49,7 @@ const VotingTab = withRouter(
         antenna.iotx &&
         antenna.iotx.accounts &&
         antenna.iotx.accounts[0];
-      if (!Boolean(iopayConnected)) {
+      if (Boolean(iopayConnected)) {
         this.setState({ activeKey: "/my-votes" });
       }
     };
