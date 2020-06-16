@@ -81,6 +81,20 @@ function toCandidates(buffer: Buffer | {}): Array<Candidate> {
   }));
 }
 
+function toCandidate(buffer: Buffer | {}): Candidate {
+  // @ts-ignore
+  const v2 = CandidateV2.deserializeBinary(buffer);
+  return {
+    name: v2.getName(),
+    ownerAddress: v2.getOwneraddress(),
+    operatorAddress: v2.getOperatoraddress(),
+    rewardAddress: v2.getRewardaddress(),
+    selfStakeBucketIdx: v2.getSelfstakebucketidx(),
+    selfStakingTokens: v2.getSelfstakingtokens(),
+    totalWeightedVotes: v2.getTotalweightedvotes()
+  };
+}
+
 function daysLater(p: Date, days: number): Date {
   const cur = new Date(p);
   cur.setDate(cur.getDate() + days);
@@ -172,7 +186,7 @@ export class Staking {
   async getCandidate(
     candName: string,
     height: string = ""
-  ): Promise<Array<Candidate>> {
+  ): Promise<Candidate> {
     const state = await this.antenna.iotx.readState({
       protocolID: Buffer.from("staking"),
       methodName: IReadStakingDataMethodToBuffer({
@@ -185,7 +199,7 @@ export class Staking {
       ],
       height
     });
-    return toCandidates(state.data);
+    return toCandidate(state.data);
   }
 
   async getAllCandidates(
@@ -262,7 +276,7 @@ export class Staking {
       }),
       this.getCandidate(candName)
     ]);
-    return toBuckets(state.data, candidates);
+    return toBuckets(state.data, [candidates]);
   }
 
   async getAllBuckets(

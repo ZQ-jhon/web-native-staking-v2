@@ -11,11 +11,11 @@ test("getAllCandidates", async t => {
   t.truthy(resp.length > 0);
 });
 
-test.skip("getCandidate", async t => {
+test("getCandidate", async t => {
   const st = new Staking({
     antenna: new Antenna("https://api.iotex.one")
   });
   const height = await st.getHeight();
   const resp = await st.getCandidate("staking4all", height);
-  t.truthy(resp.length > 0);
+  t.truthy(resp.name);
 });

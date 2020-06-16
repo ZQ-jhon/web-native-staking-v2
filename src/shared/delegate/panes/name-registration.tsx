@@ -155,10 +155,10 @@ const NameRegistrationContainer = IopayRequired(
         const { isUpdating, isFetchingUpdatingInfo, candName } = this.state;
         if (isUpdating && isFetchingUpdatingInfo && candName) {
           const resp = await getStaking().getCandidate(candName);
-          if (resp && resp[0]) {
+          if (resp && resp) {
             this.setState({
-              operatorAddress: resp[0].operatorAddress,
-              rewardAddress: resp[0].rewardAddress,
+              operatorAddress: resp.operatorAddress,
+              rewardAddress: resp.rewardAddress,
               isFetchingUpdatingInfo: false
             });
           }
