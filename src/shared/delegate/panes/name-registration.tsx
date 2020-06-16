@@ -1,9 +1,13 @@
 /* tslint:disable:use-simple-attributes react-a11y-anchors */
 // @flow
 // $FlowFixMe
-import { Alert, Button, Form, Input, notification } from "antd";
+import Alert from "antd/lib/alert";
+import Button from "antd/lib/button";
+import Form from "antd/lib/form";
 import { FormInstance } from "antd/lib/form";
+import Input from "antd/lib/input";
 import InputNumber from "antd/lib/input-number";
+import notification from "antd/lib/notification";
 import Switch from "antd/lib/switch";
 // @ts-ignore
 import window from "global/window";

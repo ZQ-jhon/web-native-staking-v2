@@ -1,9 +1,9 @@
 import UploadOutlined from "@ant-design/icons/UploadOutlined";
-import { notification } from "antd";
 import Button from "antd/lib/button";
 import Form, { FormInstance } from "antd/lib/form";
 import Input from "antd/lib/input";
 import InputNumber from "antd/lib/input-number";
+import notification from "antd/lib/notification";
 import Upload from "antd/lib/upload";
 // @ts-ignore
 import window from "global/window";

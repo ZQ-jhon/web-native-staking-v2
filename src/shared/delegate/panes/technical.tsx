@@ -1,7 +1,10 @@
 // @flow
 // $FlowFixMe
-import { Button, Form, Input, notification } from "antd";
+import Button from "antd/lib/button";
+import Form from "antd/lib/form";
 import { FormInstance } from "antd/lib/form";
+import Input from "antd/lib/input";
+import notification from "antd/lib/notification";
 import axios from "axios";
 // @ts-ignore
 import window from "global/window";

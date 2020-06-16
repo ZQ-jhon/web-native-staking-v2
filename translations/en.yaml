@@ -127,6 +127,14 @@ voting.tweet.summary.title: 'Voting for IoTeX Delegates is now LIVE - vote today
 voting.tweet.summary.description: 'Vote more than 1,000 IOTX-E to become a Genesis Voter! Seize the chance to earn 30% APR early bird voting rewards and limited edition member mega box!'
 voting.tweet.summary.image: 'https://res.cloudinary.com/dokc3pa1x/image/upload/v1552428805/delegates/voting_twitter.png'
 voting.tweet.content: '#VOTING for IoTeX Delegates is NOW LIVE - vote today!%0a I voted for ${name} and I became a #GenesisVoter. How about you?%0a #IoTeXvote #IoTeXdelegate'
+delegate.votesreceived.voter: Voter
+delegate.votesreceived.token_amount: Amount
+delegate.votesreceived.token_type: Token
+delegate.votesreceived.iotx: IOTX-E
+delegate.votesreceived.native: IOTX
+delegate.votesreceived.download: 'Download All Votes'
+delegate.votesreceived.votes: Votes
+delegate.votesreceived.remaining_duration: 'Remaining Staked Duration'
 voting.progress-bar.circulating.supply: 'Circulating Supply'
 voting.buy_iotx: 'Buy IOTX'
 voting.metamask-reminder.content: 'To proceed with the voting process, please make sure you have unlocked your MetaMask and linked to IoTex. <a target="_blank" href="https://support.iotex.io/hc/en-us/articles/360020614094">Learn more.</a> '

@@ -8,6 +8,7 @@ import SettingOutlined from "@ant-design/icons/SettingOutlined";
 import SolutionOutlined from "@ant-design/icons/SolutionOutlined";
 // import TrophyOutlined from "@ant-design/icons/TrophyOutlined";
 
+import { InboxOutlined } from "@ant-design/icons/lib";
 import Layout from "antd/lib/layout";
 import Menu from "antd/lib/menu";
 import { t } from "onefx/lib/iso-i18n";
@@ -25,6 +26,7 @@ import { NameRegistrationContainer } from "./panes/name-registration";
 import { RewardDistributionContainer } from "./panes/reward-distribution-container";
 import { Settings } from "./panes/settings";
 import { Technical } from "./panes/technical";
+import { VotesReceivedTable } from "./panes/votes-received-table";
 import { Welcome } from "./panes/welcome";
 
 type Props = {} & RouteComponentProps;
@@ -94,100 +96,16 @@ export class ProfileContainer extends PureComponent<Props, State> {
         ),
         component: NameRegistrationContainer
       },
-      // {
-      //   path: "/profile/received/",
-      //   tab: (
-      //     <span>
-      //       <InboxOutlined />
-      //       <span className="nav-text">{t("profile.received")}</span>
-      //     </span>
-      //   ),
-      //   component: NotFound
-      // },
-      // {
-      //   path: "",
-      //   tab: (
-      //     <SubMenu
-      //       key="rewards"
-      //       title={
-      //         <span>
-      //           <TrophyOutlined />
-      //           <span>{t("profile.rewards_distribution")}</span>
-      //         </span>
-      //       }
-      //     >
-      //       <Menu.Item
-      //         key="rewards_1"
-      //         onClick={() => history.push("/profile/claim-rewards/")}
-      //       >
-      //         {t("profile.claim_rewards")}
-      //       </Menu.Item>
-      //       <Menu.Item
-      //         key="rewards_2"
-      //         onClick={() => history.push("/profile/moveto-ethwallet/")}
-      //       >
-      //         {t("profile.move_to_eth_wallet")}
-      //       </Menu.Item>
-      //       <Menu.Item
-      //         key="rewards_3"
-      //         onClick={() => history.push("/profile/distribute-rewards/")}
-      //       >
-      //         {t("profile.calculate_rewards")}
-      //       </Menu.Item>
-      //       <Menu.Item
-      //         key="rewards_4"
-      //         onClick={() => history.push("/profile/distribute-iotx/")}
-      //       >
-      //         {t("profile.distribute_iotx")}
-      //       </Menu.Item>
-      //     </SubMenu>
-      //   ),
-      //   component: null
-      // },
-      // {
-      //   path: "/profile/claim-rewards/",
-      //   tab: (
-      //     <span>
-      //       <SettingOutlined />
-      //       <span className="nav-text">{t("profile.settings")}</span>
-      //     </span>
-      //   ),
-      //   component: NotFound,
-      //   hide: true
-      // },
-      // {
-      //   path: "/profile/moveto-ethwallet/",
-      //   tab: (
-      //     <span>
-      //       <SettingOutlined />
-      //       <span className="nav-text">{t("profile.settings")}</span>
-      //     </span>
-      //   ),
-      //   component: NotFound,
-      //   hide: true
-      // },
-      // {
-      //   path: "/profile/distribute-rewards/",
-      //   tab: (
-      //     <span>
-      //       <SettingOutlined />
-      //       <span className="nav-text">{t("profile.settings")}</span>
-      //     </span>
-      //   ),
-      //   component: NotFound,
-      //   hide: true
-      // },
-      // {
-      //   path: "/profile/distribute-iotx/",
-      //   tab: (
-      //     <span>
-      //       <SettingOutlined />
-      //       <span className="nav-text">{t("profile.settings")}</span>
-      //     </span>
-      //   ),
-      //   component: NotFound,
-      //   hide: true
-      // },
+      {
+        path: "/profile/received/",
+        tab: (
+          <span>
+            <InboxOutlined />
+            <span className="nav-text">{t("profile.received")}</span>
+          </span>
+        ),
+        component: VotesReceivedTable
+      },
       {
         path: "/profile/settings/",
         tab: (
