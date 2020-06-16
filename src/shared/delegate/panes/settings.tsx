@@ -3,9 +3,9 @@ import { t } from "onefx/lib/iso-i18n";
 import React, { ReactNode } from "react";
 import { PureComponent } from "react";
 import { connect } from "react-redux";
-import { Button } from "../common/button";
-import { CommonMargin } from "../common/common-margin";
-import { Flex } from "../common/flex";
+import { Button } from "../../common/button";
+import { CommonMargin } from "../../common/common-margin";
+import { Flex } from "../../common/flex";
 
 const Settings = connect((state: { base: { eth: string } }) => ({
   eth: state.base.eth

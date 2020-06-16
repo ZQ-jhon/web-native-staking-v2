@@ -2,7 +2,7 @@
 import DashboardOutlined from "@ant-design/icons/DashboardOutlined";
 // import InboxOutlined from "@ant-design/icons/InboxOutlined";
 import InfoOutlined from "@ant-design/icons/InfoOutlined";
-// import LinkOutlined from "@ant-design/icons/LinkOutlined";
+import LinkOutlined from "@ant-design/icons/LinkOutlined";
 import PercentageOutlined from "@ant-design/icons/PercentageOutlined";
 import SettingOutlined from "@ant-design/icons/SettingOutlined";
 import SolutionOutlined from "@ant-design/icons/SolutionOutlined";
@@ -20,11 +20,12 @@ import { RootStyle } from "../common/component-style";
 import { secondFontFamily } from "../common/styles/style-font";
 import { ContentPadding } from "../common/styles/style-padding";
 import { TOP_BAR_HEIGHT } from "../common/top-bar";
-import { CandidateProfileContainer } from "./candidate-profile";
-import { RewardDistributionContainer } from "./reward-distribution-container";
-import { Settings } from "./settings";
-import { Technical } from "./technical";
-import { Welcome } from "./welcome";
+import { CandidateProfileContainer } from "./panes/candidate-profile";
+import { NameRegistrationContainer } from "./panes/name-registration";
+import { RewardDistributionContainer } from "./panes/reward-distribution-container";
+import { Settings } from "./panes/settings";
+import { Technical } from "./panes/technical";
+import { Welcome } from "./panes/welcome";
 
 type Props = {} & RouteComponentProps;
 
@@ -83,16 +84,16 @@ export class ProfileContainer extends PureComponent<Props, State> {
         ),
         component: Technical
       },
-      // {
-      //   path: "/profile/name-registration/",
-      //   tab: (
-      //     <span>
-      //       <LinkOutlined />
-      //       <span className="nav-text">{t("profile.name_registration")}</span>
-      //     </span>
-      //   ),
-      //   component: NotFound
-      // },
+      {
+        path: "/profile/name-registration/",
+        tab: (
+          <span>
+            <LinkOutlined />
+            <span className="nav-text">{t("profile.name_registration")}</span>
+          </span>
+        ),
+        component: NameRegistrationContainer
+      },
       // {
       //   path: "/profile/received/",
       //   tab: (

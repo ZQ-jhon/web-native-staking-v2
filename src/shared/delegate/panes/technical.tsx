@@ -10,7 +10,7 @@ import { t } from "onefx/lib/iso-i18n";
 import React, { Component, FormEvent, RefObject } from "react";
 import { Mutation, MutationResult, Query, QueryResult } from "react-apollo";
 import { connect } from "react-redux";
-import { Preloader } from "../common/preloader";
+import { Preloader } from "../../common/preloader";
 
 const GET_BP_CANDIDATE_TECH_DETAIL = gql`
   query bpCandidateTechDetail {

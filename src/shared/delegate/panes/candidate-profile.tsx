@@ -6,9 +6,9 @@ import React from "react";
 import { Component } from "react";
 import { Query, QueryResult } from "react-apollo";
 import { connect } from "react-redux";
-import { TBpCandidate, TNewBpCandidate } from "../../types";
-import { Preloader } from "../common/preloader";
-import { GET_BP_CANDIDATE } from "../staking/smart-contract-gql-queries";
+import { TBpCandidate, TNewBpCandidate } from "../../../types";
+import { Preloader } from "../../common/preloader";
+import { GET_BP_CANDIDATE } from "../../staking/smart-contract-gql-queries";
 import { CandidateForm } from "./candidate-form";
 
 type Props = {

@@ -306,6 +306,11 @@ name_regsitration.operator_pub_key: 'Operator IoTeX Address'
 name_regsitration.operator_pub_key.required: 'Please enter your operator''s IoTeX address.'
 name_regsitration.reward_pub_key: 'Reward IoTeX Address'
 name_regsitration.reward_pub_key.required: 'Please enter the IoTeX address that you''d like your reward to be sent to.'
+name_regsitration.owner: Owner Address
+name_regsitration.stakedAmount: Staked Amount
+name_regsitration.stakedDuration: Staked Duration
+name_regsitration.autoStake: Auto Stake
+name_registration.submit.success_tip: Sent your action successfully!
 name_registration.data: Data
 my_stake.exsitingBucketWarning: 'You are about to use an existing bucket to vote for another delegate'
 my_stake.exsitingBucketWarningExplain: 'By doing so, you are going to "un-vote" the previous delegate and use the bucket to vote for the current delegate you choose above. Your staking status will remain the same. Once it is done, you will not receive rewards from the previous delegate anymore. The future reward distribution will follow the new delegate rules.'

@@ -38,7 +38,7 @@ import {
 import { ownersToNames } from "../../shared/common/apollo-client";
 import { getAntenna, getIoPayAddress } from "../../shared/common/get-antenna";
 
-type Candidate = {
+export type Candidate = {
   name: string;
   ownerAddress: string;
   operatorAddress: string;

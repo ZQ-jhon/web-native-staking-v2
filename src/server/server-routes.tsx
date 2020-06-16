@@ -10,6 +10,19 @@ import { setIdentityProviderRoutes } from "../shared/onefx-auth-provider/identit
 import { Staking } from "./gateway/staking";
 import { MyServer } from "./start-server";
 
+async function setAllCandidates(ctx: Context): Promise<void> {
+  const st = new Staking({
+    antenna: new Antenna("https://api.iotex.one")
+  });
+  const height = await st.getHeight();
+  const resp = await st.getAllCandidates(0, 1000, height);
+  const ownersToNames: Record<string, string> = {};
+  for (const c of resp) {
+    ownersToNames[c.ownerAddress] = c.name;
+  }
+  ctx.setState("base.ownersToNames", ownersToNames);
+}
+
 export function setServerRoutes(server: MyServer): void {
   // Health checks
   server.get("health", "/health", (ctx: koa.Context) => {
@@ -30,25 +43,11 @@ export function setServerRoutes(server: MyServer): void {
       ctx.setState("base.eth", user!.eth);
       ctx.setState("base.next", ctx.query.next);
       ctx.setState("base.apiToken", ctx.state.jwt);
-      const st = new Staking({
-        antenna: new Antenna("https://api.iotex.one")
-      });
-      const height = await st.getHeight();
-      const resp = await st.getAllCandidates(0, 1000, height);
-      const ownersToNames: Record<string, string> = {};
-      for (const c of resp) {
-        ownersToNames[c.ownerAddress] = c.name;
-      }
-      ctx.setState("base.ownersToNames", ownersToNames);
+      await setAllCandidates(ctx);
       ctx.setState(
         "staking.contractAddress",
         // @ts-ignore
         server.config.gateways.staking.contractAddress
-      );
-      ctx.setState(
-        "staking.delegateProfileContractAddr",
-        // @ts-ignore
-        server.config.gateways.staking.delegateProfileContractAddr
       );
       checkingAppSource(ctx);
       ctx.body = await apolloSSR(ctx, {
@@ -61,16 +60,7 @@ export function setServerRoutes(server: MyServer): void {
 
   server.get("SPA", /^(?!\/?v2\/api-gateway\/).+$/, async (ctx: Context) => {
     ctx.setState("base.next", ctx.query.next);
-    const st = new Staking({
-      antenna: new Antenna("https://api.iotex.one")
-    });
-    const height = await st.getHeight();
-    const resp = await st.getAllCandidates(0, 1000, height);
-    const ownersToNames: Record<string, string> = {};
-    for (const c of resp) {
-      ownersToNames[c.ownerAddress] = c.name;
-    }
-    ctx.setState("base.ownersToNames", ownersToNames);
+    await setAllCandidates(ctx);
     ctx.setState(
       "staking.contractAddress",
       // @ts-ignore

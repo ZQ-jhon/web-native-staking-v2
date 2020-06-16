@@ -2,8 +2,8 @@
 // @flow
 import { toRau } from "iotex-antenna/lib/account/utils";
 import { Contract } from "iotex-antenna/lib/contract/contract";
-import { lazyGetContract } from "../common/get-antenna";
-import { DEFAULT_STAKING_GAS_LIMIT } from "../common/token-utils";
+import { lazyGetContract } from "../../common/get-antenna";
+import { DEFAULT_STAKING_GAS_LIMIT } from "../../common/token-utils";
 import { DELEGATE_PROFILE_ABI } from "./delegate-profile-abi";
 
 export type ProfileField = {

@@ -11,10 +11,10 @@ import { SpinPreloader } from "iotex-react-block-producers/lib/spin-preloader";
 import { t } from "onefx/lib/iso-i18n";
 import React, { PureComponent } from "react";
 import { connect } from "react-redux";
-import { CommonMargin } from "../common/common-margin";
-import { getIoPayAddress } from "../common/get-antenna";
-import { IopayRequired } from "../common/iopay-required";
-import { actionSmartContractCalled } from "../staking/smart-contract-reducer";
+import { CommonMargin } from "../../common/common-margin";
+import { getIoPayAddress } from "../../common/get-antenna";
+import { IopayRequired } from "../../common/iopay-required";
+import { actionSmartContractCalled } from "../../staking/smart-contract-reducer";
 import { DelegateProfileContract } from "./delegate-profile-contract";
 
 type Props = {

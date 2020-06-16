@@ -13,9 +13,9 @@ import React, { RefObject } from "react";
 import { Component } from "react";
 import { Mutation } from "react-apollo";
 import { connect } from "react-redux";
-import { TBpCandidate } from "../../types";
-import { ImageIcon } from "../common/icon";
-import { upload } from "../common/upload";
+import { TBpCandidate } from "../../../types";
+import { ImageIcon } from "../../common/icon";
+import { upload } from "../../common/upload";
 
 type Props = {
   data: TBpCandidate;
