@@ -3,6 +3,7 @@
 import { toRau } from "iotex-antenna/lib/account/utils";
 import { Contract } from "iotex-antenna/lib/contract/contract";
 import { lazyGetContract } from "../../common/get-antenna";
+import {numberToHex, utf8ToHex} from "../../common/hex-utils";
 import { DEFAULT_STAKING_GAS_LIMIT } from "../../common/token-utils";
 import { DELEGATE_PROFILE_ABI } from "./delegate-profile-abi";
 
@@ -11,10 +12,9 @@ export type ProfileField = {
   value: any;
 };
 
-function castToUint16Hex(value: number): string {
-  const hex = Buffer.from(value.toString())
-    .toString("hex")
-    .replace("0x", "");
+
+function castToUint16Hex(value: any): string {
+  const hex = numberToHex(value).replace("0x", "");
   if (hex.length > 4) {
     throw new Error(`Invalid uint16 value: ${value}`);
   }
@@ -23,8 +23,8 @@ function castToUint16Hex(value: number): string {
 
 function prependLength(aHex: string): string {
   const hex = aHex.replace("0x", "");
-  const len = castToUint16Hex(hex.length / 2);
-  return "0".repeat(32 - len.length) + len + hex;
+  const len = numberToHex(hex.length / 2).replace("0x", "");
+  return "0".repeat(64 - len.length) + len + hex;
 }
 
 export class DelegateProfileContract {
@@ -46,7 +46,7 @@ export class DelegateProfileContract {
 
   format = (key: string, value: number) => {
     return (
-      prependLength(Buffer.from(key).toString("hex")) +
+      prependLength(utf8ToHex(key)) +
       prependLength(castToUint16Hex(value))
     );
   };
@@ -95,9 +95,9 @@ export class DelegateProfileContract {
     const byteCodes =
       // tslint:disable-next-line:prefer-template
       "0x" +
-      this.format("foundationRewardPortion", foundationRewardPortion) +
-      this.format("epochRewardPortion", epochRewardPortion) +
-      this.format("blockRewardPortion", blockRewardPortion);
+      this.format("foundationRewardPortion", Math.round(foundationRewardPortion)) +
+      this.format("epochRewardPortion", Math.round(epochRewardPortion)) +
+      this.format("blockRewardPortion", Math.round(blockRewardPortion));
     // tslint:disable-next-line:no-unnecessary-local-variable
     const hash = await this.contract.methods.updateProfileWithByteCode(
       byteCodes,

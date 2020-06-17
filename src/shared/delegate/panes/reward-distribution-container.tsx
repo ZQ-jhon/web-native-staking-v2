@@ -50,7 +50,7 @@ type State = {
 @IopayRequired
 class RewardDistributionContainer extends PureComponent<Props, State> {
   formRef: React.RefObject<FormInstance> = React.createRef<FormInstance>();
-  contract: DelegateProfileContract;
+  contract?: DelegateProfileContract;
 
   constructor(props: Props) {
     super(props);
@@ -59,44 +59,53 @@ class RewardDistributionContainer extends PureComponent<Props, State> {
       error: undefined,
       data: undefined
     };
-    this.contract = new DelegateProfileContract({
-      contractAddress: props.contractAddr
-    });
   }
 
   // tslint:disable-next-line:no-any
   onSubmit = async (e: any) => {
     e.preventDefault();
-    this.setState({ loading: true });
     const { actionSmartContractCalled } = this.props;
     if (!this.formRef.current) {
       return;
     }
-    const values = await this.formRef.current.validateFields();
-    window.console.log(`reward distribution values`, values);
-    try {
-      const address = await getIoPayAddress();
-      const tx = await this.contract.updateProfile({
-        foundationRewardPortion: values.foundationRewardPortion,
-        epochRewardPortion: values.epochRewardPortion,
-        blockRewardPortion: values.blockRewardPortion,
-        address
-      });
-      window.console.log(`reward distribution tx`, tx);
-      actionSmartContractCalled(true);
-    } catch (e) {
-      const message = t("profile.reward-distribution.error");
-      notification.error({ message });
-      window.console.log(`Failed to update reward distribution`, e);
-    }
-    this.setState({ loading: false });
+    // const values = await this.formRef.current.validateFields();
+    this.formRef.current.validateFields().then(async (values) => {
+      this.setState({ loading: true });
+      window.console.log(`reward distribution values`, values);
+      if(this.contract){
+        try {
+          const address = await getIoPayAddress();
+          const tx = await this.contract.updateProfile({
+            foundationRewardPortion: values.foundationRewardPortion,
+            epochRewardPortion: values.epochRewardPortion,
+            blockRewardPortion: values.blockRewardPortion,
+            address
+          });
+          window.console.log(`reward distribution tx`, tx);
+          actionSmartContractCalled(true);
+        } catch (e) {
+          const message = t("profile.reward-distribution.error");
+          notification.error({ message });
+          window.console.log(`Failed to update reward distribution`, e);
+        }
+      }
+      this.setState({ loading: false });
+    });
   };
 
   async componentDidMount(): Promise<void> {
-    const { smartContractCalled, actionSmartContractCalled } = this.props;
+    const { smartContractCalled, actionSmartContractCalled, contractAddr } = this.props;
 
     if (smartContractCalled) {
       window.setTimeout(() => actionSmartContractCalled(false), 5 * 60 * 1000);
+    }
+
+    if(contractAddr){
+      this.contract = new DelegateProfileContract({
+        contractAddress: contractAddr
+      });
+    } else {
+      return;
     }
 
     try {

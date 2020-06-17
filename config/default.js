@@ -36,7 +36,6 @@ module.exports = {
       connectTimeoutMS: 5000
     },
     staking: {
-      contractAddress: "io1zn9mn4v63jg3047ylqx9nqaqz0ev659777q3xc",
       delegateProfileContractAddr: "io1lfl4ppn2c3wcft04f0rk0jy9lyn4pcjcm7638u"
     }
   },

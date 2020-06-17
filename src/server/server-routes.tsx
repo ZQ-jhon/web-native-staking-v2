@@ -45,9 +45,9 @@ export function setServerRoutes(server: MyServer): void {
       ctx.setState("base.apiToken", ctx.state.jwt);
       await setAllCandidates(ctx);
       ctx.setState(
-        "staking.contractAddress",
+        "staking.delegateProfileContractAddr",
         // @ts-ignore
-        server.config.gateways.staking.contractAddress
+        server.config.gateways.staking.delegateProfileContractAddr
       );
       checkingAppSource(ctx);
       ctx.body = await apolloSSR(ctx, {
@@ -61,11 +61,6 @@ export function setServerRoutes(server: MyServer): void {
   server.get("SPA", /^(?!\/?v2\/api-gateway\/).+$/, async (ctx: Context) => {
     ctx.setState("base.next", ctx.query.next);
     await setAllCandidates(ctx);
-    ctx.setState(
-      "staking.contractAddress",
-      // @ts-ignore
-      server.config.gateways.staking.contractAddress
-    );
     checkingAppSource(ctx);
     ctx.body = await apolloSSR(ctx, {
       VDom: <AppContainer />,
