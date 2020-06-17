@@ -40,6 +40,9 @@ export const TopBarMenu = ({ hideMobileMenu, faucetEnable }: any) => {
   const a4Style = String(pathname).startsWith("/tools/")
     ? activeStyle
     : inactiveStyle;
+  const a5Style = String(pathname).startsWith("/reclaim-bucket/")
+    ? activeStyle
+    : inactiveStyle;
   const menu = [
     <A key={4} href="/v2/" style={aStyle} onClick={hideMobileMenu}>
       {t("topbar.home")}
@@ -52,6 +55,9 @@ export const TopBarMenu = ({ hideMobileMenu, faucetEnable }: any) => {
     </A>,
     <A key={3} href="/tools/multi-send/" style={a4Style}>
       {t("topbar.tool")}
+    </A>,
+    <A key={5} href="/reclaim-bucket/" style={a5Style}>
+      RECLAIM BUCKET
     </A>
   ];
 
