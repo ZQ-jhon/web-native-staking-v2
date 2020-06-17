@@ -40,7 +40,7 @@ type State = {
 };
 
 const state = isBrowser && JsonGlobal("state");
-const isIoPay = isBrowser && state.base.isIoPay;
+const isIoPayMobile = isBrowser && state.base.isIoPayMobile;
 
 // @ts-ignore
 @connect((state: { buckets: Array<IBucket> }) => {
@@ -484,7 +484,7 @@ class MyVotesTable extends Component<Props, State> {
             }
           }}
         >
-          {(!isIoPay ||
+          {(!isIoPayMobile ||
             !!(
               dataSource && dataSource.length === 0
             )) /*
@@ -500,7 +500,7 @@ class MyVotesTable extends Component<Props, State> {
               rowKey="index"
             />
           )}
-          {isIoPay && (
+          {isIoPayMobile && (
             <div
               className="mobileVotes"
               style={{ width: "100%", marginBottom: 40 }}
