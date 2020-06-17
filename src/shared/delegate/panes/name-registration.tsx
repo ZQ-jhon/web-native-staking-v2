@@ -42,8 +42,6 @@ type State = {
   isUpdating: boolean;
   candName?: string;
   isFetchingUpdatingInfo: boolean;
-  operatorAddress?: string;
-  rewardAddress?: string;
 };
 
 const NameRegistrationContainer = IopayRequired(
@@ -67,9 +65,7 @@ const NameRegistrationContainer = IopayRequired(
         this.state = {
           candName,
           isUpdating: Boolean(candName),
-          isFetchingUpdatingInfo: true,
-          operatorAddress: "",
-          rewardAddress: ""
+          isFetchingUpdatingInfo: true
         };
       }
 
@@ -155,12 +151,26 @@ const NameRegistrationContainer = IopayRequired(
         const { isUpdating, isFetchingUpdatingInfo, candName } = this.state;
         if (isUpdating && isFetchingUpdatingInfo && candName) {
           const resp = await getStaking().getCandidate(candName);
-          if (resp && resp) {
+          if (resp) {
             this.setState({
-              operatorAddress: resp.operatorAddress,
-              rewardAddress: resp.rewardAddress,
               isFetchingUpdatingInfo: false
             });
+            const form = this.updateFormRef.current;
+            if (!form) {
+              return;
+            }
+            form.setFields([
+              {
+                name: "operatorAddress",
+                // @ts-ignore
+                value: resp.operatorAddress
+              },
+              {
+                name: "rewardAddress",
+                // @ts-ignore
+                value: resp.rewardAddress
+              }
+            ]);
           }
         }
       }
