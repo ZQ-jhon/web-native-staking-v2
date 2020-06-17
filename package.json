@@ -139,7 +139,7 @@
     "apollo-link-context": "1.0.20",
     "apollo-link-http": "1.5.17",
     "apollo-link-timeout": "1.4.1",
-    "apollo-server-koa": "2.14.2",
+    "apollo-server-koa": "2.15.0",
     "axios": "0.19.2",
     "babel-loader": "8.1.0",
     "babel-plugin-module-resolver": "3.2.0",
