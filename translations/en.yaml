@@ -439,7 +439,7 @@ profile.rewards.confirm.content: 'Please check carefully or download the list be
 profile.rewards.listtips: '*This tool only processes transactions with over ${tipAmount} IOTX'
 profile.rewards.send: '${sendAmount} IOTX sent ! Check transaction hash to view status.'
 profile.calculate_rewards: 'Calculate Rewards'
-auth/sign_in.title: Becoming an IoTeX block producer
+auth/sign_in.title: Become an IoTeX Delegate
 auth/button_submit: Login or Sign Up with IoPay
 auth/failed_to_login: Failed to login. Please refresh the page and login again.
 auth/sign_out: Sign Out
