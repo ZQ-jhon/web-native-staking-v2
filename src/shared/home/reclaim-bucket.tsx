@@ -1,9 +1,10 @@
+import { Input } from "antd";
+import Button from "antd/lib/button";
+import Form, { FormInstance } from "antd/lib/form";
 import React, { PureComponent, RefObject } from "react";
 import { connect } from "react-redux";
-import Button from "antd/lib/button";
-import { Input } from "antd";
-import Form, { FormInstance } from "antd/lib/form";
 import { CommonModal } from "../common/common-modal";
+import { t } from "onefx/lib/iso-i18n";
 
 type IJSONMESSAGE = {
   bucket: Number;
@@ -53,8 +54,7 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
         bucket: Number(this.state.bucketIndex),
         nonce: 136,
         recipient: this.state.address,
-        reclaim:
-          "This is to certify I am transferring the ownership of said bucket to said recipient on IoTeX blockchain"
+        reclaim: t("reclaim.reclaimMessage")
       };
       // @ts-ignore
       this.setState({ visible: false, showMessageBox, jsonMessage });
@@ -83,74 +83,78 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
 
   renderOptions = () => (
     <div>
-      <p>You can reclaim the bucket by running the following ioctl command:</p>
+      <p>{t("reclaim.popUpMessage.runIoctlCmd")}:</p>
       <h4>{`ioctl stake2 reclaim ${Number(
         this.state.bucketIndex
       )} Ethereum -s ${this.state.address} -p 1 -l 300000`}</h4>
-      <p>
-        or if you wish to use the web tool, make sure ioPay is opened (and it
-        has the recipient private key/account), then click Continue
-      </p>
+      <p>{t("reclaim.continueWebTools")}</p>
     </div>
   );
 
   public render(): JSX.Element {
-    const { showMessageBox } = this.state;
     return (
       <div style={{ width: "100vw", height: "100vh" }}>
+        {/*
+            // @ts-ignore */}
         <Form layout={"vertical"} style={{ padding: "1em" }} ref={this.formRef}>
-          <h1>Reclaim Bucket</h1>
+          <h1>{t("reclaim.bucketHeader")}</h1>
+          {/*
+            // @ts-ignore */}
           <Form.Item name={"id"} initialValue="id">
             <Input name="id" type="hidden" placeholder={""} />
           </Form.Item>
-
+          {/*
+                // @ts-ignore */}
           <Form.Item
-            label="Bucket Index"
+            label={t("reclaim.bucketIndex")}
             name="address"
             initialValue=""
             rules={[
               {
                 required: true,
-                message: "enter the value of index"
+                message: t("recliam.bucketIndex.error")
               }
             ]}
           >
             <Input
-              onChange={(event: any) => {
+              onChange={event => {
                 this.setState({
                   bucketIndex: event.target.value
                 });
               }}
             />
           </Form.Item>
+          {/*
+                // @ts-ignore */}
           <Form.Item
-            label="Recipient Address"
-            name="message signature hash"
+            label={t("reclaim.recipientAddress")}
+            name={"recipient_address"}
             initialValue=""
             rules={[
               {
                 required: true,
-                message: "enter the value of signature hash"
+                message: t("reclaim.recipientAddress.error")
               }
             ]}
           >
             <Input
-              onChange={(event: any) => {
+              onChange={event => {
                 this.setState({
                   address: event.target.value
                 });
               }}
             />
           </Form.Item>
-          {showMessageBox && (
+          {/*
+                // @ts-ignore */}
+          {this.state.showMessageBox && (
             <Form.Item
-              label="Message to sign using HD-Wallet"
-              name="message signature hash"
+              label={t("reclaim.message")}
+              name={"message_signature_hash"}
               initialValue={this.state.jsonMessage}
               rules={[
                 {
-                  required: true,
-                  message: "enter the value of signature hash"
+                  required: true
                 }
               ]}
             >
@@ -158,10 +162,12 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
                 rows={4}
                 value={JSON.stringify(this.state.jsonMessage)}
               />
-              <p>Copy the message to sign using HDWallet</p>
+              <p>{t("reclaim.copyMessaage")}</p>
             </Form.Item>
           )}
-          {!showMessageBox && (
+          {/*
+                // @ts-ignore */}
+          {!this.state.showMessageBox && (
             <Form.Item>
               <Button
                 type="primary"
@@ -170,7 +176,7 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
                 style={{ marginRight: "10px" }}
                 onClick={this.showModal}
               >
-                Continue
+                {t("reclaim.contiunueButton")}
               </Button>
             </Form.Item>
           )}

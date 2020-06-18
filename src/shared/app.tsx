@@ -12,8 +12,8 @@ import { colors } from "./common/styles/style-color";
 import { fonts } from "./common/styles/style-font";
 import { TopBar } from "./common/top-bar";
 import { ProfileContainer } from "./delegate/profile-container";
-import { VotingContainer } from "./home/voting-container";
 import { ReclaimTools } from "./home/reclaim-bucket";
+import { VotingContainer } from "./home/voting-container";
 import { SignIn } from "./onefx-auth-provider/identity-provider/view/sign-in";
 import { VoteNativePage } from "./staking/voting-native-page";
 
