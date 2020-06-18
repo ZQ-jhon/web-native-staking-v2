@@ -273,16 +273,18 @@ export const CandidateForm = connect()(
                   ]}
                 >
                   <Input hidden={true} />
+                  <Upload
+                    beforeUpload={file => this.beforeUpload(file, "logo")}
+                  >
+                    {logo ? (
+                      <ImageIcon url={logo} width={"auto"} height={"35px"} />
+                    ) : (
+                      <Button>
+                        <UploadOutlined /> Click to Upload
+                      </Button>
+                    )}
+                  </Upload>
                 </Form.Item>
-                <Upload beforeUpload={file => this.beforeUpload(file, "logo")}>
-                  {logo ? (
-                    <ImageIcon url={logo} width={"auto"} height={"35px"} />
-                  ) : (
-                    <Button>
-                      <UploadOutlined /> Click to Upload
-                    </Button>
-                  )}
-                </Upload>
 
                 {/*
                 // @ts-ignore */}
@@ -298,22 +300,22 @@ export const CandidateForm = connect()(
                   ]}
                 >
                   <Input hidden={true} />
+                  <Upload
+                    beforeUpload={file => this.beforeUpload(file, "bannerUrl")}
+                  >
+                    {bannerUrl ? (
+                      <img
+                        alt="logo"
+                        style={{ width: "50%", cursor: "pointer" }}
+                        src={bannerUrl}
+                      />
+                    ) : (
+                      <Button>
+                        <UploadOutlined /> Click to Upload
+                      </Button>
+                    )}
+                  </Upload>
                 </Form.Item>
-                <Upload
-                  beforeUpload={file => this.beforeUpload(file, "bannerUrl")}
-                >
-                  {bannerUrl ? (
-                    <img
-                      alt="logo"
-                      style={{ width: "50%", cursor: "pointer" }}
-                      src={bannerUrl}
-                    />
-                  ) : (
-                    <Button>
-                      <UploadOutlined /> Click to Upload
-                    </Button>
-                  )}
-                </Upload>
 
                 {/*
                 // @ts-ignore */}
