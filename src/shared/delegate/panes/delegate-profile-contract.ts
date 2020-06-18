@@ -3,7 +3,7 @@
 import { toRau } from "iotex-antenna/lib/account/utils";
 import { Contract } from "iotex-antenna/lib/contract/contract";
 import { lazyGetContract } from "../../common/get-antenna";
-import {numberToHex, utf8ToHex} from "../../common/hex-utils";
+import { hexToUtf8, numberToHex, utf8ToHex } from "../../common/hex-utils";
 import { DEFAULT_STAKING_GAS_LIMIT } from "../../common/token-utils";
 import { DELEGATE_PROFILE_ABI } from "./delegate-profile-abi";
 
@@ -11,7 +11,6 @@ export type ProfileField = {
   key: string;
   value: any;
 };
-
 
 function castToUint16Hex(value: any): string {
   const hex = numberToHex(value).replace("0x", "");
@@ -35,9 +34,9 @@ export class DelegateProfileContract {
     try {
       this.contract = lazyGetContract(contractAddress, DELEGATE_PROFILE_ABI);
       this.types = {
-        blockRewardPortion: "",
-        epochRewardPortion: "",
-        foundationRewardPortion: ""
+        blockRewardPortion: "permyriad",
+        epochRewardPortion: "permyriad",
+        foundationRewardPortion: "permyriad"
       };
     } catch (e) {
       window.console.error("failed to construct delegate profile contract");
@@ -46,8 +45,7 @@ export class DelegateProfileContract {
 
   format = (key: string, value: number) => {
     return (
-      prependLength(utf8ToHex(key)) +
-      prependLength(castToUint16Hex(value))
+      prependLength(utf8ToHex(key)) + prependLength(castToUint16Hex(value))
     );
   };
 
@@ -62,21 +60,24 @@ export class DelegateProfileContract {
         from: delegateAddress
       }
     );
-    const hexValue = bytesResult.toString();
     window.console.log(
-      `getProfileByField ${delegateAddress} ${profileKey} hexValue`,
-      hexValue
+      `getProfileByField ${delegateAddress} ${profileKey} bytesResult`,
+      bytesResult
     );
+    const value = Buffer.from(bytesResult).toString("hex");
+    window.console.log(`value `, value);
     switch (this.types[profileKey]) {
       case "permyriad":
+        const numberValue = value ? parseInt(value, 16) / 100 : "";
+        window.console.log(`numberValue `, numberValue);
         return {
           key: profileKey,
-          value: hexValue ? Buffer.from(bytesResult, "hex").toString() : ""
+          value: numberValue
         };
       default:
         return {
           key: profileKey,
-          value: hexValue ? Buffer.from(bytesResult, "hex").toString() : ""
+          value: hexToUtf8(value)
         };
     }
   }
@@ -93,20 +94,20 @@ export class DelegateProfileContract {
     address: string;
   }): Promise<string> {
     const byteCodes =
-      // tslint:disable-next-line:prefer-template
-      "0x" +
-      this.format("foundationRewardPortion", Math.round(foundationRewardPortion)) +
-      this.format("epochRewardPortion", Math.round(epochRewardPortion)) +
-      this.format("blockRewardPortion", Math.round(blockRewardPortion));
+      this.format(
+        "foundationRewardPortion",
+        Math.round(foundationRewardPortion * 100)
+      ) +
+      this.format("epochRewardPortion", Math.round(epochRewardPortion * 100)) +
+      this.format("blockRewardPortion", Math.round(blockRewardPortion * 100));
+    const buffer = Buffer.from(byteCodes, "hex");
+    window.console.log(`buffer`, buffer);
     // tslint:disable-next-line:no-unnecessary-local-variable
-    const hash = await this.contract.methods.updateProfileWithByteCode(
-      byteCodes,
-      {
-        from: address,
-        gasLimit: DEFAULT_STAKING_GAS_LIMIT,
-        gasPrice: toRau("1", "Qev")
-      }
-    );
+    const hash = await this.contract.methods.updateProfileWithByteCode(buffer, {
+      from: address,
+      gasLimit: DEFAULT_STAKING_GAS_LIMIT,
+      gasPrice: toRau("1", "Qev")
+    });
     return hash;
   }
 }

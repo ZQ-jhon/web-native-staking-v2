@@ -69,10 +69,10 @@ class RewardDistributionContainer extends PureComponent<Props, State> {
       return;
     }
     // const values = await this.formRef.current.validateFields();
-    this.formRef.current.validateFields().then(async (values) => {
+    this.formRef.current.validateFields().then(async values => {
       this.setState({ loading: true });
       window.console.log(`reward distribution values`, values);
-      if(this.contract){
+      if (this.contract) {
         try {
           const address = await getIoPayAddress();
           const tx = await this.contract.updateProfile({
@@ -94,13 +94,17 @@ class RewardDistributionContainer extends PureComponent<Props, State> {
   };
 
   async componentDidMount(): Promise<void> {
-    const { smartContractCalled, actionSmartContractCalled, contractAddr } = this.props;
+    const {
+      smartContractCalled,
+      actionSmartContractCalled,
+      contractAddr
+    } = this.props;
 
     if (smartContractCalled) {
       window.setTimeout(() => actionSmartContractCalled(false), 5 * 60 * 1000);
     }
 
-    if(contractAddr){
+    if (contractAddr) {
       this.contract = new DelegateProfileContract({
         contractAddress: contractAddr
       });
@@ -115,7 +119,6 @@ class RewardDistributionContainer extends PureComponent<Props, State> {
         epochRewardPortion,
         blockRewardPortion
       ] = await Promise.all([
-        // this.contract.getProfiles(address),
         this.contract.getProfileByField("foundationRewardPortion", address),
         this.contract.getProfileByField("epochRewardPortion", address),
         this.contract.getProfileByField("blockRewardPortion", address)
@@ -126,6 +129,10 @@ class RewardDistributionContainer extends PureComponent<Props, State> {
         blockRewardPortion: blockRewardPortion.value
       };
       window.console.log("data", data);
+
+      if (this.formRef && this.formRef.current) {
+        this.formRef.current.setFieldsValue(data);
+      }
       this.setState({
         loading: false,
         error: undefined,
