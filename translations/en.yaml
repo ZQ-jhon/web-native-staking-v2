@@ -187,14 +187,14 @@ my_stake.canName: 'Delegate Name'
 my_stake.tranferOwnership.required: 'Please enter the Transfer address.'
 my_stake.tranferOwnership: 'Transfer Address'
 my_stake.data: Data
-my_stake.edit.add_staking: Add Votes
+my_stake.edit.add_staking: Add Stake
 my_stake.edit.restake: Restake
-my_stake.edit.revote: 'Change Delegate'
-my_stake.edit.transfer: 'Transfer'
+my_stake.edit.revote: 'Switch Delegate'
+my_stake.edit.transfer: 'Reassign Bucket'
 my_stake.edit.row: Action
 my_stake.edit.unstake: Unstake
 my_stake.edit.withdraw: Withdraw
-my_stake.edit: 'EDIT VOTE'
+my_stake.edit: 'EDIT STAKE'
 my_stake.id: ID
 my_stake.new: 'Vote For A Delegate'
 my_stake.nonDecay.yes: 'Yes'
@@ -270,7 +270,7 @@ my_stake.stake_duration: 'Stake Duration'
 my_stake.autostake: 'Auto Stake'
 my_stake.bucket_status: 'Bucket Status'
 my_stake.nonDecay: Auto-Stake
-my_stake.new_vote: 'New Vote'
+my_stake.new_vote: 'New Stake'
 my_votes.erc20_tab: 'IOTX-E (ERC-20)'
 my_votes.native_tab: 'IOTX'
 my_stake.title: 'My Votes'

@@ -161,7 +161,15 @@ my_stake.stake_duration: 质押期限
 my_stake.autostake: 自动质押
 my_stake.bucket_status: 状态
 my_stake.nonDecay: 自动质押
-my_stake.new_vote: 新投票
+my_stake.new_vote: 创建质押
 my_votes.erc20_tab: 'IOTX-E (ERC-20)'
 my_votes.native_tab: 'IOTX'
 my_stake.title: 我的投票
+my_stake.edit.add_staking: 创建质押
+my_stake.edit.restake: 重新质押
+my_stake.edit.revote: 修改候选人
+my_stake.edit.transfer: 转让质押桶
+my_stake.edit.row: Action
+my_stake.edit.unstake: 赎回质押
+my_stake.edit.withdraw: 提取赎回
+my_stake.edit: 'EDIT STAKE'
