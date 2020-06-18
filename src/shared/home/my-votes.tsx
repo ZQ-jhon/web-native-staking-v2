@@ -1,11 +1,15 @@
+import { RedoOutlined } from "@ant-design/icons/lib";
 import PlusOutlined from "@ant-design/icons/PlusOutlined";
 import Alert from "antd/lib/alert";
 import { t } from "onefx/lib/iso-i18n";
 import Helmet from "onefx/lib/react-helmet";
+import { styled } from "onefx/lib/styletron-react";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { CommonMargin } from "../common/common-margin";
 import { IopayRequired } from "../common/iopay-required";
+import { colors } from "../common/styles/style-color";
+import { fonts } from "../common/styles/style-font";
 import { VotingButton } from "../home/vote-button-modal";
 import { VoteNowContainer } from "../staking/vote-now-steps/vote-now-container";
 import { BucketsLoader } from "./account-meta";
@@ -36,6 +40,10 @@ export class StakingContractContainer extends Component<Props, State> {
     };
   }
 
+  refreshPage = () => {
+    window.location.reload();
+  };
+
   render(): JSX.Element {
     return (
       <div>
@@ -50,6 +58,11 @@ export class StakingContractContainer extends Component<Props, State> {
             {t("my_stake.new_vote")}
           </span>
         </VotingButton>
+
+        <RefreshButtonStyle onClick={() => this.refreshPage()}>
+          <RedoOutlined style={{ marginRight: 4 }} />
+          {t("my_stake.refresh_list")}
+        </RefreshButtonStyle>
 
         <CommonMargin />
 
@@ -105,3 +118,11 @@ const SmartContractCalled = connect(
     </>
   );
 });
+
+const RefreshButtonStyle = styled("span", () => ({
+  ...fonts.body,
+  backgroundColor: colors.white,
+  color: colors.primary,
+  float: "right",
+  lineHeight: "55px"
+}));
