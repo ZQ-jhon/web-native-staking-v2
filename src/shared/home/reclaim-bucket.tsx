@@ -1,10 +1,10 @@
 import { Input } from "antd";
 import Button from "antd/lib/button";
 import Form, { FormInstance } from "antd/lib/form";
+import { t } from "onefx/lib/iso-i18n";
 import React, { PureComponent, RefObject } from "react";
 import { connect } from "react-redux";
 import { CommonModal } from "../common/common-modal";
-import { t } from "onefx/lib/iso-i18n";
 
 type IJSONMESSAGE = {
   bucket: Number;
@@ -99,11 +99,6 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
         <Form layout={"vertical"} style={{ padding: "1em" }} ref={this.formRef}>
           <h1>{t("reclaim.bucketHeader")}</h1>
           {/*
-            // @ts-ignore */}
-          <Form.Item name={"id"} initialValue="id">
-            <Input name="id" type="hidden" placeholder={""} />
-          </Form.Item>
-          {/*
                 // @ts-ignore */}
           <Form.Item
             label={t("reclaim.bucketIndex")}
@@ -145,9 +140,8 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
               }}
             />
           </Form.Item>
-          {/*
-                // @ts-ignore */}
           {this.state.showMessageBox && (
+            // @ts-ignore
             <Form.Item
               label={t("reclaim.message")}
               name={"message_signature_hash"}
