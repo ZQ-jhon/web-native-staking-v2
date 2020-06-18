@@ -13,15 +13,17 @@ const Settings = connect((state: { base: { eth: string } }) => ({
   class SettingsInner extends PureComponent<{ eth: string }> {
     render(): ReactNode {
       const { eth } = this.props;
-      const addr = fromBytes(
+      const addr = eth?fromBytes(
         Buffer.from(String(eth).replace(/^0x/, ""), "hex")
-      ).string();
+      ).string():"";
 
       return (
         <Flex width="100%" column={true} alignItems="flex-start">
           <h1>{t("profile.settings")}</h1>
-          <pre>{eth}</pre>
-          <pre>{addr}</pre>
+          {<p dangerouslySetInnerHTML={{ __html: t("profile.settings.content",{
+              ioAddress: addr,
+              ethAddress: eth
+            }) }} />}
           <CommonMargin />
           <div>
             <Button secondary={true} href="/v2/logout">

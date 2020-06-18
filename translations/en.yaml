@@ -359,18 +359,12 @@ profile.welcome: WELCOME
 profile.welcome_text: '
 <h1 class="code-line" data-line-start=0 data-line-end=1 ><a id="If_you_are_interested_in_becoming_an_IoTeX_Delegate_complete_the_following_registration_items_0"></a>If you are interested in becoming an IoTeX Delegate, complete the following registration items:</h1>
 <ol>
-<li class="has-line-data" data-line-start="1" data-line-end="2">Learn about the IoTeX Delegates Program by reading our all-in-one Delegate Handbook: <a href="https://v1.iotex.io/consensus-delegate-handbook.pdf">https://v1.iotex.io/consensus-delegate-handbook.pdf</a></li>
-<li class="has-line-data" data-line-start="2" data-line-end="3">Schedule a call with IoTeX so we can sync up and answer your questions (optional): <a href="https://calendly.com/iotex-delegates/delegateinterview">https://calendly.com/iotex-delegates/delegateinterview</a></li>
-<li class="has-line-data" data-line-start="3" data-line-end="4">Create a website and social media channels for your Delegate: In addition to your voting profile, these are the primary ways that voters will learn about you - highly recommended for all Delegates. See pg. 7-8 of the Delegate Handbook for more details.</li>
-<li class="has-line-data" data-line-start="4" data-line-end="9">Register your Delegate node. Please see our step-by-step blog post for the full details:
-<ul>
-<li class="has-line-data" data-line-start="5" data-line-end="6">Login to the IoTeX voting website</li>
-<li class="has-line-data" data-line-start="6" data-line-end="7">Create a voting profile</li>
-<li class="has-line-data" data-line-start="7" data-line-end="8">Register your name + address</li>
-<li class="has-line-data" data-line-start="8" data-line-end="9">Self-stake at least 1.2 million IOTX tokens</li>
-</ul>
-</li>
-<li class="has-line-data" data-line-start="9" data-line-end="10">Campaign for votes and engage with voters! After completing all steps above, you will be eligible to receive votes. Introduce yourself to the IoTeX community in our official Telegram channel and explore / mine blocks on our Testnet.</li>
+<li class="has-line-data" data-line-start="1" data-line-end="2">Learn about the IoTeX Delegates Program by reading our all-in-one Delegate Handbook: <a href="https://docsend.com/view/wsfqu7cbm8fd5un5">https://docsend.com/view/wsfqu7cbm8fd5un5</a></li>
+<li class="has-line-data" data-line-start="2" data-line-end="3">Schedule a meeting with the IoTeX Foundation by emailing <a href="mailto:larry@iotex.io">larry@iotex.io</a> (optional)</li>
+<li class="has-line-data" data-line-start="3" data-line-end="4">Create a website and/or social media channels to communicate with your future voters. In addition to your voting profile on <a href="https://member.iotex.io">https://member.iotex.io</a>, these are the primary ways the IoTeX Community can learn about your Delegate.</li>
+<li class="has-line-data" data-line-start="4" data-line-end="5">Set up your server to operate your node -- full instructions can be found on the IoTeX Github: <a href="https://github.com/iotexproject/iotex-bootstrap">https://github.com/iotexproject/iotex-bootstrap</a></li>
+<li class="has-line-data" data-line-start="5" data-line-end="6">Register your Delegate node and complete your voting profile -- you may follow our step-by-step instructions here: <a href="https://docs.google.com/document/d/1NLtFFVv6CwCsWG_y6FtbS97zfOGWxqh4Ij2lW0O1-B0/">https://docs.google.com/document/d/1NLtFFVv6CwCsWG_y6FtbS97zfOGWxqh4Ij2lW0O1-B0/</a></li>
+<li class="has-line-data" data-line-start="6" data-line-end="7">After completing the steps above, you will be eligible to receive votes. Engage with the IoTeX Community and campaign for votes!</a></li>
 </ol>
 '
 profile.profile: 'MY PROFILE'
@@ -388,6 +382,7 @@ profile.reward_plan.insertFormat: 'Insert Format'
 profile.reward_plan.insertCancel: Cancel
 profile.reward_plan.recomendFormat: "% of day bonus reward you will redistribute to voters\n\nPayout frequency (i.e., every day, 3 days, week)\n\nYour plans for other rewards (i.e., voters, infrastructure, dApp funds, profit)"
 profile.settings: SETTINGS
+profile.settings.content: 'You are currently logged in as <pre><b>${ioAddress}</b></pre> Prior to mainnet GA, your corresponding ETH wallet address were <pre><b>${ethAddress}</b></pre>'
 profile.social_media.required: 'Please enter your social media URLs.'
 profile.social_media: 'Social Media link (at least one link and separated by space)'
 profile.team.required: 'Please enter your team background.'
