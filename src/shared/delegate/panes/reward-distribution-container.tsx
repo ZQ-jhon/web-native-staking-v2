@@ -152,7 +152,7 @@ class RewardDistributionContainer extends PureComponent<Props, State> {
   getInnerComponent({ loading, error, data }: State): JSX.Element {
     if (error && !loading) {
       return (
-        <Alert message={"error when load data"} type="error" showIcon={true} />
+        <Alert message={t("reward_distribution.maintenance")} type="error" showIcon={true} />
       );
     }
     const distributions = data || {};

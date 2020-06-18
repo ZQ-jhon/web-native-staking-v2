@@ -443,3 +443,4 @@ auth/sign_in.title: Become an IoTeX Delegate
 auth/button_submit: Login or Sign Up with IoPay
 auth/failed_to_login: Failed to login. Please refresh the page and login again.
 auth/sign_out: Sign Out
+reward_distribution.maintenance:  This is still under maintenance. Please try later.
