@@ -1,5 +1,7 @@
+import { t } from "onefx/lib/iso-i18n";
 import React, { PureComponent } from "react";
 import { connect } from "react-redux";
+import { CommonModal } from "../common/common-modal";
 import { VoteNowContainer } from "../staking/vote-now-steps/vote-now-container";
 import { VotingModal } from "./vote-button-modal";
 import { VotingBanner } from "./voting-banner";
@@ -21,6 +23,7 @@ type State = {
   displayMobileList: boolean;
   shouldDisplayMetaMaskReminder: boolean;
   userConfirmedMetaMaskReminder: boolean;
+  showHelpModal: boolean;
 };
 
 // @ts-ignore
@@ -40,7 +43,8 @@ class VotingBannerModal extends PureComponent<Props, State> {
       shouldDisplayMetaMaskReminder: false,
       userConfirmedMetaMaskReminder: false,
       currentCandidate: null,
-      displayMobileList: false
+      displayMobileList: false,
+      showHelpModal: !!(this.props.isInAppWebview && !this.props.isIoPayMobile)
     };
   }
 
@@ -101,6 +105,24 @@ class VotingBannerModal extends PureComponent<Props, State> {
             }
           />
         }
+        <CommonModal
+          title={null}
+          okText={t("button.continue")}
+          cancelText={null}
+          visible={this.state.showHelpModal}
+          onOk={() => {
+            this.setState({ showHelpModal: false });
+          }}
+          onCancel={() => {
+            this.setState({ showHelpModal: false });
+          }}
+        >
+          <p
+            dangerouslySetInnerHTML={{
+              __html: t("voting.banner_content.modal")
+            }}
+          />
+        </CommonModal>
       </>
     );
   }

@@ -164,8 +164,6 @@ class VotingBanner extends Component<Props, State> {
   render(): JSX.Element {
     const { items } = votingBannerSetting;
     const { isInAppWebview, displayMobileList } = this.props;
-    // tslint:disable-next-line:prefer-template no-console
-    console.log(isInAppWebview + "+" + displayMobileList);
     return (
       // @ts-ignore
       <Image
