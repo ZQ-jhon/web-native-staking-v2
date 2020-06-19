@@ -226,7 +226,7 @@ class VotingBanner extends Component<Props, State> {
                   {this.props.displayMobileList ? (
                     <Button
                       type="default"
-                      style={{ width: "100%", lineHeight: "32px" }}
+                      style={{ width: "100%" }}
                       onClick={this.showBuyIotxBtn}
                     >
                       {t("voting.buy_iotx")}
