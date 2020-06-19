@@ -45,12 +45,22 @@ const menuInfoStyleDisabled = {
 };
 
 function renderTransfer(record: IBucket): JSX.Element {
+  if(record.selfStakingBucket){
+    const style = ACTION_ROW_DISABLED;
+    const desc = t("my_stake.status.suffix.not_applicable");
+    return <div {...style}>
+      <span>{t("my_stake.edit.transfer")}</span>
+      {
+        // @ts-ignore
+        <span style={menuInfoStyle}>{desc}</span>
+      }
+    </div>
+  }
   const status = getStatus(
     record.withdrawWaitUntil,
     record.unstakeStartTime,
     record.stakeStartTime
   );
-
   switch (status) {
     case "staking":
       return (
@@ -83,7 +93,7 @@ function renderTransfer(record: IBucket): JSX.Element {
           {
             // @ts-ignore
             <span style={menuInfoStyleDisabled}>
-              {t("my_stake.status.suffix.anytime")}
+              {t("my_stake.status.suffix.not_applicable")}
             </span>
           }
         </div>
