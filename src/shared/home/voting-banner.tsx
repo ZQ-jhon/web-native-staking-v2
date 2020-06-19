@@ -110,6 +110,7 @@ const BannerTitle = (): JSX.Element => {
 };
 type Props = {
   displayMobileList: Boolean;
+  isInOtherApps: Boolean;
   showVotingModal(record: Object | null): void;
 };
 type State = { showBuyIotx: Boolean };
@@ -162,6 +163,7 @@ class VotingBanner extends Component<Props, State> {
   // tslint:disable-next-line:max-func-body-length
   render(): JSX.Element {
     const { items } = votingBannerSetting;
+    const { isInOtherApps } = this.props;
     return (
       // @ts-ignore
       <Image
@@ -190,7 +192,9 @@ class VotingBanner extends Component<Props, State> {
                   marginTop: "16px"
                 }}
               >
-                {t("voting.banner_content")}
+                {isInOtherApps
+                  ? t("voting.banner_content.other")
+                  : t("voting.banner_content")}
               </div>
               <CommonMargin
                 style={{

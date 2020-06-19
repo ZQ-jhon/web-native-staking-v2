@@ -1,4 +1,5 @@
 import Antenna from "iotex-antenna/lib";
+import isWebview from "is-ua-webview";
 import koa from "koa";
 import { noopReducer } from "onefx/lib/iso-react-render/root/root-reducer";
 import { Context } from "onefx/lib/types";
@@ -72,6 +73,9 @@ export function setServerRoutes(server: MyServer): void {
 
 export function checkingAppSource(ctx: koa.Context): void {
   const ua = ctx.header["user-agent"];
+  if (isWebview(ua)) {
+    ctx.setState("base.isInAppWebview", true);
+  }
   if (
     (ua && (ua.includes("IoPayAndroid") || ua.includes("IoPayiOs"))) ||
     ctx.session.app_source === "IoPay"

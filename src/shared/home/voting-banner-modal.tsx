@@ -1,5 +1,7 @@
+import { media960 } from "iotex-react-block-producers/lib/block-producers";
 import React, { PureComponent } from "react";
 import { connect } from "react-redux";
+import { PALM_WIDTH } from "../common/styles/style-media";
 import { VoteNowContainer } from "../staking/vote-now-steps/vote-now-container";
 import { VotingModal } from "./vote-button-modal";
 import { VotingBanner } from "./voting-banner";
@@ -9,6 +11,7 @@ type Props = {
   // tslint:disable-next-line:no-any
   history: any;
   isIoPayMobile?: boolean;
+  isInAppWebview?: boolean;
 };
 
 type State = {
@@ -24,7 +27,10 @@ type State = {
 
 // @ts-ignore
 // tslint:disable-next-line:no-any
-@connect(state => ({ isIoPayMobile: state.base.isIoPayMobile }))
+@connect(state => ({
+  isIoPayMobile: state.base.isIoPayMobile,
+  isInAppWebview: state.base.isInAppWebview
+}))
 class VotingBannerModal extends PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
@@ -32,7 +38,7 @@ class VotingBannerModal extends PureComponent<Props, State> {
       showModal: false,
       currentCandidateName: "",
       shouldDisplayVotingModal: false,
-      shouldDisplayMetaMaskReminder: false,
+      shouldDisplayMetaMaskReminder: falgise,
       userConfirmedMetaMaskReminder: false,
       currentCandidate: null,
       displayMobileList: false
@@ -68,18 +74,20 @@ class VotingBannerModal extends PureComponent<Props, State> {
   };
 
   render(): JSX.Element {
-    const { isMobile, history, isIoPayMobile } = this.props;
+    const { isMobile, history, isIoPayMobile, isInAppWebview } = this.props;
     const showVotingModal =
       isMobile && !isIoPayMobile
         ? () => {
             history.push(isIoPayMobile ? "/vote-native/" : "/vote/");
           }
         : this.showVotingModal;
+    const isInOtherApps = !!(isInAppWebview && !isIoPayMobile);
     return (
       <>
         <VotingBanner
           showVotingModal={showVotingModal}
           displayMobileList={isMobile}
+          isInOtherApps={isInOtherApps}
         />
         <VotingModal
           visible={this.state.shouldDisplayMetaMaskReminder}
