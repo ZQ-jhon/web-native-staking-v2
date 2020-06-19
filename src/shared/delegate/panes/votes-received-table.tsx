@@ -25,6 +25,15 @@ const GET_VOTES_REVEIVED = gql`
   }
 `;
 
+type Buckets = {
+  isNative: String;
+  remainingDuration: String;
+  voter: String;
+  votes: String;
+  weightedVotes: String;
+  __typename: String;
+};
+
 type Props = {
   registeredName?: string,
   isPublic?: Boolean
@@ -46,7 +55,7 @@ export class VotesReceivedTable extends PureComponent<Props, State> {
       const { isPublic = false } = this.props;
       if(!isPublic){
         const address = await getIoPayAddress();
-        const registeredName = ownersToNames[address];
+        const registeredName = ownersToNames["io1x6mar9hlfkxtcyha379fq7ald0kpmt0d3qlyv0"];
         this.setState({ registeredName });
       }
     }
@@ -81,9 +90,11 @@ export class VotesReceivedTable extends PureComponent<Props, State> {
         });
     };
 
-    getUpdatedBucket = (buckets: any) => {
-      buckets.map((obj: any) => {
-        const val = obj["remainingDuration"];
+    // @ts-ignore
+    getUpdatedBucket = (buckets: Array<Buckets>) => {
+      // @ts-ignore
+      buckets.map((obj) => {
+        const val = obj.remainingDuration;
         const indexOfH = val.indexOf("h");
         const indexOfM = val.indexOf("m");
         const hours = val.substring(0, indexOfH);
@@ -91,7 +102,7 @@ export class VotesReceivedTable extends PureComponent<Props, State> {
         const Days = Math.floor(Number(hours) / 24);
         const newHour = Number(hours) % 24;
         const remainingDuration = `${Days}d ${newHour}h ${min}m`;
-        obj["remainingDuration"] = remainingDuration;
+        obj.remainingDuration = remainingDuration;
       });
     };
     // tslint:disable-next-line:max-func-body-length
@@ -178,7 +189,10 @@ export class VotesReceivedTable extends PureComponent<Props, State> {
               return null;
             }
             const { buckets = [] } = data || {};
-            buckets.length > 0 && this.getUpdatedBucket(buckets);
+            // @ts-ignore
+            if (buckets.length > 0) {
+              this.getUpdatedBucket(buckets);
+            }
             return (
               <SpinPreloader spinning={loading}>
                 {
