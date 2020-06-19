@@ -289,13 +289,13 @@ export const CandidateForm = connect()(
                 {/*
                 // @ts-ignore */}
                 <Form.Item
-                  label={t("profile.banner_url")}
+                  label={t("profile.banner_image")}
                   name={"bannerUrl"}
                   initialValue={bannerUrl}
                   rules={[
                     {
                       required: true,
-                      message: t("profile.banner_url.required")
+                      message: t("profile.banner_image.required")
                     }
                   ]}
                 >
