@@ -79,8 +79,6 @@ export function checkingAppSource(ctx: koa.Context): void {
   }
   if (isMobile(ua).any) {
     ctx.setState("base.isMobile", true);
-    // tslint:disable-next-line:no-console
-    console.log(true);
   }
   if (
     (ua && (ua.includes("IoPayAndroid") || ua.includes("IoPayiOs"))) ||

@@ -73,17 +73,11 @@ class VotingBannerModal extends PureComponent<Props, State> {
   };
 
   render(): JSX.Element {
-    const { isMobile, history, isIoPayMobile, isInAppWebview } = this.props;
-    const showVotingModal =
-      isMobile && !isIoPayMobile
-        ? () => {
-            history.push(isIoPayMobile ? "/vote-native/" : "/vote/");
-          }
-        : this.showVotingModal;
+    const { isMobile, isInAppWebview } = this.props;
     return (
       <>
         <VotingBanner
-          showVotingModal={showVotingModal}
+          showVotingModal={this.showVotingModal}
           displayMobileList={!!isMobile}
           isInAppWebview={!!isInAppWebview}
         />
