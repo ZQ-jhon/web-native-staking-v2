@@ -110,6 +110,7 @@ const BannerTitle = (): JSX.Element => {
 };
 type Props = {
   displayMobileList: Boolean;
+  isInAppWebview: Boolean;
   showVotingModal(record: Object | null): void;
 };
 type State = { showBuyIotx: Boolean };
@@ -162,6 +163,7 @@ class VotingBanner extends Component<Props, State> {
   // tslint:disable-next-line:max-func-body-length
   render(): JSX.Element {
     const { items } = votingBannerSetting;
+    const { isInAppWebview, displayMobileList } = this.props;
     return (
       // @ts-ignore
       <Image
@@ -190,7 +192,15 @@ class VotingBanner extends Component<Props, State> {
                   marginTop: "16px"
                 }}
               >
-                {t("voting.banner_content")}
+                {displayMobileList && !isInAppWebview ? (
+                  <span
+                    dangerouslySetInnerHTML={{
+                      __html: t("voting.banner_content.other_browser")
+                    }}
+                  />
+                ) : (
+                  t("voting.banner_content")
+                )}
               </div>
               <CommonMargin
                 style={{
@@ -216,7 +226,7 @@ class VotingBanner extends Component<Props, State> {
                   {this.props.displayMobileList ? (
                     <Button
                       type="default"
-                      style={{ width: "100%", lineHeight: "32px" }}
+                      style={{ width: "100%" }}
                       onClick={this.showBuyIotxBtn}
                     >
                       {t("voting.buy_iotx")}

@@ -118,6 +118,7 @@ voting.buy_iotx: '购买 IOTX'
 voting.metamask-reminder.content: '开始投票前请确保你已经解锁并连接了MetaMask。<a target="_blank" href="https://support.iotex.io/hc/en-us/articles/360020614094">了解更多信息</a>'
 button.understand: 我明白，继续。
 button.cancel: 取消
+button.continue: Continue
 candidates.vote_now: 现在投票
 candidates.election.ELECTED: 当选
 candidates.election.NOT_ELECTED: 未当选

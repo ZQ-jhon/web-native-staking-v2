@@ -140,8 +140,11 @@ voting.buy_iotx: 'Buy IOTX'
 voting.metamask-reminder.content: 'To proceed with the voting process, please make sure you have unlocked your MetaMask and linked to IoTex. <a target="_blank" href="https://support.iotex.io/hc/en-us/articles/360020614094">Learn more.</a> '
 voting.banner_title: Stake IOTX to Help Secure the IoTeX Network
 voting.banner_content: The IoTeX Network is maintained by 55 Decentralized Delegates. By voting for a Delegate, you can participate in network governance and earn IOTX rewards!
+voting.banner_content.other_browser: 'update the text to: "The native IoTeX Network is maintained by 50+ decentralized delegates. By voting for a Delegate, you can participate in network governance and earn IOTX rewards! <a href="https://community.iotex.io/t/how-to-stake-on-iotex-mainnet-ga/1245?from=from_parent_docs">How to stake and vote -></a>'
+voting.banner_content.modal: 'With the major release of Mainnet GA “Machina” on June 1st, IoTeX is now a fully native blockchain. Instead of IOTX-E (on Ethereum) and Metamask, voters will use native IOTX and ioPay, the official IoTeX wallet to stake and vote on the IoTeX network.</br></br> <span style="margin-left:10px">- Check stake instructions <a href="https://community.iotex.io/t/how-to-stake-on-iotex-mainnet-ga/1245">here</a></span><br/> <span style="margin-left:10px">- Download ioPay <a href="https://iopay.iotex.io/">here</a></span>'
 button.understand: 'I understand. Continue.'
 button.cancel: Cancel
+button.continue: Continue
 candidates.vote_now: 'Vote Now!'
 candidates.election.ELECTED: Elected
 candidates.election.NOT_ELECTED: 'Not Elected'

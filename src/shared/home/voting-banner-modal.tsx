@@ -1,5 +1,7 @@
+import { t } from "onefx/lib/iso-i18n";
 import React, { PureComponent } from "react";
 import { connect } from "react-redux";
+import { CommonModal } from "../common/common-modal";
 import { VoteNowContainer } from "../staking/vote-now-steps/vote-now-container";
 import { VotingModal } from "./vote-button-modal";
 import { VotingBanner } from "./voting-banner";
@@ -9,6 +11,7 @@ type Props = {
   // tslint:disable-next-line:no-any
   history: any;
   isIoPayMobile?: boolean;
+  isInAppWebview?: boolean;
 };
 
 type State = {
@@ -20,11 +23,18 @@ type State = {
   displayMobileList: boolean;
   shouldDisplayMetaMaskReminder: boolean;
   userConfirmedMetaMaskReminder: boolean;
+  showHelpModal: boolean;
 };
 
 // @ts-ignore
-// tslint:disable-next-line:no-any
-@connect(state => ({ isIoPayMobile: state.base.isIoPayMobile }))
+@connect(state => ({
+  // @ts-ignore
+  isIoPayMobile: state.base.isIoPayMobile,
+  // @ts-ignore
+  isInAppWebview: state.base.isInAppWebview,
+  // @ts-ignore
+  isMobile: state.base.isMobile
+}))
 class VotingBannerModal extends PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
@@ -35,7 +45,8 @@ class VotingBannerModal extends PureComponent<Props, State> {
       shouldDisplayMetaMaskReminder: false,
       userConfirmedMetaMaskReminder: false,
       currentCandidate: null,
-      displayMobileList: false
+      displayMobileList: false,
+      showHelpModal: !!(this.props.isInAppWebview && !this.props.isIoPayMobile)
     };
   }
 
@@ -68,18 +79,13 @@ class VotingBannerModal extends PureComponent<Props, State> {
   };
 
   render(): JSX.Element {
-    const { isMobile, history, isIoPayMobile } = this.props;
-    const showVotingModal =
-      isMobile && !isIoPayMobile
-        ? () => {
-            history.push(isIoPayMobile ? "/vote-native/" : "/vote/");
-          }
-        : this.showVotingModal;
+    const { isMobile, isInAppWebview } = this.props;
     return (
       <>
         <VotingBanner
-          showVotingModal={showVotingModal}
-          displayMobileList={isMobile}
+          showVotingModal={this.showVotingModal}
+          displayMobileList={!!isMobile}
+          isInAppWebview={!!isInAppWebview}
         />
         <VotingModal
           visible={this.state.shouldDisplayMetaMaskReminder}
@@ -101,6 +107,24 @@ class VotingBannerModal extends PureComponent<Props, State> {
             }
           />
         }
+        <CommonModal
+          title={null}
+          okText={t("button.continue")}
+          cancelText={null}
+          visible={this.state.showHelpModal}
+          onOk={() => {
+            this.setState({ showHelpModal: false });
+          }}
+          onCancel={() => {
+            this.setState({ showHelpModal: false });
+          }}
+        >
+          <p
+            dangerouslySetInnerHTML={{
+              __html: t("voting.banner_content.modal")
+            }}
+          />
+        </CommonModal>
       </>
     );
   }
