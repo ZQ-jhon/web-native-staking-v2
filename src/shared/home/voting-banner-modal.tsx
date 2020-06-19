@@ -38,7 +38,7 @@ class VotingBannerModal extends PureComponent<Props, State> {
       showModal: false,
       currentCandidateName: "",
       shouldDisplayVotingModal: false,
-      shouldDisplayMetaMaskReminder: falgise,
+      shouldDisplayMetaMaskReminder: false,
       userConfirmedMetaMaskReminder: false,
       currentCandidate: null,
       displayMobileList: false
