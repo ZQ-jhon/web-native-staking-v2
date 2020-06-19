@@ -80,6 +80,20 @@ export class VotesReceivedTable extends PureComponent<Props, State> {
           });
         });
     };
+
+    getUpdatedBucket = (buckets: any) => {
+      buckets.map((obj: any) => {
+        const val = obj["remainingDuration"];
+        const indexOfH = val.indexOf("h");
+        const indexOfM = val.indexOf("m");
+        const hours = val.substring(0, indexOfH);
+        const min = val.substring(indexOfH + 1, indexOfM);
+        const Days = Math.floor(Number(hours) / 24);
+        const newHour = Number(hours) % 24;
+        const remainingDuration = `${Days}d ${newHour}h ${min}m`;
+        obj["remainingDuration"] = remainingDuration;
+      });
+    };
     // tslint:disable-next-line:max-func-body-length
     render(): JSX.Element {
       let { registeredName } = this.props;
@@ -164,6 +178,7 @@ export class VotesReceivedTable extends PureComponent<Props, State> {
               return null;
             }
             const { buckets = [] } = data || {};
+            buckets.length > 0 && this.getUpdatedBucket(buckets);
             return (
               <SpinPreloader spinning={loading}>
                 {
