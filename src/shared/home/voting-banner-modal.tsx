@@ -27,10 +27,12 @@ type State = {
 };
 
 // @ts-ignore
-// tslint:disable-next-line:no-any
 @connect(state => ({
+  // @ts-ignore
   isIoPayMobile: state.base.isIoPayMobile,
+  // @ts-ignore
   isInAppWebview: state.base.isInAppWebview,
+  // @ts-ignore
   isMobile: state.base.isMobile
 }))
 class VotingBannerModal extends PureComponent<Props, State> {
