@@ -273,47 +273,49 @@ export const CandidateForm = connect()(
                   ]}
                 >
                   <Input hidden={true} />
+                  <Upload
+                    beforeUpload={file => this.beforeUpload(file, "logo")}
+                  >
+                    {logo ? (
+                      <ImageIcon url={logo} width={"auto"} height={"35px"} />
+                    ) : (
+                      <Button>
+                        <UploadOutlined /> Click to Upload
+                      </Button>
+                    )}
+                  </Upload>
                 </Form.Item>
-                <Upload beforeUpload={file => this.beforeUpload(file, "logo")}>
-                  {logo ? (
-                    <ImageIcon url={logo} width={"auto"} height={"35px"} />
-                  ) : (
-                    <Button>
-                      <UploadOutlined /> Click to Upload
-                    </Button>
-                  )}
-                </Upload>
 
                 {/*
                 // @ts-ignore */}
                 <Form.Item
-                  label={t("profile.banner_url")}
+                  label={t("profile.banner_image")}
                   name={"bannerUrl"}
                   initialValue={bannerUrl}
                   rules={[
                     {
                       required: true,
-                      message: t("profile.banner_url.required")
+                      message: t("profile.banner_image.required")
                     }
                   ]}
                 >
                   <Input hidden={true} />
+                  <Upload
+                    beforeUpload={file => this.beforeUpload(file, "bannerUrl")}
+                  >
+                    {bannerUrl ? (
+                      <img
+                        alt="logo"
+                        style={{ width: "50%", cursor: "pointer" }}
+                        src={bannerUrl}
+                      />
+                    ) : (
+                      <Button>
+                        <UploadOutlined /> Click to Upload
+                      </Button>
+                    )}
+                  </Upload>
                 </Form.Item>
-                <Upload
-                  beforeUpload={file => this.beforeUpload(file, "bannerUrl")}
-                >
-                  {bannerUrl ? (
-                    <img
-                      alt="logo"
-                      style={{ width: "50%", cursor: "pointer" }}
-                      src={bannerUrl}
-                    />
-                  ) : (
-                    <Button>
-                      <UploadOutlined /> Click to Upload
-                    </Button>
-                  )}
-                </Upload>
 
                 {/*
                 // @ts-ignore */}
