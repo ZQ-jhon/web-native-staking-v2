@@ -1,7 +1,5 @@
-import { media960 } from "iotex-react-block-producers/lib/block-producers";
 import React, { PureComponent } from "react";
 import { connect } from "react-redux";
-import { PALM_WIDTH } from "../common/styles/style-media";
 import { VoteNowContainer } from "../staking/vote-now-steps/vote-now-container";
 import { VotingModal } from "./vote-button-modal";
 import { VotingBanner } from "./voting-banner";
@@ -29,7 +27,8 @@ type State = {
 // tslint:disable-next-line:no-any
 @connect(state => ({
   isIoPayMobile: state.base.isIoPayMobile,
-  isInAppWebview: state.base.isInAppWebview
+  isInAppWebview: state.base.isInAppWebview,
+  isMobile: state.base.isMobile
 }))
 class VotingBannerModal extends PureComponent<Props, State> {
   constructor(props: Props) {
@@ -81,13 +80,12 @@ class VotingBannerModal extends PureComponent<Props, State> {
             history.push(isIoPayMobile ? "/vote-native/" : "/vote/");
           }
         : this.showVotingModal;
-    const isInOtherApps = !!(isInAppWebview && !isIoPayMobile);
     return (
       <>
         <VotingBanner
           showVotingModal={showVotingModal}
-          displayMobileList={isMobile}
-          isInOtherApps={isInOtherApps}
+          displayMobileList={!!isMobile}
+          isInAppWebview={!!isInAppWebview}
         />
         <VotingModal
           visible={this.state.shouldDisplayMetaMaskReminder}
