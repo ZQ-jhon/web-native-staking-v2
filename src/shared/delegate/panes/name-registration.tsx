@@ -42,6 +42,7 @@ type State = {
   isUpdating: boolean;
   candName?: string;
   isFetchingUpdatingInfo: boolean;
+  disabled: boolean;
 };
 
 const NameRegistrationContainer = IopayRequired(
@@ -65,7 +66,8 @@ const NameRegistrationContainer = IopayRequired(
         this.state = {
           candName,
           isUpdating: Boolean(candName),
-          isFetchingUpdatingInfo: true
+          isFetchingUpdatingInfo: true,
+          disabled: false
         };
       }
 
@@ -147,6 +149,19 @@ const NameRegistrationContainer = IopayRequired(
         }
       };
 
+      handleChange = () => {
+        const form = this.updateFormRef.current;
+        this.setState({ disabled: false });
+        const errors = form && form.getFieldsError();
+        if (!!errors) {
+          errors.map(err => {
+            if (!!err.errors.length) {
+              this.setState({ disabled: true });
+            }
+          });
+        }
+      };
+
       async componentDidMount(): Promise<void> {
         const { isUpdating, isFetchingUpdatingInfo, candName } = this.state;
         if (isUpdating && isFetchingUpdatingInfo && candName) {
@@ -181,7 +196,11 @@ const NameRegistrationContainer = IopayRequired(
         const { candName } = this.state;
         return (
           // @ts-ignore
-          <Form onSubmit={this.onUpdate} ref={this.updateFormRef}>
+          <Form
+            onSubmit={this.onUpdate}
+            onFieldsChange={this.handleChange}
+            ref={this.updateFormRef}
+          >
             <h1>{t("profile.register_name")}</h1>
             <CommonMargin />
             {smartContractCalled && (
@@ -273,6 +292,7 @@ const NameRegistrationContainer = IopayRequired(
                   type={"primary"}
                   htmlType="submit"
                   onClick={this.onUpdate}
+                  disabled={this.state.disabled}
                 >
                   {t("name_registration.register")}
                 </Button>
