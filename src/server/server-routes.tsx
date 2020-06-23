@@ -64,7 +64,7 @@ export function setServerRoutes(server: MyServer): void {
       ctx.body = await apolloSSR(ctx, {
         VDom: <AppContainer />,
         reducer: noopReducer,
-        clientScript: "main.js"
+        clientScript: "v2-main.js"
       });
     }
   );
@@ -76,7 +76,7 @@ export function setServerRoutes(server: MyServer): void {
     ctx.body = await apolloSSR(ctx, {
       VDom: <AppContainer />,
       reducer: noopReducer,
-      clientScript: "main.js"
+      clientScript: "v2-main.js"
     });
   });
 }
