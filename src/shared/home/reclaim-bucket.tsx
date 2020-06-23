@@ -1,10 +1,15 @@
 import { Input } from "antd";
+import BigNumber from "bignumber.js";
 import Button from "antd/lib/button";
 import Form, { FormInstance } from "antd/lib/form";
 import { t } from "onefx/lib/iso-i18n";
 import React, { PureComponent, RefObject } from "react";
 import { connect } from "react-redux";
 import { CommonModal } from "../common/common-modal";
+import { toIoTeXAddress } from "../Wallet/address";
+import { CopyOutlined } from "@ant-design/icons";
+
+const regex = /^([0-9]+)I authorize 0x[0-9a-fA-F]{40} to claim in (0x[0-9A-Fa-f]{40})$/;
 
 type IJSONMESSAGE = {
   bucket: Number;
@@ -155,7 +160,9 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
               <Input.TextArea
                 rows={4}
                 value={JSON.stringify(this.state.jsonMessage)}
-              />
+              >
+                <CopyOutlined />
+              </Input.TextArea>
               <p>{t("reclaim.copyMessaage")}</p>
             </Form.Item>
           )}
@@ -190,3 +197,14 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
 }
 
 export const ReclaimTools = connect()(ReclaimInnerTools);
+
+export function getNonce(msg: string, address?: string): BigNumber {
+  const matches = msg.match(regex);
+  if (!matches || matches.length !== 3) {
+    throw new Error(t("account.error.invalidAuthorizedMessage"));
+  }
+  if (address && toIoTeXAddress(matches[2]) !== address) {
+    throw new Error(`invalid token address ${matches[2]}`);
+  }
+  return new BigNumber(matches[1], 10);
+}
