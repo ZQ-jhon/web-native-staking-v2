@@ -5,7 +5,7 @@ module.exports = {
   project: "web-native-staking-v2",
   server: {
     proxy: true,
-    routePrefix: "/v2",
+    routePrefix: "",
     port: process.env.PORT || 5004,
     staticDir: "./dist",
     delayInitMiddleware: false,
@@ -13,11 +13,11 @@ module.exports = {
       secrets: ["insecure plain text", "insecure secret here"]
     },
     noSecurityHeadersRoutes: {
-      "/v2/api-gateway/": true,
+      "/api-gateway/": true,
       "/api/": true
     },
     noCsrfRoutes: {
-      "/v2/api-gateway/": true,
+      "/api-gateway/": true,
       "/api/": true
     }
   },

@@ -22,7 +22,6 @@ export const TopBarMenu = ({ hideMobileMenu, faucetEnable }: any) => {
   const profileStyle = { minWitdh: "30px" };
   const aStyle =
     String(pathname) === "/" ||
-    String(pathname) === "/v1" ||
     String(pathname) === "/my-votes" ||
     String(pathname) === "/my-referrals"
       ? actived
@@ -31,7 +30,7 @@ export const TopBarMenu = ({ hideMobileMenu, faucetEnable }: any) => {
   const inactiveStyle = { ...inactived, ...profileStyle };
   const a1Style =
     String(pathname).startsWith("/profile/") ||
-    String(pathname).startsWith("/v2/profile/")
+    String(pathname).startsWith("/profile/")
       ? activeStyle
       : inactiveStyle;
   const a3Style = String(pathname).startsWith("/polls/")
@@ -41,10 +40,10 @@ export const TopBarMenu = ({ hideMobileMenu, faucetEnable }: any) => {
     ? activeStyle
     : inactiveStyle;
   const menu = [
-    <A key={4} href="/v2/" style={aStyle} onClick={hideMobileMenu}>
+    <A key={4} href="/" style={aStyle} onClick={hideMobileMenu}>
       {t("topbar.home")}
     </A>,
-    <A key={1} href="/v2/profile/" style={a1Style} onClick={hideMobileMenu}>
+    <A key={1} href="/profile/" style={a1Style} onClick={hideMobileMenu}>
       {t("topbar.i_am_a_delegate")}
     </A>,
     <A key={2} href="/polls/" style={a3Style}>

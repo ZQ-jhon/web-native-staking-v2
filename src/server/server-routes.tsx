@@ -31,6 +31,15 @@ export function setServerRoutes(server: MyServer): void {
     ctx.body = "OK";
   });
 
+  server.get("v2-home-redirect", "/v2", (ctx: koa.Context) => {
+    ctx.redirect("/");
+  });
+
+  server.get("v2-redirect", "/v2*", (ctx: koa.Context) => {
+    const target = ctx.path.replace("/v2", "");
+    ctx.redirect(target);
+  });
+
   setApiGateway(server);
 
   setIdentityProviderRoutes(server);
@@ -60,7 +69,7 @@ export function setServerRoutes(server: MyServer): void {
     }
   );
 
-  server.get("SPA", /^(?!\/?v2\/api-gateway\/).+$/, async (ctx: Context) => {
+  server.get("SPA", /^(?!\/?api-gateway\/).+$/, async (ctx: Context) => {
     ctx.setState("base.next", ctx.query.next);
     await setAllCandidates(ctx);
     checkingAppSource(ctx);
