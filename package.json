@@ -83,7 +83,7 @@
     "husky": "4.2.5",
     "nyc": "15.1.0",
     "plugin-error": "1.0.1",
-    "prettier": "1.19.1",
+    "prettier": "2.0.5",
     "pretty-quick": "2.0.1",
     "source-map-loader": "0.2.4",
     "sw-precache-webpack-plugin": "0.11.5",
