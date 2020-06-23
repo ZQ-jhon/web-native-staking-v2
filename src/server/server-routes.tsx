@@ -31,6 +31,8 @@ export function setServerRoutes(server: MyServer): void {
     ctx.body = "OK";
   });
 
+  setApiGateway(server);
+
   server.get("v2-home-redirect", "/v2", (ctx: koa.Context) => {
     ctx.redirect("/");
   });
@@ -39,8 +41,6 @@ export function setServerRoutes(server: MyServer): void {
     const target = ctx.path.replace("/v2", "");
     ctx.redirect(target);
   });
-
-  setApiGateway(server);
 
   setIdentityProviderRoutes(server);
 

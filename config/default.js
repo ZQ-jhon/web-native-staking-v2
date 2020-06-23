@@ -13,11 +13,11 @@ module.exports = {
       secrets: ["insecure plain text", "insecure secret here"]
     },
     noSecurityHeadersRoutes: {
-      "/api-gateway/": true,
+      "/v2/api-gateway/": true,
       "/api/": true
     },
     noCsrfRoutes: {
-      "/api-gateway/": true,
+      "/v2/api-gateway/": true,
       "/api/": true
     }
   },
