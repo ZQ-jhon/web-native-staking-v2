@@ -81,5 +81,5 @@ module.exports = {
     ]
   },
   apiGatewayUrl:
-    process.env.API_GATEWAY_URL || "http://localhost:5004/nsv2/api-gateway/"
+    process.env.API_GATEWAY_URL || "http://localhost:5004/v2/api-gateway/"
 };

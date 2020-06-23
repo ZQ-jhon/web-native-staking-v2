@@ -30,7 +30,7 @@ export async function apolloSSR(
   ctx: Context,
   { VDom, reducer, clientScript }: Opts
 ): Promise<string> {
-  ctx.setState("base.apiGatewayUrl", `${ctx.origin}/v2/api-gateway/`);
+  ctx.setState("base.apiGatewayUrl", config.get("apiGatewayUrl"));
   const httpLink = createHttpLink({
     uri: `http://localhost:${config.get(
       "server.port"
