@@ -209,6 +209,7 @@ my_stake.restake.title: 'Restake My Stake (ID ${bucketIndex})'
 my_stake.revote.title: 'Switch My Delegate (ID ${bucketIndex})'
 my_stake.transfer.title: 'Reassign My Bucket (ID ${bucketIndex})'
 my_stake.stakedAmount.required: 'Please enter the amount.'
+my_stake.stakedAmount.min: 'Please enter the amount greater or equal ${min}'
 my_stake.stakedAmount: Amount
 my_stake.bucketId: 'Bucket ID'
 my_stake.bucketId.required: 'Please select the Bucket'
@@ -438,6 +439,12 @@ profile.rewards.confirm.content: 'Please check carefully or download the list be
 profile.rewards.listtips: '*This tool only processes transactions with over ${tipAmount} IOTX'
 profile.rewards.send: '${sendAmount} IOTX sent ! Check transaction hash to view status.'
 profile.calculate_rewards: 'Calculate Rewards'
+profile.op-reward.addresses: 'Op/Reward Addresses'
+profile.op-address.unset_warning: 'Please set operator before running your node.'
+profile.op-address.set_warning: 'Please note that you need to update your operator address in your node config after a new operator address is set.'
+profile.reward-address.unset_warning: 'Please set reward addresses before running your node.'
+profile.reward-address.set_warning: 'Please note that you need to update your reward address in your node config after a new reward address is set.'
+profile.update-candidate.other-fields: 'You can update staked duration, amount and auto stake at <span style="color: #0b8de3;"><a href="${href}">${text}</a></span>.'
 auth/sign_in.title: Become an IoTeX Delegate
 auth/button_submit: Login or Sign Up with IoPay
 auth/failed_to_login: Failed to login. Please refresh the page and login again.
