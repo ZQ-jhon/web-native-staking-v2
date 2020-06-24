@@ -2,7 +2,7 @@
 // $FlowFixMe
 import Menu from "antd/lib/menu";
 import { t } from "onefx/lib/iso-i18n";
-import React from "react";
+import React, { CSSProperties } from "react";
 import { getStatus, IBucket } from "../../../server/gateway/staking";
 import { colors } from "../../common/styles/style-color2";
 import { DEFAULT_STAKING_DURATION_SECOND } from "../../common/token-utils";
@@ -20,41 +20,40 @@ const ACTION_ROW_STYLE = {
     fontSize: "12px",
     height: "30px",
     display: "flex",
-    justifyContent: "space-between"
-  }
+    justifyContent: "space-between",
+  },
 };
 const ACTION_ROW_DISABLED = {
   style: {
     ...ACTION_ROW_STYLE.style,
     color: colors.black65,
-    cursor: "not-allowed"
+    cursor: "not-allowed",
   },
   // tslint:disable-next-line:no-any
-  onClick: (e: any) => e.stopPropagation()
+  onClick: (e: any) => e.stopPropagation(),
 };
-const menuInfoStyle = {
+const menuInfoStyle: CSSProperties = {
   color: colors.black80,
   width: "100px",
   marginLeft: "20px",
   display: "inline-block",
-  textAlign: "left"
+  textAlign: "left",
 };
-const menuInfoStyleDisabled = {
+const menuInfoStyleDisabled: CSSProperties = {
   ...menuInfoStyle,
-  color: colors.black65
+  color: colors.black65,
 };
 
 function renderTransfer(record: IBucket): JSX.Element {
-  if(record.selfStakingBucket){
+  if (record.selfStakingBucket) {
     const style = ACTION_ROW_DISABLED;
     const desc = t("my_stake.status.suffix.not_applicable");
-    return <div {...style}>
-      <span>{t("my_stake.edit.transfer")}</span>
-      {
-        // @ts-ignore
-        <span style={menuInfoStyle}>{desc}</span>
-      }
-    </div>
+    return (
+      <div {...style}>
+        <span>{t("my_stake.edit.transfer")}</span>
+        {<span style={menuInfoStyle}>{desc}</span>}
+      </div>
+    );
   }
   const status = getStatus(
     record.withdrawWaitUntil,
@@ -67,7 +66,6 @@ function renderTransfer(record: IBucket): JSX.Element {
         <div {...ACTION_ROW_STYLE}>
           <span>{t("my_stake.edit.transfer")}</span>
           {
-            // @ts-ignore
             <span style={menuInfoStyle}>
               {t("my_stake.status.suffix.anytime")}
             </span>
@@ -79,7 +77,6 @@ function renderTransfer(record: IBucket): JSX.Element {
         <div {...ACTION_ROW_DISABLED}>
           <span>{t("my_stake.edit.transfer")}</span>
           {
-            // @ts-ignore
             <span style={menuInfoStyleDisabled}>
               {t("my_stake.status.suffix.not_applicable")}
             </span>
@@ -91,7 +88,6 @@ function renderTransfer(record: IBucket): JSX.Element {
         <div {...ACTION_ROW_DISABLED}>
           <span>{t("my_stake.edit.transfer")}</span>
           {
-            // @ts-ignore
             <span style={menuInfoStyleDisabled}>
               {t("my_stake.status.suffix.not_applicable")}
             </span>
@@ -116,7 +112,6 @@ function renderRevote(record: IBucket): JSX.Element {
         <div {...ACTION_ROW_STYLE}>
           <span>{t("my_stake.edit.revote")}</span>
           {
-            // @ts-ignore
             <span style={menuInfoStyle}>
               {t("my_stake.status.suffix.anytime")}
             </span>
@@ -128,7 +123,6 @@ function renderRevote(record: IBucket): JSX.Element {
         <div {...ACTION_ROW_DISABLED}>
           <span>{t("my_stake.edit.revote")}</span>
           {
-            // @ts-ignore
             <span style={menuInfoStyleDisabled}>
               {t("my_stake.status.suffix.not_applicable")}
             </span>
@@ -140,7 +134,6 @@ function renderRevote(record: IBucket): JSX.Element {
         <div {...ACTION_ROW_DISABLED}>
           <span>{t("my_stake.edit.revote")}</span>
           {
-            // @ts-ignore
             <span style={menuInfoStyleDisabled}>
               {t("my_stake.status.suffix.anytime")}
             </span>
@@ -162,10 +155,7 @@ function renderRestake(record: IBucket): JSX.Element {
   return ["staking", "unstaking", "withdrawable"].includes(status) ? (
     <div {...ACTION_ROW_STYLE}>
       <span>{t("my_stake.edit.restake")}</span>
-      {
-        // @ts-ignore
-        <span style={menuInfoStyle}>{t("my_stake.status.suffix.anytime")}</span>
-      }
+      {<span style={menuInfoStyle}>{t("my_stake.status.suffix.anytime")}</span>}
     </div>
   ) : (
     <></>
@@ -178,7 +168,6 @@ function renderUnstake(record: IBucket): JSX.Element {
       <div {...ACTION_ROW_STYLE}>
         <span>{t("my_stake.edit.unstake")}</span>
         {
-          // @ts-ignore
           <span style={menuInfoStyle}>
             {t("my_stake.status.suffix.anytime")}
           </span>
@@ -219,7 +208,6 @@ function renderUnstake(record: IBucket): JSX.Element {
         <div {...(disabled ? ACTION_ROW_DISABLED : ACTION_ROW_STYLE)}>
           <span>{t("my_stake.edit.unstake")}</span>
           {
-            // @ts-ignore
             // tslint:disable-next-line:use-simple-attributes
             <span style={disabled ? menuInfoStyleDisabled : menuInfoStyle}>
               {menuInfo}
@@ -232,7 +220,6 @@ function renderUnstake(record: IBucket): JSX.Element {
         <div {...ACTION_ROW_DISABLED}>
           <span>{t("my_stake.edit.unstake")}</span>
           {
-            // @ts-ignore
             <span style={menuInfoStyleDisabled}>
               {t("my_stake.status.suffix.not_applicable")}
             </span>
@@ -244,7 +231,6 @@ function renderUnstake(record: IBucket): JSX.Element {
         <div {...ACTION_ROW_DISABLED}>
           <span>{t("my_stake.edit.unstake")}</span>
           {
-            // @ts-ignore
             <span style={menuInfoStyleDisabled}>
               {t("my_stake.status.suffix.not_applicable")}
             </span>
@@ -279,7 +265,6 @@ function renderWithdraw(record: IBucket): JSX.Element {
         <div {...ACTION_ROW_DISABLED}>
           <span>{t("my_stake.edit.withdraw")}</span>
           {
-            // @ts-ignore
             <span style={menuInfoStyleDisabled}>
               {t("my_stake.status.suffix.not_applicable")}
             </span>
@@ -291,7 +276,6 @@ function renderWithdraw(record: IBucket): JSX.Element {
         <div {...ACTION_ROW_DISABLED}>
           <span>{t("my_stake.edit.withdraw")}</span>
           {
-            // @ts-ignore
             <span style={menuInfoStyleDisabled}>
               {t("my_stake.status.suffix.from", { time })}
             </span>
@@ -303,7 +287,6 @@ function renderWithdraw(record: IBucket): JSX.Element {
         <div {...ACTION_ROW_STYLE}>
           <span>{t("my_stake.edit.withdraw")}</span>
           {
-            // @ts-ignore
             <span style={menuInfoStyle}>
               {t("my_stake.status.suffix.anytime")}
             </span>
@@ -320,7 +303,6 @@ function renderAddStaking(disabled: boolean): JSX.Element {
     <div {...(disabled ? ACTION_ROW_DISABLED : ACTION_ROW_STYLE)}>
       <span>{t("my_stake.edit.add_staking")}</span>
       {
-        // @ts-ignore
         <span style={menuInfoStyle}>
           {t("my_stake.status.suffix.autostake_only")}
         </span>
