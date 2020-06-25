@@ -312,6 +312,7 @@ voting.vote.existing.bucket: 'Vote with existing bucket'
 name_registration.register: Submit
 name_registration.cancel: Cancel
 name_registration.edit: Edit
+name_registration.update: Update
 name_regsitration.name_s: 'Name for Voting'
 name_regsitration.name: 'Name for Voting (lowercase or digits, max length: 12)'
 name_regsitration.name.required: 'Please enter a valid name.'

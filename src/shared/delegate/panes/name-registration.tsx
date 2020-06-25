@@ -3,8 +3,8 @@
 // $FlowFixMe
 import Alert from "antd/lib/alert";
 import Button from "antd/lib/button";
-import { FormInstance } from "antd/lib/form";
 import Form from "antd/lib/form";
+import { FormInstance } from "antd/lib/form";
 import Input from "antd/lib/input";
 import InputNumber from "antd/lib/input-number";
 import notification from "antd/lib/notification";
@@ -16,13 +16,13 @@ import {
   CandidateRegister,
   CandidateUpdate,
 } from "iotex-antenna/lib/action/types";
-import { assetURL } from "onefx/lib/asset-url";
 import { t } from "onefx/lib/iso-i18n";
 import React, { FormEvent, PureComponent, RefObject } from "react";
 import { connect } from "react-redux";
 import { getStaking } from "../../../server/gateway/staking";
 import { ownersToNames } from "../../common/apollo-client";
 import { CommonMargin } from "../../common/common-margin";
+import { formItemLayout } from "../../common/form-item-layout";
 import { getAntenna } from "../../common/get-antenna";
 import { IopayRequired } from "../../common/iopay-required";
 import { DEFAULT_STAKING_GAS_LIMIT } from "../../common/token-utils";
@@ -74,7 +74,7 @@ const NameRegistrationContainer = IopayRequired(
           candName,
           isUpdating: Boolean(candName),
           isFetchingUpdatingInfo: true,
-          disabled: false,
+          disabled: true,
         };
       }
 
@@ -157,7 +157,10 @@ const NameRegistrationContainer = IopayRequired(
       };
 
       handleChange = () => {
-        const form = this.updateFormRef.current;
+        const { isUpdating } = this.state;
+        const form = isUpdating
+          ? this.updateFormRef.current
+          : this.registerFormRef.current;
         this.setState({ disabled: false });
         const errors = form && form.getFieldsError();
         if (!!errors) {
@@ -225,7 +228,13 @@ const NameRegistrationContainer = IopayRequired(
               {/*
                 // @ts-ignore */}
               <Form.Item
-                label={t("name_regsitration.name")}
+                {...formItemLayout}
+                label={
+                  <label style={{ whiteSpace: "break-spaces" }}>
+                    {t("name_regsitration.name")}
+                  </label>
+                }
+                labelAlign={"left"}
                 name={"name"}
                 initialValue={candName}
                 rules={[
@@ -243,7 +252,9 @@ const NameRegistrationContainer = IopayRequired(
               {/*
                 // @ts-ignore */}
               <Form.Item
+                {...formItemLayout}
                 label={t("name_regsitration.owner")}
+                labelAlign={"left"}
                 name={"ownerAddress"}
                 initialValue={getAntenna().iotx.accounts[0].address}
                 rules={[
@@ -257,7 +268,10 @@ const NameRegistrationContainer = IopayRequired(
               {/*
                 // @ts-ignore */}
               <Form.Item
+                {...formItemLayout}
+                style={{ marginBottom: "3px" }}
                 label={t("name_regsitration.operator_pub_key")}
+                labelAlign={"left"}
                 name={"operatorAddress"}
                 rules={[
                   {
@@ -272,6 +286,10 @@ const NameRegistrationContainer = IopayRequired(
                 ]}
               >
                 <Input />
+              </Form.Item>
+              {/*
+                // @ts-ignore */}
+              <Form.Item {...formItemLayout} label={<span />}>
                 <Alert
                   message={t("profile.op-address.set_warning")}
                   type="warning"
@@ -282,6 +300,9 @@ const NameRegistrationContainer = IopayRequired(
               {/*
                 // @ts-ignore */}
               <Form.Item
+                {...formItemLayout}
+                style={{ marginBottom: "3px" }}
+                labelAlign={"left"}
                 label={t("name_regsitration.reward_pub_key")}
                 name={"rewardAddress"}
                 rules={[
@@ -297,6 +318,10 @@ const NameRegistrationContainer = IopayRequired(
                 ]}
               >
                 <Input />
+              </Form.Item>
+              {/*
+                // @ts-ignore */}
+              <Form.Item {...formItemLayout} label={<span />}>
                 <Alert
                   message={t("profile.reward-address.set_warning")}
                   type="warning"
@@ -310,7 +335,7 @@ const NameRegistrationContainer = IopayRequired(
                   <span
                     dangerouslySetInnerHTML={{
                       __html: t("profile.update-candidate.other-fields", {
-                        href: assetURL("my-votes"),
+                        href: "/my-votes",
                         text: "my-votes",
                       }),
                     }}
@@ -329,7 +354,7 @@ const NameRegistrationContainer = IopayRequired(
                   onClick={this.onUpdate}
                   disabled={this.state.disabled}
                 >
-                  {t("name_registration.register")}
+                  {t("name_registration.update")}
                 </Button>
               </Form.Item>
             </div>
@@ -342,7 +367,11 @@ const NameRegistrationContainer = IopayRequired(
         const { smartContractCalled } = this.props;
         return (
           // @ts-ignore
-          <Form onSubmit={this.onRegister} ref={this.registerFormRef}>
+          <Form
+            onSubmit={this.onRegister}
+            ref={this.registerFormRef}
+            onFieldsChange={this.handleChange}
+          >
             <h1>{t("profile.register_name")}</h1>
             <CommonMargin />
             {smartContractCalled && (
@@ -360,7 +389,13 @@ const NameRegistrationContainer = IopayRequired(
               {/*
                 // @ts-ignore */}
               <Form.Item
-                label={t("name_regsitration.name")}
+                {...formItemLayout}
+                labelAlign={"left"}
+                label={
+                  <label style={{ whiteSpace: "break-spaces" }}>
+                    {t("name_regsitration.name")}
+                  </label>
+                }
                 name={"name"}
                 rules={[
                   {
@@ -377,6 +412,8 @@ const NameRegistrationContainer = IopayRequired(
               {/*
                 // @ts-ignore */}
               <Form.Item
+                {...formItemLayout}
+                labelAlign={"left"}
                 label={t("name_regsitration.stakedAmount")}
                 name={"stakedAmount"}
                 rules={[
@@ -395,6 +432,8 @@ const NameRegistrationContainer = IopayRequired(
               {/*
                 // @ts-ignore */}
               <Form.Item
+                {...formItemLayout}
+                labelAlign={"left"}
                 label={t("name_regsitration.stakedDuration")}
                 name={"stakedDuration"}
                 rules={[
@@ -415,6 +454,8 @@ const NameRegistrationContainer = IopayRequired(
               {/*
                 // @ts-ignore */}
               <Form.Item
+                {...formItemLayout}
+                labelAlign={"left"}
                 label={t("name_regsitration.autoStake")}
                 name={"autoStake"}
                 initialValue={false}
@@ -431,6 +472,8 @@ const NameRegistrationContainer = IopayRequired(
               {/*
                 // @ts-ignore */}
               <Form.Item
+                {...formItemLayout}
+                labelAlign={"left"}
                 label={t("name_regsitration.owner")}
                 name={"ownerAddress"}
                 initialValue={getAntenna().iotx.accounts[0].address}
@@ -445,6 +488,9 @@ const NameRegistrationContainer = IopayRequired(
               {/*
                 // @ts-ignore */}
               <Form.Item
+                {...formItemLayout}
+                style={{ marginBottom: "3px" }}
+                labelAlign={"left"}
                 label={t("name_regsitration.operator_pub_key")}
                 name={"operatorAddress"}
                 rules={[
@@ -458,6 +504,10 @@ const NameRegistrationContainer = IopayRequired(
                 ]}
               >
                 <Input />
+              </Form.Item>
+              {/*
+                // @ts-ignore */}
+              <Form.Item {...formItemLayout} label={<span />}>
                 <Alert
                   message={t("profile.op-address.unset_warning")}
                   type="warning"
@@ -469,6 +519,9 @@ const NameRegistrationContainer = IopayRequired(
               {/*
                 // @ts-ignore */}
               <Form.Item
+                {...formItemLayout}
+                labelAlign={"left"}
+                style={{ marginBottom: "3px" }}
                 label={t("name_regsitration.reward_pub_key")}
                 name={"rewardAddress"}
                 rules={[
@@ -482,6 +535,10 @@ const NameRegistrationContainer = IopayRequired(
                 ]}
               >
                 <Input />
+              </Form.Item>
+              {/*
+                // @ts-ignore */}
+              <Form.Item {...formItemLayout} label={<span />}>
                 <Alert
                   message={t("profile.reward-address.unset_warning")}
                   type="warning"
@@ -495,6 +552,7 @@ const NameRegistrationContainer = IopayRequired(
                   type={"primary"}
                   htmlType="submit"
                   onClick={this.onRegister}
+                  disabled={this.state.disabled}
                 >
                   {t("name_registration.register")}
                 </Button>
