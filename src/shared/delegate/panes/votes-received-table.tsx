@@ -99,10 +99,19 @@ export class VotesReceivedTable extends PureComponent<Props, State> {
         const indexOfM = val.indexOf("m");
         const hours = val.substring(0, indexOfH);
         const min = val.substring(indexOfH + 1, indexOfM);
-        const Days = Math.floor(Number(hours) / 24);
-        const newHour = Number(hours) % 24;
-        const remainingDuration = `${Days}d ${newHour}h ${min}m`;
-        obj.remainingDuration = remainingDuration;
+        let Days = Math.floor(Number(hours) / 24);
+        let month, week;
+        if (Days >= 31) {
+          month = Math.floor(Days / 31);
+          week = Math.floor((Days % 31) / 7);
+          Days = Math.floor((Days % 31) % 7);
+          const remainingDuration = `${month}mth ${week}w ${Days}d`;
+          obj.remainingDuration = remainingDuration;
+        } else {
+          const newHour = Number(hours) % 24;
+          const remainingDuration = `${Days}d ${newHour}h ${min}m`;
+          obj.remainingDuration = remainingDuration;
+        }
       });
     };
     // tslint:disable-next-line:max-func-body-length
