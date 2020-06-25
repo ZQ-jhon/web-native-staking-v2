@@ -76,22 +76,18 @@ function renderTransfer(record: IBucket): JSX.Element {
       return (
         <div {...ACTION_ROW_DISABLED}>
           <span>{t("my_stake.edit.transfer")}</span>
-          {
-            <span style={menuInfoStyleDisabled}>
-              {t("my_stake.status.suffix.not_applicable")}
-            </span>
-          }
+          <span style={menuInfoStyleDisabled}>
+            {t("my_stake.status.suffix.not_applicable")}
+          </span>
         </div>
       );
     case "withdrawable":
       return (
         <div {...ACTION_ROW_DISABLED}>
           <span>{t("my_stake.edit.transfer")}</span>
-          {
-            <span style={menuInfoStyleDisabled}>
-              {t("my_stake.status.suffix.not_applicable")}
-            </span>
-          }
+          <span style={menuInfoStyleDisabled}>
+            {t("my_stake.status.suffix.not_applicable")}
+          </span>
         </div>
       );
     default:
@@ -122,22 +118,18 @@ function renderRevote(record: IBucket): JSX.Element {
       return (
         <div {...ACTION_ROW_DISABLED}>
           <span>{t("my_stake.edit.revote")}</span>
-          {
-            <span style={menuInfoStyleDisabled}>
-              {t("my_stake.status.suffix.not_applicable")}
-            </span>
-          }
+          <span style={menuInfoStyleDisabled}>
+            {t("my_stake.status.suffix.not_applicable")}
+          </span>
         </div>
       );
     case "withdrawable":
       return (
         <div {...ACTION_ROW_DISABLED}>
           <span>{t("my_stake.edit.revote")}</span>
-          {
-            <span style={menuInfoStyleDisabled}>
-              {t("my_stake.status.suffix.anytime")}
-            </span>
-          }
+          <span style={menuInfoStyleDisabled}>
+            {t("my_stake.status.suffix.anytime")}
+          </span>
         </div>
       );
     default:
@@ -155,7 +147,7 @@ function renderRestake(record: IBucket): JSX.Element {
   return ["staking", "unstaking", "withdrawable"].includes(status) ? (
     <div {...ACTION_ROW_STYLE}>
       <span>{t("my_stake.edit.restake")}</span>
-      {<span style={menuInfoStyle}>{t("my_stake.status.suffix.anytime")}</span>}
+      <span style={menuInfoStyle}>{t("my_stake.status.suffix.anytime")}</span>
     </div>
   ) : (
     <></>
@@ -167,11 +159,7 @@ function renderUnstake(record: IBucket): JSX.Element {
     return (
       <div {...ACTION_ROW_STYLE}>
         <span>{t("my_stake.edit.unstake")}</span>
-        {
-          <span style={menuInfoStyle}>
-            {t("my_stake.status.suffix.anytime")}
-          </span>
-        }
+        <span style={menuInfoStyle}>{t("my_stake.status.suffix.anytime")}</span>
       </div>
     );
   }
@@ -207,34 +195,29 @@ function renderUnstake(record: IBucket): JSX.Element {
       return (
         <div {...(disabled ? ACTION_ROW_DISABLED : ACTION_ROW_STYLE)}>
           <span>{t("my_stake.edit.unstake")}</span>
-          {
-            // tslint:disable-next-line:use-simple-attributes
-            <span style={disabled ? menuInfoStyleDisabled : menuInfoStyle}>
-              {menuInfo}
-            </span>
-          }
+          <span
+            style={{ ...(disabled ? menuInfoStyleDisabled : menuInfoStyle) }}
+          >
+            {menuInfo}
+          </span>
         </div>
       );
     case "unstaking":
       return (
         <div {...ACTION_ROW_DISABLED}>
           <span>{t("my_stake.edit.unstake")}</span>
-          {
-            <span style={menuInfoStyleDisabled}>
-              {t("my_stake.status.suffix.not_applicable")}
-            </span>
-          }
+          <span style={menuInfoStyleDisabled}>
+            {t("my_stake.status.suffix.not_applicable")}
+          </span>
         </div>
       );
     case "withdrawable":
       return (
         <div {...ACTION_ROW_DISABLED}>
           <span>{t("my_stake.edit.unstake")}</span>
-          {
-            <span style={menuInfoStyleDisabled}>
-              {t("my_stake.status.suffix.not_applicable")}
-            </span>
-          }
+          <span style={menuInfoStyleDisabled}>
+            {t("my_stake.status.suffix.not_applicable")}
+          </span>
         </div>
       );
     default:
@@ -264,33 +247,27 @@ function renderWithdraw(record: IBucket): JSX.Element {
       return (
         <div {...ACTION_ROW_DISABLED}>
           <span>{t("my_stake.edit.withdraw")}</span>
-          {
-            <span style={menuInfoStyleDisabled}>
-              {t("my_stake.status.suffix.not_applicable")}
-            </span>
-          }
+          <span style={menuInfoStyleDisabled}>
+            {t("my_stake.status.suffix.not_applicable")}
+          </span>
         </div>
       );
     case "unstaking":
       return (
         <div {...ACTION_ROW_DISABLED}>
           <span>{t("my_stake.edit.withdraw")}</span>
-          {
-            <span style={menuInfoStyleDisabled}>
-              {t("my_stake.status.suffix.from", { time })}
-            </span>
-          }
+          <span style={menuInfoStyleDisabled}>
+            {t("my_stake.status.suffix.from", { time })}
+          </span>
         </div>
       );
     case "withdrawable":
       return (
         <div {...ACTION_ROW_STYLE}>
           <span>{t("my_stake.edit.withdraw")}</span>
-          {
-            <span style={menuInfoStyle}>
-              {t("my_stake.status.suffix.anytime")}
-            </span>
-          }
+          <span style={menuInfoStyle}>
+            {t("my_stake.status.suffix.anytime")}
+          </span>
         </div>
       );
     default:
@@ -302,11 +279,9 @@ function renderAddStaking(disabled: boolean): JSX.Element {
   return (
     <div {...(disabled ? ACTION_ROW_DISABLED : ACTION_ROW_STYLE)}>
       <span>{t("my_stake.edit.add_staking")}</span>
-      {
-        <span style={menuInfoStyle}>
-          {t("my_stake.status.suffix.autostake_only")}
-        </span>
-      }
+      <span style={menuInfoStyle}>
+        {t("my_stake.status.suffix.autostake_only")}
+      </span>
     </div>
   );
 }
@@ -316,34 +291,28 @@ export function renderActionMenu(record: IBucket): JSX.Element {
   return (
     <Menu className={"MyStakeInfoAction"}>
       <Menu.Item key="1">
-        {
-          <RevoteModal
-            autoStake={record.autoStake}
-            stakedDuration={record.stakedDuration}
-            bucketIndex={record.index}
-            canName={canName}
-            clickable={renderRevote(record)}
-          />
-        }
+        <RevoteModal
+          autoStake={record.autoStake}
+          stakedDuration={record.stakedDuration}
+          bucketIndex={record.index}
+          canName={canName}
+          clickable={renderRevote(record)}
+        />
       </Menu.Item>
       <Menu.Item key="addStaking">
-        {
-          // @ts-ignore
-          <AddStakingModal
-            bucketIndex={record.index}
-            clickable={renderAddStaking(!record.autoStake)}
-            selfStaking={record.selfStakingBucket}
-            stakeDuration={record.stakedDuration}
-            stakedAmount={record.stakedAmount}
-            nonDecay={record.autoStake}
-          />
-        }
+        <AddStakingModal
+          bucketIndex={record.index}
+          clickable={renderAddStaking(!record.autoStake)}
+          selfStaking={record.selfStakingBucket}
+          stakeDuration={record.stakedDuration}
+          stakedAmount={record.stakedAmount}
+          nonDecay={record.autoStake}
+        />
       </Menu.Item>
 
       <Menu.Item key="2">
         {
           // @ts-ignore
-          // tslint:disable-next-line:use-simple-attributes
           <RestakeModal
             bucketIndex={record.index}
             stakeDuration={record.stakedDuration}
@@ -359,7 +328,6 @@ export function renderActionMenu(record: IBucket): JSX.Element {
       <Menu.Item key="3">
         {
           // @ts-ignore
-          // tslint:disable-next-line:use-simple-attributes
           <UnstakeModal
             bucketIndex={record.index}
             stakeStartTime={record.stakeStartTime}
@@ -373,7 +341,6 @@ export function renderActionMenu(record: IBucket): JSX.Element {
       <Menu.Item key="4">
         {
           // @ts-ignore
-          // tslint:disable-next-line:use-simple-attributes
           <WithdrawModal
             bucketIndex={record.index}
             waitUntil={record.withdrawWaitUntil}
