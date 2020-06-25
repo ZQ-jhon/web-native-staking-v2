@@ -51,7 +51,7 @@ function renderTransfer(record: IBucket): JSX.Element {
     return (
       <div {...style}>
         <span>{t("my_stake.edit.transfer")}</span>
-        {<span style={menuInfoStyle}>{desc}</span>}
+        <span style={menuInfoStyle}>{desc}</span>
       </div>
     );
   }
@@ -65,11 +65,9 @@ function renderTransfer(record: IBucket): JSX.Element {
       return (
         <div {...ACTION_ROW_STYLE}>
           <span>{t("my_stake.edit.transfer")}</span>
-          {
-            <span style={menuInfoStyle}>
-              {t("my_stake.status.suffix.anytime")}
-            </span>
-          }
+          <span style={menuInfoStyle}>
+            {t("my_stake.status.suffix.anytime")}
+          </span>
         </div>
       );
     case "unstaking":
@@ -107,11 +105,9 @@ function renderRevote(record: IBucket): JSX.Element {
       return (
         <div {...ACTION_ROW_STYLE}>
           <span>{t("my_stake.edit.revote")}</span>
-          {
-            <span style={menuInfoStyle}>
-              {t("my_stake.status.suffix.anytime")}
-            </span>
-          }
+          <span style={menuInfoStyle}>
+            {t("my_stake.status.suffix.anytime")}
+          </span>
         </div>
       );
     case "unstaking":
