@@ -100,7 +100,8 @@ export class VotesReceivedTable extends PureComponent<Props, State> {
         const hours = val.substring(0, indexOfH);
         const min = val.substring(indexOfH + 1, indexOfM);
         let Days = Math.floor(Number(hours) / 24);
-        let month, week;
+        let month;
+        let week;
         if (Days >= 31) {
           month = Math.floor(Days / 31);
           week = Math.floor((Days % 31) / 7);
