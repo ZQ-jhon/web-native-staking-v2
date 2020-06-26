@@ -2,14 +2,14 @@ import { CopyOutlined } from "@ant-design/icons";
 import { Input } from "antd";
 import Button from "antd/lib/button";
 import Form, { FormInstance } from "antd/lib/form";
-import BigNumber from "bignumber.js";
 import { t } from "onefx/lib/iso-i18n";
 import React, { PureComponent, RefObject } from "react";
+import CopyToClipboard from "react-copy-to-clipboard";
 import { connect } from "react-redux";
+import { getAntenna } from "../../shared/common/get-antenna";
 import { CommonModal } from "../common/common-modal";
-import { toIoTeXAddress } from "../Wallet/address";
 
-const regex = /^([0-9]+)I authorize 0x[0-9a-fA-F]{40} to claim in (0x[0-9A-Fa-f]{40})$/;
+//const regex = /^([0-9]+)I authorize 0x[0-9a-fA-F]{40} to claim in (0x[0-9A-Fa-f]{40})$/;
 
 type IJSONMESSAGE = {
   bucket: Number;
@@ -20,9 +20,12 @@ type IJSONMESSAGE = {
 
 type STATE = {
   visible: Boolean;
+  addressCopied: Boolean;
+  messageCopied: Boolean;
+  bucketIndexCopied: Boolean;
   showMessageBox: Boolean;
-  address: String;
-  bucketIndex: String;
+  address: string;
+  bucketIndex: string;
   jsonMessage: IJSONMESSAGE;
 };
 
@@ -31,6 +34,9 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
     super(props);
     this.state = {
       visible: false,
+      addressCopied: false,
+      bucketIndexCopied: false,
+      messageCopied: false,
       showMessageBox: false,
       address: "",
       bucketIndex: "",
@@ -53,11 +59,12 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
     this.setState({ visible: true });
   };
 
-  closeModal = (showMessageBox: Boolean) => {
+  closeModal = async (showMessageBox: Boolean) => {
+    const nonce = await getNonce(this.state.address);
     if (showMessageBox) {
       const jsonMessage = {
         bucket: Number(this.state.bucketIndex),
-        nonce: 136,
+        nonce: nonce,
         recipient: this.state.address,
         reclaim: t("reclaim.reclaimMessage"),
       };
@@ -75,6 +82,34 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
       return false;
     }
   };
+
+  copyMessage = () => {
+    const text = JSON.stringify(this.state.jsonMessage);
+    return (
+      <div>
+        <p>
+          {t("reclaim.copyMessaage")}
+          <CopyToClipboard
+            text={text}
+            onCopy={() => {
+              this.setState({ messageCopied: true });
+              window.setTimeout(
+                () => this.setState({ messageCopied: false }),
+                2000
+              );
+            }}
+          >
+            {/* tslint:disable-next-line:react-a11y-anchors */}
+            <CopyOutlined />
+          </CopyToClipboard>
+          {this.state.messageCopied && (
+            <span style={{ color: "red" }}>Message Copied.</span>
+          )}
+        </p>
+      </div>
+    );
+  };
+
   getFooter = () => (
     <div>
       <Button type="primary" onClick={() => this.closeModal(false)}>
@@ -86,6 +121,40 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
     </div>
   );
 
+  copyText = (name: string) => {
+    const text =
+      name === "Address" ? this.state.address : this.state.bucketIndex;
+    return (
+      <div>
+        <CopyToClipboard
+          text={text}
+          onCopy={() => {
+            name === "Address"
+              ? this.setState({ addressCopied: true })
+              : this.setState({ bucketIndexCopied: true });
+            window.setTimeout(
+              () =>
+                this.setState({
+                  addressCopied: false,
+                  bucketIndexCopied: false,
+                }),
+              2000
+            );
+          }}
+        >
+          {/* tslint:disable-next-line:react-a11y-anchors */}
+          <CopyOutlined />
+        </CopyToClipboard>
+        {this.state.bucketIndexCopied && name === "bucketIndex" && (
+          <span style={{ color: "red" }}>Index Copied.</span>
+        )}
+        {this.state.addressCopied && name === "Address" && (
+          <span style={{ color: "red" }}>Address Copied.</span>
+        )}
+      </div>
+    );
+  };
+
   renderOptions = () => (
     <div>
       <p>{t("reclaim.popUpMessage.runIoctlCmd")}:</p>
@@ -96,101 +165,108 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
     </div>
   );
 
+  reclaimBucketContent = () => {
+    return (
+      // @ts-ignore
+      <Form layout={"vertical"} style={{ padding: "1em" }} ref={this.formRef}>
+        <h1>{t("reclaim.bucketHeader")}</h1>
+        {/*
+            // @ts-ignore */}
+        <Form.Item
+          label={t("reclaim.bucketIndex")}
+          name="address"
+          initialValue=""
+          rules={[
+            {
+              required: true,
+              message: t("recliam.bucketIndex.error"),
+            },
+          ]}
+        >
+          <Input
+            onChange={(event) => {
+              this.setState({
+                bucketIndex: event.target.value,
+                bucketIndexCopied: false,
+              });
+            }}
+            addonAfter={this.copyText("bucketIndex")}
+          />
+        </Form.Item>
+        {/*
+            // @ts-ignore */}
+        <Form.Item
+          label={t("reclaim.recipientAddress")}
+          name={"recipient_address"}
+          initialValue=""
+          rules={[
+            {
+              required: true,
+              message: t("reclaim.recipientAddress.error"),
+            },
+          ]}
+        >
+          <Input
+            onChange={(event) => {
+              this.setState({
+                address: event.target.value,
+                addressCopied: false,
+              });
+            }}
+            addonAfter={this.copyText("Address")}
+          />
+        </Form.Item>
+        {this.state.showMessageBox && (
+          // @ts-ignore
+          <Form.Item
+            label={t("reclaim.message")}
+            name={"message_signature_hash"}
+            initialValue={this.state.jsonMessage}
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+            <Input.TextArea
+              rows={4}
+              value={JSON.stringify(this.state.jsonMessage)}
+            />
+            {this.copyMessage()}
+          </Form.Item>
+        )}
+        {/*
+            // @ts-ignore */}
+        {!this.state.showMessageBox && (
+          <Form.Item>
+            <Button
+              type="primary"
+              htmlType="submit"
+              disabled={this.checkDisable()}
+              style={{ marginRight: "10px" }}
+              onClick={this.showModal}
+            >
+              {t("reclaim.contiunueButton")}
+            </Button>
+          </Form.Item>
+        )}
+        <CommonModal
+          className="vote-modal"
+          title="Reclaim Options"
+          visible={this.state.visible}
+          onCancel={this.handleCancel}
+          footer={this.getFooter()}
+        >
+          {this.renderOptions()}
+        </CommonModal>
+      </Form>
+    );
+  };
+
   public render(): JSX.Element {
     return (
       <div style={{ width: "100vw", height: "100vh" }}>
-        {/*
-            // @ts-ignore */}
-        <Form layout={"vertical"} style={{ padding: "1em" }} ref={this.formRef}>
-          <h1>{t("reclaim.bucketHeader")}</h1>
-          {/*
-                // @ts-ignore */}
-          <Form.Item
-            label={t("reclaim.bucketIndex")}
-            name="address"
-            initialValue=""
-            rules={[
-              {
-                required: true,
-                message: t("recliam.bucketIndex.error"),
-              },
-            ]}
-          >
-            <Input
-              onChange={(event) => {
-                this.setState({
-                  bucketIndex: event.target.value,
-                });
-              }}
-            />
-          </Form.Item>
-          {/*
-                // @ts-ignore */}
-          <Form.Item
-            label={t("reclaim.recipientAddress")}
-            name={"recipient_address"}
-            initialValue=""
-            rules={[
-              {
-                required: true,
-                message: t("reclaim.recipientAddress.error"),
-              },
-            ]}
-          >
-            <Input
-              onChange={(event) => {
-                this.setState({
-                  address: event.target.value,
-                });
-              }}
-            />
-          </Form.Item>
-          {this.state.showMessageBox && (
-            // @ts-ignore
-            <Form.Item
-              label={t("reclaim.message")}
-              name={"message_signature_hash"}
-              initialValue={this.state.jsonMessage}
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-            >
-              <Input.TextArea
-                rows={4}
-                value={JSON.stringify(this.state.jsonMessage)}
-              >
-                <CopyOutlined />
-              </Input.TextArea>
-              <p>{t("reclaim.copyMessaage")}</p>
-            </Form.Item>
-          )}
-          {/*
-                // @ts-ignore */}
-          {!this.state.showMessageBox && (
-            <Form.Item>
-              <Button
-                type="primary"
-                htmlType="submit"
-                disabled={this.checkDisable()}
-                style={{ marginRight: "10px" }}
-                onClick={this.showModal}
-              >
-                {t("reclaim.contiunueButton")}
-              </Button>
-            </Form.Item>
-          )}
-          <CommonModal
-            className="vote-modal"
-            title="Reclaim Options"
-            visible={this.state.visible}
-            onCancel={this.handleCancel}
-            footer={this.getFooter()}
-          >
-            {this.renderOptions()}
-          </CommonModal>
-        </Form>
+        {this.reclaimBucketContent()}
       </div>
     );
   }
@@ -198,13 +274,9 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
 
 export const ReclaimTools = connect()(ReclaimInnerTools);
 
-export function getNonce(msg: string, address?: string): BigNumber {
-  const matches = msg.match(regex);
-  if (!matches || matches.length !== 3) {
-    throw new Error(t("account.error.invalidAuthorizedMessage"));
-  }
-  if (address && toIoTeXAddress(matches[2]) !== address) {
-    throw new Error(`invalid token address ${matches[2]}`);
-  }
-  return new BigNumber(matches[1], 10);
+export async function getNonce(address: string): Promise<number> {
+  const antenna = getAntenna();
+  const { accountMeta } = await antenna.iotx.getAccount({ address });
+  // @ts-ignore
+  return accountMeta.nonce;
 }
