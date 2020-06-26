@@ -135,6 +135,7 @@ delegate.votesreceived.native: IOTX
 delegate.votesreceived.download: 'Download All Votes'
 delegate.votesreceived.votes: Votes
 delegate.votesreceived.remaining_duration: 'Remaining Staked Duration'
+delegate.rewards: Rewards
 voting.progress-bar.circulating.supply: 'Circulating Supply'
 voting.buy_iotx: 'Buy IOTX'
 voting.metamask-reminder.content: 'To proceed with the voting process, please make sure you have unlocked your MetaMask and linked to IoTex. <a target="_blank" href="https://support.iotex.io/hc/en-us/articles/360020614094">Learn more.</a> '
@@ -451,3 +452,50 @@ auth/button_submit: Login or Sign Up with IoPay
 auth/failed_to_login: Failed to login. Please refresh the page and login again.
 auth/sign_out: Sign Out
 reward_distribution.maintenance:  This is still under maintenance. Please try later.
+rewards.form_title: 'Please enter the period of time and the reward setup of the node you want to query to get rewards of its voters'
+rewards.distribution: 'Rewards to include in the distribution'
+rewards.distribution.register_name: 'Register Name'
+rewards.distribution.register_name.required: 'Register name required'
+rewards.distribution.start: Start
+rewards.distribution.start.required: 'Start epoch required'
+rewards.distribution.to: to
+rewards.distribution.to.required: 'to epoch required'
+rewards.distribution.percentage: Percentage
+rewards.distribution.percentage.required: 'Percentage required'
+rewards.distribution.integer.error: 'must be an integer'
+claim-reards.install_bookkeeper_tip: 'Copy follow code snippet and execute in your terminal to install Bookkeeper if you hasn''t installed yet'
+rewards.distribution.start.help: 'Epoch number of the beginning of the period you want to query'
+rewards.distribution.to.help: 'Epoch number of the end of the period you want to query'
+rewards.distribution.percentage.help: 'Percentage of rewards this node will distribute'
+rewards.distribution.count: 'Epoch Count'
+rewards.distribution.count.required: 'Epoch Count required'
+rewards.distribution.count.help: 'Number of epoch you want to query'
+rewards.tools.update: 'Please open your terminal and keep your ioctl up-to-date.'
+rewards.tools.bookkeeper: 'Copy follow code snippet and execute in your terminal to install Bookkeeper if you hasn''t installed yet.'
+rewards.calculate.table.button: 'Calculate the Reward Table with Analytics'
+rewards.distribution.recipient_address: 'Recipient Address'
+rewards.distribution.amount: Amount
+rewards.distribution.step_1: 'Step 1 Get the Reward Table'
+rewards.distribution.step_2: 'Step 2 Upload Reward Table'
+rewards.distribution.upload_info: 'Please preapre a csv file with your reward distribution and upload below to proceed. The CSV file should only contain two columns, "voterAddress", "amount". Amount should be in Wei.'
+rewards.distribution.upload_info_2: 'Please upload the csv file.'
+delegate.rewards_download: 'Download All Rewards'
+claim-rewards.your_iotex_reward_address: 'Your IoTeX Address'
+claim-reward.query_result: 'Query Result'
+claim-reward.available_credits: 'Available Credits'
+claim-rewards.io_address.required: 'IoTex address required'
+claim-rewards.io_address.help: 'Please use IoTeX address which starts with io'
+claim-rewards.io_address.placeholder: io12345693ug8r3zdeysppnyrcdu2xssz0lcam9l9
+claim-reward.search: search
+claim-reward.reward_address: 'IoTeX Address'
+claim-reward.amount: 'Credits to Claim'
+claim-reward.submit: 'Claim Credit'
+claim-reward.submit.help: 'Refresh the page after you finished signin & confirmation in IoPay'
+claim-reward.ok: Ok
+claim-reward.sign: 'Sign & Confirm on IoPay'
+claim-reards.copy.modal: 'Copy follow code snippet and execute in your terminal'
+claim-rewards.copy: Copy
+claim-reward.amount.error: 'Please enter a number.'
+claim-reward.eth_address: 'Mapping ETH Address'
+copy.toClipboard: 'Copy to Clipboard'
+copy.copied: Copied

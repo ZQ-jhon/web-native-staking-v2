@@ -66,6 +66,7 @@ module.exports = {
       "https://api.testnet.iotex.one/",
       "https://api.iotex.one/",
       "https://api.cloudinary.com/",
+      "https://analytics.iotexscan.io/query",
       ...(process.env.API_GATEWAY_URL ? [process.env.API_GATEWAY_URL] : [])
     ],
     "child-src": ["self"],

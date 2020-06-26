@@ -1,6 +1,6 @@
 // @flow
-import {styled} from "onefx/lib/styletron-react";
-import {colors} from "./styles/style-color2";
+import { styled } from "onefx/lib/styletron-react";
+import { colors } from "./styles/style-color2";
 import { fonts } from "./styles/style-font";
 
 export const KeySpan = styled("span", {
@@ -20,3 +20,7 @@ export const RootStyle = styled("div", () => ({
   color: colors.text01,
   textRendering: "optimizeLegibility"
 }));
+
+export const GreySpan = styled("span", {
+  color: "grey"
+});

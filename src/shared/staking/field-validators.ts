@@ -60,3 +60,22 @@ export const validateStakeDuration = (maxValue: number, minValue?: number) => (
 export const getStakeDurationMaxValue = () => {
   return STAKE_DURATION_MAX_VALUE;
 };
+
+// @ts-ignore
+export const validateMaxEpochCount = (max: number) => (_, value, callback) => {
+  if (value > max) {
+    // @ts-ignore
+    callback(t("tools.maxEpochCountError", { max }));
+  } else {
+    callback();
+  }
+};
+
+// @ts-ignore
+export const largerOrEqualTo = num => (rule, value, callback) => {
+  if (value < num) {
+    callback(t("my_stake.largerOrEqualTo.err", { num }));
+  } else {
+    callback();
+  }
+};

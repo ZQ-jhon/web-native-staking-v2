@@ -70,3 +70,15 @@ export const iotexExplorerClient = new ApolloClient({
   link,
   cache: new InMemoryCache().restore(apolloState)
 });
+
+export const analyticsApolloClient = new ApolloClient({
+  ssrMode: !isBrowser,
+  link: new HttpLink({
+    uri: "https://analytics.iotexscan.io/query",
+    fetch,
+    headers: { "x-iotex-client-id": "" }
+  }),
+  cache: isBrowser
+    ? new InMemoryCache().restore(state.webBpApolloState)
+    : new InMemoryCache()
+});
