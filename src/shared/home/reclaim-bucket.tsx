@@ -1,13 +1,13 @@
+import { CopyOutlined } from "@ant-design/icons";
 import { Input } from "antd";
-import BigNumber from "bignumber.js";
 import Button from "antd/lib/button";
 import Form, { FormInstance } from "antd/lib/form";
+import BigNumber from "bignumber.js";
 import { t } from "onefx/lib/iso-i18n";
 import React, { PureComponent, RefObject } from "react";
 import { connect } from "react-redux";
 import { CommonModal } from "../common/common-modal";
 import { toIoTeXAddress } from "../Wallet/address";
-import { CopyOutlined } from "@ant-design/icons";
 
 const regex = /^([0-9]+)I authorize 0x[0-9a-fA-F]{40} to claim in (0x[0-9A-Fa-f]{40})$/;
 
@@ -38,8 +38,8 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
         bucket: 0,
         recipient: "",
         nonce: 0,
-        reclaim: ""
-      }
+        reclaim: "",
+      },
     };
   }
 
@@ -59,7 +59,7 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
         bucket: Number(this.state.bucketIndex),
         nonce: 136,
         recipient: this.state.address,
-        reclaim: t("reclaim.reclaimMessage")
+        reclaim: t("reclaim.reclaimMessage"),
       };
       // @ts-ignore
       this.setState({ visible: false, showMessageBox, jsonMessage });
@@ -112,14 +112,14 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
             rules={[
               {
                 required: true,
-                message: t("recliam.bucketIndex.error")
-              }
+                message: t("recliam.bucketIndex.error"),
+              },
             ]}
           >
             <Input
-              onChange={event => {
+              onChange={(event) => {
                 this.setState({
-                  bucketIndex: event.target.value
+                  bucketIndex: event.target.value,
                 });
               }}
             />
@@ -133,14 +133,14 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
             rules={[
               {
                 required: true,
-                message: t("reclaim.recipientAddress.error")
-              }
+                message: t("reclaim.recipientAddress.error"),
+              },
             ]}
           >
             <Input
-              onChange={event => {
+              onChange={(event) => {
                 this.setState({
-                  address: event.target.value
+                  address: event.target.value,
                 });
               }}
             />
@@ -153,8 +153,8 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
               initialValue={this.state.jsonMessage}
               rules={[
                 {
-                  required: true
-                }
+                  required: true,
+                },
               ]}
             >
               <Input.TextArea
