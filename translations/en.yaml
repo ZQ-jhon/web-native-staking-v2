@@ -308,6 +308,7 @@ my_stake.confirmation.auto_stake_tip: 'Your stake duration will remain ${count} 
 my_stake.congrats_voter: 'And… Congratulations on becoming a <a href="/member/"><b style="color: #0b8de3;">Genesis Voter&#127881;</b></a>'
 my_stake.share_twitter: 'Share on Twitter'
 my_stake.epoch_day: 'Stake Duration (days)'
+my_stake.self_staking: 'self staking'
 voting.vote.from.wallet: 'Stake and vote from wallet'
 voting.vote.existing.bucket: 'Vote with existing bucket'
 name_registration.register: Submit
