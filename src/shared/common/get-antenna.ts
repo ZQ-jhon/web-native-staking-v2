@@ -14,6 +14,7 @@ import { WvSigner } from "./wv-signer";
 
 const state = isBrowser && JsonGlobal("state");
 const isIoPayMobile = isBrowser && state.base.isIoPayMobile;
+export const iotexCore = isBrowser && state.base.iotexCore;
 
 const contractsByAddrs: Record<string, Contract> = {};
 
@@ -29,8 +30,8 @@ export function getAntenna(): Antenna {
   } else if (isBrowser) {
     signer = new WsSignerPlugin("wss://local.iotex.io:64102");
   }
-  injectedWindow.antenna = new Antenna("https://api.iotex.one", {
-    signer
+  injectedWindow.antenna = new Antenna(iotexCore, {
+    signer,
   });
   return injectedWindow.antenna;
 }
@@ -43,7 +44,7 @@ export function lazyGetContract(address: string, abi: any): Contract {
   const antenna = getAntenna();
   contractsByAddrs[address] = new Contract(abi, address, {
     provider: antenna.iotx,
-    signer: antenna.iotx.signer
+    signer: antenna.iotx.signer,
   });
   return contractsByAddrs[address];
 }
@@ -79,7 +80,7 @@ async function getIoAddressFromIoPay(): Promise<string> {
   const id = reqId++;
   const req: IRequest = {
     reqId: id,
-    type: "GET_ACCOUNTS"
+    type: "GET_ACCOUNTS",
   };
   let sec = 1;
   while (!window.WebViewJavascriptBridge) {
@@ -93,7 +94,7 @@ async function getIoAddressFromIoPay(): Promise<string> {
       sec = 48;
     }
   }
-  return new Promise<string>(resolve =>
+  return new Promise<string>((resolve) =>
     window.WebViewJavascriptBridge.callHandler(
       "get_account",
       JSON.stringify(req),
@@ -119,7 +120,7 @@ async function getIoAddressFromIoPay(): Promise<string> {
 
 export async function getIotxBalance(address: string): Promise<number> {
   const antenna = getAntenna();
-  const {accountMeta} = await antenna.iotx.getAccount({address});
+  const { accountMeta } = await antenna.iotx.getAccount({ address });
   // @ts-ignore
   return Number(fromRau(accountMeta.balance, "Iotx"));
 }
