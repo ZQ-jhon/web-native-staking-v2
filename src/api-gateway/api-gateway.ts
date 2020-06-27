@@ -5,7 +5,7 @@ import {
   ApolloServer,
   introspectSchema,
   makeRemoteExecutableSchema,
-  mergeSchemas
+  mergeSchemas,
 } from "apollo-server-koa";
 import config from "config";
 import dottie from "dottie";
@@ -25,9 +25,9 @@ export async function setApiGateway(server: MyServer): Promise<void> {
     resolvers,
     emitSchemaFile: {
       path: sdlPath,
-      commentDescriptions: true
+      commentDescriptions: true,
     },
-    validate: false
+    validate: false,
   });
   const schemas = [localSchema];
 
@@ -40,27 +40,27 @@ export async function setApiGateway(server: MyServer): Promise<void> {
       );
       return {
         headers: {
-          Authorization: auth
-        }
+          Authorization: auth,
+        },
       };
     }
   ).concat(
     new HttpLink({
-      uri: "https://member.iotex.io/api-gateway/",
+      uri: config.get("webBp"),
       fetch,
       headers: {
-        "x-iotex-client-id": config.get("project")
-      }
+        "x-iotex-client-id": config.get("project"),
+      },
     })
   );
   const remoteSchema = makeRemoteExecutableSchema({
     schema: await introspectSchema(remoteLink),
-    link: remoteLink
+    link: remoteLink,
   });
   schemas.push(remoteSchema);
 
   const schema = mergeSchemas({
-    schemas
+    schemas,
   });
 
   const apollo = new ApolloServer({
@@ -69,9 +69,9 @@ export async function setApiGateway(server: MyServer): Promise<void> {
     playground: true,
     context: async ({ ctx }) => {
       return {
-        headers: ctx.headers
+        headers: ctx.headers,
       };
-    }
+    },
   });
   const gPath = "/v2/api-gateway/";
   apollo.applyMiddleware({ app: server.app, path: gPath });

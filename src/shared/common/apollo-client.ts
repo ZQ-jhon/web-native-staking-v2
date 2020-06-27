@@ -15,25 +15,23 @@ const apiGatewayUrl = isBrowser && state.base.apiGatewayUrl;
 const apiToken = isBrowser && state.base.apiToken;
 const csrfToken = isBrowser && state.base.csrfToken;
 export const ownersToNames = isBrowser && state.base.ownersToNames;
+const webBp = isBrowser && state.base.webBp;
 
 const timeoutLink = new ApolloLinkTimeout(isBrowser ? 10000 : 200);
 const myHttpLink = new HttpLink({
   uri: apiGatewayUrl,
   fetch,
   credentials: "same-origin",
-  headers: { "x-csrf-token": csrfToken, Authorization: `Bearer ${apiToken}` }
+  headers: { "x-csrf-token": csrfToken, Authorization: `Bearer ${apiToken}` },
 });
 const timeoutHttpLink = timeoutLink.concat(myHttpLink);
 
 export const apolloClient = new ApolloClient({
   ssrMode: !isBrowser,
   link: timeoutHttpLink,
-  cache: new InMemoryCache().restore(apolloState)
+  cache: new InMemoryCache().restore(apolloState),
 });
-export const webBpApolloClient = createWebBpApolloClient(
-  "https://member.iotex.io/api-gateway/",
-  "clientId"
-);
+export const webBpApolloClient = createWebBpApolloClient(webBp, "clientId");
 
 const iotexscanGatewayUrl = "https://iotexscan.io/api-gateway/";
 const MAX_CONCURRENT_REQUEST = 5;
@@ -48,19 +46,19 @@ const limitRateFetch = async (
     availableCap--;
     return fetch(req, opt);
   }
-  return new Promise(resolve =>
+  return new Promise((resolve) =>
     setTimeout(() => resolve(limitRateFetch(req, opt)), 100)
   );
 };
 
 const apolloClientConfig = {
-  uri: iotexscanGatewayUrl
+  uri: iotexscanGatewayUrl,
 };
 
 const httpLink = new HttpLink({
   uri: iotexscanGatewayUrl,
   fetch: async (_, ...opts) => limitRateFetch(apolloClientConfig.uri, ...opts),
-  headers: { "x-csrf-token": csrfToken }
+  headers: { "x-csrf-token": csrfToken },
 });
 
 const link = ApolloLink.from([httpLink]);
@@ -68,5 +66,5 @@ const link = ApolloLink.from([httpLink]);
 export const iotexExplorerClient = new ApolloClient({
   ssrMode: !isBrowser,
   link,
-  cache: new InMemoryCache().restore(apolloState)
+  cache: new InMemoryCache().restore(apolloState),
 });
