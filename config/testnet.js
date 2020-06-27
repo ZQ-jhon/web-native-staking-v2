@@ -12,5 +12,5 @@ module.exports = {
     },
   },
   iotexCore: "https://api.testnet.iotex.one",
-  webBp: "https://member-testnet.iotex.io/api-gateway/",
+  webBp: "https://web-bp-testnet.herokuapp.com/api-gateway/",
 };
