@@ -500,3 +500,14 @@ claim-reward.amount.error: 'Please enter a number.'
 claim-reward.eth_address: 'Mapping ETH Address'
 copy.toClipboard: 'Copy to Clipboard'
 copy.copied: Copied
+reclaim.bucketHeader: Reclaim Bucket
+reclaim.bucketIndex: Bucket Index
+recliam.bucketIndex.error: enter the bucket index
+reclaim.recipientAddress: Recipient Address
+reclaim.recipientAddress.error: enter the hash value
+reclaim.message: Message to sign using HD-Wallet
+reclaim.copyMessaage: Copy the message to sign using HDWallet
+reclaim.contiunueButton: Continue
+reclaim.reclaimMessage: This is to certify I am transferring the ownership of said bucket to said recipient on IoTeX blockchain
+reclaim.popUpMessage.runIoctlCmd: You can reclaim the bucket by running the following ioctl command
+reclaim.continueWebTools: or if you wish to use the web tool, make sure ioPay is opened (and it has the recipient private key/account), then click Continue
