@@ -39,5 +39,7 @@ export const colors = {
   notElected: "#ff9100",
 
   voteWarning: "#e44837",
-  grayText: "#b3b3b3"
+  grayText: "#b3b3b3",
+  badgeTag: "#ddf7f7",
+  grayText44: "#b3b3b344",
 };

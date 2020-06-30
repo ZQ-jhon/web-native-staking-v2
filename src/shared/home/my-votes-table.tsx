@@ -7,6 +7,7 @@ import Button from "antd/lib/button";
 import Dropdown from "antd/lib/dropdown";
 import List from "antd/lib/list";
 import Table from "antd/lib/table";
+import Tag from "antd/lib/tag";
 import dateformat from "dateformat";
 import Antenna from "iotex-antenna/lib";
 import isBrowser from "is-browser";
@@ -20,7 +21,7 @@ import { styled } from "styletron-react";
 import { IBucket } from "../../server/gateway/staking";
 import { AddressName } from "../common/address-name";
 import { Flex } from "../common/flex";
-import { colors } from "../common/styles/style-color";
+import { colors } from "../common/styles/style-color2";
 import { media } from "../common/styles/style-media";
 import { getPowerEstimationForBucket } from "../common/token-utils";
 import { renderActionMenu } from "../staking/stake-edit/modal-menu";
@@ -59,11 +60,12 @@ class MyVotesTable extends Component<Props, State> {
   }
 
   setRowClassName = (record: IBucket) => {
+    const badgeRow = record.selfStakingBucket ? "BadgeRow" : "";
     return record.canName &&
       this.state.invalidNames &&
       this.state.invalidNames.includes(record.canName)
-      ? "BorderRowWarning"
-      : "";
+      ? `BorderRowWarning ${badgeRow}`
+      : badgeRow;
   };
   showMore = (id: String) => {
     const { showMore } = this.state;
@@ -131,7 +133,7 @@ class MyVotesTable extends Component<Props, State> {
         <Flex column={true} alignItems={"baseline"} color={colors.black}>
           <span
             className="ellipsis-text"
-            style={{ maxWidth: "9vw", minWidth: 110 }}
+            style={{ maxWidth: "9vw", minWidth: 95 }}
           >
             {/* tslint:disable-next-line:use-simple-attributes */}
             <AddressName
@@ -154,44 +156,62 @@ class MyVotesTable extends Component<Props, State> {
     return null;
   };
 
-  renderMobileTable = (item: any) => {
+  // tslint:disable-next-line:max-func-body-length
+  renderMobileTable = (item: IBucket) => {
     const no = String(item.index);
+    const badgeRow = item.selfStakingBucket ? "BadgeRow" : "";
+
     const header = (
-      <Flex justifyContent={"space-between"} flexDirection={"row"}>
-        <div>
-          <Avatar
-            shape="square"
-            src={assetURL("my-staking/box.png")}
-            size={40}
-            style={{ margin: "8px 10px 8px 0" }}
-          />
-          <Flex
-            float={"right"}
-            column={true}
-            color={colors.black}
-            padding={"7px 0"}
+      <div>
+        {item.selfStakingBucket && (
+          <Tag
+            color={colors.badgeTag}
+            style={{
+              color: colors.black95,
+              borderColor: colors.grayText44,
+              padding: "1px 9px",
+            }}
           >
-            <BoldText>
-              {
-                // @ts-ignore
-                t("my_stake.order_no", { no })
-              }
-            </BoldText>
-            <BoldText style={{ whiteSpace: "nowrap" }}>
-              {t("my_stake.native_staked_amount_format", {
-                amountText: item.stakedAmount.toNumber().toLocaleString(),
-              })}
-            </BoldText>
+            {t("my_stake.self_staking")}
+          </Tag>
+        )}
+        <Flex justifyContent={"space-between"} flexDirection={"row"}>
+          <div>
+            <Avatar
+              shape="square"
+              src={assetURL("my-staking/box.png")}
+              size={40}
+              style={{ margin: "8px 10px 8px 0" }}
+            />
+            <Flex
+              float={"right"}
+              column={true}
+              color={colors.black}
+              padding={"7px 0"}
+              alignItems={"baseline"}
+            >
+              <BoldText>
+                {
+                  // @ts-ignore
+                  t("my_stake.order_no", { no })
+                }
+              </BoldText>
+              <BoldText style={{ whiteSpace: "nowrap" }}>
+                {t("my_stake.native_staked_amount_format", {
+                  amountText: item.stakedAmount.toNumber().toLocaleString(),
+                })}
+              </BoldText>
+            </Flex>
+          </div>
+          <Flex>
+            <Dropdown overlay={renderActionMenu(item)} trigger={["click"]}>
+              <Button style={{ paddingLeft: "10px", paddingRight: "10px" }}>
+                {t("my_stake.edit.row")} <DownOutlined />
+              </Button>
+            </Dropdown>
           </Flex>
-        </div>
-        <Flex>
-          <Dropdown overlay={renderActionMenu(item)} trigger={["click"]}>
-            <Button style={{ paddingLeft: "10px", paddingRight: "10px" }}>
-              {t("my_stake.edit.row")} <DownOutlined />
-            </Button>
-          </Dropdown>
         </Flex>
-      </Flex>
+      </div>
     );
 
     const data = [
@@ -204,9 +224,12 @@ class MyVotesTable extends Component<Props, State> {
         value: (
           <Flex column={true} alignItems={"flex-end"}>
             <span style={{ float: "right" }}>
-              {t("my_stake.duration_epochs", {
-                stakeDuration: item.stakedDuration,
-              })}
+              {
+                // @ts-ignore
+                t("my_stake.duration_epochs", {
+                  stakeDuration: item.stakedDuration,
+                })
+              }
             </span>
             <TimeSpan>
               {t("my_stake.from_time", {
@@ -237,6 +260,7 @@ class MyVotesTable extends Component<Props, State> {
     return (
       <List
         style={{ width: "100%", marginTop: 20 }}
+        className={badgeRow}
         size="small"
         header={header}
         bordered={true}
@@ -271,31 +295,43 @@ class MyVotesTable extends Component<Props, State> {
           // @ts-ignore
           render(text: any, record: IBucket): JSX.Element {
             const no = String(record.index);
-            const subText = record.selfStakingBucket
-              ? ` (${t("my_stake.self_staking")})`
-              : "";
             return (
               <Flex
                 column={true}
                 alignItems={"baseline"}
-                paddingLeft={"40px"}
-                paddingBottom={"14px"}
+                paddingLeft={"12px"}
+                paddingBottom={"5px"}
                 media={{
                   [media.media700]: {
                     paddingLeft: "8px",
                   },
                 }}
               >
+                {record.selfStakingBucket && (
+                  <Tag
+                    color={colors.badgeTag}
+                    style={{
+                      marginLeft: "-10px",
+                      marginTop: "-12px",
+                      color: colors.black95,
+                      borderColor: colors.grayText44,
+                      padding: "1px 9px",
+                    }}
+                  >
+                    {t("my_stake.self_staking")}
+                  </Tag>
+                )}
                 <Flex
-                  minWidth={"186px"}
+                  minWidth={"160px"}
                   alignContent={"flex-start"}
                   justifyContent={"left"}
+                  marginTop={`${record.selfStakingBucket ? "8px" : "15px"}`}
                 >
                   <Avatar
                     shape="square"
                     src={assetURL("my-staking/box.png")}
                     size={40}
-                    style={{ margin: "14px 10px 8px 0" }}
+                    style={{ margin: "5px 10px 2px 0" }}
                   />
                   <Flex
                     column={true}
@@ -312,7 +348,7 @@ class MyVotesTable extends Component<Props, State> {
                     <BoldText style={{ whiteSpace: "nowrap" }}>
                       {
                         // @ts-ignore
-                        `${t("my_stake.order_no", { no })}${subText}`
+                        t("my_stake.order_no", { no })
                       }
                     </BoldText>
                     <BoldText style={{ whiteSpace: "nowrap" }}>
@@ -324,7 +360,7 @@ class MyVotesTable extends Component<Props, State> {
                     </BoldText>
                   </Flex>
                 </Flex>
-                <Flex width={"100%"} padding={"1px 0 1px 0"}>
+                <Flex column={true} width={"100%"} padding={"1px 0 1px 0"}>
                   <StatisticSpan style={{ width: "50%" }}>
                     {t("my_stake.staking_power")}
                   </StatisticSpan>
