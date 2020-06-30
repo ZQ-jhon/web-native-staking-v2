@@ -500,12 +500,13 @@ claim-reward.amount.error: 'Please enter a number.'
 claim-reward.eth_address: 'Mapping ETH Address'
 copy.toClipboard: 'Copy to Clipboard'
 copy.copied: Copied
+reclaimBucket.introduction: This tool allows you to reclaim a bucket that is owned by a private key/account in hardware wallet. How it works is that you sign a message using the private key to prove your ownership of the bucket and indicate a new address, and upon verification, the bucket will be transferred to the new address on IoTeX blockchain. You can also reclaim a bucket using our ioctl tool, run 'ioctl stake2 reclaim' and follow the instructions.
 reclaim.bucketHeader: Reclaim Bucket
 reclaim.bucketIndex: Bucket Index
 recliam.bucketIndex.error: enter the bucket index
 reclaim.recipientAddress: Recipient Address
-reclaim.recipientAddress.error: enter the hash value
-reclaim.message: Message to sign using HD-Wallet
+reclaim.recipientAddress.error: enter the recipient address
+reclaim.message: Message to be signed
 reclaim.copyMessaage: Copy the message to sign using HDWallet
 reclaim.contiunueButton: Continue
 reclaim.reclaimMessage: This is to certify I am transferring the ownership of said bucket to said recipient on IoTeX blockchain

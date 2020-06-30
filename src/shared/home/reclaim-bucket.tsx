@@ -1,13 +1,16 @@
 import { CopyOutlined } from "@ant-design/icons";
 import Button from "antd/lib/button";
 import Form, { FormInstance } from "antd/lib/form";
+import { validateAddress } from "iotex-antenna/lib/account/utils";
 import Input from "antd/lib/input";
 import { t } from "onefx/lib/iso-i18n";
 import React, { PureComponent, RefObject } from "react";
 import CopyToClipboard from "react-copy-to-clipboard";
 import { connect } from "react-redux";
 import { getAntenna } from "../../shared/common/get-antenna";
-import { CommonModal } from "../common/common-modal";
+import { LinkButton } from "../common/buttons";
+import { Flex } from "../common/flex";
+import { validateIoAddress } from "../staking/field-validators";
 
 //const regex = /^([0-9]+)I authorize 0x[0-9a-fA-F]{40} to claim in (0x[0-9A-Fa-f]{40})$/;
 
@@ -55,11 +58,7 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
     this.setState({ visible: false });
   };
 
-  showModal = () => {
-    this.setState({ visible: true });
-  };
-
-  closeModal = async (showMessageBox: Boolean) => {
+  showModal = async (showMessageBox: Boolean) => {
     const nonce = await getNonce(this.state.address);
     if (showMessageBox) {
       const jsonMessage = {
@@ -74,9 +73,14 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
       this.setState({ visible: false });
     }
   };
+
   checkDisable = () => {
     const { address, bucketIndex } = this.state;
-    if (address.length === 0 || bucketIndex.length === 0) {
+    if (
+      address.length === 0 ||
+      bucketIndex.length === 0 ||
+      !validateAddress(address)
+    ) {
       return true;
     } else {
       return false;
@@ -86,9 +90,8 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
   copyMessage = () => {
     const text = JSON.stringify(this.state.jsonMessage);
     return (
-      <div>
+      <div style={{ position: "absolute", marginTop: "-33px", right: "4px" }}>
         <p>
-          {t("reclaim.copyMessaage")}
           <CopyToClipboard
             text={text}
             onCopy={() => {
@@ -109,17 +112,6 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
       </div>
     );
   };
-
-  getFooter = () => (
-    <div>
-      <Button type="primary" onClick={() => this.closeModal(false)}>
-        Cancel
-      </Button>
-      <Button type="primary" onClick={() => this.closeModal(true)}>
-        Continue
-      </Button>
-    </div>
-  );
 
   copyText = (name: string) => {
     const text =
@@ -155,21 +147,14 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
     );
   };
 
-  renderOptions = () => (
-    <div>
-      <p>{t("reclaim.popUpMessage.runIoctlCmd")}:</p>
-      <h4>{`ioctl stake2 reclaim ${Number(
-        this.state.bucketIndex
-      )} Ethereum -s ${this.state.address} -p 1 -l 300000`}</h4>
-      <p>{t("reclaim.continueWebTools")}</p>
-    </div>
-  );
-
   reclaimBucketContent = () => {
     return (
       // @ts-ignore
       <Form layout={"vertical"} style={{ padding: "1em" }} ref={this.formRef}>
         <h1>{t("reclaim.bucketHeader")}</h1>
+        <Flex width="100%" column={true} alignItems="flex-start">
+          <p style={{ fontSize: "13px" }}>{t("reclaimBucket.introduction")}</p>
+        </Flex>
         {/*
             // @ts-ignore */}
         <Form.Item
@@ -204,6 +189,9 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
               required: true,
               message: t("reclaim.recipientAddress.error"),
             },
+            {
+              validator: validateIoAddress,
+            },
           ]}
         >
           <Input
@@ -216,6 +204,7 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
             addonAfter={this.copyText("Address")}
           />
         </Form.Item>
+        <p style={{ fontSize: "12px" }}>{t("reclaim.continueWebTools")}</p>
         {this.state.showMessageBox && (
           // @ts-ignore
           <Form.Item
@@ -233,6 +222,9 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
               value={JSON.stringify(this.state.jsonMessage)}
             />
             {this.copyMessage()}
+            <LinkButton href="https://mycrypto.com/sign-and-verify-message/sign">
+              Click here to sign the message
+            </LinkButton>
           </Form.Item>
         )}
         {/*
@@ -244,21 +236,12 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
               htmlType="submit"
               disabled={this.checkDisable()}
               style={{ marginRight: "10px" }}
-              onClick={this.showModal}
+              onClick={() => this.showModal(true)}
             >
               {t("reclaim.contiunueButton")}
             </Button>
           </Form.Item>
         )}
-        <CommonModal
-          className="vote-modal"
-          title="Reclaim Options"
-          visible={this.state.visible}
-          onCancel={this.handleCancel}
-          footer={this.getFooter()}
-        >
-          {this.renderOptions()}
-        </CommonModal>
       </Form>
     );
   };
