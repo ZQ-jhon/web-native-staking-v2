@@ -14,7 +14,8 @@ import { WvSigner } from "./wv-signer";
 
 const state = isBrowser && JsonGlobal("state");
 const isIoPayMobile = isBrowser && state.base.isIoPayMobile;
-export const iotexCore = isBrowser && state.base.iotexCore;
+export const iotexCore =
+  (isBrowser && state.base.iotexCore) || "https://api.iotex.one";
 
 const contractsByAddrs: Record<string, Contract> = {};
 
