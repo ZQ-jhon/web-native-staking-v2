@@ -1,3 +1,4 @@
+import config from "config";
 import Antenna from "iotex-antenna/lib";
 import isWebview from "is-ua-webview";
 import isMobile from "ismobilejs";
@@ -5,7 +6,6 @@ import koa from "koa";
 import { noopReducer } from "onefx/lib/iso-react-render/root/root-reducer";
 import { Context } from "onefx/lib/types";
 import * as React from "react";
-import config from "config";
 import { setApiGateway } from "../api-gateway/api-gateway";
 import { AppContainer } from "../shared/app-container";
 import { apolloSSR } from "../shared/common/apollo-ssr";

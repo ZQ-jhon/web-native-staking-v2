@@ -11,6 +11,7 @@
     "node_modules/tslint-require-connnect-typing"
   ],
   "rules": {
+    "import-blacklist": [true, "antd"],
     "react-no-dangerous-html": [
       false,
       [

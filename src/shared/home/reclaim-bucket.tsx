@@ -1,7 +1,7 @@
 import { CopyOutlined } from "@ant-design/icons";
-import { Input } from "antd";
 import Button from "antd/lib/button";
 import Form, { FormInstance } from "antd/lib/form";
+import Input from "antd/lib/input";
 import { t } from "onefx/lib/iso-i18n";
 import React, { PureComponent, RefObject } from "react";
 import CopyToClipboard from "react-copy-to-clipboard";
