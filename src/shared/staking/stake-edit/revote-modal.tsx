@@ -19,10 +19,10 @@ import { ModalWrapper } from "./modal-wrapper";
 
 export const RevoteModal = connect(
   () => ({}),
-  dispatch => ({
+  (dispatch) => ({
     actionSmartContractCalled(payload: boolean): void {
       dispatch(actionSmartContractCalled(payload));
-    }
+    },
   })
 )(
   class RevoteForm extends Component<{
@@ -47,7 +47,7 @@ export const RevoteModal = connect(
         candidateName: canName,
         payload: "",
         gasLimit: DEFAULT_STAKING_GAS_LIMIT,
-        gasPrice: toRau("1", "Qev")
+        gasPrice: toRau("1", "Qev"),
       });
 
       window.console.log("Revote txHash", txHash);
@@ -87,7 +87,8 @@ export const RevoteModal = connect(
                   if (!loading && error) {
                     return null;
                   }
-                  const allCandidates = data.bpCandidatesOnContract || [];
+                  const allCandidates =
+                    (data && data.bpCandidatesOnContract) || [];
                   const dataSource = allCandidates
                     // tslint:disable-next-line:no-any
                     .map((item: { name: any }) => item.name)
@@ -102,11 +103,11 @@ export const RevoteModal = connect(
                       rules={[
                         {
                           required: true,
-                          message: t("my_stake.canName.required")
+                          message: t("my_stake.canName.required"),
                         },
                         {
-                          validator: validateCanName
-                        }
+                          validator: validateCanName,
+                        },
                       ]}
                     >
                       {/*
