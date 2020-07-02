@@ -1,14 +1,17 @@
 import { CopyOutlined } from "@ant-design/icons";
 import Button from "antd/lib/button";
+import { Buffer } from "buffer";
 import Form, { FormInstance } from "antd/lib/form";
-import { validateAddress } from "iotex-antenna/lib/account/utils";
+import { validateAddress, toRau } from "iotex-antenna/lib/account/utils";
 import Input from "antd/lib/input";
 import { t } from "onefx/lib/iso-i18n";
 import React, { PureComponent, RefObject } from "react";
 import CopyToClipboard from "react-copy-to-clipboard";
 import { connect } from "react-redux";
 import { getAntenna } from "../../shared/common/get-antenna";
+import { getStaking } from "../../server/gateway/staking";
 import { LinkButton } from "../common/buttons";
+import { DEFAULT_STAKING_GAS_LIMIT } from "../common/token-utils";
 import { Flex } from "../common/flex";
 import { validateIoAddress } from "../staking/field-validators";
 
@@ -21,6 +24,14 @@ type IJSONMESSAGE = {
   reclaim: string;
 };
 
+type Payload = {
+  type: string;
+  msg: string;
+  sig: string;
+  bytestream(): Uint8Array;
+  deserialize(bytes: Uint8Array): Payload;
+};
+
 type STATE = {
   visible: Boolean;
   addressCopied: Boolean;
@@ -28,6 +39,7 @@ type STATE = {
   bucketIndexCopied: Boolean;
   showMessageBox: Boolean;
   address: string;
+  sig: string;
   bucketIndex: string;
   jsonMessage: IJSONMESSAGE;
 };
@@ -42,6 +54,7 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
       messageCopied: false,
       showMessageBox: false,
       address: "",
+      sig: "",
       bucketIndex: "",
       jsonMessage: {
         bucket: 0,
@@ -147,6 +160,40 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
     );
   };
 
+  getByteStream = (payload: Payload) => {
+    const use = Buffer.from(payload.bytestream()).toString("hex");
+    console.log("we are getting the use", use);
+    return use;
+  };
+
+  sendToBlockChain = async () => {
+    const payload = {
+      type: "Etherium",
+      msg: this.state.jsonMessage,
+      sig: this.state.sig,
+    };
+    //@ts-ignore
+    const payloadBytes = Buffer.from(JSON.stringify(payload));
+    console.log("we are seeing the value after the buffer", payloadBytes);
+    //const use = this.getByteStream(payload)
+    console.log(
+      "bucket",
+      this.state.bucketIndex,
+      "address",
+      this.state.address,
+      DEFAULT_STAKING_GAS_LIMIT
+    );
+    const txHash = await getStaking().transferOwnership({
+      bucketIndex: Number(this.state.bucketIndex),
+      voterAddress: this.state.address,
+      payload: payloadBytes,
+      gasLimit: DEFAULT_STAKING_GAS_LIMIT,
+      gasPrice: toRau("1", "Qev"),
+    });
+    debugger;
+    console.log("txshash value", txHash);
+  };
+
   reclaimBucketContent = () => {
     return (
       // @ts-ignore
@@ -239,6 +286,28 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
               onClick={() => this.showModal(true)}
             >
               {t("reclaim.contiunueButton")}
+            </Button>
+          </Form.Item>
+        )}
+        {/*
+            // @ts-ignore */}
+        {this.state.jsonMessage.recipient.length > 0 && (
+          <Form.Item label="Signature Bytes from HD-WALLET" name={"sig"}>
+            <Input
+              onChange={(event) => {
+                this.setState({
+                  sig: event.target.value,
+                });
+              }}
+            />
+            <Button
+              type="primary"
+              htmlType="submit"
+              disabled={this.checkDisable()}
+              style={{ marginRight: "10px" }}
+              onClick={this.sendToBlockChain}
+            >
+              Sign Message And Send To Block Chain
             </Button>
           </Form.Item>
         )}
