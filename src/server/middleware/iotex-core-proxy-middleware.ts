@@ -1,6 +1,6 @@
 import { Server } from "onefx";
 
-export function setIoTexCoreProxy(server: Server): void {
+export function setIoTeXCoreProxy(server: Server): void {
   const proxy = require("koa-server-http-proxy");
   // @ts-ignore
   let target = server.config.iotexCore;
