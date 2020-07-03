@@ -19,6 +19,7 @@ module.exports = {
     noCsrfRoutes: {
       "/v2/api-gateway/": true,
       "/api/": true,
+      "/iotex-core-proxy/": true
     },
   },
   ssm: {
