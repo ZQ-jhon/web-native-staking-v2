@@ -1,6 +1,7 @@
 import { CopyOutlined } from "@ant-design/icons";
 import Button from "antd/lib/button";
 import { Buffer } from "buffer";
+import Layout from "antd/lib/layout";
 import Form, { FormInstance } from "antd/lib/form";
 import { validateAddress, toRau } from "iotex-antenna/lib/account/utils";
 import Input from "antd/lib/input";
@@ -14,6 +15,8 @@ import { LinkButton } from "../common/buttons";
 import { DEFAULT_STAKING_GAS_LIMIT } from "../common/token-utils";
 import { Flex } from "../common/flex";
 import { validateIoAddress } from "../staking/field-validators";
+import { colors } from "../common/styles/style-color";
+import { MAX_WIDTH } from "./voting";
 
 //const regex = /^([0-9]+)I authorize 0x[0-9a-fA-F]{40} to claim in (0x[0-9A-Fa-f]{40})$/;
 
@@ -76,7 +79,7 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
     if (showMessageBox) {
       const jsonMessage = {
         bucket: Number(this.state.bucketIndex),
-        nonce: nonce,
+        nonce: nonce + 1,
         recipient: this.state.address,
         reclaim: t("reclaim.reclaimMessage"),
       };
@@ -168,150 +171,153 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
 
   sendToBlockChain = async () => {
     const payload = {
-      type: "Etherium",
+      type: "Ethereum",
       msg: this.state.jsonMessage,
       sig: this.state.sig,
     };
     //@ts-ignore
     const payloadBytes = Buffer.from(JSON.stringify(payload));
-    console.log("we are seeing the value after the buffer", payloadBytes);
-    //const use = this.getByteStream(payload)
-    console.log(
-      "bucket",
-      this.state.bucketIndex,
-      "address",
-      this.state.address,
-      DEFAULT_STAKING_GAS_LIMIT
-    );
-    const txHash = await getStaking().transferOwnership({
+    await getStaking().transferOwnership({
       bucketIndex: Number(this.state.bucketIndex),
       voterAddress: this.state.address,
       payload: payloadBytes,
       gasLimit: DEFAULT_STAKING_GAS_LIMIT,
       gasPrice: toRau("1", "Qev"),
     });
-    debugger;
-    console.log("txshash value", txHash);
   };
 
   reclaimBucketContent = () => {
+    const layoutStyle = {
+      width: "100%",
+      maxWidth: `${MAX_WIDTH}px`,
+      backgroundColor: colors.white,
+      fontFamily: "arial",
+    };
     return (
       // @ts-ignore
-      <Form layout={"vertical"} style={{ padding: "1em" }} ref={this.formRef}>
-        <h1>{t("reclaim.bucketHeader")}</h1>
-        <Flex width="100%" column={true} alignItems="flex-start">
-          <p style={{ fontSize: "13px" }}>{t("reclaimBucket.introduction")}</p>
-        </Flex>
-        {/*
-            // @ts-ignore */}
-        <Form.Item
-          label={t("reclaim.bucketIndex")}
-          name="address"
-          initialValue=""
-          rules={[
-            {
-              required: true,
-              message: t("recliam.bucketIndex.error"),
-            },
-          ]}
-        >
-          <Input
-            onChange={(event) => {
-              this.setState({
-                bucketIndex: event.target.value,
-                bucketIndexCopied: false,
-              });
-            }}
-            addonAfter={this.copyText("bucketIndex")}
-          />
-        </Form.Item>
-        {/*
-            // @ts-ignore */}
-        <Form.Item
-          label={t("reclaim.recipientAddress")}
-          name={"recipient_address"}
-          initialValue=""
-          rules={[
-            {
-              required: true,
-              message: t("reclaim.recipientAddress.error"),
-            },
-            {
-              validator: validateIoAddress,
-            },
-          ]}
-        >
-          <Input
-            onChange={(event) => {
-              this.setState({
-                address: event.target.value,
-                addressCopied: false,
-              });
-            }}
-            addonAfter={this.copyText("Address")}
-          />
-        </Form.Item>
-        <p style={{ fontSize: "12px" }}>{t("reclaim.continueWebTools")}</p>
-        {this.state.showMessageBox && (
-          // @ts-ignore
+      <Layout style={{ ...layoutStyle, marginBottom: "15px" }}>
+        <Form layout={"vertical"} style={{ padding: "1em" }} ref={this.formRef}>
+          <h1>{t("reclaim.bucketHeader")}</h1>
+          <Flex width="100%" column={true} alignItems="flex-start">
+            <p style={{ fontSize: "13px" }}>
+              {t("reclaimBucket.introduction")}
+            </p>
+          </Flex>
+          {/*
+              // @ts-ignore */}
           <Form.Item
-            label={t("reclaim.message")}
-            name={"message_signature_hash"}
-            initialValue={this.state.jsonMessage}
+            label={t("reclaim.bucketIndex")}
+            name="address"
+            initialValue=""
             rules={[
               {
                 required: true,
+                message: t("recliam.bucketIndex.error"),
               },
             ]}
           >
-            <Input.TextArea
-              rows={4}
-              value={JSON.stringify(this.state.jsonMessage)}
-            />
-            {this.copyMessage()}
-            <LinkButton href="https://mycrypto.com/sign-and-verify-message/sign">
-              Click here to sign the message
-            </LinkButton>
-          </Form.Item>
-        )}
-        {/*
-            // @ts-ignore */}
-        {!this.state.showMessageBox && (
-          <Form.Item>
-            <Button
-              type="primary"
-              htmlType="submit"
-              disabled={this.checkDisable()}
-              style={{ marginRight: "10px" }}
-              onClick={() => this.showModal(true)}
-            >
-              {t("reclaim.contiunueButton")}
-            </Button>
-          </Form.Item>
-        )}
-        {/*
-            // @ts-ignore */}
-        {this.state.jsonMessage.recipient.length > 0 && (
-          <Form.Item label="Signature Bytes from HD-WALLET" name={"sig"}>
             <Input
               onChange={(event) => {
                 this.setState({
-                  sig: event.target.value,
+                  bucketIndex: event.target.value,
+                  bucketIndexCopied: false,
                 });
               }}
+              addonAfter={this.copyText("bucketIndex")}
             />
-            <Button
-              type="primary"
-              htmlType="submit"
-              disabled={this.checkDisable()}
-              style={{ marginRight: "10px" }}
-              onClick={this.sendToBlockChain}
-            >
-              Sign Message And Send To Block Chain
-            </Button>
           </Form.Item>
-        )}
-      </Form>
+          {/*
+              // @ts-ignore */}
+          <Form.Item
+            label={t("reclaim.recipientAddress")}
+            name={"recipient_address"}
+            initialValue=""
+            rules={[
+              {
+                required: true,
+                message: t("reclaim.recipientAddress.error"),
+              },
+              {
+                validator: validateIoAddress,
+              },
+            ]}
+          >
+            <Input
+              onChange={(event) => {
+                this.setState({
+                  address: event.target.value,
+                  addressCopied: false,
+                });
+              }}
+              addonAfter={this.copyText("Address")}
+            />
+          </Form.Item>
+          <p style={{ fontSize: "12px" }}>{t("reclaim.continueWebTools")}</p>
+          {this.state.showMessageBox && (
+            // @ts-ignore
+            <Form.Item
+              label={t("reclaim.message")}
+              name={"message_signature_hash"}
+              initialValue={this.state.jsonMessage}
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+            >
+              <Input.TextArea
+                rows={4}
+                value={JSON.stringify(this.state.jsonMessage)}
+              />
+              {this.copyMessage()}
+              <LinkButton href="https://mycrypto.com/sign-and-verify-message/sign">
+                Click here to sign the message
+              </LinkButton>
+            </Form.Item>
+          )}
+          {/*
+              // @ts-ignore */}
+          {!this.state.showMessageBox && (
+            <Form.Item>
+              <Button
+                type="primary"
+                htmlType="submit"
+                disabled={this.checkDisable()}
+                style={{ marginRight: "10px" }}
+                onClick={() => this.showModal(true)}
+              >
+                {t("reclaim.contiunueButton")}
+              </Button>
+            </Form.Item>
+          )}
+          {/*
+              // @ts-ignore */}
+          {this.state.jsonMessage.recipient.length > 0 && (
+            <Form.Item label="Signature Bytes from HD-WALLET" name={"sig"}>
+              <Input
+                onChange={(event) => {
+                  this.setState({
+                    sig: event.target.value,
+                  });
+                }}
+              />
+            </Form.Item>
+          )}
+          {this.state.jsonMessage.recipient.length > 0 && (
+            <Form.Item style={{ marginTop: "-19px" }}>
+              <Button
+                type="primary"
+                htmlType="submit"
+                disabled={this.checkDisable()}
+                style={{ marginRight: "10px" }}
+                onClick={this.sendToBlockChain}
+              >
+                Sign Message And Send To Block Chain
+              </Button>
+            </Form.Item>
+          )}
+        </Form>
+      </Layout>
     );
   };
 
