@@ -390,7 +390,7 @@ profile.reward_plan.insertFormat: 'Insert Format'
 profile.reward_plan.insertCancel: Cancel
 profile.reward_plan.recomendFormat: "% of day bonus reward you will redistribute to voters\n\nPayout frequency (i.e., every day, 3 days, week)\n\nYour plans for other rewards (i.e., voters, infrastructure, dApp funds, profit)"
 profile.settings: SETTINGS
-profile.settings.content: 'You are currently logged in as <pre><b>${ioAddress}</b></pre> Prior to mainnet GA, your corresponding ETH wallet address were <pre><b>${ethAddress}</b></pre>'
+profile.settings.content: 'You are currently logged in as <pre><b>${ioAddress}</b></pre> Prior to mainnet GA, your corresponding ETH wallet address was <pre><b>${ethAddress}</b></pre>'
 profile.social_media.required: 'Please enter your social media URLs.'
 profile.social_media: 'Social Media link (at least one link and separated by space)'
 profile.team.required: 'Please enter your team background.'
