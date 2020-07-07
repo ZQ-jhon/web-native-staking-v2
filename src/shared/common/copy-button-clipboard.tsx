@@ -1,4 +1,4 @@
-import { CopyOutlined } from "@ant-design/icons/lib";
+import CopyOutlined from "@ant-design/icons/CopyOutlined";
 import Button from "antd/lib/button";
 import { SizeType } from "antd/lib/config-provider/SizeContext";
 import Tooltip from "antd/lib/tooltip";

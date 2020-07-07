@@ -1,8 +1,8 @@
-import { CopyOutlined } from "@ant-design/icons";
+import CopyOutlined from "@ant-design/icons/CopyOutlined";
 import Button from "antd/lib/button";
 import Form, { FormInstance } from "antd/lib/form";
-import { validateAddress } from "iotex-antenna/lib/account/utils";
 import Input from "antd/lib/input";
+import { validateAddress } from "iotex-antenna/lib/account/utils";
 import { t } from "onefx/lib/iso-i18n";
 import React, { PureComponent, RefObject } from "react";
 import CopyToClipboard from "react-copy-to-clipboard";

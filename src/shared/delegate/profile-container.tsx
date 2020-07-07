@@ -1,6 +1,5 @@
 // @flow
 import DashboardOutlined from "@ant-design/icons/DashboardOutlined";
-// import InboxOutlined from "@ant-design/icons/InboxOutlined";
 import InfoOutlined from "@ant-design/icons/InfoOutlined";
 import LinkOutlined from "@ant-design/icons/LinkOutlined";
 import PercentageOutlined from "@ant-design/icons/PercentageOutlined";
@@ -8,7 +7,7 @@ import SettingOutlined from "@ant-design/icons/SettingOutlined";
 import SolutionOutlined from "@ant-design/icons/SolutionOutlined";
 import TrophyOutlined from "@ant-design/icons/TrophyOutlined";
 
-import { InboxOutlined } from "@ant-design/icons/lib";
+import InboxOutlined from "@ant-design/icons/InboxOutlined";
 import Layout from "antd/lib/layout";
 import Menu from "antd/lib/menu";
 import { t } from "onefx/lib/iso-i18n";
@@ -17,7 +16,6 @@ import { Route, Switch } from "onefx/lib/react-router";
 import React, { PureComponent } from "react";
 import { CommonMargin } from "../common/common-margin";
 import { RootStyle } from "../common/component-style";
-// import { NotFound } from "../common/not-found";
 import { secondFontFamily } from "../common/styles/style-font";
 import { ContentPadding } from "../common/styles/style-padding";
 import { TOP_BAR_HEIGHT } from "../common/top-bar";
