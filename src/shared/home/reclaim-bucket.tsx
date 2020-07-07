@@ -3,13 +3,14 @@ import Button from "antd/lib/button";
 import { Buffer } from "buffer";
 import Layout from "antd/lib/layout";
 import Form, { FormInstance } from "antd/lib/form";
+import Alert from "antd/lib/alert";
 import { validateAddress, toRau } from "iotex-antenna/lib/account/utils";
 import Input from "antd/lib/input";
 import { t } from "onefx/lib/iso-i18n";
 import React, { PureComponent, RefObject } from "react";
 import CopyToClipboard from "react-copy-to-clipboard";
 import { connect } from "react-redux";
-import { getAntenna } from "../../shared/common/get-antenna";
+import { getAntenna, iotexCore } from "../../shared/common/get-antenna";
 import { getStaking } from "../../server/gateway/staking";
 import { LinkButton } from "../common/buttons";
 import { DEFAULT_STAKING_GAS_LIMIT } from "../common/token-utils";
@@ -17,6 +18,8 @@ import { Flex } from "../common/flex";
 import { validateIoAddress } from "../staking/field-validators";
 import { colors } from "../common/styles/style-color";
 import { MAX_WIDTH } from "./voting";
+import Antenna from "iotex-antenna/lib/antenna";
+import { SignerPlugin } from "iotex-antenna/lib/action/method";
 
 //const regex = /^([0-9]+)I authorize 0x[0-9a-fA-F]{40} to claim in (0x[0-9A-Fa-f]{40})$/;
 
@@ -42,6 +45,7 @@ type STATE = {
   bucketIndexCopied: Boolean;
   showMessageBox: Boolean;
   address: string;
+  tsx: string;
   sig: string;
   bucketIndex: string;
   jsonMessage: IJSONMESSAGE;
@@ -58,6 +62,7 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
       showMessageBox: false,
       address: "",
       sig: "",
+      tsx: "",
       bucketIndex: "",
       jsonMessage: {
         bucket: 0,
@@ -177,12 +182,17 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
     };
     //@ts-ignore
     const payloadBytes = Buffer.from(JSON.stringify(payload));
-    await getStaking().transferOwnership({
+    const tsx = await getStaking().transferOwnership({
       bucketIndex: Number(this.state.bucketIndex),
       voterAddress: this.state.address,
       payload: payloadBytes,
       gasLimit: DEFAULT_STAKING_GAS_LIMIT,
       gasPrice: toRau("1", "Qev"),
+    });
+    let signer: SignerPlugin | undefined;
+    this.setState({ tsx });
+    const provider = new Antenna(iotexCore, {
+      signer,
     });
   };
 
@@ -198,6 +208,15 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
       <Layout style={{ ...layoutStyle, marginBottom: "15px" }}>
         <Form layout={"vertical"} style={{ padding: "1em" }} ref={this.formRef}>
           <h1>{t("reclaim.bucketHeader")}</h1>
+          {this.state.tsx.length > 0 && (
+            <div>
+              <Alert
+                message={t("reclaim.success")}
+                type="success"
+                showIcon={true}
+              />
+            </div>
+          )}
           <Flex width="100%" column={true} alignItems="flex-start">
             <p style={{ fontSize: "13px" }}>
               {t("reclaimBucket.introduction")}
@@ -304,7 +323,7 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
             </Form.Item>
           )}
           {this.state.jsonMessage.recipient.length > 0 && (
-            <Form.Item style={{ marginTop: "-19px" }}>
+            <Form.Item>
               <Button
                 type="primary"
                 htmlType="submit"
@@ -323,7 +342,7 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
 
   public render(): JSX.Element {
     return (
-      <div style={{ width: "100vw", height: "100vh" }}>
+      <div style={{ width: "100vw", height: "100vh", display: "initial" }}>
         {this.reclaimBucketContent()}
       </div>
     );
