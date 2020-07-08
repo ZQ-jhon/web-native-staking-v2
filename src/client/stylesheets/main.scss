@@ -136,3 +136,8 @@ $border-warning: #e44837;
 .BadgeRow {
   background-color: #f8fefe;
 }
+
+.BannerContainer::after {
+  content: "";
+  flex: auto;
+}

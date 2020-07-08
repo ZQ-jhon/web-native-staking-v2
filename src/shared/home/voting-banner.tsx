@@ -288,6 +288,7 @@ class VotingBanner extends Component<Props, State> {
           </Flex>
 
           <OverLay
+            className="BannerContainer"
             style={{
               display: this.state.showBuyIotx ? "flex" : "none",
               justifyContent: "space-between"
