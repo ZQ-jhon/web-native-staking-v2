@@ -78,6 +78,10 @@ const buyIotxList = [
   {
     href: "https://simpleswap.io/",
     src: "voting-website/simpleswap.svg"
+  },
+  {
+    href: "https://swapzone.io/?to=iotx",
+    src: "voting-website/swapzone.png"
   }
 ];
 interface AdminSettingItem {
@@ -284,7 +288,11 @@ class VotingBanner extends Component<Props, State> {
           </Flex>
 
           <OverLay
-            style={{ display: this.state.showBuyIotx ? "block" : "none" }}
+            className="BannerContainer"
+            style={{
+              display: this.state.showBuyIotx ? "flex" : "none",
+              justifyContent: "space-between"
+            }}
             onMouseEnter={this.showBuyIotxByhover(true)}
             onMouseLeave={this.showBuyIotxByhover(false)}
           >
@@ -345,14 +353,18 @@ const LinkWrapper = styled("a", {
 const Img = ({ bannerUrl = {} }: any) => {
   const desktop =
     bannerUrl.desktop &&
-    cloudinaryImage(bannerUrl.desktop)
+    (bannerUrl.desktop.indexOf("http") === -1?
+      bannerUrl.desktop:
+      cloudinaryImage(bannerUrl.desktop)
       .changeWidth(500)
-      .cdnUrl();
+      .cdnUrl());
   const mobile =
     bannerUrl.mobile &&
-    cloudinaryImage(bannerUrl.mobile)
-      .changeWidth(500)
-      .cdnUrl();
+    (bannerUrl.mobile.indexOf("http") === -1?
+      bannerUrl.mobile:
+      cloudinaryImage(bannerUrl.mobile)
+        .changeWidth(500)
+        .cdnUrl());
   const ImageBg = styled("div", {
     backgroundImage: `url("${desktop}")`,
     [media.palm]: {
@@ -362,7 +374,7 @@ const Img = ({ bannerUrl = {} }: any) => {
       backgroundImage: `url("${mobile}")`
     },
     backgroundSize: "contain",
-    backgroundColor: "#011627",
+    backgroundColor: "transparent",
     width: "100%",
     height: "100%",
     backgroundRepeat: "no-repeat",
