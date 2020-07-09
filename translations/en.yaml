@@ -317,18 +317,18 @@ name_registration.edit: Edit
 name_registration.update: Update
 name_regsitration.name: 'Delegate Name'
 name_regsitration.name.required: 'Please enter a valid name.'
-name_regsitration.name.explanation: 'the name of your delegate on-chain, which should be lowercase chars or digits, not longer than 12 bytes'
+name_regsitration.name.explanation: 'The name of your delegate on-chain, which should be lowercase chars or digits, not longer than 12 bytes'
 name_regsitration.operator_pub_key: 'Operator Address'
 name_regsitration.operator_pub_key.required: 'Please enter your operator''s IoTeX address.'
 name_regsitration.operator_pub_key.explanation: 'This address and its private key should be set to the full node that runs <a target=''_blank'' href=''https://github.com/iotexproject/iotex-core''> iotex-core</a> protocol'
 name_regsitration.reward_pub_key: 'Reward Address'
 name_regsitration.reward_pub_key.required: 'Please enter the IoTeX address that you''d like your reward to be sent to.'
-name_regsitration.reward_pub_key.explanation: 'the reward from the protocol will be sent to this address'
+name_regsitration.reward_pub_key.explanation: 'The reward from the protocol will be sent to this address'
 name_regsitration.owner: Owner Address
 name_regsitration.stakedAmount: Num of IOTX to Stake
-name_regsitration.stakedAmount.explanation: 'the amount of IOTX to be staked and voted to yourself, known as the self-stake bucket'
+name_regsitration.stakedAmount.explanation: 'The amount of IOTX to be staked and voted to yourself, known as the self-stake bucket'
 name_regsitration.stakedDuration: Stake Duration
-name_regsitration.stakedDuration.explanation: 'how long you intend to stake your IOTX. The longer the duration is, the higher-yielding the protocol offers'
+name_regsitration.stakedDuration.explanation: 'How long you intend to stake your IOTX. The longer the duration is, the higher-yielding the protocol offers'
 name_regsitration.autoStake: Auto Stake
 name_registration.submit.success_tip: Sent your action successfully!
 name_registration.data: Data

@@ -313,7 +313,7 @@ const NameRegistrationContainer = IopayRequired(
                   },
                 ]}
               >
-                <InputNumber />
+                <InputNumber style={{ width: 140 }} />
               </Form.Item>
               {/*
                 // @ts-ignore */}
@@ -432,6 +432,7 @@ const StakeAmountFormItem = () => {
       ]}
     >
       <InputNumber
+        style={{ width: 140 }}
         min={min}
         formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
         parser={(value) => (value ? value.replace(/\$\s?|(,*)/g, "") : "")}
