@@ -13,8 +13,8 @@ module.exports = {
   },
   items: [
     {
-      desktop: "banner/tokenomics.png",
-      mobile: "banner/tokenomics.png",
+      desktop: "banner/tokenomics.jpg",
+      mobile: "banner/tokenomics.jpg",
       href: "https://medium.com/@iotex/iotex-tokenomics-burn-drop-to-bootstrap-1-million-iotex-devices-66a43a1a68d7"
     }
   ]
