@@ -11,6 +11,7 @@ import { ScrollToTop } from "./common/scroll-top";
 import { colors } from "./common/styles/style-color";
 import { fonts } from "./common/styles/style-font";
 import { TopBar } from "./common/top-bar";
+import { DelegateContent } from "./delegate/delegate-content";
 import { ProfileContainer } from "./delegate/profile-container";
 import { ReclaimTools } from "./home/reclaim-bucket";
 import { VotingContainer } from "./home/voting-container";
@@ -61,6 +62,11 @@ export class App extends Component<Props> {
                 exact={true}
                 path="/profile/*"
                 component={ProfileContainer}
+              />
+              <Route
+                exact={true}
+                path="/delegate/:id/:type?"
+                component={DelegateContent}
               />
               <Route component={NotFound} />
             </Switch>
