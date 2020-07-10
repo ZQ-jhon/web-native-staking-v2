@@ -135,6 +135,7 @@ delegate.votesreceived.native: IOTX
 delegate.votesreceived.download: 'Download All Votes'
 delegate.votesreceived.votes: Votes
 delegate.votesreceived.remaining_duration: 'Remaining Staked Duration'
+delegate.votesreceived.unregister: 'Your address is unregistered'
 delegate.rewards: Rewards
 voting.progress-bar.circulating.supply: 'Circulating Supply'
 voting.buy_iotx: 'Buy IOTX'
