@@ -19,9 +19,9 @@ import { CandidateProfileViewContentContainer } from "./candidate-view-content";
 import { CandidateProfileViewHeaderContainer } from "./candidate-view-header";
 // import { DelegateParams } from "./delegate-params";
 // import { DelegateRewards } from "./delegate-rewards";
-// import { DelegateVotesReceived } from "./delegate-votes-received";
+import { DelegateVotesReceived } from "./delegate-votes-received";
 
-type Props = {
+export type Props = {
   match: {
     params: {
       id: string;
@@ -59,9 +59,9 @@ class Delegate extends Component<Props> {
     ];
     const Content = ({ data }: { data: TBpCandidate }) => {
       switch (match.params.type) {
-        /*  case "my-votes":
+        case "my-votes":
           return <DelegateVotesReceived />;
-        case "rewards":
+        /*  case "rewards":
           return <DelegateRewards registeredName={data.registeredName} />;
         case "params":
           return <DelegateParams data={data} />;*/

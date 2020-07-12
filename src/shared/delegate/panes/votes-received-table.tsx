@@ -12,7 +12,6 @@ import { ownersToNames, webBpApolloClient } from "../../common/apollo-client";
 import { CommonMargin } from "../../common/common-margin";
 import { Flex } from "../../common/flex";
 import { getIoPayAddress } from "../../common/get-antenna";
-import { IopayRequired } from "../../common/iopay-required";
 
 const GET_VOTES_REVEIVED = gql`
   query buckets($name: String!, $offset: Int, $limit: Int) {
@@ -26,7 +25,10 @@ const GET_VOTES_REVEIVED = gql`
   }
 `;
 
-type Props = {};
+type Props = {
+  registeredName?: string,
+  isPublic?: Boolean
+};
 
 type State = {
   offset: number;
@@ -34,21 +36,27 @@ type State = {
   registeredName?: string;
 };
 
-const VotesReceivedTable = IopayRequired(
-  class VotesReceivedTableInner extends PureComponent<Props, State> {
+export class VotesReceivedTable extends PureComponent<Props, State> {
     state: State = {
       offset: 0,
       limit: 30,
     };
 
     async componentDidMount(): Promise<void> {
-      const address = await getIoPayAddress();
-      const registeredName = ownersToNames[address];
-      this.setState({ registeredName });
+      const { isPublic = false } = this.props;
+      if(!isPublic){
+        const address = await getIoPayAddress();
+        const registeredName = ownersToNames[address];
+        this.setState({ registeredName });
+      }
     }
 
     downloadVotes = () => {
-      const { registeredName } = this.state;
+      let { registeredName } = this.props;
+      const { isPublic = false } = this.props;
+      if(!isPublic){
+        registeredName = this.state.registeredName
+      }
       if (!registeredName) {
         notification.error({
           message: t("delegate.votesreceived.unregister"),
@@ -74,7 +82,11 @@ const VotesReceivedTable = IopayRequired(
     };
     // tslint:disable-next-line:max-func-body-length
     render(): JSX.Element {
-      const { registeredName } = this.state;
+      let { registeredName } = this.props;
+      const { isPublic = false } = this.props;
+      if(!isPublic){
+        registeredName = this.state.registeredName
+      }
       if (!registeredName) {
         return <Table />;
       }
@@ -154,16 +166,23 @@ const VotesReceivedTable = IopayRequired(
             const { buckets = [] } = data || {};
             return (
               <SpinPreloader spinning={loading}>
-                <Flex width="100%" column={true} alignItems="flex-end">
-                  <Button
-                    loading={loading}
-                    type={"primary"}
-                    onClick={this.downloadVotes}
-                  >
-                    {t("delegate.votesreceived.download")}
-                  </Button>
-                  <CommonMargin />
-                </Flex>
+                {
+                  // tslint:disable-next-line:use-simple-attributes
+                  <Flex
+                    display={isPublic ? "none" : "flex"}
+                    width="100%"
+                    column={true}
+                    alignItems="flex-end">
+                    <Button
+                      loading={loading}
+                      type={"primary"}
+                      onClick={this.downloadVotes}
+                    >
+                      {t("delegate.votesreceived.download")}
+                    </Button>
+                    <CommonMargin />
+                  </Flex>
+                }
                 <Table
                   pagination={{
                     pageSize: limit,
@@ -192,6 +211,4 @@ const VotesReceivedTable = IopayRequired(
       );
     }
   }
-);
 
-export { VotesReceivedTable };
