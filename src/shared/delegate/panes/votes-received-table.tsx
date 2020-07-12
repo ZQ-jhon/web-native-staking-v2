@@ -8,10 +8,10 @@ import { t } from "onefx/lib/iso-i18n";
 import React from "react";
 import { PureComponent } from "react";
 import { Query, QueryResult } from "react-apollo";
-import { apolloClient, ownersToNames } from "../../common/apollo-client";
+import { ownersToNames, webBpApolloClient } from "../../common/apollo-client";
 import { CommonMargin } from "../../common/common-margin";
 import { Flex } from "../../common/flex";
-import { getAntenna } from "../../common/get-antenna";
+import { getIoPayAddress } from "../../common/get-antenna";
 import { IopayRequired } from "../../common/iopay-required";
 
 const GET_VOTES_REVEIVED = gql`
@@ -31,21 +31,34 @@ type Props = {};
 type State = {
   offset: number;
   limit: number;
+  registeredName?: string;
 };
 
 const VotesReceivedTable = IopayRequired(
   class VotesReceivedTableInner extends PureComponent<Props, State> {
     state: State = {
       offset: 0,
-      limit: 30
+      limit: 30,
     };
+
+    async componentDidMount(): Promise<void> {
+      const address = await getIoPayAddress();
+      const registeredName = ownersToNames[address];
+      this.setState({ registeredName });
+    }
+
     downloadVotes = () => {
-      const registeredName =
-        ownersToNames[getAntenna().iotx.accounts[0].address];
-      apolloClient
+      const { registeredName } = this.state;
+      if (!registeredName) {
+        notification.error({
+          message: t("delegate.votesreceived.unregister"),
+        });
+        return;
+      }
+      webBpApolloClient
         .query({
           query: GET_VOTES_REVEIVED,
-          variables: { name: registeredName, offset: 0, limit: 999999999 }
+          variables: { name: registeredName, offset: 0, limit: 999999999 },
         })
         .then(({ data: { buckets } }) => {
           // @ts-ignore
@@ -55,14 +68,13 @@ const VotesReceivedTable = IopayRequired(
           exportFromJSON({
             data: csvSource,
             fileName: "transactions",
-            exportType: "csv"
+            exportType: "csv",
           });
         });
     };
     // tslint:disable-next-line:max-func-body-length
     render(): JSX.Element {
-      const registeredName =
-        ownersToNames[getAntenna().iotx.accounts[0].address];
+      const { registeredName } = this.state;
       if (!registeredName) {
         return <Table />;
       }
@@ -70,7 +82,7 @@ const VotesReceivedTable = IopayRequired(
       const variables = {
         name: registeredName,
         offset,
-        limit
+        limit,
       };
       const columns = [
         {
@@ -78,14 +90,8 @@ const VotesReceivedTable = IopayRequired(
           dataIndex: "voter",
           key: "voter",
           render(text: string): JSX.Element {
-            return (
-              <div>
-                {String(text)
-                  .replace("0x", "")
-                  .slice(0, 8)}
-              </div>
-            );
-          }
+            return <div>{String(text).replace("0x", "").slice(0, 8)}</div>;
+          },
         },
         {
           title: t("delegate.votesreceived.token_amount"),
@@ -93,7 +99,7 @@ const VotesReceivedTable = IopayRequired(
           key: "votes",
           render(text: number): JSX.Element {
             return <span>{Math.abs(text).toLocaleString()}</span>;
-          }
+          },
         },
         {
           title: t("delegate.votesreceived.token_type"),
@@ -102,12 +108,12 @@ const VotesReceivedTable = IopayRequired(
           filters: [
             {
               text: t("delegate.votesreceived.native"),
-              value: "IOTX"
+              value: "IOTX",
             },
             {
               text: t("delegate.votesreceived.iotx"),
-              value: "IOTX-E"
-            }
+              value: "IOTX-E",
+            },
           ],
           render(_: void, record: { isNative: boolean }): string {
             return record.isNative ? "IOTX" : "IOTX-E";
@@ -116,27 +122,32 @@ const VotesReceivedTable = IopayRequired(
             const recordValue = record.isNative ? "IOTX" : "IOTX-E";
 
             return value === recordValue;
-          }
+          },
         },
         {
           title: t("delegate.votesreceived.votes"),
           dataIndex: "weightedVotes",
-          key: "weightedVotes"
+          key: "weightedVotes",
         },
         {
           title: t("delegate.votesreceived.remaining_duration"),
           dataIndex: "remainingDuration",
-          key: "remainingDuration"
-        }
+          key: "remainingDuration",
+        },
       ];
       return (
-        <Query ssr={false} query={GET_VOTES_REVEIVED} variables={variables}>
+        <Query
+          ssr={false}
+          query={GET_VOTES_REVEIVED}
+          variables={variables}
+          client={webBpApolloClient}
+        >
           {({ loading, error, data }: QueryResult) => {
             if (error) {
               notification.error({
                 message: "Error",
                 description: `failed to get votes recieved: ${error.message}`,
-                duration: 3
+                duration: 3,
               });
               return null;
             }
@@ -156,18 +167,18 @@ const VotesReceivedTable = IopayRequired(
                 <Table
                   pagination={{
                     pageSize: limit,
-                    onChange: page => {
+                    onChange: (page) => {
                       const cOffset = page > 0 ? (page - 1) * limit : 0;
                       this.setState({
                         offset: cOffset,
-                        limit
+                        limit,
                       });
                     },
                     total:
                       buckets.length < limit
                         ? offset + limit
                         : offset + limit + 1,
-                    defaultCurrent: offset / limit
+                    defaultCurrent: offset / limit,
                   }}
                   dataSource={buckets}
                   // @ts-ignore
