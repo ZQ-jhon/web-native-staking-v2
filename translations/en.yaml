@@ -136,6 +136,28 @@ delegate.votesreceived.download: 'Download All Votes'
 delegate.votesreceived.votes: Votes
 delegate.votesreceived.remaining_duration: 'Remaining Staked Duration'
 delegate.rewards: Rewards
+delegate.params: Params
+delegate.params.reward: Reward Address
+delegate.params.operator: Operator Address
+delegate.params.probationHistoricalRate: 'Probation Historical Rate'
+delegate.params.no_registered_name: 'The delegate has no registered name'
+delegate.votesreceived: 'Votes Received'
+delegate.ranking: Rank
+delegate.vote_share: 'Vote & Share Campaign'
+delegate.tweet.summary.title: '${delegate} (Retweet or Post to Enter Lucky Draw)'
+user-info.profile: Profile
+user-info.vote: 'My Votes'
+user-info.help: Help
+candidates.community_plan: 'Community Plan'
+candidates.introduction: Intro
+candidates.location: Location
+candidates.name: 'Delegate Name'
+candidates.next_epoch: 'Next Epoch'
+candidates.reward_plan: 'Reward Distribution Plan'
+candidates.social_media: 'Social Media'
+candidates.team: Team
+candidates.tech_setup: 'Tech Setup'
+candidates.title: 'Countdown For Voting Open'
 voting.progress-bar.circulating.supply: 'Circulating Supply'
 voting.buy_iotx: 'Buy IOTX'
 voting.metamask-reminder.content: 'To proceed with the voting process, please make sure you have unlocked your MetaMask and linked to IoTex. <a target="_blank" href="https://support.iotex.io/hc/en-us/articles/360020614094">Learn more.</a> '

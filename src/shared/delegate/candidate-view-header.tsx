@@ -17,6 +17,7 @@ import { RouteComponentProps } from "onefx/lib/react-router";
 import { styled } from "onefx/lib/styletron-react";
 import React, { Component } from "react";
 import { withRouter } from "react-router";
+import { TBpCandidate } from "../../types";
 import { BannerImg, shareStyle, Title } from "../common/component-style";
 import { Flex } from "../common/flex";
 import { colors } from "../common/styles/style-color2";
@@ -28,6 +29,7 @@ import {
   TwitterScriptSource,
 } from "../common/twitter";
 import { VotingButton } from "../home/vote-button-modal";
+import { VoteNowContainer } from "../staking/vote-now-steps/vote-now-container";
 
 const MAX_WIDTH = 560;
 const HEADER_HEIGHT = 160;
@@ -40,8 +42,7 @@ const { Header } = Layout;
 
 type Props = {
   scale?: number;
-  // tslint:disable-next-line:no-any
-  data: any;
+  data: TBpCandidate;
 } & RouteComponentProps;
 
 type State = {
@@ -94,6 +95,12 @@ class CandidateProfileViewHeader extends Component<Props, State> {
         >
           {t("candidate.vote")}
         </VotingButton>
+        <VoteNowContainer
+          displayOthers={false}
+          forceDisplayModal={this.state.showVotingModal}
+          requestDismiss={() => this.setState({ showVotingModal: false })}
+          registeredName={data.registeredName}
+        />
       </Flex>
     );
   }

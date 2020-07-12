@@ -19,7 +19,7 @@ module.exports = {
     noCsrfRoutes: {
       "/v2/api-gateway/": true,
       "/api/": true,
-      "/iotex-core-proxy/": true
+      "/iotex-core-proxy/": true,
     },
   },
   ssm: {
@@ -69,7 +69,7 @@ module.exports = {
       "https://api.iotex.one/",
       "https://api.cloudinary.com/",
       "https://analytics.iotexscan.io/query",
-      ...(process.env.API_GATEWAY_URL ? [process.env.API_GATEWAY_URL] : [])
+      ...(process.env.API_GATEWAY_URL ? [process.env.API_GATEWAY_URL] : []),
     ],
     "child-src": ["self"],
     "font-src": ["self", "data:", "https://fonts.gstatic.com/"],
@@ -81,6 +81,7 @@ module.exports = {
       "https://www.google-analytics.com/",
       "unsafe-eval",
       "https://web-native-staking-v2.b-cdn.net/",
+      "https://iotexmember.disqus.com/embed.js",
     ],
   },
   apiGatewayUrl:

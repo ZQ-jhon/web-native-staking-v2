@@ -6,6 +6,7 @@ import { t } from "onefx/lib/iso-i18n";
 import { RouteComponentProps } from "onefx/lib/react-router";
 import React, { Component, CSSProperties } from "react";
 import { withRouter } from "react-router";
+import { TBpCandidate } from "../../types";
 import { mdit } from "../article/markdownit";
 import { colors } from "../common/styles/style-color2";
 
@@ -17,8 +18,7 @@ const { Content } = Layout;
 const Panel = Collapse.Panel;
 
 type Props = {
-  // tslint:disable-next-line:no-any
-  data: any;
+  data: TBpCandidate;
   match: {
     params: {
       id: string;
@@ -40,8 +40,6 @@ const customPanelStyle: CSSProperties = {
 
 type State = {
   showVotingModal: boolean;
-  showMetaMaskReminder: boolean;
-  enableDetailedVote: boolean;
 };
 
 class CandidateViewProfileContent extends Component<Props, State> {
@@ -49,18 +47,9 @@ class CandidateViewProfileContent extends Component<Props, State> {
     super(props);
     this.state = {
       showVotingModal: false,
-      showMetaMaskReminder: false,
-      enableDetailedVote: false,
     };
   }
 
-  showVotingModal(): void {
-    if (this.state.enableDetailedVote) {
-      this.setState({ showVotingModal: true });
-    } else {
-      this.setState({ showMetaMaskReminder: true });
-    }
-  }
   render(): JSX.Element {
     const { data } = this.props;
     const collapses = getCollapsesParams(data);
