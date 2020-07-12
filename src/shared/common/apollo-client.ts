@@ -74,9 +74,13 @@ export const analyticsApolloClient = new ApolloClient({
   link: new HttpLink({
     uri: "https://analytics.iotexscan.io/query",
     fetch,
-    headers: { "x-iotex-client-id": "" }
+    headers: { "x-iotex-client-id": "" },
   }),
   cache: isBrowser
     ? new InMemoryCache().restore(state.webBpApolloState)
-    : new InMemoryCache()
+    : new InMemoryCache(),
 });
+
+export const explorerApolloClient = createWebBpApolloClient(
+  iotexscanGatewayUrl
+);

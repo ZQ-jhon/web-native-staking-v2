@@ -17,9 +17,9 @@ import { ContentPadding } from "../common/styles/style-padding";
 import { GET_BP_CANDIDATE } from "../staking/smart-contract-gql-queries";
 import { CandidateProfileViewContentContainer } from "./candidate-view-content";
 import { CandidateProfileViewHeaderContainer } from "./candidate-view-header";
-// import { DelegateParams } from "./delegate-params";
-// import { DelegateRewards } from "./delegate-rewards";
+import { DelegateParams } from "./delegate-params";
 import { DelegateVotesReceived } from "./delegate-votes-received";
+import { DelegateRewards } from "./panes/delegate-rewards";
 
 export type Props = {
   match: {
@@ -61,10 +61,10 @@ class Delegate extends Component<Props> {
       switch (match.params.type) {
         case "my-votes":
           return <DelegateVotesReceived />;
-        /*  case "rewards":
+        case "rewards":
           return <DelegateRewards registeredName={data.registeredName} />;
         case "params":
-          return <DelegateParams data={data} />;*/
+          return <DelegateParams data={data} />;
         default:
           return <CandidateProfileViewContentContainer data={data} />;
       }

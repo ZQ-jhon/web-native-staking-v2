@@ -69,6 +69,7 @@ module.exports = {
       "https://api.iotex.one/",
       "https://api.cloudinary.com/",
       "https://analytics.iotexscan.io/query",
+      "https://iotexscan.io/api-gateway/",
       ...(process.env.API_GATEWAY_URL ? [process.env.API_GATEWAY_URL] : []),
     ],
     "child-src": ["self"],
@@ -87,5 +88,6 @@ module.exports = {
   apiGatewayUrl:
     process.env.API_GATEWAY_URL || "http://localhost:5004/v2/api-gateway/",
   iotexCore: "https://api.iotex.one",
+  easterHeight: "4478761",
   webBp: "https://member.iotex.io/api-gateway/",
 };

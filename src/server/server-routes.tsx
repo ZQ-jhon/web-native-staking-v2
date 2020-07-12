@@ -76,6 +76,7 @@ export function setServerRoutes(server: MyServer): void {
     ctx.setState("base.next", ctx.query.next);
     ctx.setState("base.iotexCore", config.get("iotexCore"));
     ctx.setState("base.webBp", config.get("webBp"));
+    ctx.setState("base.easterHeight", config.get("easterHeight"));
     await setAllCandidates(ctx);
     checkingAppSource(ctx);
     ctx.body = await apolloSSR(ctx, {
