@@ -1,5 +1,6 @@
 import Button from "antd/lib/button";
 import notification from "antd/lib/notification";
+import parse from "parse-duration";
 import Table from "antd/lib/table";
 import exportFromJSON from "export-from-json";
 import gql from "graphql-tag";
@@ -26,12 +27,12 @@ const GET_VOTES_REVEIVED = gql`
 `;
 
 type Buckets = {
-  isNative: String;
-  remainingDuration: String;
-  voter: String;
-  votes: String;
-  weightedVotes: String;
-  __typename: String;
+  isNative: string;
+  remainingDuration: string;
+  voter: string;
+  votes: string;
+  weightedVotes: string;
+  __typename: string;
 };
 
 type Props = {
@@ -90,29 +91,17 @@ export class VotesReceivedTable extends PureComponent<Props, State> {
         });
     };
 
-    // @ts-ignore
     getUpdatedBucket = (buckets: Array<Buckets>) => {
-      // @ts-ignore
       buckets.map((obj) => {
-        const val = obj.remainingDuration;
-        const indexOfH = val.indexOf("h");
-        const indexOfM = val.indexOf("m");
-        const hours = val.substring(0, indexOfH);
-        const min = val.substring(indexOfH + 1, indexOfM);
-        let Days = Math.floor(Number(hours) / 24);
-        let month;
-        let week;
-        if (Days >= 31) {
-          month = Math.floor(Days / 31);
-          week = Math.floor((Days % 31) / 7);
-          Days = Math.floor((Days % 31) % 7);
-          const remainingDuration = `${month}mth ${week}w ${Days}d`;
-          obj.remainingDuration = remainingDuration;
-        } else {
-          const newHour = Number(hours) % 24;
-          const remainingDuration = `${Days}d ${newHour}h ${min}m`;
-          obj.remainingDuration = remainingDuration;
-        }
+        const updatedMonth = String(
+          parse(obj.remainingDuration, "month")
+        ).split(".");
+        const days = String(parse(`.${updatedMonth[1]} month`, "day")).split(
+          "."
+        );
+        obj.remainingDuration = `${updatedMonth[0]} month ${
+          days.length > 0 ? days[0] : 0
+        } day `;
       });
     };
     // tslint:disable-next-line:max-func-body-length
