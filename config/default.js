@@ -61,7 +61,7 @@ module.exports = {
       "self",
       "https://www.google-analytics.com/",
       "https://member.iotex.io/api-gateway/",
-      "https://member-testnet.iotex.io/api-gateway/",
+      "https://web-bp-testnet.herokuapp.com/api-gateway/",
       "wss://local.iotex.io:64102/",
       "https://member.iotex.io/iotex-core-proxy/",
       "https://api.nightly-cluster-2.iotex.one/",
