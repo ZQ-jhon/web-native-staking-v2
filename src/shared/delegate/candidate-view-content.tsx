@@ -7,7 +7,6 @@ import { RouteComponentProps } from "onefx/lib/react-router";
 import React, { Component, CSSProperties } from "react";
 import { withRouter } from "react-router";
 import { TBpCandidate } from "../../types";
-import { mdit } from "../article/markdownit";
 import { colors } from "../common/styles/style-color2";
 
 const TEXT_SIZE = 38;
@@ -88,7 +87,7 @@ class CandidateViewProfileContent extends Component<Props, State> {
                   fontSize: "14px",
                 }}
               >
-                <p dangerouslySetInnerHTML={getHtml(item.content)} />
+                <p dangerouslySetInnerHTML={{ __html: item.content }} />
               </div>
             </Panel>
           ))}
@@ -97,12 +96,6 @@ class CandidateViewProfileContent extends Component<Props, State> {
       </Content>
     );
   }
-}
-
-const md = mdit;
-// tslint:disable-next-line:no-any
-function getHtml(content: any): { __html: string } {
-  return { __html: md.render(content) };
 }
 
 // tslint:disable-next-line:no-any
