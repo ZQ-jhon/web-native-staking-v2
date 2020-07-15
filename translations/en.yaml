@@ -186,7 +186,7 @@ candidates.delegate_list: 'Delegate List'
 candidates.rank: Rank
 candidates.blurb: Blurb
 candidates.badge_info.hermes.title: Hermes Delegate
-candidates.badge_info.hermes.content: Automatic Rewards Distribution via Hermes
+candidates.badge_info.hermes.content: 'Automatic Rewards Distribution via Hermes <a target=''_blank'' href="https://hermes.to/">Learn More</a>'
 candidates.badge_info.genesis.title: Delegate Since Day 1
 candidates.badge_info.genesis.content: Joined to produce the genesis block
 candidates.badge_info.ambassador.title: Ambassador Delegate
