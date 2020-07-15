@@ -20,11 +20,13 @@ import JsonGlobal from "safe-json-globals/get";
 import { styled } from "styletron-react";
 import { IBucket } from "../../server/gateway/staking";
 import { AddressName } from "../common/address-name";
+import { stakeBadgeStyle } from "../common/component-style";
 import { Flex } from "../common/flex";
 import { colors } from "../common/styles/style-color2";
 import { media } from "../common/styles/style-media";
 import { getPowerEstimationForBucket } from "../common/token-utils";
 import { renderActionMenu } from "../staking/stake-edit/modal-menu";
+import { isBurnDrop } from "../staking/staking-utils";
 import { AccountMeta } from "./account-meta";
 
 const ACCOUNT_AREA_WIDTH = 290;
@@ -161,19 +163,21 @@ class MyVotesTable extends Component<Props, State> {
     const no = String(item.index);
     const badgeRow = item.selfStakingBucket ? "BadgeRow" : "";
 
+    const badges = [];
+    if (item.selfStakingBucket) {
+      badges.push(<StakeTag text={t("my_stake.self_staking")} />);
+    }
+    if (isBurnDrop(item)) {
+      badges.push(<StakeTag text={t("my_stake.burn-drop")} />);
+    }
+    const hasBadges = badges.length > 0;
+
     const header = (
       <div>
-        {item.selfStakingBucket && (
-          <Tag
-            color={colors.badgeTag}
-            style={{
-              color: colors.black95,
-              borderColor: colors.grayText44,
-              padding: "1px 9px",
-            }}
-          >
-            {t("my_stake.self_staking")}
-          </Tag>
+        {hasBadges && (
+          <Flex alignContent={"flex-start"} justifyContent={"left"}>
+            {badges.map((item) => item)}
+          </Flex>
         )}
         <Flex justifyContent={"space-between"} flexDirection={"row"}>
           <div>
@@ -295,6 +299,14 @@ class MyVotesTable extends Component<Props, State> {
           // @ts-ignore
           render(text: any, record: IBucket): JSX.Element {
             const no = String(record.index);
+            const badges = [];
+            if (record.selfStakingBucket) {
+              badges.push(<StakeTag text={t("my_stake.self_staking")} />);
+            }
+            if (isBurnDrop(record)) {
+              badges.push(<StakeTag text={t("my_stake.burn-drop")} />);
+            }
+            const hasBadges = badges.length > 0;
             return (
               <Flex
                 column={true}
@@ -307,25 +319,22 @@ class MyVotesTable extends Component<Props, State> {
                   },
                 }}
               >
-                {record.selfStakingBucket && (
-                  <Tag
-                    color={colors.badgeTag}
-                    style={{
-                      marginLeft: "-10px",
-                      marginTop: "-12px",
-                      color: colors.black95,
-                      borderColor: colors.grayText44,
-                      padding: "1px 9px",
-                    }}
+                {hasBadges && (
+                  <Flex
+                    alignContent={"flex-start"}
+                    justifyContent={"left"}
+                    nowrap={true}
+                    marginLeft={"-10px"}
+                    marginTop={"-12px"}
                   >
-                    {t("my_stake.self_staking")}
-                  </Tag>
+                    {badges.map((item) => item)}
+                  </Flex>
                 )}
                 <Flex
                   minWidth={"160px"}
                   alignContent={"flex-start"}
                   justifyContent={"left"}
-                  marginTop={`${record.selfStakingBucket ? "8px" : "15px"}`}
+                  marginTop={`${hasBadges ? "8px" : "15px"}`}
                 >
                   <Avatar
                     shape="square"
@@ -592,3 +601,9 @@ const CellSpan = styled("span", {
   color: colors.black,
   padding: "3px 0",
 });
+
+export const StakeTag = ({ text }: { text: string }) => (
+  <Tag color={colors.badgeTag} style={stakeBadgeStyle}>
+    {text}
+  </Tag>
+);

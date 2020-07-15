@@ -332,6 +332,7 @@ my_stake.congrats_voter: 'And… Congratulations on becoming a <a href="/member/
 my_stake.share_twitter: 'Share on Twitter'
 my_stake.epoch_day: 'Stake Duration (days)'
 my_stake.self_staking: 'Self Staking'
+my_stake.burn-drop: 'Burn-Drop Eligible'
 voting.vote.from.wallet: 'Stake and vote from wallet'
 voting.vote.existing.bucket: 'Vote with existing bucket'
 name_registration.register: Submit

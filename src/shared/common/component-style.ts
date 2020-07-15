@@ -37,6 +37,13 @@ export const shareStyle: CSSProperties = {
   borderColor: "unset",
 };
 
+export const stakeBadgeStyle: CSSProperties = {
+  color: colors.black95,
+  borderColor: colors.grayText44,
+  padding: "1px 9px",
+  marginRight: "4px",
+};
+
 export const BannerImg = styled("img", () => ({
   width: "100%",
 }));
