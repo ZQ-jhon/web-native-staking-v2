@@ -2,16 +2,12 @@ import RightOutlined from "@ant-design/icons/RightOutlined";
 import Avatar from "antd/lib/avatar";
 import Collapse from "antd/lib/collapse";
 import Layout from "antd/lib/layout";
-// @ts-ignore
-import MarkdownIt from "markdown-it";
 import { t } from "onefx/lib/iso-i18n";
 import { RouteComponentProps } from "onefx/lib/react-router";
 import React, { Component, CSSProperties } from "react";
 import { withRouter } from "react-router";
 import { TBpCandidate } from "../../types";
 import { colors } from "../common/styles/style-color2";
-
-const md = new MarkdownIt();
 
 const TEXT_SIZE = 38;
 const MIDDLE = 0.75;
@@ -91,7 +87,7 @@ class CandidateViewProfileContent extends Component<Props, State> {
                   fontSize: "14px",
                 }}
               >
-                <p dangerouslySetInnerHTML={getHtml(item.content)} />
+                <p dangerouslySetInnerHTML={{ __html: item.content }} />
               </div>
             </Panel>
           ))}
@@ -100,11 +96,6 @@ class CandidateViewProfileContent extends Component<Props, State> {
       </Content>
     );
   }
-}
-
-// tslint:disable-next-line:no-any
-function getHtml(content: any): { __html: string } {
-  return { __html: md.render(content) };
 }
 
 // tslint:disable-next-line:no-any
