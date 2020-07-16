@@ -337,7 +337,7 @@ const NameRegistrationContainer = IopayRequired(
               <OperatorAddressFormItem />
               <RewardAddressFormItem />
               <Form.Item>
-                <p>{t("profile.register_name.submit.desc")}</p>
+                <p><b>{t("profile.register_name.submit.desc")}</b></p>
                 <Button
                   style={{ marginRight: "10px" }}
                   type={"primary"}
