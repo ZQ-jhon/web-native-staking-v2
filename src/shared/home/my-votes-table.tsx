@@ -338,7 +338,7 @@ class MyVotesTable extends Component<Props, State> {
                 >
                   <Avatar
                     shape="square"
-                    src={assetURL("my-staking/box.png")}
+                    src={assetURL("delegate.png")}
                     size={40}
                     style={{ margin: "5px 10px 2px 0" }}
                   />
