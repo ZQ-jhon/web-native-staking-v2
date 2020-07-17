@@ -5,35 +5,35 @@ import MinusOutlined from "@ant-design/icons/MinusOutlined";
 import Avatar from "antd/lib/avatar";
 import Button from "antd/lib/button";
 import Dropdown from "antd/lib/dropdown";
-import notification from "antd/lib/notification";
 import List from "antd/lib/list";
+import notification from "antd/lib/notification";
 import Table from "antd/lib/table";
 import Tag from "antd/lib/tag";
-import dateformat from "dateformat";
-import Antenna from "iotex-antenna/lib";
 import { ApolloClient } from "apollo-client";
+import dateformat from "dateformat";
+import gql from "graphql-tag";
+import Antenna from "iotex-antenna/lib";
 import isBrowser from "is-browser";
 import { assetURL } from "onefx/lib/asset-url";
 import { t } from "onefx/lib/iso-i18n";
 import React, { Component } from "react";
-import { connect } from "react-redux";
-import gql from "graphql-tag";
 import { Query, QueryResult } from "react-apollo";
+import { connect } from "react-redux";
 // @ts-ignore
 import JsonGlobal from "safe-json-globals/get";
 import { styled } from "styletron-react";
 import { IBucket } from "../../server/gateway/staking";
+import { TBpCandidate } from "../../types";
 import { AddressName } from "../common/address-name";
+import { webBpApolloClient } from "../common/apollo-client";
 import { stakeBadgeStyle } from "../common/component-style";
 import { Flex } from "../common/flex";
 import { colors } from "../common/styles/style-color2";
 import { media } from "../common/styles/style-media";
-import { TBpCandidate } from "../../types";
 import { getPowerEstimationForBucket } from "../common/token-utils";
 import { renderActionMenu } from "../staking/stake-edit/modal-menu";
 import { isBurnDrop } from "../staking/staking-utils";
 import { AccountMeta } from "./account-meta";
-import { webBpApolloClient } from "../common/apollo-client";
 const ACCOUNT_AREA_WIDTH = 290;
 
 type Props = {
@@ -317,45 +317,43 @@ class MyVotesTable extends Component<Props, State> {
     );
   };
 
-  returnAvatar = (record: IBucket) => {
-    return (
-      <Query ssr={false} query={GET_BP_CANDIDATES} client={webBpApolloClient}>
-        {({
-          loading,
-          error,
-          data,
-        }: QueryResult<{ bpCandidates: Array<TBpCandidate> }>) => {
-          const logo =
-            data &&
-            data.bpCandidates.filter(
-              (candidate) => candidate.registeredName === record.canName
-            )[0].logo;
-          if (error && !loading) {
-            notification.error({
-              message: "Error",
-              description: `failed to get BP candidate: ${error.message}`,
-              duration: 3,
-            });
-            return <></>;
-          }
-          return (
-            <Avatar
-              shape="circle"
-              src={logo}
-              size={40}
-              style={{ margin: "5px 10px 2px 0" }}
-            />
-          );
-        }}
-      </Query>
-    );
-  };
-
   // tslint:disable-next-line:max-func-body-length
   render(): JSX.Element {
     const bpCandidates: any = [];
     const { dataSource } = this.props;
-    const { returnAvatar } = this;
+    const returnAvatar = (record: IBucket) => {
+      return (
+        <Query ssr={false} query={GET_BP_CANDIDATES} client={webBpApolloClient}>
+          {({
+            loading,
+            error,
+            data,
+          }: QueryResult<{ bpCandidates: Array<TBpCandidate> }>) => {
+            const logo =
+              data &&
+              data.bpCandidates.filter(
+                (candidate) => candidate.registeredName === record.canName
+              )[0].logo;
+            if (error && !loading) {
+              notification.error({
+                message: "Error",
+                description: `failed to get BP candidate: ${error.message}`,
+                duration: 3,
+              });
+              return <></>;
+            }
+            return (
+              <Avatar
+                shape="circle"
+                src={logo}
+                size={40}
+                style={{ margin: "5px 10px 2px 0" }}
+              />
+            );
+          }}
+        </Query>
+      );
+    };
 
     // @ts-ignore
     const DisplayMyStakeCols = (bpCandidates: any): Array<any> =>

@@ -58,8 +58,7 @@ export async function getIoPayAddress(): Promise<string> {
     return address;
   }
   const account = antenna.iotx.accounts[0];
-  // return (account && account.address) || "";
-  return "io1x6mar9hlfkxtcyha379fq7ald0kpmt0d3qlyv0";
+  return (account && account.address) || "";
 }
 
 // tslint:disable-next-line:insecure-random
