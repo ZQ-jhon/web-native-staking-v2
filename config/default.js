@@ -44,7 +44,10 @@ module.exports = {
     googleTid: "TODO: replace with your googleTid",
   },
   csp: {
-    "default-src": ["none"],
+    "default-src": ["none",
+    "https://c.disquscdn.com/",
+    "https://disqus.com/",
+    ],
     "manifest-src": ["self", "https://web-native-staking-v2.b-cdn.net/"],
     "style-src": [
       "self",
@@ -53,6 +56,7 @@ module.exports = {
       "https://web-native-staking-v2.b-cdn.net/",
     ],
     "frame-src": [
+      "https://disqus.com/",
       "https://wvjb-queue-message/",
       "https://bridge-loaded/",
       "yy://jb-queue-message/",
@@ -70,6 +74,7 @@ module.exports = {
       "https://api.cloudinary.com/",
       "https://analytics.iotexscan.io/query",
       "https://iotexscan.io/api-gateway/",
+      "https://web-native-staking-v2.b-cdn.net/'",
       ...(process.env.API_GATEWAY_URL ? [process.env.API_GATEWAY_URL] : []),
     ],
     "child-src": ["self"],
