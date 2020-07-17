@@ -5,16 +5,20 @@ import MinusOutlined from "@ant-design/icons/MinusOutlined";
 import Avatar from "antd/lib/avatar";
 import Button from "antd/lib/button";
 import Dropdown from "antd/lib/dropdown";
+import notification from "antd/lib/notification";
 import List from "antd/lib/list";
 import Table from "antd/lib/table";
 import Tag from "antd/lib/tag";
 import dateformat from "dateformat";
 import Antenna from "iotex-antenna/lib";
+import { ApolloClient } from "apollo-client";
 import isBrowser from "is-browser";
 import { assetURL } from "onefx/lib/asset-url";
 import { t } from "onefx/lib/iso-i18n";
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import gql from "graphql-tag";
+import { Query, QueryResult } from "react-apollo";
 // @ts-ignore
 import JsonGlobal from "safe-json-globals/get";
 import { styled } from "styletron-react";
@@ -24,15 +28,17 @@ import { stakeBadgeStyle } from "../common/component-style";
 import { Flex } from "../common/flex";
 import { colors } from "../common/styles/style-color2";
 import { media } from "../common/styles/style-media";
+import { TBpCandidate } from "../../types";
 import { getPowerEstimationForBucket } from "../common/token-utils";
 import { renderActionMenu } from "../staking/stake-edit/modal-menu";
 import { isBurnDrop } from "../staking/staking-utils";
 import { AccountMeta } from "./account-meta";
-
+import { webBpApolloClient } from "../common/apollo-client";
 const ACCOUNT_AREA_WIDTH = 290;
 
 type Props = {
   antenna?: Antenna;
+  apolloClient: ApolloClient<{}>;
   dataSource?: Array<IBucket>;
 };
 
@@ -41,6 +47,36 @@ type State = {
   showMore: Record<any, any>;
   address?: string;
 };
+
+export const GET_BP_CANDIDATES = gql`
+  query bpCandidates {
+    bpCandidates {
+      id
+      rank
+      logo
+      name
+      status
+      category
+      serverStatus
+      liveVotes
+      liveVotesDelta
+      nodeVersion
+      percent
+      registeredName
+      socialMedia
+      productivity
+      productivityBase
+      blockRewardPortion
+      epochRewardPortion
+      foundationRewardPortion
+      rewardPlan
+      badges
+      probation {
+        count
+      }
+    }
+  }
+`;
 
 const state = isBrowser && JsonGlobal("state");
 const isIoPayMobile = isBrowser && state.base.isIoPayMobile;
@@ -256,7 +292,7 @@ class MyVotesTable extends Component<Props, State> {
         ),
       },
       {
-        title: t("my_stake.bucket_status"),
+        title: t("my_stake.bucket_statu<s"),
         value: item.status,
       },
     ];
@@ -281,10 +317,45 @@ class MyVotesTable extends Component<Props, State> {
     );
   };
 
+  returnAvatar = (record: IBucket) => {
+    return (
+      <Query ssr={false} query={GET_BP_CANDIDATES} client={webBpApolloClient}>
+        {({
+          loading,
+          error,
+          data,
+        }: QueryResult<{ bpCandidates: Array<TBpCandidate> }>) => {
+          const logo =
+            data &&
+            data.bpCandidates.filter(
+              (candidate) => candidate.registeredName === record.canName
+            )[0].logo;
+          if (error && !loading) {
+            notification.error({
+              message: "Error",
+              description: `failed to get BP candidate: ${error.message}`,
+              duration: 3,
+            });
+            return <></>;
+          }
+          return (
+            <Avatar
+              shape="circle"
+              src={logo}
+              size={40}
+              style={{ margin: "5px 10px 2px 0" }}
+            />
+          );
+        }}
+      </Query>
+    );
+  };
+
   // tslint:disable-next-line:max-func-body-length
   render(): JSX.Element {
     const bpCandidates: any = [];
     const { dataSource } = this.props;
+    const { returnAvatar } = this;
 
     // @ts-ignore
     const DisplayMyStakeCols = (bpCandidates: any): Array<any> =>
@@ -336,12 +407,7 @@ class MyVotesTable extends Component<Props, State> {
                   justifyContent={"left"}
                   marginTop={`${hasBadges ? "8px" : "15px"}`}
                 >
-                  <Avatar
-                    shape="square"
-                    src={assetURL("delegate.png")}
-                    size={40}
-                    style={{ margin: "5px 10px 2px 0" }}
-                  />
+                  {returnAvatar(record)}
                   <Flex
                     column={true}
                     alignItems={"baseline"}
