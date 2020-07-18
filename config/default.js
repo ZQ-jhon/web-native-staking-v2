@@ -44,10 +44,7 @@ module.exports = {
     googleTid: "TODO: replace with your googleTid",
   },
   csp: {
-    "default-src": ["none",
-    "https://c.disquscdn.com/",
-    "https://disqus.com/",
-    ],
+    "default-src": ["none"],
     "manifest-src": ["self", "https://web-native-staking-v2.b-cdn.net/"],
     "style-src": [
       "self",
@@ -74,7 +71,9 @@ module.exports = {
       "https://api.cloudinary.com/",
       "https://analytics.iotexscan.io/query",
       "https://iotexscan.io/api-gateway/",
-      "https://web-native-staking-v2.b-cdn.net/'",
+      "https://web-native-staking-v2.b-cdn.net/",
+      "https://c.disquscdn.com/",
+      "https://disqus.com/",
       ...(process.env.API_GATEWAY_URL ? [process.env.API_GATEWAY_URL] : []),
     ],
     "child-src": ["self"],
@@ -88,6 +87,8 @@ module.exports = {
       "unsafe-eval",
       "https://web-native-staking-v2.b-cdn.net/",
       "https://iotexmember.disqus.com/embed.js",
+      "https://c.disquscdn.com/",
+      "https://disqus.com/",
     ],
   },
   apiGatewayUrl:
