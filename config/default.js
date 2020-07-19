@@ -44,7 +44,7 @@ module.exports = {
     googleTid: "TODO: replace with your googleTid",
   },
   csp: {
-    "default-src": ["*.*"],
+    "default-src": ["none"],
     "manifest-src": ["self", "https://web-native-staking-v2.b-cdn.net/"],
     "style-src": [
       "self",
@@ -52,9 +52,7 @@ module.exports = {
       "https://fonts.googleapis.com/css",
       "https://web-native-staking-v2.b-cdn.net/",
     ],
-    "frame-src": [
-      "*.*"
-    ],
+    "frame-src": ["*"],
     "connect-src": [
       "self",
       "https://www.google-analytics.com/",
