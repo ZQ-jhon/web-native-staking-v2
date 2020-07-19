@@ -52,7 +52,6 @@ module.exports = {
       "https://fonts.googleapis.com/css",
       "https://web-native-staking-v2.b-cdn.net/",
     ],
-    "frame-src": ["*"],
     "connect-src": [
       "self",
       "https://www.google-analytics.com/",
