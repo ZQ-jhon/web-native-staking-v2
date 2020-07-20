@@ -16,7 +16,7 @@ web-native-staking-v2 is based on OneFx which is a full-stack framework for buil
 ### Create a project
 
 ```bash
-git clone git@github.com:puncsky/web-native-staking-v2.git my-awesome-project
+git clone git@github.com:puncsky/web-native-staking-v2.git
 ```
 
 ### Run your project
