@@ -78,6 +78,10 @@ const buyIotxList = [
   {
     href: "https://simpleswap.io/",
     src: "voting-website/simpleswap.svg"
+  },
+  {
+    href: "https://swapzone.io/?to=iotx",
+    src: "voting-website/swapzone.png"
   }
 ];
 interface AdminSettingItem {
@@ -110,6 +114,7 @@ const BannerTitle = (): JSX.Element => {
 };
 type Props = {
   displayMobileList: Boolean;
+  isInAppWebview: Boolean;
   showVotingModal(record: Object | null): void;
 };
 type State = { showBuyIotx: Boolean };
@@ -162,6 +167,7 @@ class VotingBanner extends Component<Props, State> {
   // tslint:disable-next-line:max-func-body-length
   render(): JSX.Element {
     const { items } = votingBannerSetting;
+    const { isInAppWebview, displayMobileList } = this.props;
     return (
       // @ts-ignore
       <Image
@@ -190,7 +196,15 @@ class VotingBanner extends Component<Props, State> {
                   marginTop: "16px"
                 }}
               >
-                {t("voting.banner_content")}
+                {displayMobileList && !isInAppWebview ? (
+                  <span
+                    dangerouslySetInnerHTML={{
+                      __html: t("voting.banner_content.other_browser")
+                    }}
+                  />
+                ) : (
+                  t("voting.banner_content")
+                )}
               </div>
               <CommonMargin
                 style={{
@@ -216,7 +230,7 @@ class VotingBanner extends Component<Props, State> {
                   {this.props.displayMobileList ? (
                     <Button
                       type="default"
-                      style={{ width: "100%", lineHeight: "32px" }}
+                      style={{ width: "100%" }}
                       onClick={this.showBuyIotxBtn}
                     >
                       {t("voting.buy_iotx")}
@@ -274,7 +288,11 @@ class VotingBanner extends Component<Props, State> {
           </Flex>
 
           <OverLay
-            style={{ display: this.state.showBuyIotx ? "block" : "none" }}
+            className="BannerContainer"
+            style={{
+              display: this.state.showBuyIotx ? "flex" : "none",
+              justifyContent: "space-between"
+            }}
             onMouseEnter={this.showBuyIotxByhover(true)}
             onMouseLeave={this.showBuyIotxByhover(false)}
           >
@@ -335,14 +353,18 @@ const LinkWrapper = styled("a", {
 const Img = ({ bannerUrl = {} }: any) => {
   const desktop =
     bannerUrl.desktop &&
-    cloudinaryImage(bannerUrl.desktop)
+    (bannerUrl.desktop.indexOf("http") === -1?
+      bannerUrl.desktop:
+      cloudinaryImage(bannerUrl.desktop)
       .changeWidth(500)
-      .cdnUrl();
+      .cdnUrl());
   const mobile =
     bannerUrl.mobile &&
-    cloudinaryImage(bannerUrl.mobile)
-      .changeWidth(500)
-      .cdnUrl();
+    (bannerUrl.mobile.indexOf("http") === -1?
+      bannerUrl.mobile:
+      cloudinaryImage(bannerUrl.mobile)
+        .changeWidth(500)
+        .cdnUrl());
   const ImageBg = styled("div", {
     backgroundImage: `url("${desktop}")`,
     [media.palm]: {
@@ -352,7 +374,7 @@ const Img = ({ bannerUrl = {} }: any) => {
       backgroundImage: `url("${mobile}")`
     },
     backgroundSize: "contain",
-    backgroundColor: "#011627",
+    backgroundColor: "transparent",
     width: "100%",
     height: "100%",
     backgroundRepeat: "no-repeat",

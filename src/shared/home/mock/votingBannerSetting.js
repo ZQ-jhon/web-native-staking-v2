@@ -13,11 +13,9 @@ module.exports = {
   },
   items: [
     {
-      desktop:
-        "https://res.cloudinary.com/dn3pnmk8w/image/upload/v1581388564/web-bp/ucam_xyok1o_xwokxe.png",
-      mobile:
-        "https://res.cloudinary.com/dn3pnmk8w/image/upload/v1581388564/web-bp/ucam_xyok1o_xwokxe.png",
-      href: "https://ucam.iotex.io/"
+      desktop: "banner/tokenomics1024.jpg",
+      mobile: "banner/tokenomics1024.jpg",
+      href: "https://medium.com/@iotex/iotex-tokenomics-burn-drop-to-bootstrap-1-million-iotex-devices-66a43a1a68d7"
     }
   ]
 };

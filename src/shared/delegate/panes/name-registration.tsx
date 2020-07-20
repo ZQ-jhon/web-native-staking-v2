@@ -1,6 +1,5 @@
 /* tslint:disable:use-simple-attributes react-a11y-anchors */
-// @flow
-// $FlowFixMe
+import InfoCircleOutlined from "@ant-design/icons/InfoCircleOutlined";
 import Alert from "antd/lib/alert";
 import Button from "antd/lib/button";
 import Form from "antd/lib/form";
@@ -9,12 +8,13 @@ import Input from "antd/lib/input";
 import InputNumber from "antd/lib/input-number";
 import notification from "antd/lib/notification";
 import Switch from "antd/lib/switch";
+import Tooltip from "antd/lib/tooltip";
 // @ts-ignore
 import window from "global/window";
 import { toRau } from "iotex-antenna/lib/account/utils";
 import {
   CandidateRegister,
-  CandidateUpdate
+  CandidateUpdate,
 } from "iotex-antenna/lib/action/types";
 import { t } from "onefx/lib/iso-i18n";
 import React, { FormEvent, PureComponent, RefObject } from "react";
@@ -22,14 +22,22 @@ import { connect } from "react-redux";
 import { getStaking } from "../../../server/gateway/staking";
 import { ownersToNames } from "../../common/apollo-client";
 import { CommonMargin } from "../../common/common-margin";
+import { formItemLayout } from "../../common/form-item-layout";
 import { getAntenna } from "../../common/get-antenna";
 import { IopayRequired } from "../../common/iopay-required";
+import { colors } from "../../common/styles/style-color2";
 import { DEFAULT_STAKING_GAS_LIMIT } from "../../common/token-utils";
 import {
+  getStakeDurationMaxValue,
+  smallerOrEqualTo,
   validateCanName,
-  validateIoAddress
+  validateIoAddress,
+  validateStakeDuration,
 } from "../../staking/field-validators";
 import { actionSmartContractCalled } from "../../staking/smart-contract-reducer";
+
+export const min = 1200000;
+export const max = 1000000000000000000000;
 
 type Props = {
   smartContractCalled: boolean;
@@ -42,6 +50,7 @@ type State = {
   isUpdating: boolean;
   candName?: string;
   isFetchingUpdatingInfo: boolean;
+  disabled: boolean;
 };
 
 const NameRegistrationContainer = IopayRequired(
@@ -49,13 +58,13 @@ const NameRegistrationContainer = IopayRequired(
     (state: { smartContract: { smartContractCalled: boolean } }) => {
       return {
         smartContractCalled:
-          state.smartContract && state.smartContract.smartContractCalled
+          state.smartContract && state.smartContract.smartContractCalled,
       };
     },
-    disptach => ({
+    (disptach) => ({
       actionSmartContractCalled(payload: boolean): void {
         disptach(actionSmartContractCalled(payload));
-      }
+      },
     })
   )(
     class NameRegistration extends PureComponent<Props, State> {
@@ -65,7 +74,8 @@ const NameRegistrationContainer = IopayRequired(
         this.state = {
           candName,
           isUpdating: Boolean(candName),
-          isFetchingUpdatingInfo: true
+          isFetchingUpdatingInfo: true,
+          disabled: true,
         };
       }
 
@@ -98,15 +108,15 @@ const NameRegistrationContainer = IopayRequired(
             ...values,
             stakedAmount: toRau(values.stakedAmount, "Iotx"),
             gasLimit: DEFAULT_STAKING_GAS_LIMIT,
-            gasPrice: toRau("1", "Qev")
+            gasPrice: toRau("1", "Qev"),
           });
           actionSmartContractCalled(true);
           notification.success({
-            message: t("name_registration.submit.success_tip")
+            message: t("name_registration.submit.success_tip"),
           });
         } catch (error) {
           notification.error({
-            message: `failed to register: ${error}`
+            message: `failed to register: ${error}`,
           });
         }
       };
@@ -134,15 +144,31 @@ const NameRegistrationContainer = IopayRequired(
           await getStaking().updateCandidate({
             ...values,
             gasLimit: DEFAULT_STAKING_GAS_LIMIT,
-            gasPrice: toRau("1", "Qev")
+            gasPrice: toRau("1", "Qev"),
           });
           actionSmartContractCalled(true);
           notification.success({
-            message: t("name_registration.submit.success_tip")
+            message: t("name_registration.submit.success_tip"),
           });
         } catch (error) {
           notification.error({
-            message: `failed to register: ${error}`
+            message: `failed to register: ${error}`,
+          });
+        }
+      };
+
+      handleChange = () => {
+        const { isUpdating } = this.state;
+        const form = isUpdating
+          ? this.updateFormRef.current
+          : this.registerFormRef.current;
+        this.setState({ disabled: false });
+        const errors = form && form.getFieldsError();
+        if (!!errors) {
+          errors.map((err) => {
+            if (!!err.errors.length) {
+              this.setState({ disabled: true });
+            }
           });
         }
       };
@@ -153,7 +179,7 @@ const NameRegistrationContainer = IopayRequired(
           const resp = await getStaking().getCandidate(candName);
           if (resp) {
             this.setState({
-              isFetchingUpdatingInfo: false
+              isFetchingUpdatingInfo: false,
             });
             const form = this.updateFormRef.current;
             if (!form) {
@@ -163,13 +189,13 @@ const NameRegistrationContainer = IopayRequired(
               {
                 name: "operatorAddress",
                 // @ts-ignore
-                value: resp.operatorAddress
+                value: resp.operatorAddress,
               },
               {
                 name: "rewardAddress",
                 // @ts-ignore
-                value: resp.rewardAddress
-              }
+                value: resp.rewardAddress,
+              },
             ]);
           }
         }
@@ -181,7 +207,11 @@ const NameRegistrationContainer = IopayRequired(
         const { candName } = this.state;
         return (
           // @ts-ignore
-          <Form onSubmit={this.onUpdate} ref={this.updateFormRef}>
+          <Form
+            onSubmit={this.onUpdate}
+            onFieldsChange={this.handleChange}
+            ref={this.updateFormRef}
+          >
             <h1>{t("profile.register_name")}</h1>
             <CommonMargin />
             {smartContractCalled && (
@@ -196,85 +226,36 @@ const NameRegistrationContainer = IopayRequired(
             )}
             <CommonMargin />
             <div>
-              {/*
-                // @ts-ignore */}
-              <Form.Item
-                label={t("name_regsitration.name")}
-                name={"name"}
-                initialValue={candName}
-                rules={[
-                  {
-                    required: true,
-                    message: t("name_regsitration.name.required")
-                  },
-                  {
-                    validator: validateCanName
-                  }
-                ]}
-              >
-                <Input />
-              </Form.Item>
-              {/*
-                // @ts-ignore */}
-              <Form.Item
-                label={t("name_regsitration.owner")}
-                name={"ownerAddress"}
-                initialValue={getAntenna().iotx.accounts[0].address}
-                rules={[
-                  {
-                    required: true
-                  }
-                ]}
-              >
-                <Input disabled={true} />
-              </Form.Item>
-              {/*
-                // @ts-ignore */}
-              <Form.Item
-                label={t("name_regsitration.operator_pub_key")}
-                name={"operatorAddress"}
-                rules={[
-                  {
-                    required: true
-                  },
-                  {
-                    message: t("name_regsitration.operator_pub_key.required")
-                  },
-                  {
-                    validator: validateIoAddress
-                  }
-                ]}
-              >
-                <Input />
-              </Form.Item>
-              {/*
-                // @ts-ignore */}
-              <Form.Item
-                label={t("name_regsitration.reward_pub_key")}
-                name={"rewardAddress"}
-                rules={[
-                  {
-                    required: true
-                  },
-                  {
-                    message: t("name_regsitration.reward_pub_key.required")
-                  },
-                  {
-                    validator: validateIoAddress
-                  }
-                ]}
-              >
-                <Input />
-              </Form.Item>
-
+              <CanNameFormItem candName={candName} />
+              <OwnerAddressFormItem />
+              <OperatorAddressFormItem />
+              <RewardAddressFormItem />
+              <Alert
+                message={
+                  // tslint:disable-next-line:react-no-dangerous-html
+                  <span
+                    dangerouslySetInnerHTML={{
+                      __html: t("profile.update-candidate.other-fields", {
+                        href: "/my-votes",
+                        text: "my-votes",
+                      }),
+                    }}
+                  />
+                }
+                type="info"
+                showIcon={true}
+                banner={true}
+              />
+              <CommonMargin />
               <Form.Item>
                 <Button
                   style={{ marginRight: "10px" }}
                   type={"primary"}
                   htmlType="submit"
                   onClick={this.onUpdate}
+                  disabled={this.state.disabled}
                 >
-                  {t("name_registration.register")}
+                  {t("name_registration.update")}
                 </Button>
               </Form.Item>
             </div>
@@ -287,8 +268,13 @@ const NameRegistrationContainer = IopayRequired(
         const { smartContractCalled } = this.props;
         return (
           // @ts-ignore
-          <Form onSubmit={this.onRegister} ref={this.registerFormRef}>
+          <Form
+            onSubmit={this.onRegister}
+            ref={this.registerFormRef}
+            onFieldsChange={this.handleChange}
+          >
             <h1>{t("profile.register_name")}</h1>
+            <p>{t("profile.register_name.desc")}</p>
             <CommonMargin />
             {smartContractCalled && (
               <div>
@@ -301,123 +287,63 @@ const NameRegistrationContainer = IopayRequired(
               </div>
             )}
             <CommonMargin />
-            <div>
+            <div className="site-layout-content">
+              <CanNameFormItem />
+              <StakeAmountFormItem />
               {/*
                 // @ts-ignore */}
               <Form.Item
-                label={t("name_regsitration.name")}
-                name={"name"}
-                rules={[
-                  {
-                    required: true,
-                    message: t("name_regsitration.name.required")
-                  },
-                  {
-                    validator: validateCanName
-                  }
-                ]}
-              >
-                <Input />
-              </Form.Item>
-              {/*
-                // @ts-ignore */}
-              <Form.Item
-                label={t("name_regsitration.owner")}
-                name={"ownerAddress"}
-                initialValue={getAntenna().iotx.accounts[0].address}
-                rules={[
-                  {
-                    required: true
-                  }
-                ]}
-              >
-                <Input disabled={true} />
-              </Form.Item>
-              {/*
-                // @ts-ignore */}
-              <Form.Item
-                label={t("name_regsitration.operator_pub_key")}
-                name={"operatorAddress"}
-                rules={[
-                  {
-                    required: true
-                  },
-                  {
-                    message: t("name_regsitration.operator_pub_key.required")
-                  },
-                  {
-                    validator: validateIoAddress
-                  }
-                ]}
-              >
-                <Input />
-              </Form.Item>
-              {/*
-                // @ts-ignore */}
-              <Form.Item
-                label={t("name_regsitration.reward_pub_key")}
-                name={"rewardAddress"}
-                rules={[
-                  {
-                    required: true
-                  },
-                  {
-                    message: t("name_regsitration.reward_pub_key.required")
-                  },
-                  {
-                    validator: validateIoAddress
-                  }
-                ]}
-              >
-                <Input />
-              </Form.Item>
-
-              {/*
-                // @ts-ignore */}
-              <Form.Item
-                label={t("name_regsitration.stakedAmount")}
-                name={"stakedAmount"}
-                rules={[
-                  {
-                    required: true
-                  }
-                ]}
-              >
-                <InputNumber />
-              </Form.Item>
-              {/*
-                // @ts-ignore */}
-              <Form.Item
-                label={t("name_regsitration.stakedDuration")}
+                {...formItemLayout}
+                labelAlign={"left"}
+                label={getLabel(
+                  t("name_regsitration.stakedDuration"),
+                  t("name_regsitration.stakedDuration.explanation")
+                )}
                 name={"stakedDuration"}
                 rules={[
                   {
-                    required: true
-                  }
+                    required: true,
+                    message: t("my_stake.stakeDuration.required"),
+                  },
+                  {
+                    validator: validateStakeDuration(
+                      getStakeDurationMaxValue(),
+                      0
+                    ),
+                  },
                 ]}
               >
-                <InputNumber />
+                <InputNumber style={{ width: 140 }} />
               </Form.Item>
               {/*
                 // @ts-ignore */}
               <Form.Item
+                {...formItemLayout}
+                labelAlign={"left"}
                 label={t("name_regsitration.autoStake")}
                 name={"autoStake"}
+                initialValue={false}
                 rules={[
                   {
-                    required: true
-                  }
+                    required: true,
+                  },
                 ]}
               >
                 <Switch />
               </Form.Item>
-
+            </div>
+            <div className="site-layout-content">
+              <OwnerAddressFormItem />
+              <OperatorAddressFormItem />
+              <RewardAddressFormItem />
               <Form.Item>
+                <p><b>{t("profile.register_name.submit.desc")}</b></p>
                 <Button
                   style={{ marginRight: "10px" }}
                   type={"primary"}
                   htmlType="submit"
                   onClick={this.onRegister}
+                  disabled={this.state.disabled}
                 >
                   {t("name_registration.register")}
                 </Button>
@@ -439,5 +365,172 @@ const NameRegistrationContainer = IopayRequired(
     }
   )
 );
+
+const getLabel = (text: string, explanation: string) => {
+  return (
+    <label style={{ whiteSpace: "break-spaces" }}>
+      <span style={{ marginRight: "5px" }}>{text}</span>
+      <Tooltip title={<p dangerouslySetInnerHTML={{ __html: explanation }} />}>
+        <InfoCircleOutlined style={{ color: colors.primary }} />
+      </Tooltip>
+    </label>
+  );
+};
+
+const CanNameFormItem = ({ candName }: { candName?: string }) => {
+  return (
+    // @ts-ignore
+    <Form.Item
+      {...formItemLayout}
+      labelAlign={"left"}
+      initialValue={candName || ""}
+      label={getLabel(
+        t("name_regsitration.name"),
+        t("name_regsitration.name.explanation")
+      )}
+      name={"name"}
+      rules={[
+        {
+          required: true,
+          message: t("name_regsitration.name.required"),
+        },
+        {
+          validator: validateCanName,
+        },
+      ]}
+    >
+      <Input />
+    </Form.Item>
+  );
+};
+
+const StakeAmountFormItem = () => {
+  return (
+    // @ts-ignore
+    <Form.Item
+      {...formItemLayout}
+      labelAlign={"left"}
+      label={getLabel(
+        t("name_regsitration.stakedAmount"),
+        t("name_regsitration.stakedAmount.explanation")
+      )}
+      name={"stakedAmount"}
+      rules={[
+        {
+          required: true,
+          message: t("my_stake.stakedAmount.min", {
+            min: min.toLocaleString(),
+          }),
+        },
+        {
+          validator: smallerOrEqualTo(
+            max,
+            min,
+            t("my_stake.stakedAmount.min", { min: min.toLocaleString() })
+          ),
+        },
+      ]}
+    >
+      <InputNumber
+        style={{ width: 140 }}
+        min={min}
+        formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+        parser={(value) => (value ? value.replace(/\$\s?|(,*)/g, "") : "")}
+      />
+    </Form.Item>
+  );
+};
+
+const OwnerAddressFormItem = () => {
+  return (
+    // @ts-ignore
+    <Form.Item
+      {...formItemLayout}
+      labelAlign={"left"}
+      label={t("name_regsitration.owner")}
+      name={"ownerAddress"}
+      initialValue={getAntenna().iotx.accounts[0].address}
+      rules={[
+        {
+          required: true,
+        },
+      ]}
+    >
+      <Input disabled={true} />
+    </Form.Item>
+  );
+};
+
+const OperatorAddressFormItem = () => {
+  return (
+    // @ts-ignore
+    <Form.Item
+      {...formItemLayout}
+      labelAlign={"left"}
+      label={getLabel(
+        t("name_regsitration.operator_pub_key"),
+        t("name_regsitration.operator_pub_key.explanation")
+      )}
+      name={"operatorAddress"}
+      rules={[
+        {
+          required: true,
+          message: t("name_regsitration.operator_pub_key.required"),
+        },
+        {
+          validator: validateIoAddress,
+        },
+      ]}
+    >
+      <Input />
+    </Form.Item>
+  );
+};
+
+const RewardAddressFormItem = () => {
+  return (
+    <>
+      {/*
+                // @ts-ignore */}
+      <Form.Item
+        {...formItemLayout}
+        labelAlign={"left"}
+        style={{ marginBottom: "3px" }}
+        label={getLabel(
+          t("name_regsitration.reward_pub_key"),
+          t("name_regsitration.reward_pub_key.explanation")
+        )}
+        name={"rewardAddress"}
+        rules={[
+          {
+            required: true,
+            message: t("name_regsitration.reward_pub_key.required"),
+          },
+          {
+            validator: validateIoAddress,
+          },
+        ]}
+      >
+        <Input />
+      </Form.Item>
+      {/*
+                // @ts-ignore */}
+      <Form.Item {...formItemLayout} label={<span />}>
+        <Alert
+          message={
+            <p
+              dangerouslySetInnerHTML={{
+                __html: t("profile.reward-address.unset_warning"),
+              }}
+            />
+          }
+          type="warning"
+          showIcon={true}
+          banner={true}
+        />
+      </Form.Item>
+    </>
+  );
+};
 
 export { NameRegistrationContainer };

@@ -1,14 +1,13 @@
 // @flow
 import DashboardOutlined from "@ant-design/icons/DashboardOutlined";
-// import InboxOutlined from "@ant-design/icons/InboxOutlined";
 import InfoOutlined from "@ant-design/icons/InfoOutlined";
 import LinkOutlined from "@ant-design/icons/LinkOutlined";
 import PercentageOutlined from "@ant-design/icons/PercentageOutlined";
 import SettingOutlined from "@ant-design/icons/SettingOutlined";
 import SolutionOutlined from "@ant-design/icons/SolutionOutlined";
-// import TrophyOutlined from "@ant-design/icons/TrophyOutlined";
+import TrophyOutlined from "@ant-design/icons/TrophyOutlined";
 
-import { InboxOutlined } from "@ant-design/icons/lib";
+import InboxOutlined from "@ant-design/icons/InboxOutlined";
 import Layout from "antd/lib/layout";
 import Menu from "antd/lib/menu";
 import { t } from "onefx/lib/iso-i18n";
@@ -17,11 +16,12 @@ import { Route, Switch } from "onefx/lib/react-router";
 import React, { PureComponent } from "react";
 import { CommonMargin } from "../common/common-margin";
 import { RootStyle } from "../common/component-style";
-// import { NotFound } from "../common/not-found";
 import { secondFontFamily } from "../common/styles/style-font";
 import { ContentPadding } from "../common/styles/style-padding";
 import { TOP_BAR_HEIGHT } from "../common/top-bar";
 import { CandidateProfileContainer } from "./panes/candidate-profile";
+import { ClaimRewardsContainer } from "./panes/claim-rewards";
+import { DelegateRewards } from "./panes/delegate-rewards";
 import { NameRegistrationContainer } from "./panes/name-registration";
 import { RewardDistributionContainer } from "./panes/reward-distribution-container";
 import { Settings } from "./panes/settings";
@@ -43,7 +43,7 @@ export class ProfileContainer extends PureComponent<Props, State> {
   render(): JSX.Element {
     const { history } = this.props;
     const { Sider, Content } = Layout;
-    // const SubMenu = Menu.SubMenu;
+    const SubMenu = Menu.SubMenu;
 
     const PANES = [
       {
@@ -54,7 +54,7 @@ export class ProfileContainer extends PureComponent<Props, State> {
             <span className="nav-text">{t("profile.welcome")}</span>
           </span>
         ),
-        component: Welcome
+        component: Welcome,
       },
       {
         path: "/profile/profile",
@@ -64,7 +64,7 @@ export class ProfileContainer extends PureComponent<Props, State> {
             <span className="nav-text">{t("profile.profile")}</span>
           </span>
         ),
-        component: CandidateProfileContainer
+        component: CandidateProfileContainer,
       },
       {
         path: "/profile/reward-distribution",
@@ -74,7 +74,7 @@ export class ProfileContainer extends PureComponent<Props, State> {
             <span className="nav-text">{t("profile.reward-distribution")}</span>
           </span>
         ),
-        component: RewardDistributionContainer
+        component: RewardDistributionContainer,
       },
       {
         path: "/profile/technical/",
@@ -84,7 +84,7 @@ export class ProfileContainer extends PureComponent<Props, State> {
             <span className="nav-text">{t("profile.technical")}</span>
           </span>
         ),
-        component: Technical
+        component: Technical,
       },
       {
         path: "/profile/name-registration/",
@@ -94,7 +94,7 @@ export class ProfileContainer extends PureComponent<Props, State> {
             <span className="nav-text">{t("profile.name_registration")}</span>
           </span>
         ),
-        component: NameRegistrationContainer
+        component: NameRegistrationContainer,
       },
       {
         path: "/profile/received/",
@@ -104,7 +104,59 @@ export class ProfileContainer extends PureComponent<Props, State> {
             <span className="nav-text">{t("profile.received")}</span>
           </span>
         ),
-        component: VotesReceivedTable
+        component: VotesReceivedTable,
+      },
+      {
+        path: "",
+        tab: (
+          <SubMenu
+            key="rewards"
+            title={
+              <span>
+                <TrophyOutlined />
+                <span>{t("profile.rewards_distribution")}</span>
+              </span>
+            }
+          >
+            <Menu.Item
+              key="rewards_1"
+              onClick={() => history.push("/profile/claim-rewards/")}
+            >
+              {t("profile.claim_rewards")}
+            </Menu.Item>
+            <Menu.Item
+              key="rewards_2"
+              onClick={() => history.push("/profile/distribute-rewards/")}
+            >
+              {t("profile.calculate_rewards")}
+            </Menu.Item>
+          </SubMenu>
+        ),
+        component: null,
+      },
+      {
+        key: "rewards_1",
+        path: "/profile/claim-rewards/",
+        tab: (
+          <span>
+            <SettingOutlined />
+            <span className="nav-text">{t("profile.settings")}</span>
+          </span>
+        ),
+        component: ClaimRewardsContainer,
+        hide: true,
+      },
+      {
+        key: "rewards_2",
+        path: "/profile/distribute-rewards/",
+        tab: (
+          <span>
+            <SettingOutlined />
+            <span className="nav-text">{t("profile.settings")}</span>
+          </span>
+        ),
+        component: DelegateRewards,
+        hide: true,
       },
       {
         path: "/profile/settings/",
@@ -114,9 +166,14 @@ export class ProfileContainer extends PureComponent<Props, State> {
             <span className="nav-text">{t("profile.settings")}</span>
           </span>
         ),
-        component: Settings
-      }
+        component: Settings,
+      },
     ];
+
+    const index = PANES.findIndex((p) => p.path === history.location.pathname);
+    const open =
+      index >= 0 && index < PANES.length && PANES[index].hide ? "rewards" : "";
+    const defaultSelectedKey = open ? PANES[index].key : index;
 
     return (
       <RootStyle>
@@ -127,7 +184,7 @@ export class ProfileContainer extends PureComponent<Props, State> {
               style={{
                 padding: "24px 0",
                 background: "#fff",
-                minHeight: `calc((100vh - ${TOP_BAR_HEIGHT}px) - 86px)`
+                minHeight: `calc((100vh - ${TOP_BAR_HEIGHT}px) - 86px)`,
               }}
               hasSider={true}
             >
@@ -139,11 +196,8 @@ export class ProfileContainer extends PureComponent<Props, State> {
               >
                 <Menu
                   mode="inline"
-                  defaultSelectedKeys={[
-                    String(
-                      PANES.findIndex(p => p.path === history.location.pathname)
-                    )
-                  ]}
+                  defaultSelectedKeys={[String(defaultSelectedKey)]}
+                  defaultOpenKeys={[open]}
                   style={{ height: "100%" }}
                 >
                   {PANES.map((p, i) => {
@@ -168,7 +222,7 @@ export class ProfileContainer extends PureComponent<Props, State> {
                 style={{
                   background: "#fff",
                   margin: "0 16px",
-                  fontFamily: secondFontFamily
+                  fontFamily: secondFontFamily,
                 }}
               >
                 <Switch>

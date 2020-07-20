@@ -22,7 +22,6 @@ export const TopBarMenu = ({ hideMobileMenu, faucetEnable }: any) => {
   const profileStyle = { minWitdh: "30px" };
   const aStyle =
     String(pathname) === "/" ||
-    String(pathname) === "/v1" ||
     String(pathname) === "/my-votes" ||
     String(pathname) === "/my-referrals"
       ? actived
@@ -31,7 +30,7 @@ export const TopBarMenu = ({ hideMobileMenu, faucetEnable }: any) => {
   const inactiveStyle = { ...inactived, ...profileStyle };
   const a1Style =
     String(pathname).startsWith("/profile/") ||
-    String(pathname).startsWith("/v2/profile/")
+    String(pathname).startsWith("/profile/")
       ? activeStyle
       : inactiveStyle;
   const a3Style = String(pathname).startsWith("/polls/")
@@ -40,11 +39,14 @@ export const TopBarMenu = ({ hideMobileMenu, faucetEnable }: any) => {
   const a4Style = String(pathname).startsWith("/tools/")
     ? activeStyle
     : inactiveStyle;
+  const a5Style = String(pathname).startsWith("/reclaim-bucket/")
+    ? activeStyle
+    : inactiveStyle;
   const menu = [
-    <A key={4} href="/v2/" style={aStyle} onClick={hideMobileMenu}>
+    <A key={4} href="/" style={aStyle} onClick={hideMobileMenu}>
       {t("topbar.home")}
     </A>,
-    <A key={1} href="/v2/profile/" style={a1Style} onClick={hideMobileMenu}>
+    <A key={1} href="/profile/" style={a1Style} onClick={hideMobileMenu}>
       {t("topbar.i_am_a_delegate")}
     </A>,
     <A key={2} href="/polls/" style={a3Style}>
@@ -52,7 +54,10 @@ export const TopBarMenu = ({ hideMobileMenu, faucetEnable }: any) => {
     </A>,
     <A key={3} href="/tools/multi-send/" style={a4Style}>
       {t("topbar.tool")}
-    </A>
+    </A>,
+    <A key={5} href="/reclaim-bucket/" style={a5Style}>
+      RECLAIM BUCKET
+    </A>,
   ];
 
   let key = 4;
@@ -73,7 +78,7 @@ export const TopBarMobileMenu = ({
   displayMobileMenu,
   history,
   hideMobileMenu,
-  faucetEnable
+  faucetEnable,
 }: // tslint:disable-next-line:no-any
 any) => {
   if (!displayMobileMenu) {
@@ -100,7 +105,7 @@ const menuItem = {
   marginLeft: "14px",
   textDecoration: "none",
   ":hover": {
-    color: colors.primary
+    color: colors.primary,
   },
   transition,
   fontWeight: "bold",
@@ -108,8 +113,8 @@ const menuItem = {
     boxSizing: "border-box",
     width: "100%",
     padding: "16px 0 16px 0",
-    borderBottom: "1px #EDEDED solid"
-  }
+    borderBottom: "1px #EDEDED solid",
+  },
 };
 // @ts-ignore
 const A = styled("a", menuItem);
@@ -125,5 +130,5 @@ const Dropdown = styled("div", {
   width: "100vw",
   height: "100vh",
   alignItems: "flex-end!important",
-  boxSizing: "border-box"
+  boxSizing: "border-box",
 });

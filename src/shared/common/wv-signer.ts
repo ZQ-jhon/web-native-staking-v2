@@ -13,9 +13,10 @@ let reqId = Math.round(Math.random() * 10000);
 
 interface IRequest {
   reqId: number;
-  type: "SIGN_AND_SEND" | "GET_ACCOUNTS";
+  type: "SIGN_AND_SEND" | "GET_ACCOUNTS" | "SIGN";
 
   envelop?: string; // serialized proto string
+  message?: string | Buffer | Uint8Array; // serialized proto string
 }
 
 export class WvSigner implements SignerPlugin {
@@ -59,7 +60,7 @@ export class WvSigner implements SignerPlugin {
         bridge.init((message: string, responseCallback: Function) => {
           window.console.log("JS got a message", message);
           const data = {
-            "Javascript Responds": "测试中文!"
+            "Javascript Responds": "测试中文!",
           };
           window.console.log("JS responding with", data.toString());
           responseCallback(data);
@@ -86,10 +87,10 @@ export class WvSigner implements SignerPlugin {
     const req: IRequest = {
       reqId: id,
       envelop: Buffer.from(envelop.bytestream()).toString("hex"),
-      type: "SIGN_AND_SEND"
+      type: "SIGN_AND_SEND",
     };
 
-    return new Promise<string>(resolve =>
+    return new Promise<string>((resolve) =>
       window.WebViewJavascriptBridge.callHandler(
         "sign_and_send",
         JSON.stringify(req),
@@ -114,52 +115,19 @@ export class WvSigner implements SignerPlugin {
     account.address = address;
     window.console.log("getAccount account ", account);
     return account;
-
-    const id = reqId++;
-    const req = {
-      reqId: id,
-      type: "GET_ACCOUNTS"
-    };
-
-    window.console.log(JSON.stringify(req));
-    // tslint:disable-next-line:promise-must-complete
-    return new Promise<Account>(async resolve => {
-      // tslint:disable-next-line:no-any
-      window.document.addEventListener("message", async (e: any) => {
-        let resp = { reqId: -1, address: "" };
-        try {
-          resp = JSON.parse(e.data);
-        } catch (err) {
-          window.console.log("error parse response ", resp);
-          return;
-        }
-        window.console.log("getAccount resp", resp);
-        if (resp.reqId === id) {
-          if (resp.address === address) {
-            const account = new Account();
-            account.address = address;
-            resolve(account);
-            return false;
-          } else {
-            return true;
-          }
-        }
-        throw new Error("could not get any account");
-      });
-    });
   }
 
   async getAccounts(): Promise<Array<Account>> {
     const id = reqId++;
     const req = {
       reqId: id,
-      type: "GET_ACCOUNTS"
+      type: "GET_ACCOUNTS",
     };
 
     window.console.log(JSON.stringify(req));
 
     // tslint:disable-next-line:promise-must-complete
-    return new Promise<Array<Account>>(async resolve => {
+    return new Promise<Array<Account>>(async (resolve) => {
       // tslint:disable-next-line:no-any
       window.document.addEventListener("message", async (e: any) => {
         let resp = { reqId: -1, accounts: [] };
@@ -175,5 +143,34 @@ export class WvSigner implements SignerPlugin {
         }
       });
     });
+  }
+
+  signMessage(message: string | Buffer | Uint8Array): Promise<Buffer> {
+    window.console.log(`signMessage start`);
+    const id = reqId++;
+    const req: IRequest = {
+      reqId: id,
+      type: "SIGN",
+      message,
+    };
+    return new Promise<Buffer>((resolve) =>
+      window.WebViewJavascriptBridge.callHandler(
+        "sign",
+        JSON.stringify(req),
+        (responseData: string) => {
+          window.console.log("signMessage sign responseData: ", responseData);
+          let resp = { reqId: -1, signature: new Buffer("") };
+          try {
+            resp = JSON.parse(responseData);
+          } catch (e) {
+            window.console.log("signMessage: Error when parse responseData", e);
+            return;
+          }
+          if (resp.reqId === id) {
+            resolve(resp.signature);
+          }
+        }
+      )
+    );
   }
 }

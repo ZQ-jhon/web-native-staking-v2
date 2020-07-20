@@ -135,13 +135,40 @@ delegate.votesreceived.native: IOTX
 delegate.votesreceived.download: 'Download All Votes'
 delegate.votesreceived.votes: Votes
 delegate.votesreceived.remaining_duration: 'Remaining Staked Duration'
+delegate.votesreceived.unregister: 'Your address is unregistered'
+delegate.rewards: Rewards
+delegate.params: Params
+delegate.params.reward: Reward Address
+delegate.params.operator: Operator Address
+delegate.params.probationHistoricalRate: 'Probation Historical Rate'
+delegate.params.no_registered_name: 'The delegate has no registered name'
+delegate.votesreceived: 'Votes Received'
+delegate.ranking: Rank
+delegate.vote_share: 'Vote & Share Campaign'
+delegate.tweet.summary.title: '${delegate} (Retweet or Post to Enter Lucky Draw)'
+user-info.profile: Profile
+user-info.vote: 'My Votes'
+user-info.help: Help
+candidates.community_plan: 'Community Plan'
+candidates.introduction: Intro
+candidates.location: Location
+candidates.name: 'Delegate Name'
+candidates.next_epoch: 'Next Epoch'
+candidates.reward_plan: 'Reward Distribution Plan'
+candidates.social_media: 'Social Media'
+candidates.team: Team
+candidates.tech_setup: 'Tech Setup'
+candidates.title: 'Countdown For Voting Open'
 voting.progress-bar.circulating.supply: 'Circulating Supply'
 voting.buy_iotx: 'Buy IOTX'
 voting.metamask-reminder.content: 'To proceed with the voting process, please make sure you have unlocked your MetaMask and linked to IoTex. <a target="_blank" href="https://support.iotex.io/hc/en-us/articles/360020614094">Learn more.</a> '
 voting.banner_title: Stake IOTX to Help Secure the IoTeX Network
 voting.banner_content: The IoTeX Network is maintained by 55 Decentralized Delegates. By voting for a Delegate, you can participate in network governance and earn IOTX rewards!
+voting.banner_content.other_browser: 'The native IoTeX Network is maintained by 50+ decentralized delegates. By voting for a Delegate, you can participate in network governance and earn IOTX rewards! <a href="https://community.iotex.io/t/how-to-stake-on-iotex-mainnet-ga/1245?from=from_parent_docs">How to stake and vote -></a>'
+voting.banner_content.modal: 'With the major release of Mainnet GA “Machina” on June 1st, IoTeX is now a fully native blockchain. Instead of IOTX-E (on Ethereum) and Metamask, voters will use native IOTX and ioPay, the official IoTeX wallet to stake and vote on the IoTeX network.</br></br> <span style="margin-left:10px">- Check stake instructions <a href="https://community.iotex.io/t/how-to-stake-on-iotex-mainnet-ga/1245">here</a></span><br/> <span style="margin-left:10px">- Download ioPay <a href="https://iopay.iotex.io/">here</a></span>'
 button.understand: 'I understand. Continue.'
 button.cancel: Cancel
+button.continue: Continue
 candidates.vote_now: 'Vote Now!'
 candidates.election.ELECTED: Elected
 candidates.election.NOT_ELECTED: 'Not Elected'
@@ -159,7 +186,7 @@ candidates.delegate_list: 'Delegate List'
 candidates.rank: Rank
 candidates.blurb: Blurb
 candidates.badge_info.hermes.title: Hermes Delegate
-candidates.badge_info.hermes.content: Automatic Rewards Distribution via Hermes
+candidates.badge_info.hermes.content: 'Automatic Rewards Distribution via Hermes <a target=''_blank'' href="https://hermes.to/">Learn More</a>'
 candidates.badge_info.genesis.title: Delegate Since Day 1
 candidates.badge_info.genesis.content: Joined to produce the genesis block
 candidates.badge_info.ambassador.title: Ambassador Delegate
@@ -206,6 +233,7 @@ my_stake.restake.title: 'Restake My Stake (ID ${bucketIndex})'
 my_stake.revote.title: 'Switch My Delegate (ID ${bucketIndex})'
 my_stake.transfer.title: 'Reassign My Bucket (ID ${bucketIndex})'
 my_stake.stakedAmount.required: 'Please enter the amount.'
+my_stake.stakedAmount.min: 'The self-stake bucket should contain at least ${min} IOTX'
 my_stake.stakedAmount: Amount
 my_stake.bucketId: 'Bucket ID'
 my_stake.bucketId.required: 'Please select the Bucket'
@@ -303,21 +331,28 @@ my_stake.confirmation.auto_stake_tip: 'Your stake duration will remain ${count} 
 my_stake.congrats_voter: 'And… Congratulations on becoming a <a href="/member/"><b style="color: #0b8de3;">Genesis Voter&#127881;</b></a>'
 my_stake.share_twitter: 'Share on Twitter'
 my_stake.epoch_day: 'Stake Duration (days)'
+my_stake.self_staking: 'Self Staking'
+my_stake.burn-drop: 'Burn-Drop Eligible'
 voting.vote.from.wallet: 'Stake and vote from wallet'
 voting.vote.existing.bucket: 'Vote with existing bucket'
 name_registration.register: Submit
 name_registration.cancel: Cancel
 name_registration.edit: Edit
-name_regsitration.name_s: 'Name for Voting'
-name_regsitration.name: 'Name for Voting (lowercase or digits, max length: 12)'
+name_registration.update: Update
+name_regsitration.name: 'Delegate Name'
 name_regsitration.name.required: 'Please enter a valid name.'
-name_regsitration.operator_pub_key: 'Operator IoTeX Address'
+name_regsitration.name.explanation: 'The name of your delegate on-chain, which should be lowercase chars or digits, not longer than 12 bytes'
+name_regsitration.operator_pub_key: 'Operator Address'
 name_regsitration.operator_pub_key.required: 'Please enter your operator''s IoTeX address.'
-name_regsitration.reward_pub_key: 'Reward IoTeX Address'
+name_regsitration.operator_pub_key.explanation: 'This address and its private key should be set to the full node that runs <a target=''_blank'' href=''https://github.com/iotexproject/iotex-core''> iotex-core</a> protocol'
+name_regsitration.reward_pub_key: 'Reward Address'
 name_regsitration.reward_pub_key.required: 'Please enter the IoTeX address that you''d like your reward to be sent to.'
+name_regsitration.reward_pub_key.explanation: 'The reward from the protocol will be sent to this address'
 name_regsitration.owner: Owner Address
-name_regsitration.stakedAmount: Staked Amount
-name_regsitration.stakedDuration: Staked Duration
+name_regsitration.stakedAmount: Num of IOTX to Stake
+name_regsitration.stakedAmount.explanation: 'The amount of IOTX to be staked and voted to yourself, known as the self-stake bucket'
+name_regsitration.stakedDuration: Stake Duration
+name_regsitration.stakedDuration.explanation: 'How long you intend to stake your IOTX. The longer the duration is, the higher-yielding the protocol offers'
 name_regsitration.autoStake: Auto Stake
 name_registration.submit.success_tip: Sent your action successfully!
 name_registration.data: Data
@@ -340,8 +375,8 @@ my_stake.status.suffix.anytime: Anytime
 my_stake.status.suffix.autostake_only: AutoStake Only
 my_stake.status.suffix.not_applicable: 'Not applicable'
 my_stake.status.suffix.from: 'After ${time}'
-profile.banner_url.required: 'Please enter your banner URL.'
-profile.banner_url: 'Banner URL'
+profile.banner_image.required: 'Upload banner image'
+profile.banner_image: 'Banner Image'
 profile.blurb.required: 'Please enter your one-sentence statement.'
 profile.blurb: 'One-sentence statement  (100 words limit)'
 profile.community_plan.required: 'Please enter your community plan.'
@@ -351,8 +386,8 @@ profile.introduction: 'Introduction  (500 words limit) in markdown'
 profile.invalid_url: '''${value}'' is an invalid URL.'
 profile.location.required: 'Please enter your location.'
 profile.location: Location
-profile.logo.required: 'Please enter your logo URL.'
-profile.logo: 'Logo URL'
+profile.logo.required: 'Upload Logo'
+profile.logo: 'Logo'
 profile.name.required: 'Please enter the delegate name.'
 profile.name: 'Delegate Name (20 words limit)'
 profile.name_registration: 'NAME REGISTRATION'
@@ -383,7 +418,7 @@ profile.reward_plan.insertFormat: 'Insert Format'
 profile.reward_plan.insertCancel: Cancel
 profile.reward_plan.recomendFormat: "% of day bonus reward you will redistribute to voters\n\nPayout frequency (i.e., every day, 3 days, week)\n\nYour plans for other rewards (i.e., voters, infrastructure, dApp funds, profit)"
 profile.settings: SETTINGS
-profile.settings.content: 'You are currently logged in as <pre><b>${ioAddress}</b></pre> Prior to mainnet GA, your corresponding ETH wallet address were <pre><b>${ethAddress}</b></pre>'
+profile.settings.content: 'You are currently logged in as <pre><b>${ioAddress}</b></pre> Prior to mainnet GA, your corresponding ETH wallet address was <pre><b>${ethAddress}</b></pre>'
 profile.social_media.required: 'Please enter your social media URLs.'
 profile.social_media: 'Social Media link (at least one link and separated by space)'
 profile.team.required: 'Please enter your team background.'
@@ -435,8 +470,75 @@ profile.rewards.confirm.content: 'Please check carefully or download the list be
 profile.rewards.listtips: '*This tool only processes transactions with over ${tipAmount} IOTX'
 profile.rewards.send: '${sendAmount} IOTX sent ! Check transaction hash to view status.'
 profile.calculate_rewards: 'Calculate Rewards'
+profile.op-reward.addresses: 'Op/Reward Addresses'
+profile.op-address.unset_warning: 'Please set operator before running your node.'
+profile.op-address.set_warning: 'Please note that you need to update your operator address in your node config after a new operator address is set.'
+profile.reward-address.unset_warning: 'Recommend use <a target=''_blank'' href=''http://hermes.to/''>Hermes</a> for auto-distribute the rewards to your voters'
+profile.reward-address.set_warning: 'Please note that you need to update your reward address in your node config after a new reward address is set.'
+profile.update-candidate.other-fields: 'You can update staked duration, amount and auto stake at <span style="color: #0b8de3;"><a href="${href}">${text}</a></span>.'
+profile.register_name.desc: 'Follow the instructions below will register your delegate name on IoTeX blockchain, associate it with the operator address (who produces blocks) and the reward address (who receives the reward), and create your self-staking bucket of IOTX. The registration costs you 100 IOTX.'
+profile.register_name.submit.desc: 'By clicking "Submit", the given IOTX will be withdrawn from your account and stake into the bucket.'
 auth/sign_in.title: Become an IoTeX Delegate
 auth/button_submit: Login or Sign Up with IoPay
 auth/failed_to_login: Failed to login. Please refresh the page and login again.
 auth/sign_out: Sign Out
 reward_distribution.maintenance:  This is still under maintenance. Please try later.
+rewards.form_title: 'Please enter the period of time and the reward setup of the node you want to query to get rewards of its voters'
+rewards.distribution: 'Rewards to include in the distribution'
+rewards.distribution.register_name: 'Register Name'
+rewards.distribution.register_name.required: 'Register name required'
+rewards.distribution.start: Start
+rewards.distribution.start.required: 'Start epoch required'
+rewards.distribution.to: to
+rewards.distribution.to.required: 'to epoch required'
+rewards.distribution.percentage: Percentage
+rewards.distribution.percentage.required: 'Percentage required'
+rewards.distribution.integer.error: 'must be an integer'
+claim-reards.install_bookkeeper_tip: 'Copy follow code snippet and execute in your terminal to install Bookkeeper if you hasn''t installed yet'
+rewards.distribution.start.help: 'Epoch number of the beginning of the period you want to query'
+rewards.distribution.to.help: 'Epoch number of the end of the period you want to query'
+rewards.distribution.percentage.help: 'Percentage of rewards this node will distribute'
+rewards.distribution.count: 'Epoch Count'
+rewards.distribution.count.required: 'Epoch Count required'
+rewards.distribution.count.help: 'Number of epoch you want to query'
+rewards.tools.update: 'Please open your terminal and keep your ioctl up-to-date.'
+rewards.tools.bookkeeper: 'Copy follow code snippet and execute in your terminal to install Bookkeeper if you hasn''t installed yet.'
+rewards.calculate.table.button: 'Calculate the Reward Table with Analytics'
+rewards.distribution.recipient_address: 'Recipient Address'
+rewards.distribution.amount: Amount
+rewards.distribution.step_1: 'Step 1 Get the Reward Table'
+rewards.distribution.step_2: 'Step 2 Upload Reward Table'
+rewards.distribution.upload_info: 'Please preapre a csv file with your reward distribution and upload below to proceed. The CSV file should only contain two columns, "voterAddress", "amount". Amount should be in Wei.'
+rewards.distribution.upload_info_2: 'Please upload the csv file.'
+delegate.rewards_download: 'Download All Rewards'
+claim-rewards.your_iotex_reward_address: 'Your IoTeX Address'
+claim-reward.query_result: 'Query Result'
+claim-reward.available_credits: 'Available Credits'
+claim-rewards.io_address.required: 'IoTex address required'
+claim-rewards.io_address.help: 'Please use IoTeX address which starts with io'
+claim-rewards.io_address.placeholder: io12345693ug8r3zdeysppnyrcdu2xssz0lcam9l9
+claim-reward.search: search
+claim-reward.reward_address: 'IoTeX Address'
+claim-reward.amount: 'Credits to Claim'
+claim-reward.submit: 'Claim Credit'
+claim-reward.submit.help: 'Refresh the page after you finished signin & confirmation in IoPay'
+claim-reward.ok: Ok
+claim-reward.sign: 'Sign & Confirm on IoPay'
+claim-reards.copy.modal: 'Copy follow code snippet and execute in your terminal'
+claim-rewards.copy: Copy
+claim-reward.amount.error: 'Please enter a number.'
+claim-reward.eth_address: 'Mapping ETH Address'
+copy.toClipboard: 'Copy to Clipboard'
+copy.copied: Copied
+reclaimBucket.introduction: This tool allows you to reclaim a bucket that is owned by a private key/account in hardware wallet. How it works is that you sign a message using the private key to prove your ownership of the bucket and indicate a new address, and upon verification, the bucket will be transferred to the new address on IoTeX blockchain. You can also reclaim a bucket using our ioctl tool, run 'ioctl stake2 reclaim' and follow the instructions.
+reclaim.bucketHeader: Reclaim Bucket
+reclaim.bucketIndex: Bucket Index
+recliam.bucketIndex.error: enter the bucket index
+reclaim.recipientAddress: Recipient Address
+reclaim.recipientAddress.error: enter the recipient address
+reclaim.message: Message to be signed
+reclaim.copyMessaage: Copy the message to sign using HDWallet
+reclaim.contiunueButton: Continue
+reclaim.reclaimMessage: This is to certify I am transferring the ownership of said bucket to said recipient on IoTeX blockchain
+reclaim.popUpMessage.runIoctlCmd: You can reclaim the bucket by running the following ioctl command
+reclaim.continueWebTools: or if you wish to use the web tool, make sure ioPay is opened (and it has the recipient private key/account), then click Continue

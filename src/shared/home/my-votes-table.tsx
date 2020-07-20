@@ -7,6 +7,7 @@ import Button from "antd/lib/button";
 import Dropdown from "antd/lib/dropdown";
 import List from "antd/lib/list";
 import Table from "antd/lib/table";
+import Tag from "antd/lib/tag";
 import dateformat from "dateformat";
 import Antenna from "iotex-antenna/lib";
 import isBrowser from "is-browser";
@@ -19,11 +20,13 @@ import JsonGlobal from "safe-json-globals/get";
 import { styled } from "styletron-react";
 import { IBucket } from "../../server/gateway/staking";
 import { AddressName } from "../common/address-name";
+import { stakeBadgeStyle } from "../common/component-style";
 import { Flex } from "../common/flex";
-import { colors } from "../common/styles/style-color";
+import { colors } from "../common/styles/style-color2";
 import { media } from "../common/styles/style-media";
 import { getPowerEstimationForBucket } from "../common/token-utils";
 import { renderActionMenu } from "../staking/stake-edit/modal-menu";
+import { isBurnDrop } from "../staking/staking-utils";
 import { AccountMeta } from "./account-meta";
 
 const ACCOUNT_AREA_WIDTH = 290;
@@ -45,7 +48,7 @@ const isIoPayMobile = isBrowser && state.base.isIoPayMobile;
 // @ts-ignore
 @connect((state: { buckets: Array<IBucket> }) => {
   return {
-    dataSource: state.buckets || []
+    dataSource: state.buckets || [],
   };
 })
 class MyVotesTable extends Component<Props, State> {
@@ -54,23 +57,24 @@ class MyVotesTable extends Component<Props, State> {
     this.state = {
       invalidNames: "",
       showMore: {},
-      address: ""
+      address: "",
     };
   }
 
   setRowClassName = (record: IBucket) => {
+    const badgeRow = record.selfStakingBucket ? "BadgeRow" : "";
     return record.canName &&
       this.state.invalidNames &&
       this.state.invalidNames.includes(record.canName)
-      ? "BorderRowWarning"
-      : "";
+      ? `BorderRowWarning ${badgeRow}`
+      : badgeRow;
   };
   showMore = (id: String) => {
     const { showMore } = this.state;
     // @ts-ignore
     showMore[id] = true;
     this.setState({
-      showMore: { ...showMore }
+      showMore: { ...showMore },
     });
   };
   renderReward = (bpCandidates: any, record: IBucket) => {
@@ -82,7 +86,7 @@ class MyVotesTable extends Component<Props, State> {
       blockRewardPortion,
       epochRewardPortion,
       foundationRewardPortion,
-      rewardPlan
+      rewardPlan,
     } = bpCandidate;
     if (!rewardPlan) {
       return null;
@@ -111,7 +115,7 @@ class MyVotesTable extends Component<Props, State> {
               onClick={() => this.showMore(id)}
               style={{
                 paddingLeft: "5px",
-                color: colors.PRODUCING
+                color: colors.PRODUCING,
               }}
             >
               {t("voting.delegate_show_more")}
@@ -131,7 +135,7 @@ class MyVotesTable extends Component<Props, State> {
         <Flex column={true} alignItems={"baseline"} color={colors.black}>
           <span
             className="ellipsis-text"
-            style={{ maxWidth: "9vw", minWidth: 110 }}
+            style={{ maxWidth: "9vw", minWidth: 95 }}
           >
             {/* tslint:disable-next-line:use-simple-attributes */}
             <AddressName
@@ -154,67 +158,92 @@ class MyVotesTable extends Component<Props, State> {
     return null;
   };
 
-  renderMobileTable = (item: any) => {
+  // tslint:disable-next-line:max-func-body-length
+  renderMobileTable = (item: IBucket) => {
     const no = String(item.index);
+    const badgeRow = item.selfStakingBucket ? "BadgeRow" : "";
+
+    const badges = [];
+    if (item.selfStakingBucket) {
+      badges.push(<StakeTag text={t("my_stake.self_staking")} />);
+    }
+    if (isBurnDrop(item)) {
+      badges.push(<StakeTag text={t("my_stake.burn-drop")} />);
+    }
+    const hasBadges = badges.length > 0;
+
     const header = (
-      <Flex justifyContent={"space-between"} flexDirection={"row"}>
-        <div>
-          <Avatar
-            shape="square"
-            src={assetURL("my-staking/box.png")}
-            size={40}
-            style={{ margin: "8px 10px 8px 0" }}
-          />
-          <Flex
-            float={"right"}
-            column={true}
-            color={colors.black}
-            padding={"7px 0"}
-          >
-            <BoldText>
-              {// @ts-ignore
-              t("my_stake.order_no", { no })}
-            </BoldText>
-            <BoldText style={{ whiteSpace: "nowrap" }}>
-              {t("my_stake.native_staked_amount_format", {
-                amountText: item.stakedAmount.toNumber().toLocaleString()
-              })}
-            </BoldText>
+      <div>
+        {hasBadges && (
+          <Flex alignContent={"flex-start"} justifyContent={"left"}>
+            {badges.map((item) => item)}
           </Flex>
-        </div>
-        <Flex>
-          <Dropdown overlay={renderActionMenu(item)} trigger={["click"]}>
-            <Button style={{ paddingLeft: "10px", paddingRight: "10px" }}>
-              {t("my_stake.edit.row")} <DownOutlined />
-            </Button>
-          </Dropdown>
+        )}
+        <Flex justifyContent={"space-between"} flexDirection={"row"}>
+          <div>
+            <Avatar
+              shape="square"
+              src={assetURL("my-staking/box.png")}
+              size={40}
+              style={{ margin: "8px 10px 8px 0" }}
+            />
+            <Flex
+              float={"right"}
+              column={true}
+              color={colors.black}
+              padding={"7px 0"}
+              alignItems={"baseline"}
+            >
+              <BoldText>
+                {
+                  // @ts-ignore
+                  t("my_stake.order_no", { no })
+                }
+              </BoldText>
+              <BoldText style={{ whiteSpace: "nowrap" }}>
+                {t("my_stake.native_staked_amount_format", {
+                  amountText: item.stakedAmount.toNumber().toLocaleString(),
+                })}
+              </BoldText>
+            </Flex>
+          </div>
+          <Flex>
+            <Dropdown overlay={renderActionMenu(item)} trigger={["click"]}>
+              <Button style={{ paddingLeft: "10px", paddingRight: "10px" }}>
+                {t("my_stake.edit.row")} <DownOutlined />
+              </Button>
+            </Dropdown>
+          </Flex>
         </Flex>
-      </Flex>
+      </div>
     );
 
     const data = [
       {
         title: t("my_stake.vote_for"),
-        value: <span style={{ color: colors.primary }}>{item.canName}</span>
+        value: <span style={{ color: colors.primary }}>{item.canName}</span>,
       },
       {
         title: t("my_stake.stake_duration"),
         value: (
           <Flex column={true} alignItems={"flex-end"}>
             <span style={{ float: "right" }}>
-              {t("my_stake.duration_epochs", {
-                stakeDuration: item.stakedDuration
-              })}
+              {
+                // @ts-ignore
+                t("my_stake.duration_epochs", {
+                  stakeDuration: item.stakedDuration,
+                })
+              }
             </span>
             <TimeSpan>
               {t("my_stake.from_time", {
                 startTime: item.stakeStartTime
                   ? dateformat(item.stakeStartTime, "yyyy/mm/dd")
-                  : "-"
+                  : "-",
               })}
             </TimeSpan>
           </Flex>
-        )
+        ),
       },
       {
         title: t("my_stake.nonDecay"),
@@ -224,22 +253,23 @@ class MyVotesTable extends Component<Props, State> {
           />
         ) : (
           <MinusOutlined style={{ color: colors.MISSED, fontSize: "24px" }} />
-        )
+        ),
       },
       {
         title: t("my_stake.bucket_status"),
-        value: item.status
-      }
+        value: item.status,
+      },
     ];
 
     return (
       <List
         style={{ width: "100%", marginTop: 20 }}
+        className={badgeRow}
         size="small"
         header={header}
         bordered={true}
         dataSource={data}
-        renderItem={item => (
+        renderItem={(item) => (
           <List.Item style={{ minHeight: 50 }}>
             <span style={{ color: colors.text01, fontWeight: "bold" }}>
               {item.title}
@@ -269,29 +299,48 @@ class MyVotesTable extends Component<Props, State> {
           // @ts-ignore
           render(text: any, record: IBucket): JSX.Element {
             const no = String(record.index);
-
+            const badges = [];
+            if (record.selfStakingBucket) {
+              badges.push(<StakeTag text={t("my_stake.self_staking")} />);
+            }
+            if (isBurnDrop(record)) {
+              badges.push(<StakeTag text={t("my_stake.burn-drop")} />);
+            }
+            const hasBadges = badges.length > 0;
             return (
               <Flex
                 column={true}
                 alignItems={"baseline"}
-                paddingLeft={"40px"}
-                paddingBottom={"14px"}
+                paddingLeft={"12px"}
+                paddingBottom={"5px"}
                 media={{
                   [media.media700]: {
-                    paddingLeft: "8px"
-                  }
+                    paddingLeft: "8px",
+                  },
                 }}
               >
+                {hasBadges && (
+                  <Flex
+                    alignContent={"flex-start"}
+                    justifyContent={"left"}
+                    nowrap={true}
+                    marginLeft={"-10px"}
+                    marginTop={"-12px"}
+                  >
+                    {badges.map((item) => item)}
+                  </Flex>
+                )}
                 <Flex
-                  minWidth={"186px"}
+                  minWidth={"160px"}
                   alignContent={"flex-start"}
                   justifyContent={"left"}
+                  marginTop={`${hasBadges ? "8px" : "15px"}`}
                 >
                   <Avatar
                     shape="square"
                     src={assetURL("my-staking/box.png")}
                     size={40}
-                    style={{ margin: "14px 10px 8px 0" }}
+                    style={{ margin: "5px 10px 2px 0" }}
                   />
                   <Flex
                     column={true}
@@ -301,24 +350,26 @@ class MyVotesTable extends Component<Props, State> {
                     padding={"7px 0"}
                     media={{
                       [media.media700]: {
-                        width: "100%"
-                      }
+                        width: "100%",
+                      },
                     }}
                   >
-                    <BoldText>
-                      {// @ts-ignore
-                      t("my_stake.order_no", { no })}
+                    <BoldText style={{ whiteSpace: "nowrap" }}>
+                      {
+                        // @ts-ignore
+                        t("my_stake.order_no", { no })
+                      }
                     </BoldText>
                     <BoldText style={{ whiteSpace: "nowrap" }}>
                       {t("my_stake.native_staked_amount_format", {
                         amountText: record.stakedAmount
                           .toNumber()
-                          .toLocaleString()
+                          .toLocaleString(),
                       })}
                     </BoldText>
                   </Flex>
                 </Flex>
-                <Flex width={"100%"} padding={"1px 0 1px 0"}>
+                <Flex column={true} width={"100%"} padding={"1px 0 1px 0"}>
                   <StatisticSpan style={{ width: "50%" }}>
                     {t("my_stake.staking_power")}
                   </StatisticSpan>
@@ -326,13 +377,13 @@ class MyVotesTable extends Component<Props, State> {
                     {t("my_stake.staking_power.estimate", {
                       total: getPowerEstimationForBucket(record)
                         .dp(1, 1)
-                        .toLocaleString()
+                        .toLocaleString(),
                     })}
                   </StatisticValue>
                 </Flex>
               </Flex>
             );
-          }
+          },
         },
         {
           title: (
@@ -342,7 +393,7 @@ class MyVotesTable extends Component<Props, State> {
           ),
           dataIndex: "canName",
           className: "BorderTop BorderBottom",
-          render: this.renderAction
+          render: this.renderAction,
         },
         {
           title: (
@@ -363,12 +414,12 @@ class MyVotesTable extends Component<Props, State> {
                   {t("my_stake.from_time", {
                     startTime: record.stakeStartTime
                       ? dateformat(record.stakeStartTime, timeformat)
-                      : "-"
+                      : "-",
                   })}
                 </TimeSpan>
               </Flex>
             );
-          }
+          },
         },
         {
           title: (
@@ -388,7 +439,7 @@ class MyVotesTable extends Component<Props, State> {
                 style={{ color: colors.MISSED, fontSize: "24px" }}
               />
             );
-          }
+          },
         },
         {
           title: (
@@ -443,7 +494,7 @@ class MyVotesTable extends Component<Props, State> {
                 </TimeSpan>
               </Flex>
             );
-          }
+          },
         },
         {
           title: "",
@@ -457,8 +508,8 @@ class MyVotesTable extends Component<Props, State> {
                 </Button>
               </Dropdown>
             );
-          }
-        }
+          },
+        },
       ];
     // @ts-ignore
     // @ts-ignore
@@ -467,8 +518,8 @@ class MyVotesTable extends Component<Props, State> {
         alignItems={"flex-start"}
         media={{
           [media.media1024]: {
-            flexDirection: "column !important"
-          }
+            flexDirection: "column !important",
+          },
         }}
       >
         <Flex
@@ -480,8 +531,8 @@ class MyVotesTable extends Component<Props, State> {
           media={{
             [media.media1024]: {
               maxWidth: "100% !important",
-              marginRight: "0 !important"
-            }
+              marginRight: "0 !important",
+            },
           }}
         >
           {(!isIoPayMobile ||
@@ -507,7 +558,7 @@ class MyVotesTable extends Component<Props, State> {
             >
               {dataSource &&
                 dataSource.length > 0 &&
-                dataSource.map(item => {
+                dataSource.map((item) => {
                   return this.renderMobileTable(item);
                 })}
             </div>
@@ -532,21 +583,27 @@ class MyVotesTable extends Component<Props, State> {
 export { MyVotesTable };
 const StatisticSpan = styled("span", {
   fontSize: "10px",
-  color: colors.black80
+  color: colors.black80,
 });
 const StatisticValue = styled("span", {
   fontSize: "10px",
-  color: colors.black95
+  color: colors.black95,
 });
 const BoldText = styled("b", {
-  fontSize: "12px"
+  fontSize: "12px",
 });
 const TimeSpan = styled("span", {
   fontSize: "10px",
-  color: colors.black80
+  color: colors.black80,
 });
 const CellSpan = styled("span", {
   fontSize: "12px",
   color: colors.black,
-  padding: "3px 0"
+  padding: "3px 0",
 });
+
+export const StakeTag = ({ text }: { text: string }) => (
+  <Tag color={colors.badgeTag} style={stakeBadgeStyle}>
+    {text}
+  </Tag>
+);

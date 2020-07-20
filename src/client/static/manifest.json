@@ -1,11 +1,11 @@
 {
-  "short_name": "TODO_boilerplate",
-  "name": "TODO_boilerplate",
+  "short_name": "IoTeX Member Portal",
+  "name": "IoTeX Member Portal",
   "icons": [
     {
       "src": "favicon.png",
-      "sizes": "192x192",
-      "type": "image/svg"
+      "sizes": "100x100",
+      "type": "image/png"
     }
   ],
   "start_url": "/",

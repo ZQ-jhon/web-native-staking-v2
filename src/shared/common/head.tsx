@@ -52,7 +52,7 @@ function HeadInner({ locale }: { locale: string }): JSX.Element {
       ]}
       script={[
         {
-          src: assetURL("vendors~main.js")
+          src: assetURL("vendors~v2-main.js")
         }
       ]}
     >

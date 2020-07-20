@@ -1,5 +1,5 @@
-import { RedoOutlined } from "@ant-design/icons/lib";
 import PlusOutlined from "@ant-design/icons/PlusOutlined";
+import RedoOutlined from "@ant-design/icons/RedoOutlined";
 import Alert from "antd/lib/alert";
 import { t } from "onefx/lib/iso-i18n";
 import Helmet from "onefx/lib/react-helmet";
@@ -36,7 +36,7 @@ export class StakingContractContainer extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      showVoteNowModal: false
+      showVoteNowModal: false,
     };
   }
 
@@ -95,11 +95,11 @@ const SmartContractCalled = connect(
   (state: { smartContract: { smartContractCalled: boolean } }) => {
     return {
       smartContractCalled:
-        state.smartContract && state.smartContract.smartContractCalled
+        state.smartContract && state.smartContract.smartContractCalled,
     };
   }
 )(function Inner({
-  smartContractCalled
+  smartContractCalled,
 }: {
   smartContractCalled: boolean;
 }): JSX.Element {
@@ -124,5 +124,5 @@ const RefreshButtonStyle = styled("span", () => ({
   backgroundColor: colors.white,
   color: colors.primary,
   float: "right",
-  lineHeight: "55px"
+  lineHeight: "55px",
 }));
