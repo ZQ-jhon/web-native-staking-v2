@@ -7,7 +7,7 @@
 
 ## Getting Started
 
-OneFx is a full-stack framework for building web apps. Here are the features you'll find in Onefx.js:
+web-native-staking-v2 is based on OneFx which is a full-stack framework for building web apps. Here are the features you'll find in Onefx.js:
 
 - server side rendering and universal rendering with react and redux
 - ES2017, JSX, TypeScript support out of the box
