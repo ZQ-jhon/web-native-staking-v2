@@ -111,6 +111,7 @@ export class VotesReceivedTable extends PureComponent<Props, State> {
       obj.remainingDuration = updatedStr ? updatedStr : "0";
     });
   };
+
   // tslint:disable-next-line:max-func-body-length
   render(): JSX.Element {
     let { registeredName } = this.props;
