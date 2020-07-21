@@ -93,15 +93,25 @@ export class VotesReceivedTable extends PureComponent<Props, State> {
 
   getUpdatedBucket = (buckets: Array<Buckets>) => {
     buckets.map((obj) => {
-      const updatedMonth = String(parse(obj.remainingDuration, "month")).split(
-        "."
-      );
-      const days = String(parse(`.${updatedMonth[1]} month`, "day")).split(".");
-      obj.remainingDuration = `${updatedMonth[0]} month ${
-        days[0] !== "null" ? days[0] : 0
-      } day `;
+      const updatedDay = String(parse(obj.remainingDuration, "d")).split(".");
+      const updatedHour = String(
+        parse(`.${updatedDay[1] ? updatedDay[1] : 0} day`, "hr")
+      ).split(".");
+      const updatedMin = String(
+        parse(`.${updatedHour[1] ? updatedHour[1] : 0} h`, "min")
+      ).split(".");
+      const updatedStr = [
+        { value: updatedDay[0], unit: "d" },
+        { value: updatedHour[0], unit: "h" },
+        { value: updatedMin[0], unit: "m" },
+      ]
+        .filter((e) => e.value !== "0")
+        .map((e) => `${e.value}${e.unit}`)
+        .join(" ");
+      obj.remainingDuration = updatedStr ? updatedStr : "0";
     });
   };
+
   // tslint:disable-next-line:max-func-body-length
   render(): JSX.Element {
     let { registeredName } = this.props;
