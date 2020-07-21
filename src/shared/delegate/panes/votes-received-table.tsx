@@ -108,7 +108,7 @@ export class VotesReceivedTable extends PureComponent<Props, State> {
         .filter((e) => e.value !== "0")
         .map((e) => `${e.value}${e.unit}`)
         .join(" ");
-      obj.remainingDuration = updatedStr ? updatedStr : "Now";
+      obj.remainingDuration = updatedStr ? updatedStr : "0";
     });
   };
   // tslint:disable-next-line:max-func-body-length
