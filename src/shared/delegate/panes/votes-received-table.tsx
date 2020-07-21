@@ -108,7 +108,6 @@ export class VotesReceivedTable extends PureComponent<Props, State> {
         .filter((e) => e.value !== "0")
         .map((e) => `${e.value}${e.unit}`)
         .join(" ");
-      
       obj.remainingDuration = updatedStr ? updatedStr : "0";
     });
   };
