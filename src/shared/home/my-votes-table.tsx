@@ -28,6 +28,10 @@ import { getPowerEstimationForBucket } from "../common/token-utils";
 import { renderActionMenu } from "../staking/stake-edit/modal-menu";
 import { isBurnDrop } from "../staking/staking-utils";
 import { AccountMeta } from "./account-meta";
+import { Query } from "react-apollo";
+import { GET_ALL_CANDIDATES_ID_NAME } from "../staking/smart-contract-gql-queries";
+import { webBpApolloClient } from "../common/apollo-client";
+import { MyVotesTableDelegateAvatar } from "./my-votes-table-avatar";
 
 const ACCOUNT_AREA_WIDTH = 290;
 
@@ -307,6 +311,7 @@ class MyVotesTable extends Component<Props, State> {
               badges.push(<StakeTag text={t("my_stake.burn-drop")} />);
             }
             const hasBadges = badges.length > 0;
+            const candidateInfo = bpCandidates[record.canName];
             return (
               <Flex
                 column={true}
@@ -336,12 +341,12 @@ class MyVotesTable extends Component<Props, State> {
                   justifyContent={"left"}
                   marginTop={`${hasBadges ? "8px" : "15px"}`}
                 >
-                  <Avatar
-                    shape="square"
-                    src={assetURL("my-staking/box.png")}
-                    size={40}
-                    style={{ margin: "5px 10px 2px 0" }}
-                  />
+                  {candidateInfo && (
+                    <MyVotesTableDelegateAvatar
+                      candidateProfileId={candidateInfo.id}
+                    />
+                  )}
+
                   <Flex
                     column={true}
                     alignItems={"baseline"}
@@ -514,68 +519,91 @@ class MyVotesTable extends Component<Props, State> {
     // @ts-ignore
     // @ts-ignore
     return (
-      <Flex
-        alignItems={"flex-start"}
-        media={{
-          [media.media1024]: {
-            flexDirection: "column !important",
-          },
-        }}
-      >
-        <Flex
-          width="100%"
-          alignItems={"flex-start"}
-          overflowX={"scroll"}
-          marginRight={"23px"}
-          maxWidth={`calc(100% - ${ACCOUNT_AREA_WIDTH + 23}px)`}
-          media={{
-            [media.media1024]: {
-              maxWidth: "100% !important",
-              marginRight: "0 !important",
-            },
-          }}
+      <>
+        {/*
+                // @ts-ignore */}
+        <Query
+          query={GET_ALL_CANDIDATES_ID_NAME}
+          client={webBpApolloClient}
+          ssr={false}
         >
-          {(!isIoPayMobile ||
-            !!(
-              dataSource && dataSource.length === 0
-            )) /*
+          {/* tslint:disable-next-line:no-any */}
+          {({ data }: any) => {
+            if (data && Array.isArray(data.bpCandidates)) {
+              data.bpCandidates.forEach(
+                (i: { status: string; registeredName: string | number }) => {
+                  // @ts-ignore
+                  bpCandidates[i.registeredName] = i;
+                }
+              );
+            }
+            return (
+              <Flex
+                alignItems={"flex-start"}
+                media={{
+                  [media.media1024]: {
+                    flexDirection: "column !important",
+                  },
+                }}
+              >
+                <Flex
+                  width="100%"
+                  alignItems={"flex-start"}
+                  overflowX={"scroll"}
+                  marginRight={"23px"}
+                  maxWidth={`calc(100% - ${ACCOUNT_AREA_WIDTH + 23}px)`}
+                  media={{
+                    [media.media1024]: {
+                      maxWidth: "100% !important",
+                      marginRight: "0 !important",
+                    },
+                  }}
+                >
+                  {(!isIoPayMobile ||
+                    !!(
+                      dataSource && dataSource.length === 0
+                    )) /*
             // @ts-ignore */ && (
-            <Table
-              className={"MyStakeInfo"}
-              rowClassName={this.setRowClassName}
-              style={{ width: "100%" }}
-              pagination={{ pageSize: 6 }}
-              columns={DisplayMyStakeCols(bpCandidates)}
-              dataSource={dataSource}
-              showHeader={!!(dataSource && dataSource.length > 0)}
-              rowKey="index"
-            />
-          )}
-          {isIoPayMobile && (
-            <div
-              className="mobileVotes"
-              style={{ width: "100%", marginBottom: 40 }}
-            >
-              {dataSource &&
-                dataSource.length > 0 &&
-                dataSource.map((item) => {
-                  return this.renderMobileTable(item);
-                })}
-            </div>
-          )}
-        </Flex>
-        <Flex
-          column={true}
-          alignItems={"baseline"}
-          maxWidth={`${ACCOUNT_AREA_WIDTH}px`}
-          backgroundColor={colors.black10}
-          padding={"24px"}
-          fontSize={"12px"}
-          marginBottom={"24px"}
-        >
-          <AccountMeta />
-        </Flex>
-      </Flex>
+                    <Table
+                      className={"MyStakeInfo"}
+                      rowClassName={this.setRowClassName}
+                      style={{ width: "100%" }}
+                      pagination={{ pageSize: 6 }}
+                      columns={DisplayMyStakeCols(bpCandidates)}
+                      dataSource={dataSource}
+                      showHeader={!!(dataSource && dataSource.length > 0)}
+                      rowKey="index"
+                    />
+                  )}
+                  {isIoPayMobile && (
+                    <div
+                      className="mobileVotes"
+                      style={{ width: "100%", marginBottom: 40 }}
+                    >
+                      {dataSource &&
+                        dataSource.length > 0 &&
+                        dataSource.map((item) => {
+                          return this.renderMobileTable(item);
+                        })}
+                    </div>
+                  )}
+                </Flex>
+                <Flex
+                  column={true}
+                  alignItems={"baseline"}
+                  maxWidth={`${ACCOUNT_AREA_WIDTH}px`}
+                  backgroundColor={colors.black10}
+                  padding={"24px"}
+                  fontSize={"12px"}
+                  marginBottom={"24px"}
+                >
+                  <AccountMeta />
+                </Flex>
+              </Flex>
+            );
+          }}
+        </Query>
+      </>
     );
   }
 }

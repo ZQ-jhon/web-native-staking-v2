@@ -18,6 +18,16 @@ export const GET_ALL_CANDIDATE = gql`
   }
 `;
 
+export const GET_ALL_CANDIDATES_ID_NAME = gql`
+  query allCandidates {
+    bpCandidates {
+      id
+      name
+      registeredName
+    }
+  }
+`;
+
 export const GET_BP_CANDIDATE = gql`
   query bpCandidate($candidateProfileId: ID, $eth: ID) {
     bpCandidate(candidateProfileId: $candidateProfileId, eth: $eth) {
