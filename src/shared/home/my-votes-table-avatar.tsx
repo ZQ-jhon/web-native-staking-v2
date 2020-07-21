@@ -5,7 +5,6 @@ import { webBpApolloClient } from "../common/apollo-client";
 import { TBpCandidate } from "../../types";
 import notification from "antd/lib/notification";
 import Avatar from "antd/lib/avatar";
-import { Preloader } from "../common/preloader";
 import { SpinPreloader } from "iotex-react-block-producers/lib/spin-preloader";
 
 interface IProps {
