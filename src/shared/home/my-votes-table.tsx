@@ -11,7 +11,6 @@ import Tag from "antd/lib/tag";
 import dateformat from "dateformat";
 import Antenna from "iotex-antenna/lib";
 import isBrowser from "is-browser";
-import { assetURL } from "onefx/lib/asset-url";
 import { t } from "onefx/lib/iso-i18n";
 import React, { Component } from "react";
 import { Query, QueryResult } from "react-apollo";
