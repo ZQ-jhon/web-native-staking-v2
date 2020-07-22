@@ -163,7 +163,7 @@ class MyVotesTable extends Component<Props, State> {
   };
 
   // tslint:disable-next-line:max-func-body-length
-  renderMobileTable = (item: IBucket) => {
+  renderMobileTable = (item: IBucket, bpCandidates: any) => {
     const no = String(item.index);
     const badgeRow = item.selfStakingBucket ? "BadgeRow" : "";
 
@@ -175,6 +175,7 @@ class MyVotesTable extends Component<Props, State> {
       badges.push(<StakeTag text={t("my_stake.burn-drop")} />);
     }
     const hasBadges = badges.length > 0;
+    const candidateInfo = bpCandidates[item.canName];
 
     const header = (
       <div>
@@ -185,12 +186,15 @@ class MyVotesTable extends Component<Props, State> {
         )}
         <Flex justifyContent={"space-between"} flexDirection={"row"}>
           <div>
-            <Avatar
-              shape="square"
-              src={assetURL("my-staking/box.png")}
-              size={40}
-              style={{ margin: "8px 10px 8px 0" }}
-            />
+            {candidateInfo && (
+              <Avatar
+                alt="AV"
+                shape="circle"
+                src={candidateInfo.logo}
+                size={40}
+                style={{ margin: "8px 10px 8px 0" }}
+              />
+            )}
             <Flex
               float={"right"}
               column={true}
@@ -586,7 +590,7 @@ class MyVotesTable extends Component<Props, State> {
                       {dataSource &&
                         dataSource.length > 0 &&
                         dataSource.map((item) => {
-                          return this.renderMobileTable(item);
+                          return this.renderMobileTable(item, bpCandidates);
                         })}
                     </div>
                   )}
