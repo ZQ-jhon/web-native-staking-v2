@@ -14,24 +14,24 @@ import isBrowser from "is-browser";
 import { assetURL } from "onefx/lib/asset-url";
 import { t } from "onefx/lib/iso-i18n";
 import React, { Component } from "react";
+import { Query, QueryResult } from "react-apollo";
 import { connect } from "react-redux";
 // @ts-ignore
 import JsonGlobal from "safe-json-globals/get";
 import { styled } from "styletron-react";
 import { IBucket } from "../../server/gateway/staking";
+import { TBpCandidate } from "../../types";
 import { AddressName } from "../common/address-name";
+import { webBpApolloClient } from "../common/apollo-client";
 import { stakeBadgeStyle } from "../common/component-style";
 import { Flex } from "../common/flex";
 import { colors } from "../common/styles/style-color2";
 import { media } from "../common/styles/style-media";
 import { getPowerEstimationForBucket } from "../common/token-utils";
+import { GET_ALL_CANDIDATES_ID_NAME } from "../staking/smart-contract-gql-queries";
 import { renderActionMenu } from "../staking/stake-edit/modal-menu";
 import { isBurnDrop } from "../staking/staking-utils";
 import { AccountMeta } from "./account-meta";
-import { Query } from "react-apollo";
-import { GET_ALL_CANDIDATES_ID_NAME } from "../staking/smart-contract-gql-queries";
-import { webBpApolloClient } from "../common/apollo-client";
-import { MyVotesTableDelegateAvatar } from "./my-votes-table-avatar";
 
 const ACCOUNT_AREA_WIDTH = 290;
 
@@ -342,8 +342,12 @@ class MyVotesTable extends Component<Props, State> {
                   marginTop={`${hasBadges ? "8px" : "15px"}`}
                 >
                   {candidateInfo && (
-                    <MyVotesTableDelegateAvatar
-                      candidateProfileId={candidateInfo.id}
+                    <Avatar
+                      alt="AV"
+                      shape="circle"
+                      src={candidateInfo.logo}
+                      size={40}
+                      style={{ margin: "5px 10px 2px 0" }}
                     />
                   )}
 
@@ -527,8 +531,7 @@ class MyVotesTable extends Component<Props, State> {
           client={webBpApolloClient}
           ssr={false}
         >
-          {/* tslint:disable-next-line:no-any */}
-          {({ data }: any) => {
+          {({ data }: QueryResult<{ bpCandidates: TBpCandidate }>) => {
             if (data && Array.isArray(data.bpCandidates)) {
               data.bpCandidates.forEach(
                 (i: { status: string; registeredName: string | number }) => {

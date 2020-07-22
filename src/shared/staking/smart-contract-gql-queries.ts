@@ -24,6 +24,7 @@ export const GET_ALL_CANDIDATES_ID_NAME = gql`
       id
       name
       registeredName
+      logo
     }
   }
 `;
