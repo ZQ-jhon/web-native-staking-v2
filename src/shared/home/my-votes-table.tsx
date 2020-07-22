@@ -11,20 +11,23 @@ import Tag from "antd/lib/tag";
 import dateformat from "dateformat";
 import Antenna from "iotex-antenna/lib";
 import isBrowser from "is-browser";
-import { assetURL } from "onefx/lib/asset-url";
 import { t } from "onefx/lib/iso-i18n";
 import React, { Component } from "react";
+import { Query, QueryResult } from "react-apollo";
 import { connect } from "react-redux";
 // @ts-ignore
 import JsonGlobal from "safe-json-globals/get";
 import { styled } from "styletron-react";
 import { IBucket } from "../../server/gateway/staking";
+import { TBpCandidate } from "../../types";
 import { AddressName } from "../common/address-name";
+import { webBpApolloClient } from "../common/apollo-client";
 import { stakeBadgeStyle } from "../common/component-style";
 import { Flex } from "../common/flex";
 import { colors } from "../common/styles/style-color2";
 import { media } from "../common/styles/style-media";
 import { getPowerEstimationForBucket } from "../common/token-utils";
+import { GET_ALL_CANDIDATES_ID_NAME } from "../staking/smart-contract-gql-queries";
 import { renderActionMenu } from "../staking/stake-edit/modal-menu";
 import { isBurnDrop } from "../staking/staking-utils";
 import { AccountMeta } from "./account-meta";
@@ -159,7 +162,7 @@ class MyVotesTable extends Component<Props, State> {
   };
 
   // tslint:disable-next-line:max-func-body-length
-  renderMobileTable = (item: IBucket) => {
+  renderMobileTable = (item: IBucket, bpCandidates: any) => {
     const no = String(item.index);
     const badgeRow = item.selfStakingBucket ? "BadgeRow" : "";
 
@@ -171,6 +174,7 @@ class MyVotesTable extends Component<Props, State> {
       badges.push(<StakeTag text={t("my_stake.burn-drop")} />);
     }
     const hasBadges = badges.length > 0;
+    const candidateInfo = bpCandidates[item.canName];
 
     const header = (
       <div>
@@ -181,12 +185,15 @@ class MyVotesTable extends Component<Props, State> {
         )}
         <Flex justifyContent={"space-between"} flexDirection={"row"}>
           <div>
-            <Avatar
-              shape="square"
-              src={assetURL("my-staking/box.png")}
-              size={40}
-              style={{ margin: "8px 10px 8px 0" }}
-            />
+            {candidateInfo && (
+              <Avatar
+                alt="AV"
+                shape="circle"
+                src={candidateInfo.logo}
+                size={40}
+                style={{ margin: "8px 10px 8px 0" }}
+              />
+            )}
             <Flex
               float={"right"}
               column={true}
@@ -307,6 +314,7 @@ class MyVotesTable extends Component<Props, State> {
               badges.push(<StakeTag text={t("my_stake.burn-drop")} />);
             }
             const hasBadges = badges.length > 0;
+            const candidateInfo = bpCandidates[record.canName];
             return (
               <Flex
                 column={true}
@@ -336,12 +344,16 @@ class MyVotesTable extends Component<Props, State> {
                   justifyContent={"left"}
                   marginTop={`${hasBadges ? "8px" : "15px"}`}
                 >
-                  <Avatar
-                    shape="square"
-                    src={assetURL("my-staking/box.png")}
-                    size={40}
-                    style={{ margin: "5px 10px 2px 0" }}
-                  />
+                  {candidateInfo && (
+                    <Avatar
+                      alt="AV"
+                      shape="circle"
+                      src={candidateInfo.logo}
+                      size={40}
+                      style={{ margin: "5px 10px 2px 0" }}
+                    />
+                  )}
+
                   <Flex
                     column={true}
                     alignItems={"baseline"}
@@ -514,68 +526,90 @@ class MyVotesTable extends Component<Props, State> {
     // @ts-ignore
     // @ts-ignore
     return (
-      <Flex
-        alignItems={"flex-start"}
-        media={{
-          [media.media1024]: {
-            flexDirection: "column !important",
-          },
-        }}
-      >
-        <Flex
-          width="100%"
-          alignItems={"flex-start"}
-          overflowX={"scroll"}
-          marginRight={"23px"}
-          maxWidth={`calc(100% - ${ACCOUNT_AREA_WIDTH + 23}px)`}
-          media={{
-            [media.media1024]: {
-              maxWidth: "100% !important",
-              marginRight: "0 !important",
-            },
-          }}
+      <>
+        {/*
+                // @ts-ignore */}
+        <Query
+          query={GET_ALL_CANDIDATES_ID_NAME}
+          client={webBpApolloClient}
+          ssr={false}
         >
-          {(!isIoPayMobile ||
-            !!(
-              dataSource && dataSource.length === 0
-            )) /*
+          {({ data }: QueryResult<{ bpCandidates: TBpCandidate }>) => {
+            if (data && Array.isArray(data.bpCandidates)) {
+              data.bpCandidates.forEach(
+                (i: { status: string; registeredName: string | number }) => {
+                  // @ts-ignore
+                  bpCandidates[i.registeredName] = i;
+                }
+              );
+            }
+            return (
+              <Flex
+                alignItems={"flex-start"}
+                media={{
+                  [media.media1024]: {
+                    flexDirection: "column !important",
+                  },
+                }}
+              >
+                <Flex
+                  width="100%"
+                  alignItems={"flex-start"}
+                  overflowX={"scroll"}
+                  marginRight={"23px"}
+                  maxWidth={`calc(100% - ${ACCOUNT_AREA_WIDTH + 23}px)`}
+                  media={{
+                    [media.media1024]: {
+                      maxWidth: "100% !important",
+                      marginRight: "0 !important",
+                    },
+                  }}
+                >
+                  {(!isIoPayMobile ||
+                    !!(
+                      dataSource && dataSource.length === 0
+                    )) /*
             // @ts-ignore */ && (
-            <Table
-              className={"MyStakeInfo"}
-              rowClassName={this.setRowClassName}
-              style={{ width: "100%" }}
-              pagination={{ pageSize: 6 }}
-              columns={DisplayMyStakeCols(bpCandidates)}
-              dataSource={dataSource}
-              showHeader={!!(dataSource && dataSource.length > 0)}
-              rowKey="index"
-            />
-          )}
-          {isIoPayMobile && (
-            <div
-              className="mobileVotes"
-              style={{ width: "100%", marginBottom: 40 }}
-            >
-              {dataSource &&
-                dataSource.length > 0 &&
-                dataSource.map((item) => {
-                  return this.renderMobileTable(item);
-                })}
-            </div>
-          )}
-        </Flex>
-        <Flex
-          column={true}
-          alignItems={"baseline"}
-          maxWidth={`${ACCOUNT_AREA_WIDTH}px`}
-          backgroundColor={colors.black10}
-          padding={"24px"}
-          fontSize={"12px"}
-          marginBottom={"24px"}
-        >
-          <AccountMeta />
-        </Flex>
-      </Flex>
+                    <Table
+                      className={"MyStakeInfo"}
+                      rowClassName={this.setRowClassName}
+                      style={{ width: "100%" }}
+                      pagination={{ pageSize: 6 }}
+                      columns={DisplayMyStakeCols(bpCandidates)}
+                      dataSource={dataSource}
+                      showHeader={!!(dataSource && dataSource.length > 0)}
+                      rowKey="index"
+                    />
+                  )}
+                  {isIoPayMobile && (
+                    <div
+                      className="mobileVotes"
+                      style={{ width: "100%", marginBottom: 40 }}
+                    >
+                      {dataSource &&
+                        dataSource.length > 0 &&
+                        dataSource.map((item) => {
+                          return this.renderMobileTable(item, bpCandidates);
+                        })}
+                    </div>
+                  )}
+                </Flex>
+                <Flex
+                  column={true}
+                  alignItems={"baseline"}
+                  maxWidth={`${ACCOUNT_AREA_WIDTH}px`}
+                  backgroundColor={colors.black10}
+                  padding={"24px"}
+                  fontSize={"12px"}
+                  marginBottom={"24px"}
+                >
+                  <AccountMeta />
+                </Flex>
+              </Flex>
+            );
+          }}
+        </Query>
+      </>
     );
   }
 }
