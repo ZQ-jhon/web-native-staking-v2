@@ -8,7 +8,7 @@ module.exports = {
     routePrefix: "",
     port: process.env.PORT || 5004,
     staticDir: "./dist",
-    delayInitMiddleware: false,
+    delayInitMiddleware: true,
     cookie: {
       secrets: ["insecure plain text", "insecure secret here"],
     },
