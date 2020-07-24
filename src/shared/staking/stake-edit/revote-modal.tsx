@@ -2,7 +2,6 @@
 import AutoComplete from "antd/lib/auto-complete";
 import Form from "antd/lib/form";
 import { FormInstance } from "antd/lib/form";
-import { get } from "dottie";
 import { toRau } from "iotex-antenna/lib/account/utils";
 import { t } from "onefx/lib/iso-i18n";
 import React, { Component } from "react";
@@ -15,6 +14,7 @@ import { DEFAULT_STAKING_GAS_LIMIT } from "../../common/token-utils";
 import { validateCanName } from "../field-validators";
 import { GET_ALL_CANDIDATE } from "../smart-contract-gql-queries";
 import { actionSmartContractCalled } from "../smart-contract-reducer";
+import { extractCandidates } from "../staking-form-item";
 import { ModalWrapper } from "./modal-wrapper";
 
 export const RevoteModal = connect(
@@ -87,13 +87,7 @@ export const RevoteModal = connect(
                   if (!loading && error) {
                     return null;
                   }
-                  const allCandidates =
-                    (data && data.bpCandidatesOnContract) || [];
-                  const dataSource = allCandidates
-                    // tslint:disable-next-line:no-any
-                    .map((item: { name: any }) => item.name)
-                    // tslint:disable-next-line:no-any
-                    .filter((item: any) => item && Boolean(item));
+                  const dataSource = extractCandidates(data);
                   return (
                     // @ts-ignore
                     <Form.Item
@@ -114,14 +108,13 @@ export const RevoteModal = connect(
                       // @ts-ignore*/}
                       <AutoComplete
                         size="large"
-                        dataSource={dataSource}
+                        options={dataSource}
                         defaultValue={canName}
-                        filterOption={
-                          // tslint:disable-next-line:no-any
-                          (inputValue: any, option: any) =>
-                            String(get(option, "props.children"))
-                              .toLowerCase()
-                              .indexOf(inputValue.toLowerCase()) !== -1
+                        // @ts-ignore
+                        filterOption={(inputValue, option) =>
+                          option.value
+                            .toUpperCase()
+                            .indexOf(inputValue.toUpperCase()) !== -1
                         }
                       />
                     </Form.Item>
