@@ -175,6 +175,7 @@
     "js-yaml": "3.14.0",
     "jsonwebtoken": "8.5.1",
     "koa-server-http-proxy": "0.1.0",
+    "koa-useragent": "^4.0.0",
     "left-pad": "1.3.0",
     "markdown-it": "10.0.0",
     "markdown-it-mark": "3.0.0",
