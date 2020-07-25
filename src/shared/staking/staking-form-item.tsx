@@ -6,13 +6,16 @@ import { FormInstance } from "antd/lib/form";
 import InputNumber from "antd/lib/input-number";
 import Switch from "antd/lib/switch";
 import BigNumber from "bignumber.js";
+import { get } from "dottie";
 // @ts-ignore
 import { t } from "onefx/lib/iso-i18n";
 import React, { Component, RefObject } from "react";
+import { TBpCandidate } from "../../types";
+import { ownersToNames } from "../common/apollo-client";
 import {
   CommonMarginBottomStyle,
   CommonMarginTop,
-  NoMarginBottomStyle
+  NoMarginBottomStyle,
 } from "../common/common-margin";
 import { Flex } from "../common/flex";
 import { formItemLayout } from "../common/form-item-layout";
@@ -21,8 +24,37 @@ import { fontFamily, fonts } from "../common/styles/style-font";
 import { getPowerEstimation } from "../common/token-utils";
 import {
   getStakeDurationMaxValue,
-  validateStakeDuration
+  validateStakeDuration,
 } from "./field-validators";
+
+export function extractCandidates(
+  data: { bpCandidates: TBpCandidate } | undefined
+): Array<{ label: string | JSX.Element; value: string }> {
+  const bpCandidates: Record<string, TBpCandidate> = {};
+  if (data && Array.isArray(data.bpCandidates)) {
+    data.bpCandidates.forEach((i: TBpCandidate) => {
+      if (i.status && i.status !== "UNQUALIFIED") {
+        bpCandidates[i.registeredName] = i;
+      }
+    });
+  }
+
+  const dataSource: Array<{ label: string | JSX.Element; value: string }> = [];
+  Object.keys(ownersToNames).forEach((key) => {
+    const registeredName = ownersToNames[key];
+    const delegateName = get(bpCandidates[registeredName], "name", "");
+    dataSource.push({
+      value: registeredName,
+      label: (
+        <span>
+          {registeredName}
+          <b>{delegateName ? ` - ${delegateName}` : ""}</b>
+        </span>
+      ),
+    });
+  });
+  return dataSource;
+}
 
 type Props = {
   // tslint:disable-next-line:no-any
@@ -57,7 +89,7 @@ export function IconLabel({ iconType, text = "" }: IconLabelType): JSX.Element {
           ...fonts.inputLabel,
           fontFamily,
           fontSize: "15px",
-          marginLeft: "9px"
+          marginLeft: "9px",
         }}
       >
         {text}{" "}
@@ -71,14 +103,14 @@ export const subTextStyle = {
   fontSize: "12px",
   fontFamily,
   color: colors.black80,
-  whiteSpace: "break-spaces"
+  whiteSpace: "break-spaces",
 };
 
 export const centerTextStyle = {
   ...subTextStyle,
   textAlign: "center",
   color: colors.black,
-  margin: "0 18px"
+  margin: "0 18px",
 };
 
 type FormItemTextTypes = {
@@ -88,7 +120,7 @@ type FormItemTextTypes = {
 
 export function FormItemText({
   text = "",
-  sub = ""
+  sub = "",
 }: FormItemTextTypes): JSX.Element {
   return (
     <>
@@ -104,7 +136,7 @@ export function FormItemText({
 
 export class AutoStakeFormItem extends Component<Props, State> {
   state: State = {
-    nonDecay: false
+    nonDecay: false,
   };
   props: Props;
 
@@ -114,7 +146,7 @@ export class AutoStakeFormItem extends Component<Props, State> {
       const form = formRef.current;
       if (form) {
         form.setFieldsValue({
-          nonDecay: this.props.initialValue
+          nonDecay: this.props.initialValue,
         });
       }
     }
@@ -140,7 +172,7 @@ export class AutoStakeFormItem extends Component<Props, State> {
       stakeAmount = new BigNumber(0),
       stakeDuration = 0,
       forceDisable = false,
-      initialValue
+      initialValue,
     } = this.props;
     const votingPower = this.getPowerEstimation(
       stakeAmount,
@@ -173,7 +205,7 @@ export class AutoStakeFormItem extends Component<Props, State> {
             >
               <Switch
                 style={{ textAlign: "right" }}
-                onChange={checked => {
+                onChange={(checked) => {
                   if (!forceDisable) {
                     this.setState({ nonDecay: checked });
                   }
@@ -213,9 +245,9 @@ export class AutoStakeFormItem extends Component<Props, State> {
                   // @ts-ignore
                   {
                     duration: stakeDuration,
-                    votes: votingPower
+                    votes: votingPower,
                   }
-                )
+                ),
               }}
             />
           }
@@ -246,7 +278,7 @@ export class DurationFormItem extends Component<DurationFormItemProps> {
       fieldName = "stakeDuration",
       initialValue = 0,
       onChange,
-      validatorFactory = validateStakeDuration
+      validatorFactory = validateStakeDuration,
     } = this.props;
     const minDuration = initialValue;
 
@@ -270,11 +302,11 @@ export class DurationFormItem extends Component<DurationFormItemProps> {
           rules={[
             {
               required: true,
-              message: t("my_stake.stakeDuration.required")
+              message: t("my_stake.stakeDuration.required"),
             },
             {
-              validator: validatorFactory(maxDuration, minDuration)
-            }
+              validator: validatorFactory(maxDuration, minDuration),
+            },
           ]}
           initialValue={initialValue}
         >
