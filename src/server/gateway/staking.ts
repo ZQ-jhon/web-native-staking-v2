@@ -95,6 +95,10 @@ function toCandidate(buffer: Buffer | {}): Candidate {
   };
 }
 
+function isValidDatetime(datetime?: Date): boolean {
+  return datetime!=null && datetime instanceof Date && !isNaN(datetime.getTime()) && datetime.getTime() > 0;
+}
+
 function daysLater(p: Date, days: number): Date {
   const cur = new Date(p);
   cur.setDate(cur.getDate() + days);
@@ -142,13 +146,21 @@ export type Status =
   | "withdrawable"
   | "unstaking"
   | "staking"
-  | "no_stake_starttime";
+  | "no_stake_starttime"
+  | "invalid_status";
 
 export function getStatus(
   withdrawWaitUntil?: Date,
   unstakeStartTime?: Date,
   stakeStartTime?: Date
 ): Status {
+  if(stakeStartTime &&
+    isValidDatetime(stakeStartTime) &&
+    unstakeStartTime &&
+    isValidDatetime(unstakeStartTime) &&
+    stakeStartTime > unstakeStartTime){
+    return "invalid_status"
+  }
   const now = new Date();
   if (withdrawWaitUntil && withdrawWaitUntil > daysLater(new Date(0), 4)) {
     const date = new Date(withdrawWaitUntil);

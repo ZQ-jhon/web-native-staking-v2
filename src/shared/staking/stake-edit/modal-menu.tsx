@@ -71,6 +71,7 @@ function renderTransfer(record: IBucket): JSX.Element {
         </div>
       );
     case "unstaking":
+    case "invalid_status":
       return (
         <div {...ACTION_ROW_DISABLED}>
           <span>{t("my_stake.edit.transfer")}</span>
@@ -111,6 +112,7 @@ function renderRevote(record: IBucket): JSX.Element {
         </div>
       );
     case "unstaking":
+    case "invalid_status":
       return (
         <div {...ACTION_ROW_DISABLED}>
           <span>{t("my_stake.edit.revote")}</span>
@@ -139,6 +141,13 @@ function renderRestake(record: IBucket): JSX.Element {
     record.unstakeStartTime,
     record.stakeStartTime
   );
+
+  if(["unstaking", "invalid_status"].includes(status) ){
+    return <div {...ACTION_ROW_DISABLED}>
+      <span>{t("my_stake.edit.restake")}</span>
+      <span style={menuInfoStyle}>{t("my_stake.status.suffix.not_applicable")}</span>
+    </div>;
+  }
 
   return ["staking", "unstaking", "withdrawable"].includes(status) ? (
     <div {...ACTION_ROW_STYLE}>
@@ -199,6 +208,7 @@ function renderUnstake(record: IBucket): JSX.Element {
         </div>
       );
     case "unstaking":
+    case "invalid_status":
       return (
         <div {...ACTION_ROW_DISABLED}>
           <span>{t("my_stake.edit.unstake")}</span>
@@ -240,6 +250,7 @@ function renderWithdraw(record: IBucket): JSX.Element {
 
   switch (status) {
     case "staking":
+    case "invalid_status":
       return (
         <div {...ACTION_ROW_DISABLED}>
           <span>{t("my_stake.edit.withdraw")}</span>
@@ -271,7 +282,13 @@ function renderWithdraw(record: IBucket): JSX.Element {
   }
 }
 
-function renderAddStaking(disabled: boolean): JSX.Element {
+function renderAddStaking(record: IBucket): JSX.Element {
+  const status = getStatus(
+    record.withdrawWaitUntil,
+    record.unstakeStartTime,
+    record.stakeStartTime
+  );
+  const disabled = !record.autoStake || ["invalid_status"].includes(status);
   return (
     <div {...(disabled ? ACTION_ROW_DISABLED : ACTION_ROW_STYLE)}>
       <span>{t("my_stake.edit.add_staking")}</span>
@@ -298,7 +315,7 @@ export function renderActionMenu(record: IBucket): JSX.Element {
       <Menu.Item key="addStaking">
         <AddStakingModal
           bucketIndex={record.index}
-          clickable={renderAddStaking(!record.autoStake)}
+          clickable={renderAddStaking(record)}
           selfStaking={record.selfStakingBucket}
           stakeDuration={record.stakedDuration}
           stakedAmount={record.stakedAmount}
