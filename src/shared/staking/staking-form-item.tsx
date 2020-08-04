@@ -17,7 +17,6 @@ import {
   CommonMarginTop,
   NoMarginBottomStyle,
 } from "../common/common-margin";
-import { Flex } from "../common/flex";
 import { formItemLayout } from "../common/form-item-layout";
 import { colors } from "../common/styles/style-color2";
 import { fontFamily, fonts } from "../common/styles/style-font";
@@ -226,32 +225,15 @@ export class AutoStakeFormItem extends Component<Props, State> {
             iconType={<InfoCircleOutlined style={{ color: colors.deltaUp }} />}
             text={t("my_stake.voting_power")}
           />
+          <span style={{ float: "right", fontWeight: "bold" }}>
+            {t("my_stake.votes_number", { votes: votingPower })}
+          </span>
         </div>
         <div style={{ marginBottom: "18px", marginTop: "10px" }}>
           {/*
               // @ts-ignore */}
           <span style={subTextStyle}>{t("my_stake.voting_power_explain")}</span>
         </div>
-
-        <Flex backgroundColor={colors.black10} padding={"15px"}>
-          {
-            // tslint:disable-next-line:react-no-dangerous-html
-            <p
-              // @ts-ignore
-              style={centerTextStyle}
-              dangerouslySetInnerHTML={{
-                __html: t(
-                  "my_stake.nonDecay.calculate_auto",
-                  // @ts-ignore
-                  {
-                    duration: stakeDuration,
-                    votes: votingPower,
-                  }
-                ),
-              }}
-            />
-          }
-        </Flex>
         {children}
       </div>
     );
