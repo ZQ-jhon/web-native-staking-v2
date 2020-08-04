@@ -117,7 +117,7 @@ class Delegate extends Component<Props> {
                           )
                         ),
                       ]}
-                      style={{ height: "100%" }}
+                      style={{ height: "100%", margin: "0 1em" }}
                     >
                       {PANES.map((p, i) => (
                         <Menu.Item key={i} onClick={() => history.push(p.path)}>

@@ -165,7 +165,7 @@ export class VotesReceivedTable extends PureComponent<Props, State> {
       },
     ];
     return (
-      <div style={{ width: "100%" }}>
+      <div style={{ width: "100%", padding: "0 1em" }}>
         <Query
           ssr={false}
           query={GET_VOTES_REVEIVED}
