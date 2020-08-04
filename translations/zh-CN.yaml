@@ -152,6 +152,7 @@ candidate.elected: 当选
 candidate.not_elected: 未当选
 candidate.productivity: Productivity
 my_stake.address: 钱包地址
+my_stake.wallet_balance: 钱包余额
 my_stake.staking_amount: 质押总数
 my_stake.unstake_pendding_amount: 正在赎回的数量
 my_stake.withdrawable_amount: 可以取出的

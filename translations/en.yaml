@@ -284,6 +284,7 @@ my_stake.unstake.nondecay_flag: 'Cannot unstake when the bucket is autostaked. Y
 my_stake.nonDecay.calculate_auto: 'You will retain the same voting power until you disable Auto-Stake. The stake duration of <b>${duration}</b> days will begin to elapse once you have disabled Auto-Stake. <br/><b style="font-size: 16px">${votes}</b><br/>VOTES'
 my_stake.nonDecay.calculate_estimate: '<small>${date}</small><br/><b style="font-size: 16px">${total}</b><br/>VOTES'
 my_stake.address: 'Account address'
+my_stake.wallet_balance: 'Wallet balance'
 my_stake.staking_amount: 'Total Staked Amount'
 my_stake.unstake_pendding_amount: 'Pending Unstake Amount'
 my_stake.withdrawable_amount: 'Ready to Withdraw'
