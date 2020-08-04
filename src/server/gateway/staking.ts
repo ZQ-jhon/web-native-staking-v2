@@ -11,7 +11,7 @@ import {
   StakeRestakeMethod,
   StakeTransferOwnershipMethod,
   StakeUnstakeMethod,
-  StakeWithdrawMethod
+  StakeWithdrawMethod,
 } from "iotex-antenna/lib/action/method";
 import {
   CandidateRegister,
@@ -22,18 +22,18 @@ import {
   StakeRestake,
   StakeTransferOwnership,
   StakeUnstake,
-  StakeWithdraw
+  StakeWithdraw,
 } from "iotex-antenna/lib/action/types";
 import {
   IReadStakingDataMethodName,
   IReadStakingDataMethodToBuffer,
-  IReadStakingDataRequestToBuffer
+  IReadStakingDataRequestToBuffer,
 } from "iotex-antenna/lib/rpc-method/types";
 import {
   CandidateListV2,
   CandidateV2,
   VoteBucket,
-  VoteBucketList
+  VoteBucketList,
 } from "iotex-antenna/protogen/proto/types/state_data_pb";
 import { ownersToNames } from "../../shared/common/apollo-client";
 import { getAntenna, getIoPayAddress } from "../../shared/common/get-antenna";
@@ -77,7 +77,7 @@ function toCandidates(buffer: Buffer | {}): Array<Candidate> {
     rewardAddress: v.getRewardaddress(),
     selfStakeBucketIdx: v.getSelfstakebucketidx(),
     selfStakingTokens: v.getSelfstakingtokens(),
-    totalWeightedVotes: v.getTotalweightedvotes()
+    totalWeightedVotes: v.getTotalweightedvotes(),
   }));
 }
 
@@ -91,12 +91,17 @@ function toCandidate(buffer: Buffer | {}): Candidate {
     rewardAddress: v2.getRewardaddress(),
     selfStakeBucketIdx: v2.getSelfstakebucketidx(),
     selfStakingTokens: v2.getSelfstakingtokens(),
-    totalWeightedVotes: v2.getTotalweightedvotes()
+    totalWeightedVotes: v2.getTotalweightedvotes(),
   };
 }
 
-function isValidDatetime(datetime?: Date): boolean {
-  return datetime!=null && datetime instanceof Date && !isNaN(datetime.getTime()) && datetime.getTime() > 0;
+export function isValidDatetime(datetime?: Date): boolean {
+  return (
+    datetime != null &&
+    datetime instanceof Date &&
+    !isNaN(datetime.getTime()) &&
+    datetime.getTime() > 0
+  );
 }
 
 function daysLater(p: Date, days: number): Date {
@@ -110,7 +115,7 @@ function toBuckets(
   candidates: Array<Candidate>
 ): Array<IBucket> {
   const selfStakingIndexes: Record<number, boolean> = {};
-  candidates.forEach(candidate => {
+  candidates.forEach((candidate) => {
     selfStakingIndexes[candidate.selfStakeBucketIdx] = true;
   });
   // @ts-ignore
@@ -137,7 +142,7 @@ function toBuckets(
       selfStakingBucket: b.getIndex() in selfStakingIndexes,
       withdrawWaitUntil,
       status: getStatus(withdrawWaitUntil, unstakeStartTime, stakeStartTime),
-      canName: ownersToNames[b.getCandidateaddress()]
+      canName: ownersToNames[b.getCandidateaddress()],
     };
   });
 }
@@ -154,13 +159,6 @@ export function getStatus(
   unstakeStartTime?: Date,
   stakeStartTime?: Date
 ): Status {
-  if(stakeStartTime &&
-    isValidDatetime(stakeStartTime) &&
-    unstakeStartTime &&
-    isValidDatetime(unstakeStartTime) &&
-    stakeStartTime > unstakeStartTime){
-    return "invalid_status"
-  }
   const now = new Date();
   if (withdrawWaitUntil && withdrawWaitUntil > daysLater(new Date(0), 4)) {
     const date = new Date(withdrawWaitUntil);
@@ -202,14 +200,14 @@ export class Staking {
     const state = await this.antenna.iotx.readState({
       protocolID: Buffer.from("staking"),
       methodName: IReadStakingDataMethodToBuffer({
-        method: IReadStakingDataMethodName.CANDIDATE_BY_NAME
+        method: IReadStakingDataMethodName.CANDIDATE_BY_NAME,
       }),
       arguments: [
         IReadStakingDataRequestToBuffer({
-          candidateByName: { candName }
-        })
+          candidateByName: { candName },
+        }),
       ],
-      height
+      height,
     });
     return toCandidate(state.data);
   }
@@ -222,17 +220,17 @@ export class Staking {
     const state = await this.antenna.iotx.readState({
       protocolID: Buffer.from("staking"),
       methodName: IReadStakingDataMethodToBuffer({
-        method: IReadStakingDataMethodName.CANDIDATES
+        method: IReadStakingDataMethodName.CANDIDATES,
       }),
       arguments: [
         IReadStakingDataRequestToBuffer({
           candidates: {
             candName: "",
-            pagination: { offset, limit }
-          }
-        })
+            pagination: { offset, limit },
+          },
+        }),
       ],
-      height
+      height,
     });
     return toCandidates(state.data);
   }
@@ -247,19 +245,19 @@ export class Staking {
       this.antenna.iotx.readState({
         protocolID: Buffer.from("staking"),
         methodName: IReadStakingDataMethodToBuffer({
-          method: IReadStakingDataMethodName.BUCKETS_BY_VOTER
+          method: IReadStakingDataMethodName.BUCKETS_BY_VOTER,
         }),
         arguments: [
           IReadStakingDataRequestToBuffer({
             bucketsByVoter: {
               voterAddress: voterAddr,
-              pagination: { offset, limit }
-            }
-          })
+              pagination: { offset, limit },
+            },
+          }),
         ],
-        height
+        height,
       }),
-      this.getAllCandidates(0, 1000, height)
+      this.getAllCandidates(0, 1000, height),
     ]);
     return toBuckets(state.data, candidates);
   }
@@ -274,19 +272,19 @@ export class Staking {
       this.antenna.iotx.readState({
         protocolID: Buffer.from("staking"),
         methodName: IReadStakingDataMethodToBuffer({
-          method: IReadStakingDataMethodName.BUCKETS_BY_CANDIDATE
+          method: IReadStakingDataMethodName.BUCKETS_BY_CANDIDATE,
         }),
         arguments: [
           IReadStakingDataRequestToBuffer({
             bucketsByCandidate: {
               candName,
-              pagination: { offset, limit }
-            }
-          })
+              pagination: { offset, limit },
+            },
+          }),
         ],
-        height
+        height,
       }),
-      this.getCandidate(candName)
+      this.getCandidate(candName),
     ]);
     return toBuckets(state.data, [candidates]);
   }
@@ -300,18 +298,18 @@ export class Staking {
       this.antenna.iotx.readState({
         protocolID: Buffer.from("staking"),
         methodName: IReadStakingDataMethodToBuffer({
-          method: IReadStakingDataMethodName.BUCKETS
+          method: IReadStakingDataMethodName.BUCKETS,
         }),
         arguments: [
           IReadStakingDataRequestToBuffer({
             buckets: {
-              pagination: { offset, limit }
-            }
-          })
+              pagination: { offset, limit },
+            },
+          }),
         ],
-        height
+        height,
       }),
-      this.getAllCandidates(0, 999)
+      this.getAllCandidates(0, 999),
     ]);
     return toBuckets(state.data, candidates);
   }
@@ -319,7 +317,7 @@ export class Staking {
   public async createStake(req: StakeCreate): Promise<string> {
     const sender = await this.getSender();
     return new StakeCreateMethod(this.antenna.iotx, sender, req, {
-      signer: this.antenna.iotx.signer
+      signer: this.antenna.iotx.signer,
     }).execute();
   }
 
@@ -327,7 +325,7 @@ export class Staking {
     const sender = await this.getSender();
 
     return new StakeUnstakeMethod(this.antenna.iotx, sender, req, {
-      signer: this.antenna.iotx.signer
+      signer: this.antenna.iotx.signer,
     }).execute();
   }
 
@@ -335,7 +333,7 @@ export class Staking {
     const sender = await this.getSender();
 
     return new StakeWithdrawMethod(this.antenna.iotx, sender, req, {
-      signer: this.antenna.iotx.signer
+      signer: this.antenna.iotx.signer,
     }).execute();
   }
 
@@ -343,7 +341,7 @@ export class Staking {
     const sender = await this.getSender();
 
     return new StakeAddDepositMethod(this.antenna.iotx, sender, req, {
-      signer: this.antenna.iotx.signer
+      signer: this.antenna.iotx.signer,
     }).execute();
   }
 
@@ -351,7 +349,7 @@ export class Staking {
     const sender = await this.getSender();
 
     return new StakeRestakeMethod(this.antenna.iotx, sender, req, {
-      signer: this.antenna.iotx.signer
+      signer: this.antenna.iotx.signer,
     }).execute();
   }
 
@@ -359,7 +357,7 @@ export class Staking {
     const sender = await this.getSender();
 
     return new StakeChangeCandidateMethod(this.antenna.iotx, sender, req, {
-      signer: this.antenna.iotx.signer
+      signer: this.antenna.iotx.signer,
     }).execute();
   }
 
@@ -367,7 +365,7 @@ export class Staking {
     const sender = await this.getSender();
 
     return new StakeTransferOwnershipMethod(this.antenna.iotx, sender, req, {
-      signer: this.antenna.iotx.signer
+      signer: this.antenna.iotx.signer,
     }).execute();
   }
 
@@ -375,7 +373,7 @@ export class Staking {
     const sender = await this.getSender();
 
     return new CandidateRegisterMethod(this.antenna.iotx, sender, req, {
-      signer: this.antenna.iotx.signer
+      signer: this.antenna.iotx.signer,
     }).execute();
   }
 
@@ -383,7 +381,7 @@ export class Staking {
     const sender = await this.getSender();
 
     return new CandidateUpdateMethod(this.antenna.iotx, sender, req, {
-      signer: this.antenna.iotx.signer
+      signer: this.antenna.iotx.signer,
     }).execute();
   }
 

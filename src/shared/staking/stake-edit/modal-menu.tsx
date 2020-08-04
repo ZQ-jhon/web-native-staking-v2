@@ -1,5 +1,3 @@
-// @flow
-// $FlowFixMe
 import Menu from "antd/lib/menu";
 import { t } from "onefx/lib/iso-i18n";
 import React, { CSSProperties } from "react";
@@ -23,6 +21,7 @@ const ACTION_ROW_STYLE = {
     justifyContent: "space-between",
   },
 };
+
 const ACTION_ROW_DISABLED = {
   style: {
     ...ACTION_ROW_STYLE.style,
@@ -55,43 +54,12 @@ function renderTransfer(record: IBucket): JSX.Element {
       </div>
     );
   }
-  const status = getStatus(
-    record.withdrawWaitUntil,
-    record.unstakeStartTime,
-    record.stakeStartTime
+  return (
+    <div {...ACTION_ROW_STYLE}>
+      <span>{t("my_stake.edit.transfer")}</span>
+      <span style={menuInfoStyle}>{t("my_stake.status.suffix.anytime")}</span>
+    </div>
   );
-  switch (status) {
-    case "staking":
-      return (
-        <div {...ACTION_ROW_STYLE}>
-          <span>{t("my_stake.edit.transfer")}</span>
-          <span style={menuInfoStyle}>
-            {t("my_stake.status.suffix.anytime")}
-          </span>
-        </div>
-      );
-    case "unstaking":
-    case "invalid_status":
-      return (
-        <div {...ACTION_ROW_DISABLED}>
-          <span>{t("my_stake.edit.transfer")}</span>
-          <span style={menuInfoStyleDisabled}>
-            {t("my_stake.status.suffix.not_applicable")}
-          </span>
-        </div>
-      );
-    case "withdrawable":
-      return (
-        <div {...ACTION_ROW_DISABLED}>
-          <span>{t("my_stake.edit.transfer")}</span>
-          <span style={menuInfoStyleDisabled}>
-            {t("my_stake.status.suffix.not_applicable")}
-          </span>
-        </div>
-      );
-    default:
-      return <></>;
-  }
 }
 
 function renderRevote(record: IBucket): JSX.Element {
@@ -142,20 +110,18 @@ function renderRestake(record: IBucket): JSX.Element {
     record.stakeStartTime
   );
 
-  if(["unstaking", "invalid_status"].includes(status) ){
-    return <div {...ACTION_ROW_DISABLED}>
-      <span>{t("my_stake.edit.restake")}</span>
-      <span style={menuInfoStyle}>{t("my_stake.status.suffix.not_applicable")}</span>
-    </div>;
-  }
-
-  return ["staking", "unstaking", "withdrawable"].includes(status) ? (
+  return ["staking"].includes(status) ? (
     <div {...ACTION_ROW_STYLE}>
       <span>{t("my_stake.edit.restake")}</span>
       <span style={menuInfoStyle}>{t("my_stake.status.suffix.anytime")}</span>
     </div>
   ) : (
-    <></>
+    <div {...ACTION_ROW_DISABLED}>
+      <span>{t("my_stake.edit.restake")}</span>
+      <span style={menuInfoStyle}>
+        {t("my_stake.status.suffix.not_applicable")}
+      </span>
+    </div>
   );
 }
 
@@ -288,7 +254,7 @@ function renderAddStaking(record: IBucket): JSX.Element {
     record.unstakeStartTime,
     record.stakeStartTime
   );
-  const disabled = !record.autoStake || ["invalid_status"].includes(status);
+  const disabled = !record.autoStake || status !== "staking";
   return (
     <div {...(disabled ? ACTION_ROW_DISABLED : ACTION_ROW_STYLE)}>
       <span>{t("my_stake.edit.add_staking")}</span>
