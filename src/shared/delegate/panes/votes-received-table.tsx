@@ -149,23 +149,8 @@ export class VotesReceivedTable extends PureComponent<Props, State> {
         title: t("delegate.votesreceived.token_type"),
         dataIndex: "isNative",
         key: "isNative",
-        filters: [
-          {
-            text: t("delegate.votesreceived.native"),
-            value: "IOTX",
-          },
-          {
-            text: t("delegate.votesreceived.iotx"),
-            value: "IOTX-E",
-          },
-        ],
         render(_: void, record: { isNative: boolean }): string {
           return record.isNative ? "IOTX" : "IOTX-E";
-        },
-        onFilter(value: string, record: { isNative: boolean }): boolean {
-          const recordValue = record.isNative ? "IOTX" : "IOTX-E";
-
-          return value === recordValue;
         },
       },
       {
@@ -180,70 +165,72 @@ export class VotesReceivedTable extends PureComponent<Props, State> {
       },
     ];
     return (
-      <Query
-        ssr={false}
-        query={GET_VOTES_REVEIVED}
-        variables={variables}
-        client={webBpApolloClient}
-      >
-        {({ loading, error, data }: QueryResult) => {
-          if (error) {
-            notification.error({
-              message: "Error",
-              description: `failed to get votes recieved: ${error.message}`,
-              duration: 3,
-            });
-            return null;
-          }
-          const { buckets = [] } = data || {};
-          if (buckets.length > 0) {
-            this.getUpdatedBucket(buckets);
-          }
-          return (
-            <SpinPreloader spinning={loading}>
-              {
-                // tslint:disable-next-line:use-simple-attributes
-                <Flex
-                  display={isPublic ? "none" : "flex"}
-                  width="100%"
-                  column={true}
-                  alignItems="flex-end"
-                >
-                  <Button
-                    loading={loading}
-                    type={"primary"}
-                    onClick={this.downloadVotes}
+      <div style={{ width: "100%" }}>
+        <Query
+          ssr={false}
+          query={GET_VOTES_REVEIVED}
+          variables={variables}
+          client={webBpApolloClient}
+        >
+          {({ loading, error, data }: QueryResult) => {
+            if (error) {
+              notification.error({
+                message: "Error",
+                description: `failed to get votes recieved: ${error.message}`,
+                duration: 3,
+              });
+              return null;
+            }
+            const { buckets = [] } = data || {};
+            if (buckets.length > 0) {
+              this.getUpdatedBucket(buckets);
+            }
+            return (
+              <SpinPreloader spinning={loading}>
+                {
+                  // tslint:disable-next-line:use-simple-attributes
+                  <Flex
+                    display={isPublic ? "none" : "flex"}
+                    width="100%"
+                    column={true}
+                    alignItems="flex-end"
                   >
-                    {t("delegate.votesreceived.download")}
-                  </Button>
-                  <CommonMargin />
-                </Flex>
-              }
-              <Table
-                pagination={{
-                  pageSize: limit,
-                  onChange: (page) => {
-                    const cOffset = page > 0 ? (page - 1) * limit : 0;
-                    this.setState({
-                      offset: cOffset,
-                      limit,
-                    });
-                  },
-                  total:
-                    buckets.length < limit
-                      ? offset + limit
-                      : offset + limit + 1,
-                  defaultCurrent: offset / limit,
-                }}
-                dataSource={buckets}
-                // @ts-ignore
-                columns={columns}
-                rowKey={"id"}
-              />
-            </SpinPreloader>
-          );
-        }}
-      </Query>
+                    <Button
+                      loading={loading}
+                      type={"primary"}
+                      onClick={this.downloadVotes}
+                    >
+                      {t("delegate.votesreceived.download")}
+                    </Button>
+                    <CommonMargin />
+                  </Flex>
+                }
+                <Table
+                  pagination={{
+                    pageSize: limit,
+                    onChange: (page) => {
+                      const cOffset = page > 0 ? (page - 1) * limit : 0;
+                      this.setState({
+                        offset: cOffset,
+                        limit,
+                      });
+                    },
+                    total:
+                      buckets.length < limit
+                        ? offset + limit
+                        : offset + limit + 1,
+                    defaultCurrent: offset / limit,
+                  }}
+                  dataSource={buckets}
+                  // @ts-ignore
+                  columns={columns}
+                  rowKey={"id"}
+                />
+              </SpinPreloader>
+            );
+          }}
+        </Query>
+      </div>
     );
   }
 }

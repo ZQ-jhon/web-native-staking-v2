@@ -45,7 +45,7 @@ class Delegate extends Component<Props> {
         tab: <span>{t("user-info.profile")}</span>,
       },
       {
-        path: `/delegate/${match.params.id}/my-votes`,
+        path: `/delegate/${match.params.id}/votes`,
         tab: <span>{t("delegate.votesreceived")}</span>,
       },
       {
@@ -59,7 +59,7 @@ class Delegate extends Component<Props> {
     ];
     const Content = ({ data }: { data: TBpCandidate }) => {
       switch (match.params.type) {
-        case "my-votes":
+        case "votes":
           return <DelegateVotesReceived />;
         case "rewards":
           return <DelegateRewards registeredName={data.registeredName} />;
