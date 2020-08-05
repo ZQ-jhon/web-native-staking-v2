@@ -4,7 +4,7 @@ import Alert from "antd/lib/alert";
 import { t } from "onefx/lib/iso-i18n";
 import Helmet from "onefx/lib/react-helmet";
 import { styled } from "onefx/lib/styletron-react";
-import React, { Component } from "react";
+import React, { Component, PureComponent } from "react";
 import { connect } from "react-redux";
 import { CommonMargin } from "../common/common-margin";
 import { IopayRequired } from "../common/iopay-required";
@@ -17,9 +17,14 @@ import { MyVotesTable } from "./my-votes-table";
 
 type State = {
   showVoteNowModal: boolean;
+  isBlur: boolean;
 };
 
-type Props = {};
+type Props = {
+  isMobile?: boolean;
+  isIoPayMobile?: boolean;
+  isInAppWebview?: boolean;
+};
 
 // path: /my-votes
 export function MyVotes(): JSX.Element {
@@ -32,11 +37,21 @@ export function MyVotes(): JSX.Element {
   );
 }
 
-export class StakingContractContainer extends Component<Props, State> {
+// @ts-ignore
+@connect((state) => ({
+  // @ts-ignore
+  isIoPayMobile: state.base.isIoPayMobile,
+  // @ts-ignore
+  isInAppWebview: state.base.isInAppWebview,
+  // @ts-ignore
+  isMobile: state.base.isMobile,
+}))
+export class StakingContractContainer extends PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
       showVoteNowModal: false,
+      isBlur: false,
     };
   }
 
@@ -44,20 +59,57 @@ export class StakingContractContainer extends Component<Props, State> {
     window.location.reload();
   };
 
+  componentDidMount(): void {
+    window.onblur = () => {
+      this.setState(
+        {
+          isBlur: true,
+        },
+        this.ioPayIsInstall
+      );
+    };
+  }
+
+  ioPayIsInstall = () => {
+    // window.open("iopay://iopay.iotex.io/open?action=web&url=https://member.iotex.io")
+    // window.location.href = "iopay://iopay.iotex.io/open?action=web&url=https://member.iotex.io"
+    setTimeout(() => {
+      if (!this.state.isBlur) {
+        location.href = "http://iopay.iotex.io";
+      }
+    }, 3000);
+  };
+
   render(): JSX.Element {
+    const { isIoPayMobile, isMobile } = this.props;
     return (
       <div>
         <SmartContractCalled />
-        <VotingButton
-          launch={() => this.setState({ showVoteNowModal: true })}
-          disabled={false}
-          extra={{ size: "large" }}
-        >
-          <span>
-            <PlusOutlined />
-            {t("my_stake.new_vote")}
-          </span>
-        </VotingButton>
+        {isMobile && !isIoPayMobile ? (
+          <VotingButton
+            launch={() => {
+              this.ioPayIsInstall();
+            }}
+            disabled={false}
+            extra={{ size: "large" }}
+          >
+            <span>
+              <PlusOutlined />
+              {t("my_stake.button.vote_with_iopay")}
+            </span>
+          </VotingButton>
+        ) : (
+          <VotingButton
+            launch={() => this.setState({ showVoteNowModal: true })}
+            disabled={false}
+            extra={{ size: "large" }}
+          >
+            <span>
+              <PlusOutlined />
+              {t("my_stake.new_vote")}
+            </span>
+          </VotingButton>
+        )}
 
         <RefreshButtonStyle onClick={() => this.refreshPage()}>
           <RedoOutlined style={{ marginRight: 4 }} />

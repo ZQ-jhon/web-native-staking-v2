@@ -163,6 +163,7 @@ my_stake.autostake: 自动质押
 my_stake.bucket_status: 状态
 my_stake.nonDecay: 自动质押
 my_stake.new_vote: 创建质押
+my_stake.button.vote_with_iopay: '用IoPay投票'
 my_stake.refresh_list: 刷新
 my_votes.erc20_tab: 'IOTX-E (ERC-20)'
 my_votes.native_tab: 'IOTX'
