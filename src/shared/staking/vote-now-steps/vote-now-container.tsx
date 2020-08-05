@@ -24,7 +24,6 @@ import { formItemLayout } from "../../common/form-item-layout";
 import { getIoPayAddress } from "../../common/get-antenna";
 import { colors } from "../../common/styles/style-color2";
 import { DEFAULT_STAKING_GAS_LIMIT } from "../../common/token-utils";
-import { MyReferralTwitterButton } from "../../my-referrals/my-referral-twitter-button";
 import { validateCanName } from "../field-validators";
 import {
   GET_ALL_CANDIDATE,
@@ -365,7 +364,7 @@ const VoteNowContainer = connect(
 
     // tslint:disable-next-line:no-any
     getFooter = (recordStakingReferral: any) => {
-      const { disableModal, currentCandidate } = this.props;
+      const { disableModal } = this.props;
 
       switch (this.state.step) {
         case SUCCESS_STEP:
@@ -375,16 +374,6 @@ const VoteNowContainer = connect(
                 {t("name_registration.cancel")}
               </Button>
             ),
-            " ",
-            // tslint:disable-next-line:use-simple-attributes
-            <MyReferralTwitterButton
-              key="twitter"
-              data={
-                currentCandidate || {
-                  name: this.bucket && this.bucket.canName,
-                }
-              }
-            />,
           ];
         default:
           return [

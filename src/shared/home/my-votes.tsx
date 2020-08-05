@@ -67,7 +67,6 @@ export class StakingContractContainer extends Component<Props, State> {
         <CommonMargin />
 
         <MyVotesTableWrapper />
-
         <VoteNowContainer
           displayOthers={false}
           forceDisplayModal={this.state.showVoteNowModal}
