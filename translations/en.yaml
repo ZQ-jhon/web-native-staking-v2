@@ -116,7 +116,7 @@ topbar.staking: STAKING
 topbar.support: SUPPORT
 topbar.vita: VITA
 topbar.voting: VOTING
-contract.called: 'Succeeded! Please wait for a few minutes and refresh this page to see the result.'
+contract.called: 'Succeeded! Please wait for a few seconds and refresh this page to see the result.'
 topbar.poll: POLL
 topbar.tool: TOOL
 contract.install: 'Please use ioPay desktop, import & unlock your wallet, and then refresh this page to continue.'
