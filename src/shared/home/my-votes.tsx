@@ -68,11 +68,12 @@ export class StakingContractContainer extends PureComponent<Props, State> {
   }
   openDeepLink = () => {
     const a = document.createElement("a");
+    const tagId = "startIoPay";
     a.setAttribute("href", "iopay://io.iotex.iopay/open?action=stake");
-    a.setAttribute("id", "startIoPay");
-    if (document.getElementById("startIoPay")) {
+    a.setAttribute("id", tagId);
+    if (document.getElementById(tagId)) {
       // @ts-ignore
-      document.body.removeChild(document.getElementById("startIoPay"));
+      document.body.removeChild(document.getElementById(tagId));
     }
     document.body.appendChild(a);
     a.click();
