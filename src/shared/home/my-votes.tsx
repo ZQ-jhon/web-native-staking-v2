@@ -93,9 +93,6 @@ export class StakingContractContainer extends PureComponent<Props, State> {
     return (
       <div>
         <SmartContractCalled />
-        <a href="iopay://io.iotex.iopay/open?action=web&url=https://member.iotex.io">
-          TEST
-        </a>
         {isMobile && !isIoPayMobile ? (
           <VotingButton
             launch={() => {
