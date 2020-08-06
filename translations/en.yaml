@@ -342,6 +342,7 @@ name_registration.register: Submit
 name_registration.cancel: Cancel
 name_registration.edit: Edit
 name_registration.update: Update
+name_registration.ok: Ok
 name_regsitration.name: 'Delegate Name'
 name_regsitration.name.required: 'Please enter a valid name.'
 name_regsitration.name.explanation: 'The name of your delegate on-chain, which should be lowercase chars or digits, not longer than 12 bytes'
