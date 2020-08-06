@@ -61,18 +61,25 @@ export class StakingContractContainer extends PureComponent<Props, State> {
 
   componentDidMount(): void {
     window.onblur = () => {
-      this.setState(
-        {
-          isBlur: true,
-        },
-        this.ioPayIsInstall
-      );
+      this.setState({
+        isBlur: true,
+      });
     };
   }
+  openDeepLink = () => {
+    const a = document.createElement("a");
+    a.setAttribute("href", "iopay://io.iotex.iopay/open?action=stake");
+    a.setAttribute("id", "startIoPay");
+    if (document.getElementById("startIoPay")) {
+      // @ts-ignore
+      document.body.removeChild(document.getElementById("startIoPay"));
+    }
+    document.body.appendChild(a);
+    a.click();
+  };
 
   ioPayIsInstall = () => {
-    // window.open("iopay://iopay.iotex.io/open?action=web&url=https://member.iotex.io")
-    // window.location.href = "iopay://iopay.iotex.io/open?action=web&url=https://member.iotex.io"
+    this.openDeepLink();
     setTimeout(() => {
       if (!this.state.isBlur) {
         location.href = "http://iopay.iotex.io";
@@ -85,6 +92,9 @@ export class StakingContractContainer extends PureComponent<Props, State> {
     return (
       <div>
         <SmartContractCalled />
+        <a href="iopay://io.iotex.iopay/open?action=web&url=https://member.iotex.io">
+          TEST
+        </a>
         {isMobile && !isIoPayMobile ? (
           <VotingButton
             launch={() => {
