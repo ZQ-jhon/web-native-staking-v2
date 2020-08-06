@@ -107,7 +107,7 @@ const SmartContractCalled = connect(
       {smartContractCalled && (
         <div>
           <Alert
-            message={t("contract.called")}
+            message={t("action.broadcasted")}
             type="success"
             showIcon={true}
           />
