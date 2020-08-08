@@ -175,4 +175,4 @@ my_stake.edit.transfer: 转让质押桶
 my_stake.edit.row: Action
 my_stake.edit.unstake: 赎回质押
 my_stake.edit.withdraw: 提取赎回
-action.broadcasted: 广播成功!您的TX已广播到网络。这并不意味着它在区块链上被挖掘。确认通常需要几秒钟。请稍等几秒钟，刷新此页以查看结果。
+action.broadcasted: 广播成功！请稍候几秒钟，刷新此页以查看结果。
