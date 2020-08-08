@@ -342,6 +342,7 @@ name_registration.register: Submit
 name_registration.cancel: Cancel
 name_registration.edit: Edit
 name_registration.update: Update
+name_registration.ok: Ok
 name_regsitration.name: 'Delegate Name'
 name_regsitration.name.required: 'Please enter a valid name.'
 name_regsitration.name.explanation: 'The name of your delegate on-chain, which should be lowercase chars or digits, not longer than 12 bytes'
@@ -545,3 +546,4 @@ reclaim.contiunueButton: Continue
 reclaim.reclaimMessage: This is to certify I am transferring the ownership of said bucket to said recipient on IoTeX blockchain
 reclaim.popUpMessage.runIoctlCmd: You can reclaim the bucket by running the following ioctl command
 reclaim.continueWebTools: or if you wish to use the web tool, make sure ioPay is opened (and it has the recipient private key/account), then click Continue
+action.broadcasted: Broadcasted successfully! Please wait for a few seconds and refresh this page to see the result.
