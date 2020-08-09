@@ -141,3 +141,7 @@ $border-warning: #e44837;
   content: "";
   flex: auto;
 }
+
+.table_wrapper__votes_received .ant-table-content {
+  overflow-x: auto;
+}
