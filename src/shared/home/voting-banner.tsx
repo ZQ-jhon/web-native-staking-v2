@@ -6,6 +6,7 @@ import { t } from "onefx/lib/iso-i18n";
 import { styled } from "onefx/lib/styletron-react";
 import React, { Component } from "react";
 import { Query, QueryResult } from "react-apollo";
+import { connect } from "react-redux";
 import { TBpCandidate } from "../../types";
 import { webBpApolloClient } from "../common/apollo-client";
 import { CommonMargin } from "../common/common-margin";
@@ -88,6 +89,7 @@ const buyIotxList = [
     src: "voting-website/swapzone.png",
   },
 ];
+
 interface AdminSettingItem {
   href: string;
   desktop: string;
@@ -120,16 +122,29 @@ type Props = {
   displayMobileList: Boolean;
   isInAppWebview: Boolean;
   showVotingModal(record: Object | null): void;
+  isMobile?: boolean;
+  isIoPayMobile?: boolean;
 };
-type State = { showBuyIotx: Boolean };
+type State = { showBuyIotx: Boolean; isBlur: Boolean };
 
+// @ts-ignore
+@connect((state) => ({
+  // @ts-ignore
+  isIoPayMobile: state.base.isIoPayMobile,
+  // @ts-ignore
+  isInAppWebview: state.base.isInAppWebview,
+  // @ts-ignore
+  isMobile: state.base.isMobile,
+}))
 class VotingBanner extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
       showBuyIotx: false,
+      isBlur: false,
     };
   }
+
   showBuyIotxBtn = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ): void => {
@@ -168,10 +183,46 @@ class VotingBanner extends Component<Props, State> {
       });
     }
   };
+
+  openDeepLink = () => {
+    const a = document.createElement("a");
+    const tagId = "startIoPay";
+    a.setAttribute("href", "iopay://io.iotex.iopay/open?action=stake");
+    a.setAttribute("id", tagId);
+    if (document.getElementById(tagId)) {
+      // @ts-ignore
+      document.body.removeChild(document.getElementById(tagId));
+    }
+    document.body.appendChild(a);
+    a.click();
+  };
+
+  ioPayIsInstall = () => {
+    this.openDeepLink();
+    setTimeout(() => {
+      if (!this.state.isBlur) {
+        location.href = "http://iopay.iotex.io";
+      }
+    }, 3000);
+  };
+
+  componentDidMount(): void {
+    window.onblur = () => {
+      this.setState({
+        isBlur: true,
+      });
+    };
+  }
+
   // tslint:disable-next-line:max-func-body-length
   render(): JSX.Element {
     const { items } = votingBannerSetting;
-    const { isInAppWebview, displayMobileList } = this.props;
+    const {
+      isInAppWebview,
+      displayMobileList,
+      isIoPayMobile,
+      isMobile,
+    } = this.props;
     return (
       // @ts-ignore
       <Image
@@ -235,19 +286,35 @@ class VotingBanner extends Component<Props, State> {
                   marginTop: "24px",
                 }}
               >
-                <VotingButton
-                  launch={() => {
-                    this.props.showVotingModal(null);
-                  }}
-                  extra={{
-                    style: {
-                      background: colors.primary,
-                      borderColor: colors.primary,
-                    },
-                  }}
-                >
-                  {t("candidates.vote_now")}
-                </VotingButton>
+                {isMobile && !isIoPayMobile ? (
+                  <VotingButton
+                    launch={() => {
+                      this.ioPayIsInstall();
+                    }}
+                    extra={{
+                      style: {
+                        background: colors.primary,
+                        borderColor: colors.primary,
+                      },
+                    }}
+                  >
+                    {t("my_stake.button.vote_with_iopay")}
+                  </VotingButton>
+                ) : (
+                  <VotingButton
+                    launch={() => {
+                      this.props.showVotingModal(null);
+                    }}
+                    extra={{
+                      style: {
+                        background: colors.primary,
+                        borderColor: colors.primary,
+                      },
+                    }}
+                  >
+                    {t("candidates.vote_now")}
+                  </VotingButton>
+                )}
                 <BuyButtonWrapper>
                   {this.props.displayMobileList ? (
                     <Button
