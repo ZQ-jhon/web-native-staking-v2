@@ -5,9 +5,10 @@ import exportFromJSON from "export-from-json";
 import gql from "graphql-tag";
 import { SpinPreloader } from "iotex-react-block-producers/lib/spin-preloader";
 import { t } from "onefx/lib/iso-i18n";
+import { styled } from "onefx/lib/styletron-react";
 import parse from "parse-duration";
-import React from "react";
 import { PureComponent } from "react";
+import React from "react";
 import { Query, QueryResult } from "react-apollo";
 import { ownersToNames, webBpApolloClient } from "../../common/apollo-client";
 import { CommonMargin } from "../../common/common-margin";
@@ -134,7 +135,7 @@ export class VotesReceivedTable extends PureComponent<Props, State> {
         dataIndex: "voter",
         key: "voter",
         render(text: string): JSX.Element {
-          return <div>{String(text).replace("0x", "").slice(0, 8)}</div>;
+          return <div>{String(text).replace("0x", "")}</div>;
         },
       },
       {
@@ -165,7 +166,7 @@ export class VotesReceivedTable extends PureComponent<Props, State> {
       },
     ];
     return (
-      <div style={{ width: "100%", padding: "0 1em" }}>
+      <VotesReceivedTableWrapper className="table_wrapper__votes_received">
         <Query
           ssr={false}
           query={GET_VOTES_REVEIVED}
@@ -230,7 +231,15 @@ export class VotesReceivedTable extends PureComponent<Props, State> {
             );
           }}
         </Query>
-      </div>
+      </VotesReceivedTableWrapper>
     );
   }
 }
+
+const VotesReceivedTableWrapper = styled("div", () => ({
+  width: "100%",
+  padding: "0 1em",
+  "& .ant-table-content": {
+    overflowX: "auto",
+  },
+}));

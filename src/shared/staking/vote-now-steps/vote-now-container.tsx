@@ -370,8 +370,8 @@ const VoteNowContainer = connect(
         case SUCCESS_STEP:
           return [
             !disableModal && (
-              <Button key="back" onClick={this.handleCancel}>
-                {t("name_registration.cancel")}
+              <Button key="back" type="primary" onClick={this.handleCancel}>
+                {t("name_registration.ok")}
               </Button>
             ),
           ];

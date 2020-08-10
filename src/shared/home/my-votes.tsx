@@ -67,7 +67,6 @@ export class StakingContractContainer extends Component<Props, State> {
         <CommonMargin />
 
         <MyVotesTableWrapper />
-
         <VoteNowContainer
           displayOthers={false}
           forceDisplayModal={this.state.showVoteNowModal}
@@ -108,7 +107,7 @@ const SmartContractCalled = connect(
       {smartContractCalled && (
         <div>
           <Alert
-            message={t("contract.called")}
+            message={t("action.broadcasted")}
             type="success"
             showIcon={true}
           />

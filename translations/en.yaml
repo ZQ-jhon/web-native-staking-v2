@@ -116,7 +116,7 @@ topbar.staking: STAKING
 topbar.support: SUPPORT
 topbar.vita: VITA
 topbar.voting: VOTING
-contract.called: 'Succeeded! Please wait for a few minutes and refresh this page to see the result.'
+contract.called: 'Succeeded! Please wait for a few seconds and refresh this page to see the result.'
 topbar.poll: POLL
 topbar.tool: TOOL
 contract.install: 'Please use ioPay desktop, import & unlock your wallet, and then refresh this page to continue.'
@@ -256,7 +256,7 @@ my_stake.withdraw.title: 'Withdraw My Vote (ID ${bucketIndex})'
 my_stake.withdraw.wait: 'Tokens cannot be withdrawn within three days of unstaking... Please wait until ${waitUntil}.'
 my_stake.proceed_to_vote: 'Proceed to Vote'
 my_stake.proceed_to_stake: 'Proceed to Stake'
-my_stake.canName_tint: 'Vote for a delegate or yourself'
+my_stake.canName_tint: 'Vote for a delegate'
 my_stake.amount_of_vote: '# of tokens'
 my_stake.duration_of_epoch: '# of days'
 my_stake.change_anytime: 'You can change it at any time'
@@ -286,6 +286,7 @@ my_stake.unstake.nondecay_flag: 'Cannot unstake when the bucket is autostaked. Y
 my_stake.nonDecay.calculate_auto: 'You will retain the same voting power until you disable Auto-Stake. The stake duration of <b>${duration}</b> days will begin to elapse once you have disabled Auto-Stake. <br/><b style="font-size: 16px">${votes}</b><br/>VOTES'
 my_stake.nonDecay.calculate_estimate: '<small>${date}</small><br/><b style="font-size: 16px">${total}</b><br/>VOTES'
 my_stake.address: 'Account address'
+my_stake.wallet_balance: 'Wallet balance'
 my_stake.staking_amount: 'Total Staked Amount'
 my_stake.unstake_pendding_amount: 'Pending Unstake Amount'
 my_stake.withdrawable_amount: 'Ready to Withdraw'
@@ -342,6 +343,7 @@ name_registration.register: Submit
 name_registration.cancel: Cancel
 name_registration.edit: Edit
 name_registration.update: Update
+name_registration.ok: Ok
 name_regsitration.name: 'Delegate Name'
 name_regsitration.name.required: 'Please enter a valid name.'
 name_regsitration.name.explanation: 'The name of your delegate on-chain, which should be lowercase chars or digits, not longer than 12 bytes'
@@ -545,3 +547,4 @@ reclaim.contiunueButton: Continue
 reclaim.reclaimMessage: This is to certify I am transferring the ownership of said bucket to said recipient on IoTeX blockchain
 reclaim.popUpMessage.runIoctlCmd: You can reclaim the bucket by running the following ioctl command
 reclaim.continueWebTools: or if you wish to use the web tool, make sure ioPay is opened (and it has the recipient private key/account), then click Continue
+action.broadcasted: Broadcasted successfully! Please wait for a few seconds and refresh this page to see the result.
