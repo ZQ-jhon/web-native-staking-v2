@@ -4,7 +4,7 @@ import Alert from "antd/lib/alert";
 import { t } from "onefx/lib/iso-i18n";
 import Helmet from "onefx/lib/react-helmet";
 import { styled } from "onefx/lib/styletron-react";
-import React, { Component, PureComponent } from "react";
+import React, { Component } from "react";
 import { connect } from "react-redux";
 import { CommonMargin } from "../common/common-margin";
 import { IopayRequired } from "../common/iopay-required";
@@ -32,7 +32,7 @@ export function MyVotes(): JSX.Element {
   );
 }
 
-export class StakingContractContainer extends PureComponent<Props, State> {
+export class StakingContractContainer extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
