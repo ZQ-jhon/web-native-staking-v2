@@ -234,7 +234,6 @@ export class VotesReceivedTable extends PureComponent<Props, State> {
                       });
                     },
                     total,
-                    defaultCurrent: offset / limit,
                   }}
                   dataSource={buckets}
                   columns={this.columns}
