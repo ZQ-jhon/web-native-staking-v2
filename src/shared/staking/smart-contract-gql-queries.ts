@@ -89,3 +89,33 @@ export const RECORD_STAKING_REFERRAL = gql`
     }
   }
 `;
+
+export const GET_BUCKETS_BY_CANDIDATE = gql`
+  query delegate(
+    $startEpoch: Int!
+    $epochCount: Int!
+    $delegateName: String!
+    $pagination: Pagination
+  ) {
+    delegate(
+      startEpoch: $startEpoch
+      epochCount: $epochCount
+      delegateName: $delegateName
+    ) {
+      bucketInfo {
+        exist
+        bucketInfoList(pagination: $pagination) {
+          epochNumber
+          count
+          bucketInfo {
+            voterIotexAddress
+            votes
+            weightedVotes
+            remainingDuration
+            isNative
+          }
+        }
+      }
+    }
+  }
+`;

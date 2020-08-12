@@ -25,6 +25,7 @@ import {
   StakeWithdraw,
 } from "iotex-antenna/lib/action/types";
 import {
+  IEpochData,
   IReadStakingDataMethodName,
   IReadStakingDataMethodToBuffer,
   IReadStakingDataRequestToBuffer,
@@ -191,6 +192,11 @@ export class Staking {
   async getHeight(): Promise<string> {
     const res = await this.antenna.iotx.getChainMeta({});
     return res.chainMeta.height;
+  }
+
+  async getEpochData(): Promise<IEpochData> {
+    const res = await this.antenna.iotx.getChainMeta({});
+    return res.chainMeta.epoch;
   }
 
   async getCandidate(

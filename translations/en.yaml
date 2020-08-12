@@ -146,6 +146,7 @@ delegate.votesreceived: 'Votes Received'
 delegate.ranking: Rank
 delegate.vote_share: 'Vote & Share Campaign'
 delegate.tweet.summary.title: '${delegate} (Retweet or Post to Enter Lucky Draw)'
+delegate.annotate.non-official: '* This is not a node hosted by IoTeX Official Team.'
 user-info.profile: Profile
 user-info.vote: 'My Votes'
 user-info.help: Help

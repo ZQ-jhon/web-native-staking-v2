@@ -176,3 +176,4 @@ my_stake.edit.row: Action
 my_stake.edit.unstake: 赎回质押
 my_stake.edit.withdraw: 提取赎回
 action.broadcasted: 广播成功！请稍候几秒钟，刷新此页以查看结果。
+delegate.annotate.non-official: '*这不是IoTeX官方节点。'
