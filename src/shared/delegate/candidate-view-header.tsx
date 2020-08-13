@@ -18,16 +18,11 @@ import { styled } from "onefx/lib/styletron-react";
 import React, { Component } from "react";
 import { withRouter } from "react-router";
 import { TBpCandidate } from "../../types";
-import { BannerImg, shareStyle, Title } from "../common/component-style";
+import { BannerImg, Title } from "../common/component-style";
 import { Flex } from "../common/flex";
 import { colors } from "../common/styles/style-color2";
 import { fullOnPalm, media } from "../common/styles/style-media";
-import {
-  convertToString,
-  getTwitterAccount,
-  TWEET_WEB_INTENT_URL,
-  TwitterScriptSource,
-} from "../common/twitter";
+import { TwitterScriptSource } from "../common/twitter";
 import { VotingButton } from "../home/vote-button-modal";
 import { VoteNowContainer } from "../staking/vote-now-steps/vote-now-container";
 
@@ -89,12 +84,7 @@ class CandidateProfileViewHeader extends Component<Props, State> {
           <br />
           {`#${data.rank || "---"}`}
         </Button>
-        <VotingButton
-          launch={() => this.showVotingModal()}
-          extra={{ style: { width: "100%", height: "50px" } }}
-        >
-          {t("candidate.vote")}
-        </VotingButton>
+
         <VoteNowContainer
           displayOthers={false}
           forceDisplayModal={this.state.showVotingModal}
@@ -114,17 +104,6 @@ class CandidateProfileViewHeader extends Component<Props, State> {
     const lineHeight = LINE_HEIGHT * scale;
 
     const actionButtons = this.renderActionButtons(data);
-
-    const url = window.location && window.location.href;
-
-    const name = getTwitterAccount(data) || data.name;
-    const text = `Big congrats to @iotex_io Mainnet Alpha launch! Now Delegates have started to build the @iotex_io network. Let’s make it stronger together! I will vote for @${name} as a Delegate - how about YOU? #IoTeXdelegate #IoTeXvotess $IOTX-E`;
-    const tweetWebIntentParameters = convertToString({
-      text,
-      via: "iotex_io",
-      url,
-      related: "$iotx_io",
-    });
 
     const isNonOfficialIotex =
       data.name && data.name.toLowerCase().includes("iotex");
@@ -157,7 +136,7 @@ class CandidateProfileViewHeader extends Component<Props, State> {
       >
         <Helmet title={`${data.name} - ${t("meta.description.delegates")}`} />
         <BannerImg className="banner-frame" src={data.bannerUrl} />
-        <Flex alignItems={"normal"} marginTop="24px">
+        <Flex alignItems={"normal"} marginTop="24px" marginBottom="12px">
           <Flex marginBottom="24px">
             <Avatar
               className="profile-frame"
@@ -233,14 +212,19 @@ class CandidateProfileViewHeader extends Component<Props, State> {
           {actionButtons}
         </Flex>
         {annotateText}
-        <a
-          href={`${TWEET_WEB_INTENT_URL}?${tweetWebIntentParameters}`}
-          data-size="large"
+        <VotingButton
+          launch={() => this.showVotingModal()}
+          extra={{
+            style: {
+              width: "100%",
+              height: "50px",
+              fontSize: 20,
+              marginTop: 12,
+            },
+          }}
         >
-          <Button type={"primary"} size="large" style={shareStyle}>
-            {t("delegate.vote_share")}
-          </Button>
-        </a>
+          <b>{t("candidate.vote")}</b>
+        </VotingButton>
         <TwitterScriptSource />
       </Header>
     );
