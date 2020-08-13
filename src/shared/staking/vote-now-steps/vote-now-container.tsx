@@ -6,34 +6,37 @@ import Button from "antd/lib/button";
 import Form from "antd/lib/form";
 import { FormInstance } from "antd/lib/form";
 import Radio from "antd/lib/radio";
-import { get } from "dottie";
 // @ts-ignore
 import window from "global/window";
 import { t } from "onefx/lib/iso-i18n";
 import { styled } from "onefx/lib/styletron-react";
 import React, { Component, RefObject } from "react";
-import { Mutation, Query } from "react-apollo";
+import { Mutation, Query, QueryResult } from "react-apollo";
 import { connect } from "react-redux";
+import { TBpCandidate } from "../../../types";
 // @ts-ignore
 import {
   CommonMargin,
-  CommonMarginBottomStyle
+  CommonMarginBottomStyle,
 } from "../../common/common-margin";
 import { CommonModal } from "../../common/common-modal";
 import { formItemLayout } from "../../common/form-item-layout";
 import { getIoPayAddress } from "../../common/get-antenna";
 import { colors } from "../../common/styles/style-color2";
 import { DEFAULT_STAKING_GAS_LIMIT } from "../../common/token-utils";
-import { MyReferralTwitterButton } from "../../my-referrals/my-referral-twitter-button";
 import { validateCanName } from "../field-validators";
 import {
   GET_ALL_CANDIDATE,
-  RECORD_STAKING_REFERRAL
+  RECORD_STAKING_REFERRAL,
 } from "../smart-contract-gql-queries";
 import { actionSmartContractCalled } from "../smart-contract-reducer";
 import { StakeAndVoteExisting } from "../stake-and-vote-source-options/stake-and-vote-existing";
 import { StakeAndVoteNew } from "../stake-and-vote-source-options/stake-and-vote-new";
-import { FormItemText, subTextStyle } from "../staking-form-item";
+import {
+  extractCandidates,
+  FormItemText,
+  subTextStyle,
+} from "../staking-form-item";
 import { ConfirmStep } from "./confirm-step";
 import { SuccessStep } from "./success-step";
 
@@ -76,27 +79,27 @@ type Props = {
 const CONFIRM_STEP = "CONFIRM";
 const SUCCESS_STEP = "SUCCESS";
 
-const ModalTitle = styled("b", props => ({
+const ModalTitle = styled("b", (props) => ({
   fontSize: "24px",
-  ...props
+  ...props,
 }));
 
 const Confirmation = styled("div", () => ({
   color: colors.error,
   fontSize: "12px",
-  marginTop: "10px"
+  marginTop: "10px",
 }));
 
 const VoteNowContainer = connect(
   (state: { base: { siteUrl: string; isIoPayMobile: boolean } }) => ({
     siteUrl: state.base.siteUrl,
-    isIoPayMobile: state.base.isIoPayMobile
+    isIoPayMobile: state.base.isIoPayMobile,
   }),
-  dispatch => ({
+  (dispatch) => ({
     // tslint:disable-next-line:no-any
     actionSmartContractCalled(payload: any): any {
       dispatch(actionSmartContractCalled(payload));
-    }
+    },
   })
 )(
   class VoteNowContainer extends Component<Props, State> {
@@ -123,7 +126,7 @@ const VoteNowContainer = connect(
         autoStake,
         index,
         stakedAmount,
-        canName
+        canName,
       } = this.bucket;
       const amount = String(stakedAmount);
       if (canName) {
@@ -134,7 +137,7 @@ const VoteNowContainer = connect(
               candidateName: canName,
               payload: "",
               gasLimit: DEFAULT_STAKING_GAS_LIMIT,
-              gasPrice: toRau("1", "Qev")
+              gasPrice: toRau("1", "Qev"),
             });
           } else if (this.isFreshStaking()) {
             this.txHash = await getStaking().createStake({
@@ -144,16 +147,16 @@ const VoteNowContainer = connect(
               autoStake,
               payload: "",
               gasLimit: DEFAULT_STAKING_GAS_LIMIT,
-              gasPrice: toRau("1", "Qev")
+              gasPrice: toRau("1", "Qev"),
             });
             this.ioAddress = await getIoPayAddress();
             recordStakingReferral({
               variables: {
                 stakingReferralInput: {
                   referralEthAddr: this.ioAddress,
-                  txHash: this.txHash
-                }
-              }
+                  txHash: this.txHash,
+                },
+              },
             });
           } else {
             this.txHash = await getStaking().restake({
@@ -162,7 +165,7 @@ const VoteNowContainer = connect(
               autoStake,
               payload: "",
               gasLimit: DEFAULT_STAKING_GAS_LIMIT,
-              gasPrice: toRau("1", "Qev")
+              gasPrice: toRau("1", "Qev"),
             });
           }
           window.console.log(`create native staking: ${this.txHash}`);
@@ -194,8 +197,8 @@ const VoteNowContainer = connect(
         canName: {
           value: props.registeredName || "",
           errorMsg: "",
-          validateStatus: ""
-        }
+          validateStatus: "",
+        },
       };
     }
 
@@ -222,7 +225,7 @@ const VoteNowContainer = connect(
         visible: false,
         step: "",
         reEdit: false,
-        stepConfirming: false
+        stepConfirming: false,
       });
     };
 
@@ -239,7 +242,7 @@ const VoteNowContainer = connect(
       if (!this.state.canName.errorMsg) {
         window.console.log("Received values of form: ", {
           ...values,
-          canName: this.state.canName.value
+          canName: this.state.canName.value,
         });
         const bucket = this.bucket || {};
         // @ts-ignore
@@ -252,7 +255,7 @@ const VoteNowContainer = connect(
               : bucket.autoStake || false,
           stakedDuration: values.stakeDuration || bucket.stakedDuration || 0,
           stakedAmount:
-            values.stakedAmount || bucket.stakedAmount || new BigNumber(0)
+            values.stakedAmount || bucket.stakedAmount || new BigNumber(0),
         };
         this.setState({ step: CONFIRM_STEP });
       }
@@ -270,7 +273,7 @@ const VoteNowContainer = connect(
         delete this.bucket;
         this.setState({
           currentStakeAmount: 0,
-          currentStakeDuration: 0
+          currentStakeDuration: 0,
         });
       }
     };
@@ -280,7 +283,7 @@ const VoteNowContainer = connect(
       this.bucket = value;
       this.setState({
         currentStakeDuration: stakeDuration,
-        currentStakeAmount: stakedAmount
+        currentStakeAmount: stakedAmount,
       });
     };
     handleRevote = (bucket: IBucket) => {
@@ -288,7 +291,7 @@ const VoteNowContainer = connect(
       this.isExistingBucket = true;
       this.setState({
         currentStakeAmount: Number(bucket.stakedAmount),
-        currentStakeDuration: bucket.stakedDuration
+        currentStakeDuration: bucket.stakedDuration,
       });
     };
     // tslint:disable-next-line:no-any
@@ -337,13 +340,13 @@ const VoteNowContainer = connect(
     // tslint:disable-next-line:no-any
     handleCanNameChange = (value: any) => {
       // @ts-ignore
-      validateCanName(null, value, errorMsg => {
+      validateCanName(null, value, (errorMsg) => {
         this.setState({
           canName: {
             value,
             errorMsg,
-            validateStatus: errorMsg ? "error" : "success"
-          }
+            validateStatus: errorMsg ? "error" : "success",
+          },
         });
       });
     };
@@ -354,33 +357,23 @@ const VoteNowContainer = connect(
       const form = this.formRef.current;
       if (!numberValue && form) {
         form.setFieldsValue({
-          nonDecay: false
+          nonDecay: false,
         });
       }
     }
 
     // tslint:disable-next-line:no-any
     getFooter = (recordStakingReferral: any) => {
-      const { disableModal, currentCandidate } = this.props;
+      const { disableModal } = this.props;
 
       switch (this.state.step) {
         case SUCCESS_STEP:
           return [
             !disableModal && (
-              <Button key="back" onClick={this.handleCancel}>
-                {t("name_registration.cancel")}
+              <Button key="back" type="primary" onClick={this.handleCancel}>
+                {t("name_registration.ok")}
               </Button>
             ),
-            " ",
-            // tslint:disable-next-line:use-simple-attributes
-            <MyReferralTwitterButton
-              key="twitter"
-              data={
-                currentCandidate || {
-                  name: this.bucket && this.bucket.canName
-                }
-              }
-            />
           ];
         default:
           return [
@@ -395,7 +388,7 @@ const VoteNowContainer = connect(
               key="submit"
               type="primary"
               loading={Boolean(this.state.step) && this.state.stepConfirming}
-              onClick={e => this.getHandleOk(recordStakingReferral)(e)}
+              onClick={(e) => this.getHandleOk(recordStakingReferral)(e)}
             >
               {this.getOkText()}
             </Button>,
@@ -403,7 +396,7 @@ const VoteNowContainer = connect(
               <Confirmation key="confirmation">
                 {t("my_stake.on_process_native_confirmation")}
               </Confirmation>
-            )
+            ),
           ];
       }
     };
@@ -414,7 +407,7 @@ const VoteNowContainer = connect(
       const {
         votingSource,
         currentStakeDuration,
-        currentStakeAmount
+        currentStakeAmount,
       } = this.state;
 
       switch (this.state.step) {
@@ -438,40 +431,8 @@ const VoteNowContainer = connect(
                 ssr={false}
                 query={GET_ALL_CANDIDATE}
               >
-                {/* tslint:disable-next-line:no-any */}
-                {({ data }: any) => {
-                  const bpCandidates = {};
-                  const allCandidates =
-                    (data && data.bpCandidatesOnContract) || [];
-                  if (data && Array.isArray(data.bpCandidates)) {
-                    data.bpCandidates.forEach(
-                      (i: {
-                        status: string;
-                        registeredName: string | number;
-                      }) => {
-                        if (i.status && i.status !== "UNQUALIFIED") {
-                          // @ts-ignore
-                          bpCandidates[i.registeredName] = i;
-                        }
-                      }
-                    );
-                  }
-                  const dataSource = allCandidates
-                    // @ts-ignore
-                    .map(item => {
-                      const delegateName = get(
-                        // @ts-ignore
-                        bpCandidates[item.name],
-                        "name",
-                        ""
-                      );
-                      const displayName = delegateName
-                        ? `${item.name} - ${delegateName}`
-                        : item.name;
-                      return { text: displayName, value: item.name };
-                    })
-                    // tslint:disable-next-line:no-any
-                    .filter((item: { value: any }) => Boolean(item.value));
+                {({ data }: QueryResult<{ bpCandidates: TBpCandidate }>) => {
+                  const dataSource = extractCandidates(data);
                   return (
                     <Form.Item
                       {...formItemLayout}
@@ -495,18 +456,12 @@ const VoteNowContainer = connect(
                         onChange={this.handleCanNameChange}
                         size="large"
                         disabled={Boolean(this.props.registeredName)}
-                        dataSource={dataSource}
+                        options={dataSource}
                         // @ts-ignore
                         filterOption={(inputValue, option) =>
-                          String(
-                            get(
-                              // @ts-ignore
-                              option,
-                              "props.children"
-                            )
-                          )
-                            .toLowerCase()
-                            .indexOf(inputValue.toLowerCase()) !== -1
+                          option.value
+                            .toUpperCase()
+                            .indexOf(inputValue.toUpperCase()) !== -1
                         }
                       />
                     </Form.Item>
@@ -537,14 +492,14 @@ const VoteNowContainer = connect(
                   bucket={this.bucket}
                   reEdit={this.state.reEdit}
                   // @ts-ignore
-                  handleSelectChange={it => this.handleSelectChange(it)}
+                  handleSelectChange={(it) => this.handleSelectChange(it)}
                   // @ts-ignore
-                  handleDurationChange={it => this.handleDurationChange(it)}
+                  handleDurationChange={(it) => this.handleDurationChange(it)}
                   formRef={this.formRef}
                   currentStakeDuration={currentStakeDuration}
                   currentStakeAmount={currentStakeAmount}
                   // @ts-ignore
-                  handleStakedAmountChange={it =>
+                  handleStakedAmountChange={(it) =>
                     this.setState({ currentStakeAmount: it })
                   }
                 />
@@ -553,7 +508,7 @@ const VoteNowContainer = connect(
                 // tslint:disable-next-line:use-simple-attributes
                 <StakeAndVoteExisting
                   // @ts-ignore
-                  handleRevote={bucket => this.handleRevote(bucket)}
+                  handleRevote={(bucket) => this.handleRevote(bucket)}
                   currentStakeDuration={currentStakeDuration}
                   currentStakeAmount={new BigNumber(currentStakeAmount)}
                   defaultValue={this.bucket && this.bucket.index}
@@ -575,7 +530,7 @@ const VoteNowContainer = connect(
       const {
         forceDisplayModal,
         displayOthers = false,
-        disableModal
+        disableModal,
       } = this.props;
       return (
         // @ts-ignore

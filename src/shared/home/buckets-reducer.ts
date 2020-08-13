@@ -10,7 +10,7 @@ export function actionUpdateBuckets(
 ): { type: string; payload: any } {
   return {
     payload,
-    type: UPDATE_BUCKETS
+    type: UPDATE_BUCKETS,
   };
 }
 
@@ -21,7 +21,7 @@ export function actionUpdateAccountMeta(
 ): { type: string; payload: any } {
   return {
     payload,
-    type: UPDATE_ACCOUNT_META
+    type: UPDATE_ACCOUNT_META,
   };
 }
 
@@ -46,7 +46,8 @@ export function accountMetaReducer(
     totalStaked: "-",
     pendingUnstaked: "-",
     readyToWithdraw: "-",
-    totalVotes: "-"
+    totalVotes: "-",
+    balance: "-",
   },
   // tslint:disable-next-line:no-any
   action: { type: string; payload: any }

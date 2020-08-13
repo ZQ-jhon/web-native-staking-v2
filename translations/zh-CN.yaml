@@ -104,7 +104,7 @@ topbar.staking: 质押
 topbar.support: 帮助
 topbar.vita: VITA
 topbar.voting: 投票
-contract.called: 合同签订成功！请稍候几分钟，刷新此页以查看结果。
+contract.called: 合同签订成功！请稍候几秒钟，刷新此页以查看结果。
 contract.install: 请安装ioPay桌面版钱包，导入、解锁您的钱包后刷新试试。
 contract.please_unlock: 若要继续，请在Metamask中解锁您的钱包
 my_stake.ioAddress.err: 'Invalid IoTeX Address'
@@ -152,6 +152,7 @@ candidate.elected: 当选
 candidate.not_elected: 未当选
 candidate.productivity: Productivity
 my_stake.address: 钱包地址
+my_stake.wallet_balance: 钱包余额
 my_stake.staking_amount: 质押总数
 my_stake.unstake_pendding_amount: 正在赎回的数量
 my_stake.withdrawable_amount: 可以取出的
@@ -174,3 +175,5 @@ my_stake.edit.transfer: 转让质押桶
 my_stake.edit.row: Action
 my_stake.edit.unstake: 赎回质押
 my_stake.edit.withdraw: 提取赎回
+action.broadcasted: 广播成功！请稍候几秒钟，刷新此页以查看结果。
+delegate.annotate.non-official: '*这不是IoTeX官方节点。'

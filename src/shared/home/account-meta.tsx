@@ -5,11 +5,11 @@ import { styled } from "onefx/lib/styletron-react";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { getStaking } from "../../server/gateway/staking";
-import { getIoPayAddress } from "../common/get-antenna";
+import { getIoPayAddress, getIotxBalance } from "../common/get-antenna";
 import { getPowerEstimation } from "../common/token-utils";
 import {
   actionUpdateAccountMeta,
-  actionUpdateBuckets
+  actionUpdateBuckets,
 } from "./buckets-reducer";
 
 type Props = {
@@ -29,13 +29,13 @@ export const BucketsLoader = connect(
   () => {
     return {};
   },
-  dispatch => ({
+  (dispatch) => ({
     // tslint:disable-next-line:no-any
     actionUpdateBuckets: (payload: any) =>
       dispatch(actionUpdateBuckets(payload)),
     // tslint:disable-next-line:no-any
     actionUpdateAccountMeta: (payload: any) =>
-      dispatch(actionUpdateAccountMeta(payload))
+      dispatch(actionUpdateAccountMeta(payload)),
   })
 )(
   class BucketsLoaderInner extends Component<Props, State> {
@@ -43,6 +43,7 @@ export const BucketsLoader = connect(
       const { actionUpdateBuckets, actionUpdateAccountMeta } = this.props;
       const staking = getStaking();
       const address = await getIoPayAddress();
+      const balance = await getIotxBalance(address);
       const buckets = await staking.getBucketsByVoter(address, 0, 999);
       let totalStaked = new BigNumber(0);
       let totalVotes = new BigNumber(0);
@@ -75,7 +76,8 @@ export const BucketsLoader = connect(
           totalVotes: totalVotes.toFixed(0),
           pendingUnstaked: pendingUnstaked.toFixed(0),
           readyToWithdraw: withdrawableAmount.toFixed(0),
-          address
+          address,
+          balance: `${balance} IOTX`,
         });
       }
     }
@@ -92,6 +94,7 @@ type AMProps = {
   pendingUnstaked: string;
   readyToWithdraw: string;
   totalVotes: string;
+  balance: string;
 };
 
 export const AccountMeta = connect(
@@ -102,6 +105,7 @@ export const AccountMeta = connect(
       pendingUnstaked: string;
       readyToWithdraw: string;
       totalVotes: string;
+      balance: string;
     };
   }) => {
     return { ...(state.accountMeta || {}) };
@@ -111,15 +115,18 @@ export const AccountMeta = connect(
     render(): JSX.Element | undefined {
       const {
         address,
+        balance,
         totalStaked,
         pendingUnstaked,
         readyToWithdraw,
-        totalVotes
+        totalVotes,
       } = this.props;
       return (
         <>
           <b>{t("my_stake.address")}</b>
           <LabelText>{address}</LabelText>
+          <b>{t("my_stake.wallet_balance")}</b>
+          <LabelText>{String(balance)}</LabelText>
           <b>{t("my_stake.staking_amount")}</b>
           <LabelText>{String(totalStaked)}</LabelText>
           <b>{t("my_stake.unstake_pendding_amount")}</b>
@@ -134,9 +141,9 @@ export const AccountMeta = connect(
   }
 );
 
-const LabelText = styled("span", props => ({
+const LabelText = styled("span", (props) => ({
   fontSize: "14px",
   marginBottom: "24px",
   wordBreak: "break-word",
-  ...props
+  ...props,
 }));

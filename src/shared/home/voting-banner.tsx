@@ -5,11 +5,15 @@ import { assetURL } from "onefx/lib/asset-url";
 import { t } from "onefx/lib/iso-i18n";
 import { styled } from "onefx/lib/styletron-react";
 import React, { Component } from "react";
+import { Query, QueryResult } from "react-apollo";
+import { TBpCandidate } from "../../types";
+import { webBpApolloClient } from "../common/apollo-client";
 import { CommonMargin } from "../common/common-margin";
 import { Flex } from "../common/flex";
 import { cloudinaryImage, Image } from "../common/image";
 import { colors } from "../common/styles/style-color";
 import { media } from "../common/styles/style-media";
+import { GET_ALL_CANDIDATES_ID_NAME } from "../staking/smart-contract-gql-queries";
 // @ts-ignore
 import votingBannerSetting from "./mock/votingBannerSetting";
 import { VotingButton } from "./vote-button-modal";
@@ -17,68 +21,72 @@ import { VotingButton } from "./vote-button-modal";
 const buyIotxList = [
   {
     href: "https://www.binance.com/en/trade/IOTX_BTC",
-    src: "voting-website/binance.png"
+    src: "voting-website/binance.png",
   },
   {
     href: "https://gateio.io/trade/IOTX_USDT",
-    src: "voting-website/gate.png"
+    src: "voting-website/gate.png",
   },
   {
     href: "https://upbit.com/exchange?code=CRIX.UPBIT.BTC-IOTX",
-    src: "voting-website/upbit.svg"
+    src: "voting-website/upbit.svg",
   },
   {
     href: "https://www.kucoin.com/#/trade/IOTX-BTC",
-    src: "voting-website/kucoin.png"
+    src: "voting-website/kucoin.png",
   },
   {
     href: "https://international.bittrex.com/Market/Index?MarketName=BTC-IOTX",
-    src: "voting-website/bittrex.png"
+    src: "voting-website/bittrex.png",
   },
   {
     href: "https://www.mxc.com/trade/easy#IOTX_USDT",
-    src: "voting-website/MXC.png"
+    src: "voting-website/MXC.png",
   },
   {
     href: "https://coindcx.com/trade/IOTXBTC",
-    src: "voting-website/coindcx_white.svg"
+    src: "voting-website/coindcx_white.svg",
   },
   {
     href: "https://bilaxy.com/trade/IOTX_ETH",
-    src: "voting-website/bilaxy.png"
+    src: "voting-website/bilaxy.png",
   },
   {
     href: "https://www.citex.co.kr",
-    src: "voting-website/citex.png"
+    src: "voting-website/citex.png",
   },
   {
     href: "https://coinone.co.kr",
-    src: "voting-website/coinone.png"
+    src: "voting-website/coinone.png",
   },
   {
     href: "https://hitbtc.com/exchange/IOTX-to-BTC",
-    src: "voting-website/HitBTC.png"
+    src: "voting-website/HitBTC.png",
   },
   {
     href: "https://www.hotbit.io/exchange?symbol=IOTX_USDT",
-    src: "voting-website/Hotbit.png"
+    src: "voting-website/Hotbit.png",
   },
   {
     href: "https://www.elitex.io/#/en-US/trade/home?symbol=IOTX_BTC",
-    src: "voting-website/elitex.png"
+    src: "voting-website/elitex.png",
   },
   {
     href: "https://changelly.com/exchange/btc/iotx",
-    src: "voting-website/changelly.svg"
+    src: "voting-website/changelly.svg",
   },
   {
     href: "https://swapspace.co/?from=btc&to=iotx&amount=0.1",
-    src: "voting-website/swapspace.svg"
+    src: "voting-website/swapspace.svg",
   },
   {
     href: "https://simpleswap.io/",
-    src: "voting-website/simpleswap.svg"
-  }
+    src: "voting-website/simpleswap.svg",
+  },
+  {
+    href: "https://swapzone.io/?to=iotx",
+    src: "voting-website/swapzone.png",
+  },
 ];
 interface AdminSettingItem {
   href: string;
@@ -96,11 +104,11 @@ const BannerTitle = (): JSX.Element => {
           fontSize: 20,
           lineHeight: 2,
           padding: "0",
-          color: colors.black
+          color: colors.black,
         }}
         // @ts-ignore
         media={{
-          [media.palm]: { fontSize: "16px" }
+          [media.palm]: { fontSize: "16px" },
         }}
       >
         {t("voting.banner_title")}
@@ -119,7 +127,7 @@ class VotingBanner extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      showBuyIotx: false
+      showBuyIotx: false,
     };
   }
   showBuyIotxBtn = (
@@ -130,7 +138,7 @@ class VotingBanner extends Component<Props, State> {
     e.stopPropagation();
 
     this.setState({
-      showBuyIotx: !showBuyIotx
+      showBuyIotx: !showBuyIotx,
     });
   };
   getCarouselData = (
@@ -145,7 +153,7 @@ class VotingBanner extends Component<Props, State> {
     return data.map(({ desktop, mobile, href }) => ({
       href,
       desktop: getImgUrl(desktop),
-      mobile: getImgUrl(mobile)
+      mobile: getImgUrl(mobile),
     }));
   };
   showBuyIotxByhover = (showBuyIotx: Boolean) => (
@@ -156,7 +164,7 @@ class VotingBanner extends Component<Props, State> {
     const { displayMobileList } = this.props;
     if (!displayMobileList) {
       this.setState({
-        showBuyIotx
+        showBuyIotx,
       });
     }
   };
@@ -171,7 +179,7 @@ class VotingBanner extends Component<Props, State> {
         style={{
           backgroundSize: "cover",
           position: "relative",
-          width: "100%"
+          width: "100%",
         }}
       >
         <Flex width="100%">
@@ -183,30 +191,48 @@ class VotingBanner extends Component<Props, State> {
                 width: "100%",
                 display: "flex",
                 flexDirection: "column",
-                justifyContent: "space-between"
+                justifyContent: "space-between",
               }}
             >
               <BannerTitle />
-              <div
-                style={{
-                  marginTop: "16px"
-                }}
+              <Query
+                query={GET_ALL_CANDIDATES_ID_NAME}
+                client={webBpApolloClient}
+                ssr={false}
               >
-                {displayMobileList && !isInAppWebview ? (
-                  <span
-                    dangerouslySetInnerHTML={{
-                      __html: t("voting.banner_content.other_browser")
-                    }}
-                  />
-                ) : (
-                  t("voting.banner_content")
-                )}
-              </div>
+                {({ data }: QueryResult<{ bpCandidates: TBpCandidate }>) => {
+                  if (!data || !Array.isArray(data.bpCandidates)) {
+                    return null;
+                  }
+                  const delegatesCount = String(data.bpCandidates.length);
+
+                  return (
+                    <div
+                      style={{
+                        marginTop: "16px",
+                      }}
+                    >
+                      {displayMobileList && !isInAppWebview ? (
+                        <span
+                          dangerouslySetInnerHTML={{
+                            __html: t("voting.banner_content.other_browser", {
+                              delegatesCount,
+                            }),
+                          }}
+                        />
+                      ) : (
+                        t("voting.banner_content", { delegatesCount })
+                      )}
+                    </div>
+                  );
+                }}
+              </Query>
+
               <CommonMargin
                 style={{
                   display: "flex",
                   marginLeft: 0,
-                  marginTop: "24px"
+                  marginTop: "24px",
                 }}
               >
                 <VotingButton
@@ -216,8 +242,8 @@ class VotingBanner extends Component<Props, State> {
                   extra={{
                     style: {
                       background: colors.primary,
-                      borderColor: colors.primary
-                    }
+                      borderColor: colors.primary,
+                    },
                   }}
                 >
                   {t("candidates.vote_now")}
@@ -236,7 +262,7 @@ class VotingBanner extends Component<Props, State> {
                       // @ts-ignore
                       visible={this.state.showBuyIotx}
                       overlay={<div />}
-                      onVisibleChange={showBuyIotx =>
+                      onVisibleChange={(showBuyIotx) =>
                         this.setState({ showBuyIotx })
                       }
                     >
@@ -259,13 +285,13 @@ class VotingBanner extends Component<Props, State> {
               [media.lap]: {
                 width: "100%",
                 height: "140px",
-                padding: "0px"
+                padding: "0px",
               },
               [media.palm]: {
                 width: "100%",
                 height: "120px",
-                padding: "0px"
-              }
+                padding: "0px",
+              },
             }}
             height="220px"
             column={true}
@@ -284,7 +310,11 @@ class VotingBanner extends Component<Props, State> {
           </Flex>
 
           <OverLay
-            style={{ display: this.state.showBuyIotx ? "block" : "none" }}
+            className="BannerContainer"
+            style={{
+              display: this.state.showBuyIotx ? "flex" : "none",
+              justifyContent: "space-between",
+            }}
             onMouseEnter={this.showBuyIotxByhover(true)}
             onMouseLeave={this.showBuyIotxByhover(false)}
           >
@@ -311,17 +341,17 @@ const BuyButtonWrapper = styled("div", {
   flexDirection: "column",
   alignItems: "center",
   position: "relative",
-  marginLeft: "40px"
+  marginLeft: "40px",
 });
 const flexMedia = {
   [media.lap]: {
     width: "100%",
-    padding: "0px"
+    padding: "0px",
   },
   [media.palm]: {
     width: "100%",
-    padding: "0px"
-  }
+    padding: "0px",
+  },
 };
 const BannerTitleSpan = styled("span", () => ({
   fontWeight: "bold",
@@ -330,43 +360,43 @@ const BannerTitleSpan = styled("span", () => ({
   padding: "0.3em",
   textAlign: "center",
   [media.palm]: { fontSize: "16px" },
-  [media.lap]: { fontSize: "16px" }
+  [media.lap]: { fontSize: "16px" },
 }));
 
 const IotexCarousel = styled(Carousel, {
   width: "100%",
-  height: "100%"
+  height: "100%",
 });
 const LinkWrapper = styled("a", {
   width: "100%",
-  height: "100%"
+  height: "100%",
 });
 // tslint:disable-next-line:no-any
 const Img = ({ bannerUrl = {} }: any) => {
   const desktop =
     bannerUrl.desktop &&
-    cloudinaryImage(bannerUrl.desktop)
-      .changeWidth(500)
-      .cdnUrl();
+    (bannerUrl.desktop.indexOf("http") === -1
+      ? bannerUrl.desktop
+      : cloudinaryImage(bannerUrl.desktop).changeWidth(500).cdnUrl());
   const mobile =
     bannerUrl.mobile &&
-    cloudinaryImage(bannerUrl.mobile)
-      .changeWidth(500)
-      .cdnUrl();
+    (bannerUrl.mobile.indexOf("http") === -1
+      ? bannerUrl.mobile
+      : cloudinaryImage(bannerUrl.mobile).changeWidth(500).cdnUrl());
   const ImageBg = styled("div", {
     backgroundImage: `url("${desktop}")`,
     [media.palm]: {
-      backgroundImage: `url("${mobile}")`
+      backgroundImage: `url("${mobile}")`,
     },
     [media.lap]: {
-      backgroundImage: `url("${mobile}")`
+      backgroundImage: `url("${mobile}")`,
     },
     backgroundSize: "contain",
-    backgroundColor: "#011627",
+    backgroundColor: "transparent",
     width: "100%",
     height: "100%",
     backgroundRepeat: "no-repeat",
-    backgroundPosition: "center"
+    backgroundPosition: "center",
   });
   return <ImageBg />;
 };
@@ -384,9 +414,9 @@ const OverLay = styled("div", {
   justifyContent: "center",
   alignItems: "center",
   [media.lap]: {
-    top: "calc(100% - 140px)"
+    top: "calc(100% - 140px)",
   },
   [media.palm]: {
-    top: "calc(100% - 120px)"
-  }
+    top: "calc(100% - 120px)",
+  },
 });

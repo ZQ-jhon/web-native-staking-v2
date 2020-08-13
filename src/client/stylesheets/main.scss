@@ -136,3 +136,12 @@ $border-warning: #e44837;
 .BadgeRow {
   background-color: #f8fefe;
 }
+
+.BannerContainer::after {
+  content: "";
+  flex: auto;
+}
+
+.table_wrapper__votes_received .ant-table-content {
+  overflow-x: auto;
+}

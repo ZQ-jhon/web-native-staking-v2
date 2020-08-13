@@ -66,9 +66,10 @@ let reqId = Math.round(Math.random() * 10000);
 
 interface IRequest {
   reqId: number;
-  type: "SIGN_AND_SEND" | "GET_ACCOUNTS";
+  type: "SIGN_AND_SEND" | "GET_ACCOUNTS" | "SIGN";
 
   envelop?: string; // serialized proto string
+  message?: string; // serialized proto string
 }
 
 let ioPayAddress: string;
@@ -124,4 +125,18 @@ export async function getIotxBalance(address: string): Promise<number> {
   const { accountMeta } = await antenna.iotx.getAccount({ address });
   // @ts-ignore
   return Number(fromRau(accountMeta.balance, "Iotx"));
+}
+
+export async function signMessage(message: string): Promise<string> {
+  const antenna = getAntenna();
+  if (antenna.iotx.signer && antenna.iotx.signer.signMessage) {
+    const signed = await antenna.iotx.signer.signMessage(message);
+    if (typeof signed === "object") {
+      return Buffer.from(signed).toString("hex");
+    }
+    return signed;
+  }
+  const account = antenna.iotx.accounts[0];
+  const sig = account && (await account.sign(message));
+  return (sig && sig.toString("hex")) || "";
 }

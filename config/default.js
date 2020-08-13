@@ -8,7 +8,7 @@ module.exports = {
     routePrefix: "",
     port: process.env.PORT || 5004,
     staticDir: "./dist",
-    delayInitMiddleware: false,
+    delayInitMiddleware: true,
     cookie: {
       secrets: ["insecure plain text", "insecure secret here"],
     },
@@ -19,6 +19,7 @@ module.exports = {
     noCsrfRoutes: {
       "/v2/api-gateway/": true,
       "/api/": true,
+      "/iotex-core-proxy/": true,
     },
   },
   ssm: {
@@ -52,6 +53,7 @@ module.exports = {
       "https://web-native-staking-v2.b-cdn.net/",
     ],
     "frame-src": [
+      "https://disqus.com/",
       "https://wvjb-queue-message/",
       "https://bridge-loaded/",
       "yy://jb-queue-message/",
@@ -60,7 +62,7 @@ module.exports = {
       "self",
       "https://www.google-analytics.com/",
       "https://member.iotex.io/api-gateway/",
-      "https://member-testnet.iotex.io/api-gateway/",
+      "https://web-bp-testnet.herokuapp.com/api-gateway/",
       "wss://local.iotex.io:64102/",
       "https://member.iotex.io/iotex-core-proxy/",
       "https://api.nightly-cluster-2.iotex.one/",
@@ -68,7 +70,11 @@ module.exports = {
       "https://api.iotex.one/",
       "https://api.cloudinary.com/",
       "https://analytics.iotexscan.io/query",
-      ...(process.env.API_GATEWAY_URL ? [process.env.API_GATEWAY_URL] : [])
+      "https://iotexscan.io/api-gateway/",
+      "https://web-native-staking-v2.b-cdn.net/",
+      "https://c.disquscdn.com/",
+      "https://disqus.com/",
+      ...(process.env.API_GATEWAY_URL ? [process.env.API_GATEWAY_URL] : []),
     ],
     "child-src": ["self"],
     "font-src": ["self", "data:", "https://fonts.gstatic.com/"],
@@ -80,10 +86,14 @@ module.exports = {
       "https://www.google-analytics.com/",
       "unsafe-eval",
       "https://web-native-staking-v2.b-cdn.net/",
+      "https://iotexmember.disqus.com/embed.js",
+      "https://c.disquscdn.com/",
+      "https://disqus.com/",
     ],
   },
   apiGatewayUrl:
     process.env.API_GATEWAY_URL || "http://localhost:5004/v2/api-gateway/",
   iotexCore: "https://api.iotex.one",
+  easterHeight: "4478761",
   webBp: "https://member.iotex.io/api-gateway/",
 };

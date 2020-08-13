@@ -2,7 +2,7 @@ import Button from "antd/lib/button";
 import { t } from "onefx/lib/iso-i18n";
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { getAntenna } from "../../../common/get-antenna";
+import { getIoPayAddress, signMessage } from "../../../common/get-antenna";
 import { IopayRequired } from "../../../common/iopay-required";
 import { axiosInstance } from "./axios-instance";
 import { InputError } from "./input-error";
@@ -24,7 +24,7 @@ export const LoginOrSignUp = IopayRequired(
         isLoading: true,
         message: "",
         nonce: "",
-        error: null
+        error: null,
       };
 
       async componentDidMount(): Promise<void> {
@@ -33,15 +33,15 @@ export const LoginOrSignUp = IopayRequired(
           this.setState({
             isLoading: false,
             message: data.message,
-            nonce: data.nonce
+            nonce: data.nonce,
           });
         } catch (e) {
           this.setState({
             isLoading: false,
             error: {
               code: "FAILED_TO_INIT",
-              message: "failed to initalize"
-            }
+              message: "failed to initalize",
+            },
           });
         }
       }
@@ -49,13 +49,14 @@ export const LoginOrSignUp = IopayRequired(
       onSubmit = async (e: Event) => {
         const { nonce } = this.state;
         e.preventDefault();
-        const acct = getAntenna().iotx.accounts[0];
-        const msg = `Login with ${acct.address} and the nonce of ${nonce}`;
-        const sig = await acct.sign(msg);
+        const address = await getIoPayAddress();
+        const msg = `Login with ${address} and the nonce of ${nonce}`;
+        const sig = await signMessage(msg);
+        window.console.log(`signMessage sig ${sig}`);
         const { data } = await axiosInstance.post("/api/sign-in/", {
-          sig: sig.toString("hex"),
-          address: acct.address,
-          next: this.props.next
+          sig,
+          address,
+          next: this.props.next,
         });
         if (data.ok && data.shouldRedirect) {
           return (window.location.href = data.next);

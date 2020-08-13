@@ -11,7 +11,15 @@
     "node_modules/tslint-require-connnect-typing"
   ],
   "rules": {
-    "import-blacklist": [true, "antd"],
+    "import-blacklist": [
+      true,
+      [
+        "^antd$",
+        "^@ant-design$",
+        "^@ant-design/icons$",
+        "^@ant-design/icons/lib.*$"
+      ]
+    ],
     "react-no-dangerous-html": [
       false,
       [

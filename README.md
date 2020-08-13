@@ -2,12 +2,12 @@
 
 [![CircleCI](https://circleci.com/gh/iotexproject/web-native-staking-v2/tree/master.svg?style=svg)](https://circleci.com/gh/iotexproject/web-native-staking-v2/tree/master)
 
-- [Documentation](https://onefx.js.org/doc.html?utm_source=github-iotex-explorer)
+- [Documentation](https://onefx.js.org/doc.html?utm_source=web-native-staking-v2)
 - [Contributing](https://onefx.js.org/contributing.html?utm_source=github-iotex-explorer)
 
 ## Getting Started
 
-OneFx is a full-stack framework for building web apps. Here are the features you'll find in Onefx.js:
+web-native-staking-v2 is based on OneFx which is a full-stack framework for building web apps. Here are the features you'll find in Onefx.js:
 
 - server side rendering and universal rendering with react and redux
 - ES2017, JSX, TypeScript support out of the box
@@ -16,7 +16,7 @@ OneFx is a full-stack framework for building web apps. Here are the features you
 ### Create a project
 
 ```bash
-git clone git@github.com:puncsky/web-native-staking-v2.git my-awesome-project
+git clone git@github.com:puncsky/web-native-staking-v2.git
 ```
 
 ### Run your project
@@ -24,7 +24,7 @@ git clone git@github.com:puncsky/web-native-staking-v2.git my-awesome-project
 This is intended for \*nix users. If you use Windows, go to [Run on Windows](#run-on-windows). Let's first prepare the environment.
 
 ```bash
-cd my-awesome-project
+cd web-native-staking-v2
 
 nvm use 10.15.0
 npm install
@@ -54,7 +54,7 @@ NODE_ENV=production npm run start
 
 #### NPM scripts
 
-- `npm run test`: test the whole project and generate a test coverage
+- `npm run test`: **test the whole project and generate a test coverage**
 - `npm run ava ./path/to/test-file.js`: run a specific test file
 - `npm run build`: build source code from `src` to `dist`
 - `npm run lint`: run the linter

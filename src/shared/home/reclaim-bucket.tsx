@@ -1,25 +1,23 @@
-import { CopyOutlined } from "@ant-design/icons";
-import Button from "antd/lib/button";
-import { Buffer } from "buffer";
-import Layout from "antd/lib/layout";
-import Form, { FormInstance } from "antd/lib/form";
+import CopyOutlined from "@ant-design/icons/CopyOutlined";
 import Alert from "antd/lib/alert";
-import { validateAddress, toRau } from "iotex-antenna/lib/account/utils";
+import Button from "antd/lib/button";
+import Form, { FormInstance } from "antd/lib/form";
 import Input from "antd/lib/input";
+import Layout from "antd/lib/layout";
+import { Buffer } from "buffer";
+import { toRau, validateAddress } from "iotex-antenna/lib/account/utils";
 import { t } from "onefx/lib/iso-i18n";
 import React, { PureComponent, RefObject } from "react";
 import CopyToClipboard from "react-copy-to-clipboard";
 import { connect } from "react-redux";
-import { getAntenna, iotexCore } from "../../shared/common/get-antenna";
 import { getStaking } from "../../server/gateway/staking";
+import { getAntenna} from "../../shared/common/get-antenna";
 import { LinkButton } from "../common/buttons";
-import { DEFAULT_STAKING_GAS_LIMIT } from "../common/token-utils";
 import { Flex } from "../common/flex";
-import { validateIoAddress } from "../staking/field-validators";
 import { colors } from "../common/styles/style-color";
+import { DEFAULT_STAKING_GAS_LIMIT } from "../common/token-utils";
+import { validateIoAddress } from "../staking/field-validators";
 import { MAX_WIDTH } from "./voting";
-import Antenna from "iotex-antenna/lib/antenna";
-import { SignerPlugin } from "iotex-antenna/lib/action/method";
 
 //const regex = /^([0-9]+)I authorize 0x[0-9a-fA-F]{40} to claim in (0x[0-9A-Fa-f]{40})$/;
 
@@ -170,7 +168,7 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
 
   getByteStream = (payload: Payload) => {
     const use = Buffer.from(payload.bytestream()).toString("hex");
-    console.log("we are getting the use", use);
+    window.console.log("we are getting the use", use);
     return use;
   };
 
@@ -189,11 +187,7 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
       gasLimit: DEFAULT_STAKING_GAS_LIMIT,
       gasPrice: toRau("1", "Qev"),
     });
-    let signer: SignerPlugin | undefined;
     this.setState({ tsx });
-    const provider = new Antenna(iotexCore, {
-      signer,
-    });
   };
 
   reclaimBucketContent = () => {
@@ -309,8 +303,6 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
               </Button>
             </Form.Item>
           )}
-          {/*
-              // @ts-ignore */}
           {this.state.jsonMessage.recipient.length > 0 && (
             <Form.Item label="Signature Bytes from HD-WALLET" name={"sig"}>
               <Input
