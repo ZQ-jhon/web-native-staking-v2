@@ -22,10 +22,6 @@ import { DEFAULT_STAKING_GAS_LIMIT } from "../common/token-utils";
 import { validateIoAddress } from "../staking/field-validators";
 import { MAX_WIDTH } from "./voting";
 
-// tslint:disable-next-line:no-var-requires
-/*const BufferSerializer = require("buffer-serializer");
-const serializer = new BufferSerializer();*/
-
 type IJSONMESSAGE = {
   bucket: Number;
   recipient: string;
@@ -99,44 +95,8 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
       msg: JSON.stringify(this.state.jsonMessage),
       sig: this.state.sig.replace("0x", "")
     };
-    // const payload = `{"type":"Ethereum","msg":"${JSON.stringify(this.state.jsonMessage)}","sig":"${this.state.sig.replace("0x", "")}"}`;
-    window.console.log("payload", payload);
-   /* const str = "0x"+[...JSON.stringify(payload)];
-    const payloadBytes = Buffer.from(str.map((c,i)=>str.charCodeAt(i).toString(16)).join(""),"hex");
-*/
-
-    // @ts-ignore
-    // tslint:disable-next-line:prefer-template
-    // const str = "0x"+[...JSON.stringify(payload)].map((c,i)=>c.toString(16)).join("");
-  /*  const pt = JSON.stringify(payload).replace(/\\"/g,"\"").replace(/\"/g,'"');
-    window.console.log("pt", pt);
-    const str = utf8ToHex2(pt)
-      .replace("0x", "")
-      .replace(/\\/g, "");
-    // @ts-ignore
-    const arr = new Uint8Array(str.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
-    window.console.log("arr", arr);
-    const payloadBytes = Buffer.from(str,"hex");
-    window.console.log("str", payloadBytes.toString());
-
-*/
-    /*
-    const aBuffer = serializer.toBuffer(payload);
-    window.console.log("serialized", aBuffer.toString("hex"));*/
-
-   /* const payloadBytes = Buffer.from(pt);
-
-    // const payloadBytes = Buffer.from(pt,"utf16le");
-    window.console.log("payloadBytes", payloadBytes.toString());
-
-    const bpl = serialize(payload);
-    window.console.log("bpl", bpl);
-    window.console.log("deserialize", deserialize(bpl));
-*/
-    const payloadBytes = Buffer.from(JSON.stringify(payload));
-    window.console.log("payloadBytes.toString()", payloadBytes.toString());
-    /*const payloadBuffer = serializeBuffer(payload);
-      window.console.log("payloadBuffer.toString", payloadBuffer.toString());*/
+    const payloadStringtify = JSON.stringify(payload);
+    const payloadBytes = Buffer.from(payloadStringtify);
     const tsx = await getStaking().transferOwnership({
       bucketIndex: Number(this.state.bucketIndex),
       voterAddress: this.state.address,
