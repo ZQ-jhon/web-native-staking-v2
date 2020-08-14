@@ -1,4 +1,3 @@
-import CopyOutlined from "@ant-design/icons/CopyOutlined";
 import Alert from "antd/lib/alert";
 import Button from "antd/lib/button";
 import Form, { FormInstance } from "antd/lib/form";
@@ -9,13 +8,13 @@ import { Buffer } from "buffer";
 import { toRau, validateAddress } from "iotex-antenna/lib/account/utils";
 import { t } from "onefx/lib/iso-i18n";
 import React, { PureComponent, RefObject } from "react";
-import CopyToClipboard from "react-copy-to-clipboard";
 import { connect } from "react-redux";
 import { getStaking } from "../../server/gateway/staking";
 import { getAntenna} from "../../shared/common/get-antenna";
 import { LinkButton } from "../common/buttons";
 import {CommonMargin} from "../common/common-margin";
 import {RootStyle} from "../common/component-style";
+import {CopyButtonClipboardComponent} from "../common/copy-button-clipboard";
 import { Flex } from "../common/flex";
 import { colors } from "../common/styles/style-color";
 import {Pd} from "../common/styles/style-padding";
@@ -23,7 +22,9 @@ import { DEFAULT_STAKING_GAS_LIMIT } from "../common/token-utils";
 import { validateIoAddress } from "../staking/field-validators";
 import { MAX_WIDTH } from "./voting";
 
-//const regex = /^([0-9]+)I authorize 0x[0-9a-fA-F]{40} to claim in (0x[0-9A-Fa-f]{40})$/;
+// tslint:disable-next-line:no-var-requires
+/*const BufferSerializer = require("buffer-serializer");
+const serializer = new BufferSerializer();*/
 
 type IJSONMESSAGE = {
   bucket: Number;
@@ -69,10 +70,6 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
 
   formRef: RefObject<FormInstance> = React.createRef<FormInstance>();
 
-  handleCancel = () => {
-    this.setState({ visible: false });
-  };
-
   showModal = async (showMessageBox: Boolean) => {
     const nonce = await getNonce(this.state.address);
     if (showMessageBox) {
@@ -96,77 +93,54 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
       !validateAddress(address);
   };
 
-  copyMessage = () => {
-    const text = JSON.stringify(this.state.jsonMessage);
-    return (
-      <div style={{ position: "absolute", marginTop: "-33px", right: "4px" }}>
-        <p>
-          <CopyToClipboard
-            text={text}
-            onCopy={() => {
-              this.setState({ messageCopied: true });
-              window.setTimeout(
-                () => this.setState({ messageCopied: false }),
-                2000
-              );
-            }}
-          >
-            {/* tslint:disable-next-line:react-a11y-anchors */}
-            <CopyOutlined />
-          </CopyToClipboard>
-          {this.state.messageCopied && (
-            <span style={{ color: "red" }}>Message Copied.</span>
-          )}
-        </p>
-      </div>
-    );
-  };
-
-  copyText = (name: string) => {
-    const text =
-      name === "Address" ? this.state.address : this.state.bucketIndex;
-    return (
-      <div>
-        <CopyToClipboard
-          text={text}
-          onCopy={() => {
-            name === "Address"
-              ? this.setState({ addressCopied: true })
-              : this.setState({ bucketIndexCopied: true });
-            window.setTimeout(
-              () =>
-                this.setState({
-                  addressCopied: false,
-                  bucketIndexCopied: false,
-                }),
-              2000
-            );
-          }}
-        >
-          {/* tslint:disable-next-line:react-a11y-anchors */}
-          <CopyOutlined />
-        </CopyToClipboard>
-        {this.state.bucketIndexCopied && name === "bucketIndex" && (
-          <span style={{ color: "red" }}>Index Copied.</span>
-        )}
-        {this.state.addressCopied && name === "Address" && (
-          <span style={{ color: "red" }}>Address Copied.</span>
-        )}
-      </div>
-    );
-  };
-
   sendToBlockChain = async () => {
-    const payload = {
+   const payload = {
       type: "Ethereum",
-      msg: this.state.jsonMessage,
-      sig: this.state.sig,
+      msg: JSON.stringify(this.state.jsonMessage),
+      sig: this.state.sig.replace("0x", "")
     };
+    // const payload = `{"type":"Ethereum","msg":"${JSON.stringify(this.state.jsonMessage)}","sig":"${this.state.sig.replace("0x", "")}"}`;
+    window.console.log("payload", payload);
+   /* const str = "0x"+[...JSON.stringify(payload)];
+    const payloadBytes = Buffer.from(str.map((c,i)=>str.charCodeAt(i).toString(16)).join(""),"hex");
+*/
+
+    // @ts-ignore
+    // tslint:disable-next-line:prefer-template
+    // const str = "0x"+[...JSON.stringify(payload)].map((c,i)=>c.toString(16)).join("");
+  /*  const pt = JSON.stringify(payload).replace(/\\"/g,"\"").replace(/\"/g,'"');
+    window.console.log("pt", pt);
+    const str = utf8ToHex2(pt)
+      .replace("0x", "")
+      .replace(/\\/g, "");
+    // @ts-ignore
+    const arr = new Uint8Array(str.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
+    window.console.log("arr", arr);
+    const payloadBytes = Buffer.from(str,"hex");
+    window.console.log("str", payloadBytes.toString());
+
+*/
+    /*
+    const aBuffer = serializer.toBuffer(payload);
+    window.console.log("serialized", aBuffer.toString("hex"));*/
+
+   /* const payloadBytes = Buffer.from(pt);
+
+    // const payloadBytes = Buffer.from(pt,"utf16le");
+    window.console.log("payloadBytes", payloadBytes.toString());
+
+    const bpl = serialize(payload);
+    window.console.log("bpl", bpl);
+    window.console.log("deserialize", deserialize(bpl));
+*/
     const payloadBytes = Buffer.from(JSON.stringify(payload));
+    window.console.log("payloadBytes.toString()", payloadBytes.toString());
+    /*const payloadBuffer = serializeBuffer(payload);
+      window.console.log("payloadBuffer.toString", payloadBuffer.toString());*/
     const tsx = await getStaking().transferOwnership({
       bucketIndex: Number(this.state.bucketIndex),
       voterAddress: this.state.address,
-      //@ts-ignore
+      // @ts-ignore
       payload: payloadBytes,
       gasLimit: DEFAULT_STAKING_GAS_LIMIT,
       gasPrice: toRau("1", "Qev"),
@@ -174,16 +148,10 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
     this.setState({ tsx });
   };
 
+
   // tslint:disable-next-line:max-func-body-length
   reclaimBucketContent = () => {
-    const layoutStyle = {
-      width: "100%",
-      maxWidth: `${MAX_WIDTH}px`,
-      backgroundColor: colors.white,
-      fontFamily: "arial",
-    };
     return (
-      // @ts-ignore
       <Layout style={{ ...layoutStyle, marginBottom: "15px" }}>
         {
           // @ts-ignore
@@ -191,7 +159,7 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
             layout={"vertical"}
             style={{ padding: "1em" }}
             ref={this.formRef}>
-            <h1>{t("reclaim.bucketHeader")}</h1>
+            <h1><b>{t("reclaim.bucketHeader")}</b></h1>
             {this.state.tsx.length > 0 && (
               <div>
                 <Alert
@@ -227,7 +195,7 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
                     bucketIndexCopied: false,
                   });
                 }}
-                addonAfter={this.copyText("bucketIndex")}
+                addonAfter={<CopyButtonClipboardComponent text={this.state.bucketIndex} size={"small"} />}
               />
             </Form.Item>
             {/*
@@ -253,7 +221,7 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
                     addressCopied: false,
                   });
                 }}
-                addonAfter={this.copyText("Address")}
+                addonAfter={<CopyButtonClipboardComponent text={this.state.address} size={"small"} />}
               />
             </Form.Item>
             <p style={{ fontSize: "12px" }}>{t("reclaim.continueWebTools")}</p>
@@ -273,7 +241,9 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
                   rows={4}
                   value={JSON.stringify(this.state.jsonMessage)}
                 />
-                {this.copyMessage()}
+                <div style={{ position: "absolute", marginTop: "-33px", right: "4px" }}>
+                  <CopyButtonClipboardComponent text={JSON.stringify(this.state.jsonMessage)} size={"small"} />
+                </div>
                 <LinkButton href="https://mycrypto.com/sign-and-verify-message/sign">
                   {t("reclaim.click-to-sign")}
                 </LinkButton>
@@ -293,10 +263,10 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
               </Form.Item>
             )}
             {
-              // @ts-ignore
-              this.state.jsonMessage.recipient.length > 0 && (<Form.Item
+              this.state.jsonMessage.recipient.length > 0 && (
+                <Form.Item
                   label={t("reclaim.sig.desc")}
-                  name={"sig"}>
+                >
                   <TextArea
                     onChange={(event) => {
                       this.setState({
@@ -338,6 +308,13 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
     );
   }
 }
+
+const layoutStyle = {
+  width: "100%",
+  maxWidth: `${MAX_WIDTH}px`,
+  backgroundColor: colors.white,
+  fontFamily: "arial",
+};
 
 export const ReclaimTools = connect()(ReclaimInnerTools);
 
