@@ -1,4 +1,4 @@
-import RightOutlined from "@ant-design/icons/RightOutlined";
+import CaretDownOutlined from "@ant-design/icons/CaretDownOutlined";
 import Avatar from "antd/lib/avatar";
 import Collapse from "antd/lib/collapse";
 import Layout from "antd/lib/layout";
@@ -60,15 +60,22 @@ class CandidateViewProfileContent extends Component<Props, State> {
             <Avatar
               shape="square"
               size={24}
-              style={{ backgroundColor: colors.deltaUp, borderRadius: 0 }}
+              style={{
+                backgroundColor: colors.white,
+                borderRadius: 3,
+                borderColor: colors.black80,
+                borderWidth: 1,
+                borderStyle: "solid",
+              }}
             >
               {/* tslint:disable-next-line:use-simple-attributes */}
-              <RightOutlined
-                rotate={isActive ? 90 : 0}
-                style={{ color: colors.white }}
+              <CaretDownOutlined
+                rotate={isActive ? 0 : -90}
+                style={{ color: colors.black80 }}
               />
             </Avatar>
           )}
+          expandIconPosition="right"
           defaultActiveKey={collapses.map((a) => a.key)}
         >
           {collapses.map((item) => (

@@ -125,7 +125,7 @@ migration.success: You have successfully submitted the migration request. Please
 my_stake.ioAddress.err: 'Invalid IoTeX Address'
 voting.tweet.summary.title: 'Voting for IoTeX Delegates is now LIVE - vote today!'
 voting.tweet.summary.description: 'Vote more than 1,000 IOTX-E to become a Genesis Voter! Seize the chance to earn 30% APR early bird voting rewards and limited edition member mega box!'
-voting.tweet.summary.image: 'https://res.cloudinary.com/dokc3pa1x/image/upload/v1552428805/delegates/voting_twitter.png'
+voting.tweet.summary.image: 'https://imgc.iotex.io/dokc3pa1x/image/upload/v1552428805/delegates/voting_twitter.png'
 voting.tweet.content: '#VOTING for IoTeX Delegates is NOW LIVE - vote today!%0a I voted for ${name} and I became a #GenesisVoter. How about you?%0a #IoTeXvote #IoTeXdelegate'
 delegate.votesreceived.voter: Voter
 delegate.votesreceived.token_amount: Amount
