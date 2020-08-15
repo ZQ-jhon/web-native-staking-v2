@@ -101,6 +101,7 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
     const tsx = await getStaking().transferOwnership({
       bucketIndex: Number(this.state.bucketIndex),
       voterAddress: this.state.address,
+      // @ts-ignore
       payload: payloadBytes,
       gasLimit: DEFAULT_STAKING_GAS_LIMIT,
       gasPrice: toRau("1", "Qev"),
