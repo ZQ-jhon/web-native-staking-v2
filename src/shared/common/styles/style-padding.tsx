@@ -23,7 +23,7 @@ export const topBottomContentPadding = {
   paddingTop: "12px",
   paddingBottom: "12px"
 };
-const Pd = styled("div", contentPadding);
+export const Pd = styled("div", contentPadding);
 
 export const ContentPadding = ({
   children,
