@@ -548,7 +548,7 @@ reclaim.contiunueButton: Continue
 reclaim.reclaimMessage: This is to certify I am transferring the ownership of said bucket to said recipient on IoTeX blockchain
 reclaim.popUpMessage.runIoctlCmd: You can reclaim the bucket by running the following ioctl command
 reclaim.continueWebTools: or if you wish to use the web tool, make sure ioPay is opened (and it has the recipient private key/account), then click Continue
-reclaim.sig.desc: Signature Bytes from HD-WALLET
-reclaim.sign-and-send: Sign Message And Send To Block Chain
+reclaim.sig.desc: Signature Bytes from Ethereum Wallet
+reclaim.sign-and-send: "Reclaim"
 reclaim.click-to-sign: Click here to sign the message
 action.broadcasted: Broadcasted successfully! Please wait for a few seconds and refresh this page to see the result.

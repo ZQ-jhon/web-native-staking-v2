@@ -7,15 +7,16 @@ import Layout from "antd/lib/layout";
 import { Buffer } from "buffer";
 import { toRau, validateAddress } from "iotex-antenna/lib/account/utils";
 import { t } from "onefx/lib/iso-i18n";
-import React, { PureComponent, RefObject } from "react";
+import React, {Component, PureComponent, RefObject} from "react";
 import { connect } from "react-redux";
 import { getStaking } from "../../server/gateway/staking";
-import { getAntenna} from "../../shared/common/get-antenna";
+import {getAntenna} from "../../shared/common/get-antenna";
 import { LinkButton } from "../common/buttons";
 import {CommonMargin} from "../common/common-margin";
 import {RootStyle} from "../common/component-style";
 import {CopyButtonClipboardComponent} from "../common/copy-button-clipboard";
 import { Flex } from "../common/flex";
+import {IopayRequired} from "../common/iopay-required";
 import { colors } from "../common/styles/style-color";
 import {Pd} from "../common/styles/style-padding";
 import { DEFAULT_STAKING_GAS_LIMIT } from "../common/token-utils";
@@ -52,8 +53,8 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
       messageCopied: false,
       showMessageBox: false,
       address: "",
-      sig: "",
       tsx: "",
+      sig: "",
       bucketIndex: "",
       jsonMessage: {
         bucket: 0,
@@ -100,7 +101,6 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
     const tsx = await getStaking().transferOwnership({
       bucketIndex: Number(this.state.bucketIndex),
       voterAddress: this.state.address,
-      // @ts-ignore
       payload: payloadBytes,
       gasLimit: DEFAULT_STAKING_GAS_LIMIT,
       gasPrice: toRau("1", "Qev"),
@@ -238,15 +238,13 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
               )}
             {this.state.jsonMessage.recipient.length > 0 && (
               <Form.Item>
-                <Button
-                  type="primary"
-                  htmlType="submit"
-                  disabled={this.checkDisable()}
-                  style={{ marginRight: "10px" }}
-                  onClick={this.sendToBlockChain}
-                >
-                  {t("reclaim.sign-and-send")}
-                </Button>
+                {
+                  // @ts-ignore
+                  <Reclaim
+                    disabled={this.checkDisable()}
+                    submit={this.sendToBlockChain}
+                  />
+                }
               </Form.Item>
             )}
           </Form>
@@ -275,6 +273,25 @@ const layoutStyle = {
   backgroundColor: colors.white,
   fontFamily: "arial",
 };
+
+export const Reclaim = IopayRequired(
+    class ClaimButton extends Component<{ disabled: boolean, submit(): {}; }> {
+
+      render(): JSX.Element {
+        return (
+          <Button
+            type="primary"
+            htmlType="submit"
+            disabled={this.props.disabled}
+            style={{ marginRight: "10px" }}
+            onClick={this.props.submit}
+          >
+            {t("reclaim.sign-and-send")}
+          </Button>
+        );
+      }
+    }
+);
 
 export const ReclaimTools = connect()(ReclaimInnerTools);
 
