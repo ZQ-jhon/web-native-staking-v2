@@ -542,7 +542,7 @@ recliam.bucketIndex.error: enter the bucket index
 reclaim.recipientAddress: Recipient Address
 reclaim.recipientAddress.error: enter the recipient address
 reclaim.message: Message to be signed
-reclaim.success: Action broadcasted successfully!
+reclaim.success: 'Action broadcasted successfully!'
 reclaim.copyMessaage: Copy the message to sign using HDWallet
 reclaim.contiunueButton: Continue
 reclaim.reclaimMessage: This is to certify I am transferring the ownership of said bucket to said recipient on IoTeX blockchain
