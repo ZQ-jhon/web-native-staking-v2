@@ -125,7 +125,7 @@ migration.success: You have successfully submitted the migration request. Please
 my_stake.ioAddress.err: 'Invalid IoTeX Address'
 voting.tweet.summary.title: 'Voting for IoTeX Delegates is now LIVE - vote today!'
 voting.tweet.summary.description: 'Vote more than 1,000 IOTX-E to become a Genesis Voter! Seize the chance to earn 30% APR early bird voting rewards and limited edition member mega box!'
-voting.tweet.summary.image: 'https://res.cloudinary.com/dokc3pa1x/image/upload/v1552428805/delegates/voting_twitter.png'
+voting.tweet.summary.image: 'https://imgc.iotex.io/dokc3pa1x/image/upload/v1552428805/delegates/voting_twitter.png'
 voting.tweet.content: '#VOTING for IoTeX Delegates is NOW LIVE - vote today!%0a I voted for ${name} and I became a #GenesisVoter. How about you?%0a #IoTeXvote #IoTeXdelegate'
 delegate.votesreceived.voter: Voter
 delegate.votesreceived.token_amount: Amount
@@ -146,6 +146,7 @@ delegate.votesreceived: 'Votes Received'
 delegate.ranking: Rank
 delegate.vote_share: 'Vote & Share Campaign'
 delegate.tweet.summary.title: '${delegate} (Retweet or Post to Enter Lucky Draw)'
+delegate.annotate.non-official: '* This is not a node hosted by IoTeX Official Team.'
 user-info.profile: Profile
 user-info.vote: 'My Votes'
 user-info.help: Help
@@ -478,7 +479,7 @@ profile.calculate_rewards: 'Calculate Rewards'
 profile.op-reward.addresses: 'Op/Reward Addresses'
 profile.op-address.unset_warning: 'Please set operator before running your node.'
 profile.op-address.set_warning: 'Please note that you need to update your operator address in your node config after a new operator address is set.'
-profile.reward-address.unset_warning: 'Recommend use <a target=''_blank'' href=''http://hermes.to/''>Hermes</a> for auto-distribute the rewards to your voters'
+profile.reward-address.unset_warning: '<a target=''_blank'' href=''http://hermes.to/''>Hermes</a> is highly recommended for auto-distribution of your rewards to your voters.'
 profile.reward-address.set_warning: 'Please note that you need to update your reward address in your node config after a new reward address is set.'
 profile.update-candidate.other-fields: 'You can update staked duration, amount and auto stake at <span style="color: #0b8de3;"><a href="${href}">${text}</a></span>.'
 profile.register_name.desc: 'Follow the instructions below will register your delegate name on IoTeX blockchain, associate it with the operator address (who produces blocks) and the reward address (who receives the reward), and create your self-staking bucket of IOTX. The registration costs you 100 IOTX.'
@@ -542,9 +543,13 @@ recliam.bucketIndex.error: enter the bucket index
 reclaim.recipientAddress: Recipient Address
 reclaim.recipientAddress.error: enter the recipient address
 reclaim.message: Message to be signed
+reclaim.success: 'Action broadcasted successfully!'
 reclaim.copyMessaage: Copy the message to sign using HDWallet
 reclaim.contiunueButton: Continue
 reclaim.reclaimMessage: This is to certify I am transferring the ownership of said bucket to said recipient on IoTeX blockchain
 reclaim.popUpMessage.runIoctlCmd: You can reclaim the bucket by running the following ioctl command
 reclaim.continueWebTools: or if you wish to use the web tool, make sure ioPay is opened (and it has the recipient private key/account), then click Continue
+reclaim.sig.desc: Signature Bytes from Ethereum Wallet
+reclaim.sign-and-send: "Reclaim"
+reclaim.click-to-sign: Click here to sign the message
 action.broadcasted: Broadcasted successfully! Please wait for a few seconds and refresh this page to see the result.

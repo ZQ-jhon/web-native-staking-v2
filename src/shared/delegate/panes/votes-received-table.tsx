@@ -1,39 +1,29 @@
 import Button from "antd/lib/button";
 import notification from "antd/lib/notification";
-import Table from "antd/lib/table";
+import Table, {ColumnType} from "antd/lib/table";
 import exportFromJSON from "export-from-json";
-import gql from "graphql-tag";
-import { SpinPreloader } from "iotex-react-block-producers/lib/spin-preloader";
-import { t } from "onefx/lib/iso-i18n";
-import { styled } from "onefx/lib/styletron-react";
+import {fromRau} from "iotex-antenna/lib/account/utils";
+import {SpinPreloader} from "iotex-react-block-producers/lib/spin-preloader";
+import {t} from "onefx/lib/iso-i18n";
+import {styled} from "onefx/lib/styletron-react";
 import parse from "parse-duration";
-import { PureComponent } from "react";
-import React from "react";
-import { Query, QueryResult } from "react-apollo";
-import { ownersToNames, webBpApolloClient } from "../../common/apollo-client";
-import { CommonMargin } from "../../common/common-margin";
-import { Flex } from "../../common/flex";
-import { getIoPayAddress } from "../../common/get-antenna";
-
-const GET_VOTES_REVEIVED = gql`
-  query buckets($name: String!, $offset: Int, $limit: Int) {
-    buckets(name: $name, offset: $offset, limit: $limit) {
-      voter
-      votes
-      weightedVotes
-      remainingDuration
-      isNative
-    }
-  }
-`;
+import React, {PureComponent} from "react";
+import {Query, QueryResult} from "react-apollo";
+import {getStaking} from "../../../server/gateway/staking";
+import {analyticsApolloClient, ownersToNames} from "../../common/apollo-client";
+import {CommonMargin} from "../../common/common-margin";
+import {Flex} from "../../common/flex";
+import {getIoPayAddress} from "../../common/get-antenna";
+import {numberWithCommas, secondsToDuration} from "../../common/number-util";
+import {GET_BUCKETS_BY_CANDIDATE} from "../../staking/smart-contract-gql-queries";
 
 type Buckets = {
-  isNative: string;
+  isNative: boolean;
   remainingDuration: string;
-  voter: string;
+  voterIotexAddress: string;
   votes: string;
   weightedVotes: string;
-  __typename: string;
+  __typename: string
 };
 
 type Props = {
@@ -44,6 +34,7 @@ type Props = {
 type State = {
   offset: number;
   limit: number;
+  startEpoch: number;
   registeredName?: string;
 };
 
@@ -51,6 +42,7 @@ export class VotesReceivedTable extends PureComponent<Props, State> {
   state: State = {
     offset: 0,
     limit: 30,
+    startEpoch: 0,
   };
 
   async componentDidMount(): Promise<void> {
@@ -60,11 +52,13 @@ export class VotesReceivedTable extends PureComponent<Props, State> {
       const registeredName = ownersToNames[address];
       this.setState({ registeredName });
     }
+    const epochData = await getStaking().getEpochData();
+    this.setState({ startEpoch: epochData.num });
   }
 
-  downloadVotes = () => {
+  downloadVotes = (startEpoch:number) => {
     let { registeredName } = this.props;
-    const { isPublic = false } = this.props;
+    const { isPublic = false} = this.props;
     if (!isPublic) {
       registeredName = this.state.registeredName;
     }
@@ -74,48 +68,91 @@ export class VotesReceivedTable extends PureComponent<Props, State> {
       });
       return;
     }
-    webBpApolloClient
-      .query({
-        query: GET_VOTES_REVEIVED,
-        variables: { name: registeredName, offset: 0, limit: 999999999 },
-      })
-      .then(({ data: { buckets } }) => {
-        // @ts-ignore
-        const csvSource = buckets.map(({ __typename, ...data }) => {
-          return { ...data, voter: data.voter.replace("0x", "") };
-        }); // remove __typename field from dataSource
-        exportFromJSON({
-          data: csvSource,
-          fileName: "transactions",
-          exportType: "csv",
+
+    if (startEpoch>0){
+      analyticsApolloClient
+        .query({
+          query: GET_BUCKETS_BY_CANDIDATE,
+          variables: {
+            startEpoch: startEpoch-1,
+            epochCount: 1,
+            delegateName: registeredName,
+            pagination: { skip: 0, first: 500 }
+          },
+        })
+        .then(({ data: { delegate: {bucketInfo:{bucketInfoList}} } }) => {
+          if(bucketInfoList && bucketInfoList.length > 0){
+            const csvSource = bucketInfoList[0].bucketInfo;
+            csvSource.forEach((bucket: Buckets) => {
+              delete bucket.__typename;
+            });
+            exportFromJSON({
+              data: csvSource,
+              fileName: `votes_received_${registeredName}`,
+              exportType: "csv",
+            });
+          }
         });
-      });
+    }
   };
 
-  getUpdatedBucket = (buckets: Array<Buckets>) => {
-    buckets.map((obj) => {
-      const updatedDay = String(parse(obj.remainingDuration, "d")).split(".");
-      const updatedHour = String(
-        parse(`.${updatedDay[1] ? updatedDay[1] : 0} day`, "hr")
-      ).split(".");
-      const updatedMin = String(
-        parse(`.${updatedHour[1] ? updatedHour[1] : 0} h`, "min")
-      ).split(".");
-      const updatedStr = [
-        { value: updatedDay[0], unit: "d" },
-        { value: updatedHour[0], unit: "h" },
-        { value: updatedMin[0], unit: "m" },
-      ]
-        .filter((e) => e.value !== "0")
-        .map((e) => `${e.value}${e.unit}`)
-        .join(" ");
-      obj.remainingDuration = updatedStr ? updatedStr : "0";
-    });
-  };
+  columns:Array<ColumnType<Buckets>> = [
+    {
+      title: t("delegate.votesreceived.voter"),
+      dataIndex: "voterIotexAddress",
+      key: "voterIotexAddress",
+      width: "10vw",
+      ellipsis: true,
+      render(text: string): JSX.Element {
+        return <span className="ellipsis-text" style={{ minWidth: 95 }}>{text}</span>;
+      },
+    },
+    {
+      title: t("delegate.votesreceived.token_amount"),
+      dataIndex: "votes",
+      key: "votes",
+      width: "12vw",
+      ellipsis: true,
+      render(votes: string): JSX.Element {
+        return <span>{`${numberWithCommas(fromRau(votes, "iotx"))}`}</span>;
+      },
+    },
+    {
+      title: t("delegate.votesreceived.token_type"),
+      dataIndex: "isNative",
+      width: "6vw",
+      key: "isNative",
+      ellipsis: true,
+      render(_: void, record: { isNative: boolean }): string {
+        return record.isNative ? "IOTX" : "IOTX-E";
+      },
+    },
+    {
+      title: t("delegate.votesreceived.votes"),
+      dataIndex: "weightedVotes",
+      key: "weightedVotes",
+      width: "18vw",
+      ellipsis: true,
+      render(weightedVotes: string): JSX.Element {
+        return <span>{`${numberWithCommas(fromRau(weightedVotes, "iotx"))}`}</span>;
+      },
+    },
+    {
+      title: t("delegate.votesreceived.remaining_duration"),
+      dataIndex: "remainingDuration",
+      key: "remainingDuration",
+      width: "16vw",
+      ellipsis: true,
+      render: (text: string) => {
+        const duration = parse(text);
+        return <span style={{ minWidth: 100 }}>{duration?secondsToDuration(duration/1000):text}</span>;
+      },
+    },
+  ];
 
-  // tslint:disable-next-line:max-func-body-length
   render(): JSX.Element {
     let { registeredName } = this.props;
+    const { startEpoch } = this.state;
     const { isPublic = false } = this.props;
     if (!isPublic) {
       registeredName = this.state.registeredName;
@@ -123,69 +160,49 @@ export class VotesReceivedTable extends PureComponent<Props, State> {
     if (!registeredName) {
       return <Table />;
     }
+
+    if (startEpoch<=1){
+      return <Table />;
+    }
+
     const { offset, limit } = this.state;
     const variables = {
-      name: registeredName,
-      offset,
-      limit,
+      startEpoch: startEpoch-1,
+      epochCount: 1,
+      delegateName: registeredName,
+      pagination: { skip: offset, first: limit }
     };
-    const columns = [
-      {
-        title: t("delegate.votesreceived.voter"),
-        dataIndex: "voter",
-        key: "voter",
-        render(text: string): JSX.Element {
-          return <div>{String(text).replace("0x", "")}</div>;
-        },
-      },
-      {
-        title: t("delegate.votesreceived.token_amount"),
-        dataIndex: "votes",
-        key: "votes",
-        render(text: number): JSX.Element {
-          return <span>{Math.abs(text).toLocaleString()}</span>;
-        },
-      },
-      {
-        title: t("delegate.votesreceived.token_type"),
-        dataIndex: "isNative",
-        key: "isNative",
-        render(_: void, record: { isNative: boolean }): string {
-          return record.isNative ? "IOTX" : "IOTX-E";
-        },
-      },
-      {
-        title: t("delegate.votesreceived.votes"),
-        dataIndex: "weightedVotes",
-        key: "weightedVotes",
-      },
-      {
-        title: t("delegate.votesreceived.remaining_duration"),
-        dataIndex: "remainingDuration",
-        key: "remainingDuration",
-      },
-    ];
+
     return (
       <VotesReceivedTableWrapper className="table_wrapper__votes_received">
         <Query
           ssr={false}
-          query={GET_VOTES_REVEIVED}
+          query={GET_BUCKETS_BY_CANDIDATE}
           variables={variables}
-          client={webBpApolloClient}
+          client={analyticsApolloClient}
         >
-          {({ loading, error, data }: QueryResult) => {
+          {({ loading, error, data }: QueryResult<{
+            delegate: {
+              bucketInfo: {
+                bucketInfoList: Array<{
+                  count: number,
+                  bucketInfo: Array<Buckets>
+                }>
+              }
+            }
+          }>) => {
             if (error) {
               notification.error({
                 message: "Error",
                 description: `failed to get votes recieved: ${error.message}`,
                 duration: 3,
               });
-              return null;
+              return <></>;
             }
-            const { buckets = [] } = data || {};
-            if (buckets.length > 0) {
-              this.getUpdatedBucket(buckets);
-            }
+
+            const buckets = data&&data.delegate.bucketInfo.bucketInfoList.length>0?data.delegate.bucketInfo.bucketInfoList[0].bucketInfo:[];
+            const total = data&&data.delegate.bucketInfo.bucketInfoList.length>0?data.delegate.bucketInfo.bucketInfoList[0].count:0;
+
             return (
               <SpinPreloader spinning={loading}>
                 {
@@ -199,7 +216,7 @@ export class VotesReceivedTable extends PureComponent<Props, State> {
                     <Button
                       loading={loading}
                       type={"primary"}
-                      onClick={this.downloadVotes}
+                      onClick={() => this.downloadVotes(startEpoch)}
                     >
                       {t("delegate.votesreceived.download")}
                     </Button>
@@ -216,15 +233,10 @@ export class VotesReceivedTable extends PureComponent<Props, State> {
                         limit,
                       });
                     },
-                    total:
-                      buckets.length < limit
-                        ? offset + limit
-                        : offset + limit + 1,
-                    defaultCurrent: offset / limit,
+                    total,
                   }}
                   dataSource={buckets}
-                  // @ts-ignore
-                  columns={columns}
+                  columns={this.columns}
                   rowKey={"id"}
                 />
               </SpinPreloader>

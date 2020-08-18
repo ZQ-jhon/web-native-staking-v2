@@ -111,7 +111,7 @@ my_stake.ioAddress.err: 'Invalid IoTeX Address'
 migration.success: You have successfully submitted the migration request. Please wait a while for it to take effects.
 voting.tweet.summary.title: IoTeX节点投票已经开启，现在加入!
 voting.tweet.summary.description: '参与1000IOTX投票成为创世会员！ 早期参与赢得30%年化收益，赢得限量版会员大礼包！'
-voting.tweet.summary.image: 'https://res.cloudinary.com/dokc3pa1x/image/upload/v1552428805/delegates/voting_twitter.png'
+voting.tweet.summary.image: 'https://imgc.iotex.io/dokc3pa1x/image/upload/v1552428805/delegates/voting_twitter.png'
 voting.tweet.content: '#VOTING for IoTeX节点现在正在进行中！作为#GenesisVoter， %0a 我投了 ${name} 。到你了！%0a #IoTeXvote #IoTeXdelegate'
 voting.progress-bar.circulating.supply: 流通
 voting.buy_iotx: '购买 IOTX'
@@ -177,3 +177,4 @@ my_stake.edit.row: Action
 my_stake.edit.unstake: 赎回质押
 my_stake.edit.withdraw: 提取赎回
 action.broadcasted: 广播成功！请稍候几秒钟，刷新此页以查看结果。
+delegate.annotate.non-official: '*这不是IoTeX官方节点。'

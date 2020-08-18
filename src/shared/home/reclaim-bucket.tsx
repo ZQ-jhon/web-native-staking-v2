@@ -1,18 +1,27 @@
-import CopyOutlined from "@ant-design/icons/CopyOutlined";
+import Alert from "antd/lib/alert";
 import Button from "antd/lib/button";
 import Form, { FormInstance } from "antd/lib/form";
 import Input from "antd/lib/input";
-import { validateAddress } from "iotex-antenna/lib/account/utils";
+import TextArea from "antd/lib/input/TextArea";
+import Layout from "antd/lib/layout";
+import { Buffer } from "buffer";
+import { toRau, validateAddress } from "iotex-antenna/lib/account/utils";
 import { t } from "onefx/lib/iso-i18n";
-import React, { PureComponent, RefObject } from "react";
-import CopyToClipboard from "react-copy-to-clipboard";
+import React, {Component, PureComponent, RefObject} from "react";
 import { connect } from "react-redux";
-import { getAntenna } from "../../shared/common/get-antenna";
+import { getStaking } from "../../server/gateway/staking";
+import {getAntenna} from "../../shared/common/get-antenna";
 import { LinkButton } from "../common/buttons";
+import {CommonMargin} from "../common/common-margin";
+import {RootStyle} from "../common/component-style";
+import {CopyButtonClipboardComponent} from "../common/copy-button-clipboard";
 import { Flex } from "../common/flex";
+import {IopayRequired} from "../common/iopay-required";
+import { colors } from "../common/styles/style-color";
+import {Pd} from "../common/styles/style-padding";
+import { DEFAULT_STAKING_GAS_LIMIT } from "../common/token-utils";
 import { validateIoAddress } from "../staking/field-validators";
-
-//const regex = /^([0-9]+)I authorize 0x[0-9a-fA-F]{40} to claim in (0x[0-9A-Fa-f]{40})$/;
+import { MAX_WIDTH } from "./voting";
 
 type IJSONMESSAGE = {
   bucket: Number;
@@ -28,6 +37,8 @@ type STATE = {
   bucketIndexCopied: Boolean;
   showMessageBox: Boolean;
   address: string;
+  tsx: string;
+  sig: string;
   bucketIndex: string;
   jsonMessage: IJSONMESSAGE;
 };
@@ -42,6 +53,8 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
       messageCopied: false,
       showMessageBox: false,
       address: "",
+      tsx: "",
+      sig: "",
       bucketIndex: "",
       jsonMessage: {
         bucket: 0,
@@ -54,16 +67,12 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
 
   formRef: RefObject<FormInstance> = React.createRef<FormInstance>();
 
-  handleCancel = () => {
-    this.setState({ visible: false });
-  };
-
   showModal = async (showMessageBox: Boolean) => {
     const nonce = await getNonce(this.state.address);
     if (showMessageBox) {
       const jsonMessage = {
         bucket: Number(this.state.bucketIndex),
-        nonce: nonce,
+        nonce: nonce + 1,
         recipient: this.state.address,
         reclaim: t("reclaim.reclaimMessage"),
       };
@@ -76,184 +85,214 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
 
   checkDisable = () => {
     const { address, bucketIndex } = this.state;
-    if (
-      address.length === 0 ||
+    return address.length === 0 ||
       bucketIndex.length === 0 ||
-      !validateAddress(address)
-    ) {
-      return true;
-    } else {
-      return false;
-    }
+      !validateAddress(address);
   };
 
-  copyMessage = () => {
-    const text = JSON.stringify(this.state.jsonMessage);
-    return (
-      <div style={{ position: "absolute", marginTop: "-33px", right: "4px" }}>
-        <p>
-          <CopyToClipboard
-            text={text}
-            onCopy={() => {
-              this.setState({ messageCopied: true });
-              window.setTimeout(
-                () => this.setState({ messageCopied: false }),
-                2000
-              );
-            }}
-          >
-            {/* tslint:disable-next-line:react-a11y-anchors */}
-            <CopyOutlined />
-          </CopyToClipboard>
-          {this.state.messageCopied && (
-            <span style={{ color: "red" }}>Message Copied.</span>
-          )}
-        </p>
-      </div>
-    );
+  sendToBlockChain = async () => {
+   const payload = {
+      type: "Ethereum",
+      msg: JSON.stringify(this.state.jsonMessage),
+      sig: this.state.sig.replace("0x", "")
+    };
+    const payloadStringtify = JSON.stringify(payload);
+    const payloadBytes = Buffer.from(payloadStringtify);
+    const tsx = await getStaking().transferOwnership({
+      bucketIndex: Number(this.state.bucketIndex),
+      voterAddress: this.state.address,
+      // @ts-ignore
+      payload: payloadBytes,
+      gasLimit: DEFAULT_STAKING_GAS_LIMIT,
+      gasPrice: toRau("1", "Qev"),
+    });
+    this.setState({ tsx });
   };
 
-  copyText = (name: string) => {
-    const text =
-      name === "Address" ? this.state.address : this.state.bucketIndex;
-    return (
-      <div>
-        <CopyToClipboard
-          text={text}
-          onCopy={() => {
-            name === "Address"
-              ? this.setState({ addressCopied: true })
-              : this.setState({ bucketIndexCopied: true });
-            window.setTimeout(
-              () =>
-                this.setState({
-                  addressCopied: false,
-                  bucketIndexCopied: false,
-                }),
-              2000
-            );
-          }}
-        >
-          {/* tslint:disable-next-line:react-a11y-anchors */}
-          <CopyOutlined />
-        </CopyToClipboard>
-        {this.state.bucketIndexCopied && name === "bucketIndex" && (
-          <span style={{ color: "red" }}>Index Copied.</span>
-        )}
-        {this.state.addressCopied && name === "Address" && (
-          <span style={{ color: "red" }}>Address Copied.</span>
-        )}
-      </div>
-    );
-  };
 
+  // tslint:disable-next-line:max-func-body-length
   reclaimBucketContent = () => {
     return (
-      // @ts-ignore
-      <Form layout={"vertical"} style={{ padding: "1em" }} ref={this.formRef}>
-        <h1>{t("reclaim.bucketHeader")}</h1>
-        <Flex width="100%" column={true} alignItems="flex-start">
-          <p style={{ fontSize: "13px" }}>{t("reclaimBucket.introduction")}</p>
-        </Flex>
-        {/*
-            // @ts-ignore */}
-        <Form.Item
-          label={t("reclaim.bucketIndex")}
-          name="address"
-          initialValue=""
-          rules={[
-            {
-              required: true,
-              message: t("recliam.bucketIndex.error"),
-            },
-          ]}
-        >
-          <Input
-            onChange={(event) => {
-              this.setState({
-                bucketIndex: event.target.value,
-                bucketIndexCopied: false,
-              });
-            }}
-            addonAfter={this.copyText("bucketIndex")}
-          />
-        </Form.Item>
-        {/*
-            // @ts-ignore */}
-        <Form.Item
-          label={t("reclaim.recipientAddress")}
-          name={"recipient_address"}
-          initialValue=""
-          rules={[
-            {
-              required: true,
-              message: t("reclaim.recipientAddress.error"),
-            },
-            {
-              validator: validateIoAddress,
-            },
-          ]}
-        >
-          <Input
-            onChange={(event) => {
-              this.setState({
-                address: event.target.value,
-                addressCopied: false,
-              });
-            }}
-            addonAfter={this.copyText("Address")}
-          />
-        </Form.Item>
-        <p style={{ fontSize: "12px" }}>{t("reclaim.continueWebTools")}</p>
-        {this.state.showMessageBox && (
+      <Layout style={{ ...layoutStyle, marginBottom: "15px" }}>
+        {
           // @ts-ignore
-          <Form.Item
-            label={t("reclaim.message")}
-            name={"message_signature_hash"}
-            initialValue={this.state.jsonMessage}
-            rules={[
-              {
-                required: true,
-              },
-            ]}
-          >
-            <Input.TextArea
-              rows={4}
-              value={JSON.stringify(this.state.jsonMessage)}
-            />
-            {this.copyMessage()}
-            <LinkButton href="https://mycrypto.com/sign-and-verify-message/sign">
-              Click here to sign the message
-            </LinkButton>
-          </Form.Item>
-        )}
-        {/*
-            // @ts-ignore */}
-        {!this.state.showMessageBox && (
-          <Form.Item>
-            <Button
-              type="primary"
-              htmlType="submit"
-              disabled={this.checkDisable()}
-              style={{ marginRight: "10px" }}
-              onClick={() => this.showModal(true)}
+          <Form
+            layout={"vertical"}
+            style={{ padding: "1em" }}
+            ref={this.formRef}>
+            <h1><b>{t("reclaim.bucketHeader")}</b></h1>
+            {this.state.tsx.length > 0 && (
+              <div>
+                <Alert
+                  message={t("reclaim.success")}
+                  type="success"
+                  showIcon={true}
+                />
+                <CommonMargin />
+              </div>
+            )}
+            <Flex width="100%" column={true} alignItems="flex-start">
+              <p style={{ fontSize: "13px" }}>
+                {t("reclaimBucket.introduction")}
+              </p>
+            </Flex>
+            {/*
+              // @ts-ignore */}
+            <Form.Item
+              label={t("reclaim.bucketIndex")}
+              name="address"
+              initialValue=""
+              rules={[
+                {
+                  required: true,
+                  message: t("recliam.bucketIndex.error"),
+                },
+              ]}
             >
-              {t("reclaim.contiunueButton")}
-            </Button>
-          </Form.Item>
-        )}
-      </Form>
+              <Input
+                onChange={(event) => {
+                  this.setState({
+                    bucketIndex: event.target.value,
+                    bucketIndexCopied: false,
+                  });
+                }}
+                addonAfter={<CopyButtonClipboardComponent text={this.state.bucketIndex} size={"small"} />}
+              />
+            </Form.Item>
+            {/*
+              // @ts-ignore */}
+            <Form.Item
+              label={t("reclaim.recipientAddress")}
+              name={"recipient_address"}
+              initialValue=""
+              rules={[
+                {
+                  required: true,
+                  message: t("reclaim.recipientAddress.error"),
+                },
+                {
+                  validator: validateIoAddress,
+                },
+              ]}
+            >
+              <Input
+                onChange={(event) => {
+                  this.setState({
+                    address: event.target.value,
+                    addressCopied: false,
+                  });
+                }}
+                addonAfter={<CopyButtonClipboardComponent text={this.state.address} size={"small"} />}
+              />
+            </Form.Item>
+            <p style={{ fontSize: "12px" }}>{t("reclaim.continueWebTools")}</p>
+            {this.state.showMessageBox && (
+              // @ts-ignore
+              <Form.Item
+                label={t("reclaim.message")}
+                name={"message_signature_hash"}
+                initialValue={this.state.jsonMessage}
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}
+              >
+                <Input.TextArea
+                  rows={4}
+                  value={JSON.stringify(this.state.jsonMessage)}
+                />
+                <div style={{ position: "absolute", marginTop: "-33px", right: "4px" }}>
+                  <CopyButtonClipboardComponent text={JSON.stringify(this.state.jsonMessage)} size={"small"} />
+                </div>
+                <LinkButton href="https://mycrypto.com/sign-and-verify-message/sign">
+                  {t("reclaim.click-to-sign")}
+                </LinkButton>
+              </Form.Item>
+            )}
+            {!this.state.showMessageBox && (
+              <Form.Item>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  disabled={this.checkDisable()}
+                  style={{ marginRight: "10px" }}
+                  onClick={() => this.showModal(true)}
+                >
+                  {t("reclaim.contiunueButton")}
+                </Button>
+              </Form.Item>
+            )}
+            {
+              this.state.jsonMessage.recipient.length > 0 && (
+                <Form.Item
+                  label={t("reclaim.sig.desc")}
+                >
+                  <TextArea
+                    onChange={(event) => {
+                      this.setState({
+                        sig: event.target.value,
+                      });
+                    }}
+                  />
+                </Form.Item>
+              )}
+            {this.state.jsonMessage.recipient.length > 0 && (
+              <Form.Item>
+                {
+                  // @ts-ignore
+                  <Reclaim
+                    disabled={this.checkDisable()}
+                    submit={this.sendToBlockChain}
+                  />
+                }
+              </Form.Item>
+            )}
+          </Form>
+        }
+      </Layout>
     );
   };
 
   public render(): JSX.Element {
     return (
-      <div style={{ width: "100vw", height: "100vh" }}>
-        {this.reclaimBucketContent()}
-      </div>
+      <RootStyle>
+        <Layout>
+          <CommonMargin />
+          <Pd>
+            {this.reclaimBucketContent()}
+          </Pd>
+        </Layout>
+      </RootStyle>
     );
   }
 }
+
+const layoutStyle = {
+  width: "100%",
+  maxWidth: `${MAX_WIDTH}px`,
+  backgroundColor: colors.white,
+  fontFamily: "arial",
+};
+
+export const Reclaim = IopayRequired(
+    class ClaimButton extends Component<{ disabled: boolean, submit(): {}; }> {
+
+      render(): JSX.Element {
+        return (
+          <Button
+            type="primary"
+            htmlType="submit"
+            disabled={this.props.disabled}
+            style={{ marginRight: "10px" }}
+            onClick={this.props.submit}
+          >
+            {t("reclaim.sign-and-send")}
+          </Button>
+        );
+      }
+    }
+);
 
 export const ReclaimTools = connect()(ReclaimInnerTools);
 

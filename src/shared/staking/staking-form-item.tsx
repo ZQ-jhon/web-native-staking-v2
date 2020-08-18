@@ -170,7 +170,6 @@ export class AutoStakeFormItem extends Component<Props, State> {
       children,
       stakeAmount = new BigNumber(0),
       stakeDuration = 0,
-      forceDisable = false,
       initialValue,
     } = this.props;
     const votingPower = this.getPowerEstimation(
@@ -205,9 +204,7 @@ export class AutoStakeFormItem extends Component<Props, State> {
               <Switch
                 style={{ textAlign: "right" }}
                 onChange={(checked) => {
-                  if (!forceDisable) {
-                    this.setState({ nonDecay: checked });
-                  }
+                  this.setState({ nonDecay: checked });
                 }}
               />
             </Form.Item>
