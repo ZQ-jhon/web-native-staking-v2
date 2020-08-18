@@ -201,7 +201,7 @@ class VotingBanner extends Component<Props, State> {
     this.openDeepLink();
     setTimeout(() => {
       if (!this.state.isBlur) {
-        location.href = "http://iopay.iotex.io";
+        location.href = "https://iopay.iotex.io";
       }
     }, 3000);
   };
