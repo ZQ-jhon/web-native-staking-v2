@@ -27,6 +27,7 @@ import { Flex } from "../common/flex";
 import { colors } from "../common/styles/style-color2";
 import { media } from "../common/styles/style-media";
 import { getPowerEstimationForBucket } from "../common/token-utils";
+import { convertHttps } from "../common/url-utils";
 import { GET_ALL_CANDIDATES_ID_NAME } from "../staking/smart-contract-gql-queries";
 import { renderActionMenu } from "../staking/stake-edit/modal-menu";
 import { isBurnDrop } from "../staking/staking-utils";
@@ -189,7 +190,7 @@ class MyVotesTable extends Component<Props, State> {
               <Avatar
                 alt="AV"
                 shape="circle"
-                src={candidateInfo.logo}
+                src={convertHttps(candidateInfo.logo)}
                 size={40}
                 style={{ margin: "8px 10px 8px 0" }}
               />
@@ -348,7 +349,7 @@ class MyVotesTable extends Component<Props, State> {
                     <Avatar
                       alt="AV"
                       shape="circle"
-                      src={candidateInfo.logo}
+                      src={convertHttps(candidateInfo.logo)}
                       size={40}
                       style={{ margin: "5px 10px 2px 0" }}
                     />

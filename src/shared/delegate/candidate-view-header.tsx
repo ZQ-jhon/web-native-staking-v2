@@ -23,6 +23,7 @@ import { Flex } from "../common/flex";
 import { colors } from "../common/styles/style-color2";
 import { fullOnPalm, media } from "../common/styles/style-media";
 import { TwitterScriptSource } from "../common/twitter";
+import { convertHttps } from "../common/url-utils";
 import { VotingButton } from "../home/vote-button-modal";
 import { VoteNowContainer } from "../staking/vote-now-steps/vote-now-container";
 
@@ -135,14 +136,17 @@ class CandidateProfileViewHeader extends Component<Props, State> {
         }}
       >
         <Helmet title={`${data.name} - ${t("meta.description.delegates")}`} />
-        <BannerImg className="banner-frame" src={data.bannerUrl} />
+        <BannerImg
+          className="banner-frame"
+          src={convertHttps(data.bannerUrl)}
+        />
         <Flex alignItems={"normal"} marginTop="24px" marginBottom="12px">
           <Flex marginBottom="24px">
             <Avatar
               className="profile-frame"
               shape="square"
               size={HEADER_HEIGHT * imageScale}
-              src={data.logo}
+              src={convertHttps(data.logo)}
             />
             <Flex
               column={true}
