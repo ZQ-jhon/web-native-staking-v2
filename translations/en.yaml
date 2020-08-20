@@ -198,6 +198,11 @@ candidate.VERIFYING: Verifying
 candidate.vote: Vote
 candidate.vote.native: IOTX
 candidate.vote.erc20: IOTX-E (ERC-20)
+candidate.herems.distribution_ratios: 'Distribution Ratios (via Hermes)'
+candidate.herems.block_reward: 'block reward'
+candidate.herems.epoch_reward: 'epoch reward'
+candidate.herems.foundation_bonus_reward: 'foundation bonus reward'
+candidate.herems.more_details: 'More details'
 candidate.delegate_badges: Badges
 candidate.delegate_name: Delegate Name
 candidate.status: Status
