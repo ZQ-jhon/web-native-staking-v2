@@ -119,3 +119,30 @@ export const GET_BUCKETS_BY_CANDIDATE = gql`
     }
   }
 `;
+
+export const GET_REWARDS_RATIO_BY_DELEGATE = gql`
+  query hermesMeta(
+    $startEpoch: Int!
+    $epochCount: Int!
+    $delegateName: String!
+  ) {
+    hermes2(startEpoch: $startEpoch, epochCount: $epochCount) {
+      byDelegate(delegateName: $delegateName) {
+        distributionRatio {
+          epochNumber
+          blockRewardRatio
+          foundationBonusRatio
+          epochRewardRatio
+        }
+      }
+    }
+  }
+`;
+
+export const GET_EPOCH = gql`
+  query {
+    chain {
+      mostRecentEpoch
+    }
+  }
+`;

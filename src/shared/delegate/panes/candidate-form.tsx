@@ -16,6 +16,7 @@ import { connect } from "react-redux";
 import { TBpCandidate } from "../../../types";
 import { ImageIcon } from "../../common/icon";
 import { upload } from "../../common/upload";
+import { convertHttps } from "../../common/url-utils";
 
 type Props = {
   data: TBpCandidate;
@@ -75,7 +76,7 @@ export const CandidateForm = connect()(
         loading: false,
         logo: "",
         bannerUrl: "",
-        showInsertFormat: false
+        showInsertFormat: false,
       };
     }
 
@@ -122,9 +123,9 @@ export const CandidateForm = connect()(
               rewardPlan: prevData.rewardPlan,
               annualReward: prevData.annualReward,
               ...values,
-              socialMedia: values.socialMedia.split(" ")
-            }
-          }
+              socialMedia: values.socialMedia.split(" "),
+            },
+          },
         });
         this.setState({ loading: false });
         // scroll to top
@@ -132,12 +133,12 @@ export const CandidateForm = connect()(
         window.document.documentElement.scrollTop = window.document.body.scrollTop = 0;
         // show success notification
         notification.success({
-          message: t("profile.change_saved")
+          message: t("profile.change_saved"),
         });
       } catch (err) {
         this.setState({ loading: false });
         notification.error({
-          message: `${t("profile.change_not_saved")}.`
+          message: `${t("profile.change_not_saved")}.`,
         });
       }
     };
@@ -169,7 +170,7 @@ export const CandidateForm = connect()(
     // tslint:disable-next-line:no-any
     beforeUpload = (file: any, title: any) => {
       // @ts-ignore
-      return upload(file, title).then(data => {
+      return upload(file, title).then((data) => {
         // @ts-ignore
         this.setState({ [title]: data.secure_url });
         const form = this.formRef.current;
@@ -178,7 +179,7 @@ export const CandidateForm = connect()(
         }
         form.setFieldsValue({
           // @ts-ignore
-          [title]: data.secure_url
+          [title]: data.secure_url,
         });
         return Promise.reject();
       });
@@ -190,287 +191,297 @@ export const CandidateForm = connect()(
 
       return (
         <Mutation mutation={UPSERT_BP_CANDIDATE}>
-          {// tslint:disable-next-line
-          (upsertBpCandidate: any, resp: any) => {
-            const data =
-              (resp && resp.data && resp.data.upsertBpCandidate) ||
-              this.props.data;
-            const logo = this.state.logo || data.logo;
-            const bannerUrl = this.state.bannerUrl || data.bannerUrl;
+          {
+            // tslint:disable-next-line
+            (upsertBpCandidate: any, resp: any) => {
+              const data =
+                (resp && resp.data && resp.data.upsertBpCandidate) ||
+                this.props.data;
+              const logo = this.state.logo || data.logo;
+              const bannerUrl = this.state.bannerUrl || data.bannerUrl;
 
-            return (
-              // @ts-ignore
-              <Form
-                layout={"vertical"}
-                onSubmit={this.onSubmit(upsertBpCandidate)}
-                style={{ padding: "1em" }}
-                ref={this.formRef}
-              >
-                <h1>{t("profile.profile")}</h1>
-                {/*
+              return (
+                // @ts-ignore
+                <Form
+                  layout={"vertical"}
+                  onSubmit={this.onSubmit(upsertBpCandidate)}
+                  style={{ padding: "1em" }}
+                  ref={this.formRef}
+                >
+                  <h1>{t("profile.profile")}</h1>
+                  {/*
                 // @ts-ignore */}
-                <Form.Item name={"id"} initialValue={data.id}>
-                  <Input name="id" type="hidden" placeholder={""} />
-                </Form.Item>
+                  <Form.Item name={"id"} initialValue={data.id}>
+                    <Input name="id" type="hidden" placeholder={""} />
+                  </Form.Item>
 
-                {/*
+                  {/*
                 // @ts-ignore */}
-                <Form.Item
-                  label={t("profile.name")}
-                  name={"name"}
-                  initialValue={data.name}
-                  rules={[
-                    {
-                      required: true,
-                      message: t("my_stake.bucketId.required")
-                    }
-                  ]}
-                >
-                  <Input />
-                </Form.Item>
-                {/*
-                // @ts-ignore */}
-                <Form.Item
-                  label={t("profile.blurb")}
-                  name={"blurb"}
-                  initialValue={data.blurb}
-                  rules={[
-                    {
-                      required: true,
-                      message: t("profile.blurb.required")
-                    }
-                  ]}
-                >
-                  <Input />
-                </Form.Item>
-                {/*
-                // @ts-ignore */}
-                <Form.Item
-                  label={t("profile.website")}
-                  name={"website"}
-                  initialValue={data.website}
-                  rules={[
-                    {
-                      required: true,
-                      message: t("profile.website.required")
-                    },
-                    { validator: validateUrls }
-                  ]}
-                >
-                  <Input />
-                </Form.Item>
-                {/*
-                // @ts-ignore */}
-                <Form.Item
-                  label={t("profile.logo")}
-                  name={"logo"}
-                  initialValue={logo}
-                  rules={[
-                    {
-                      required: true,
-                      message: t("profile.logo.required")
-                    }
-                  ]}
-                >
-                  <Input hidden={true} />
-                  <Upload
-                    beforeUpload={file => this.beforeUpload(file, "logo")}
+                  <Form.Item
+                    label={t("profile.name")}
+                    name={"name"}
+                    initialValue={data.name}
+                    rules={[
+                      {
+                        required: true,
+                        message: t("my_stake.bucketId.required"),
+                      },
+                    ]}
                   >
-                    {logo ? (
-                      <ImageIcon url={logo} width={"auto"} height={"35px"} />
-                    ) : (
-                      <Button>
-                        <UploadOutlined /> Click to Upload
-                      </Button>
-                    )}
-                  </Upload>
-                </Form.Item>
-
-                {/*
+                    <Input />
+                  </Form.Item>
+                  {/*
                 // @ts-ignore */}
-                <Form.Item
-                  label={t("profile.banner_image")}
-                  name={"bannerUrl"}
-                  initialValue={bannerUrl}
-                  rules={[
-                    {
-                      required: true,
-                      message: t("profile.banner_image.required")
-                    }
-                  ]}
-                >
-                  <Input hidden={true} />
-                  <Upload
-                    beforeUpload={file => this.beforeUpload(file, "bannerUrl")}
+                  <Form.Item
+                    label={t("profile.blurb")}
+                    name={"blurb"}
+                    initialValue={data.blurb}
+                    rules={[
+                      {
+                        required: true,
+                        message: t("profile.blurb.required"),
+                      },
+                    ]}
                   >
-                    {bannerUrl ? (
-                      <img
-                        alt="logo"
-                        style={{ width: "50%", cursor: "pointer" }}
-                        src={bannerUrl}
-                      />
-                    ) : (
-                      <Button>
-                        <UploadOutlined /> Click to Upload
-                      </Button>
-                    )}
-                  </Upload>
-                </Form.Item>
-
-                {/*
+                    <Input />
+                  </Form.Item>
+                  {/*
                 // @ts-ignore */}
-                <Form.Item
-                  label={t("profile.annual_reward")}
-                  name={"annualReward"}
-                  initialValue={data.annualReward}
-                  rules={[
-                    {
-                      required: true,
-                      message: t("profile.annual_reward.required")
-                    }
-                  ]}
-                >
-                  <InputNumber step={0.1} />
-                </Form.Item>
-                {/*
-                // @ts-ignore */}
-                <Form.Item
-                  label={t("profile.social_media")}
-                  name={"socialMedia"}
-                  initialValue={(data.socialMedia || []).join(" ")}
-                  rules={[
-                    {
-                      required: true,
-                      message: t("profile.social_media.required")
-                    },
-                    { validator: validateUrls }
-                  ]}
-                >
-                  <Input />
-                </Form.Item>
-                {/*
-                // @ts-ignore */}
-                <Form.Item
-                  label={t("profile.location")}
-                  name={"location"}
-                  initialValue={data.location}
-                  rules={[
-                    {
-                      required: true,
-                      message: t("profile.location.required")
-                    }
-                  ]}
-                >
-                  <Input />
-                </Form.Item>
-                {/*
-                // @ts-ignore */}
-                <Form.Item
-                  label={t("profile.introduction")}
-                  name={"introduction"}
-                  initialValue={data.introduction}
-                  rules={[
-                    {
-                      required: true,
-                      message: t("profile.introduction.required")
-                    }
-                  ]}
-                >
-                  <Input.TextArea rows={4} />
-                </Form.Item>
-                {/*
-                // @ts-ignore */}
-                <Form.Item
-                  label={t("profile.team")}
-                  name={"team"}
-                  initialValue={data.team}
-                  rules={[
-                    {
-                      required: true,
-                      message: t("profile.team.required")
-                    }
-                  ]}
-                >
-                  <Input.TextArea rows={4} />
-                </Form.Item>
-                {/*
-                // @ts-ignore */}
-                <Form.Item
-                  label={t("profile.tech_setup")}
-                  name={"techSetup"}
-                  initialValue={data.techSetup}
-                  rules={[
-                    {
-                      required: true,
-                      message: t("profile.tech_setup.required")
-                    }
-                  ]}
-                >
-                  <Input.TextArea rows={4} />
-                </Form.Item>
-                {/*
-                // @ts-ignore */}
-                <Form.Item
-                  label={t("profile.community_plan")}
-                  name={"communityPlan"}
-                  initialValue={data.communityPlan}
-                  rules={[
-                    {
-                      required: true,
-                      message: t("profile.community_plan.required")
-                    }
-                  ]}
-                >
-                  <Input.TextArea rows={4} />
-                </Form.Item>
-                {/*
-                // @ts-ignore */}
-                <Form.Item
-                  colon={false}
-                  label={
-                    <span>
-                      <span>{t("profile.reward_plan")}:</span>
-
-                      {/* tslint:disable-next-line:react-a11y-anchors react-a11y-event-has-role */}
-                      <a
-                        style={{ marginLeft: 20 }}
-                        onClick={e =>
-                          this.handleClickInsertFormat(e, data.rewardPlan)
-                        }
-                      >
-                        {showInsertFormat
-                          ? t("profile.reward_plan.insertCancel")
-                          : t("profile.reward_plan.insertFormat")}
-                      </a>
-                    </span>
-                  }
-                  name={"rewardPlan"}
-                  initialValue={data.rewardPlan}
-                  rules={[
-                    {
-                      required: true,
-                      message: t("profile.reward_plan.required")
-                    }
-                  ]}
-                >
-                  <Input.TextArea rows={6} />
-                </Form.Item>
-
-                <Form.Item>
-                  <Button
-                    type="primary"
-                    htmlType="submit"
-                    style={{ marginRight: "10px" }}
-                    loading={this.state.loading}
-                    onClick={this.onSubmit(upsertBpCandidate)}
+                  <Form.Item
+                    label={t("profile.website")}
+                    name={"website"}
+                    initialValue={data.website}
+                    rules={[
+                      {
+                        required: true,
+                        message: t("profile.website.required"),
+                      },
+                      { validator: validateUrls },
+                    ]}
                   >
-                    {t("profile.update")}
-                  </Button>
-                  <Button onClick={this.preview}>{t("profile.preview")}</Button>
-                </Form.Item>
-              </Form>
-            );
-          }}
+                    <Input />
+                  </Form.Item>
+                  {/*
+                // @ts-ignore */}
+                  <Form.Item
+                    label={t("profile.logo")}
+                    name={"logo"}
+                    initialValue={convertHttps(logo)}
+                    rules={[
+                      {
+                        required: true,
+                        message: t("profile.logo.required"),
+                      },
+                    ]}
+                  >
+                    <Input hidden={true} />
+                    <Upload
+                      beforeUpload={(file) => this.beforeUpload(file, "logo")}
+                    >
+                      {logo ? (
+                        <ImageIcon
+                          url={convertHttps(logo)}
+                          width={"auto"}
+                          height={"35px"}
+                        />
+                      ) : (
+                        <Button>
+                          <UploadOutlined /> Click to Upload
+                        </Button>
+                      )}
+                    </Upload>
+                  </Form.Item>
+
+                  {/*
+                // @ts-ignore */}
+                  <Form.Item
+                    label={t("profile.banner_image")}
+                    name={"bannerUrl"}
+                    initialValue={convertHttps(bannerUrl)}
+                    rules={[
+                      {
+                        required: true,
+                        message: t("profile.banner_image.required"),
+                      },
+                    ]}
+                  >
+                    <Input hidden={true} />
+                    <Upload
+                      beforeUpload={(file) =>
+                        this.beforeUpload(file, "bannerUrl")
+                      }
+                    >
+                      {bannerUrl ? (
+                        <img
+                          alt="logo"
+                          style={{ width: "50%", cursor: "pointer" }}
+                          src={convertHttps(bannerUrl)}
+                        />
+                      ) : (
+                        <Button>
+                          <UploadOutlined /> Click to Upload
+                        </Button>
+                      )}
+                    </Upload>
+                  </Form.Item>
+
+                  {/*
+                // @ts-ignore */}
+                  <Form.Item
+                    label={t("profile.annual_reward")}
+                    name={"annualReward"}
+                    initialValue={data.annualReward}
+                    rules={[
+                      {
+                        required: true,
+                        message: t("profile.annual_reward.required"),
+                      },
+                    ]}
+                  >
+                    <InputNumber step={0.1} />
+                  </Form.Item>
+                  {/*
+                // @ts-ignore */}
+                  <Form.Item
+                    label={t("profile.social_media")}
+                    name={"socialMedia"}
+                    initialValue={(data.socialMedia || []).join(" ")}
+                    rules={[
+                      {
+                        required: true,
+                        message: t("profile.social_media.required"),
+                      },
+                      { validator: validateUrls },
+                    ]}
+                  >
+                    <Input />
+                  </Form.Item>
+                  {/*
+                // @ts-ignore */}
+                  <Form.Item
+                    label={t("profile.location")}
+                    name={"location"}
+                    initialValue={data.location}
+                    rules={[
+                      {
+                        required: true,
+                        message: t("profile.location.required"),
+                      },
+                    ]}
+                  >
+                    <Input />
+                  </Form.Item>
+                  {/*
+                // @ts-ignore */}
+                  <Form.Item
+                    label={t("profile.introduction")}
+                    name={"introduction"}
+                    initialValue={data.introduction}
+                    rules={[
+                      {
+                        required: true,
+                        message: t("profile.introduction.required"),
+                      },
+                    ]}
+                  >
+                    <Input.TextArea rows={4} />
+                  </Form.Item>
+                  {/*
+                // @ts-ignore */}
+                  <Form.Item
+                    label={t("profile.team")}
+                    name={"team"}
+                    initialValue={data.team}
+                    rules={[
+                      {
+                        required: true,
+                        message: t("profile.team.required"),
+                      },
+                    ]}
+                  >
+                    <Input.TextArea rows={4} />
+                  </Form.Item>
+                  {/*
+                // @ts-ignore */}
+                  <Form.Item
+                    label={t("profile.tech_setup")}
+                    name={"techSetup"}
+                    initialValue={data.techSetup}
+                    rules={[
+                      {
+                        required: true,
+                        message: t("profile.tech_setup.required"),
+                      },
+                    ]}
+                  >
+                    <Input.TextArea rows={4} />
+                  </Form.Item>
+                  {/*
+                // @ts-ignore */}
+                  <Form.Item
+                    label={t("profile.community_plan")}
+                    name={"communityPlan"}
+                    initialValue={data.communityPlan}
+                    rules={[
+                      {
+                        required: true,
+                        message: t("profile.community_plan.required"),
+                      },
+                    ]}
+                  >
+                    <Input.TextArea rows={4} />
+                  </Form.Item>
+                  {/*
+                // @ts-ignore */}
+                  <Form.Item
+                    colon={false}
+                    label={
+                      <span>
+                        <span>{t("profile.reward_plan")}:</span>
+
+                        {/* tslint:disable-next-line:react-a11y-anchors react-a11y-event-has-role */}
+                        <a
+                          style={{ marginLeft: 20 }}
+                          onClick={(e) =>
+                            this.handleClickInsertFormat(e, data.rewardPlan)
+                          }
+                        >
+                          {showInsertFormat
+                            ? t("profile.reward_plan.insertCancel")
+                            : t("profile.reward_plan.insertFormat")}
+                        </a>
+                      </span>
+                    }
+                    name={"rewardPlan"}
+                    initialValue={data.rewardPlan}
+                    rules={[
+                      {
+                        required: true,
+                        message: t("profile.reward_plan.required"),
+                      },
+                    ]}
+                  >
+                    <Input.TextArea rows={6} />
+                  </Form.Item>
+
+                  <Form.Item>
+                    <Button
+                      type="primary"
+                      htmlType="submit"
+                      style={{ marginRight: "10px" }}
+                      loading={this.state.loading}
+                      onClick={this.onSubmit(upsertBpCandidate)}
+                    >
+                      {t("profile.update")}
+                    </Button>
+                    <Button onClick={this.preview}>
+                      {t("profile.preview")}
+                    </Button>
+                  </Form.Item>
+                </Form>
+              );
+            }
+          }
         </Mutation>
       );
     }

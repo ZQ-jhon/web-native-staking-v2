@@ -16,14 +16,21 @@ import Helmet from "onefx/lib/react-helmet";
 import { RouteComponentProps } from "onefx/lib/react-router";
 import { styled } from "onefx/lib/styletron-react";
 import React, { Component } from "react";
+import { Query, QueryResult } from "react-apollo";
 import { withRouter } from "react-router";
 import { TBpCandidate } from "../../types";
+import { analyticsApolloClient } from "../common/apollo-client";
 import { BannerImg, Title } from "../common/component-style";
 import { Flex } from "../common/flex";
 import { colors } from "../common/styles/style-color2";
 import { fullOnPalm, media } from "../common/styles/style-media";
 import { TwitterScriptSource } from "../common/twitter";
+import { convertHttps } from "../common/url-utils";
 import { VotingButton } from "../home/vote-button-modal";
+import {
+  GET_EPOCH,
+  GET_REWARDS_RATIO_BY_DELEGATE,
+} from "../staking/smart-contract-gql-queries";
 import { VoteNowContainer } from "../staking/vote-now-steps/vote-now-container";
 
 const MAX_WIDTH = 560;
@@ -43,6 +50,28 @@ type Props = {
 type State = {
   showVotingModal: boolean;
 };
+
+interface RewardsQueryVariables {
+  startEpoch: number;
+  epochCount: number;
+  voterAddress?: string;
+  delegateName?: string;
+}
+
+interface RewardsRatioQueryResult {
+  hermes2: {
+    byDelegate: {
+      distributionRatio: [
+        {
+          epochNumber: number;
+          blockRewardRatio: number;
+          foundationBonusRatio: number;
+          epochRewardRatio: number;
+        }
+      ];
+    };
+  };
+}
 
 class CandidateProfileViewHeader extends Component<Props, State> {
   constructor(props: Props) {
@@ -135,14 +164,18 @@ class CandidateProfileViewHeader extends Component<Props, State> {
         }}
       >
         <Helmet title={`${data.name} - ${t("meta.description.delegates")}`} />
-        <BannerImg className="banner-frame" src={data.bannerUrl} />
+        <BannerImg
+          className="banner-frame"
+          src={convertHttps(data.bannerUrl)}
+        />
         <Flex alignItems={"normal"} marginTop="24px" marginBottom="12px">
           <Flex marginBottom="24px">
             <Avatar
               className="profile-frame"
               shape="square"
               size={HEADER_HEIGHT * imageScale}
-              src={data.logo}
+              src={convertHttps(data.logo)}
+              style={{ alignSelf: "baseline" }}
             />
             <Flex
               column={true}
@@ -207,10 +240,83 @@ class CandidateProfileViewHeader extends Component<Props, State> {
                   {data.blurb}{" "}
                 </Text>
               }
+              <Query
+                query={GET_EPOCH}
+                ssr={false}
+                client={analyticsApolloClient}
+              >
+                {({
+                  data: epochData,
+                  error,
+                  loading,
+                }: QueryResult<{ chain: { mostRecentEpoch: number } }>) => {
+                  if (loading || error || !epochData) {
+                    return null;
+                  }
+                  const variables: RewardsQueryVariables = {
+                    startEpoch: epochData.chain.mostRecentEpoch,
+                    epochCount: 1,
+                    delegateName: String(data.name).toLowerCase(),
+                  };
+                  return (
+                    <Query
+                      ssr={false}
+                      query={GET_REWARDS_RATIO_BY_DELEGATE}
+                      client={analyticsApolloClient}
+                      variables={variables}
+                    >
+                      {({
+                        data: ratioData,
+                        error,
+                        loading,
+                      }: QueryResult<RewardsRatioQueryResult>) => {
+                        if (loading || error || !ratioData) {
+                          return null;
+                        }
+                        return (
+                          <div style={{ lineHeight: 1.5 }}>
+                            {
+                              // @ts-ignore
+                              <Text scale={0.6} style={{ color: "black" }}>
+                                {t("candidate.herems.distribution_ratios")}
+                                :&nbsp;
+                                {
+                                  ratioData.hermes2.byDelegate
+                                    .distributionRatio[0].blockRewardRatio
+                                }
+                                %&nbsp;{t("candidate.herems.block_reward")}
+                                ,&nbsp;
+                                {
+                                  ratioData.hermes2.byDelegate
+                                    .distributionRatio[0].epochRewardRatio
+                                }
+                                %&nbsp;
+                                {t("candidate.herems.epoch_reward")}
+                                ,&nbsp;
+                                {
+                                  ratioData.hermes2.byDelegate
+                                    .distributionRatio[0].foundationBonusRatio
+                                }
+                                % &nbsp;
+                                {t("candidate.herems.foundation_bonus_reward")}
+                                .&nbsp;
+                              </Text>
+                            }
+                            <a href="https://hermes.to/">
+                              {t("candidate.herems.more_details")}.
+                            </a>
+                          </div>
+                        );
+                      }}
+                    </Query>
+                  );
+                }}
+              </Query>
             </Flex>
           </Flex>
           {actionButtons}
         </Flex>
+
         {annotateText}
         <VotingButton
           launch={() => this.showVotingModal()}
