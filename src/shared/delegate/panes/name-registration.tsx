@@ -23,7 +23,7 @@ import { getStaking } from "../../../server/gateway/staking";
 import { ownersToNames } from "../../common/apollo-client";
 import { CommonMargin } from "../../common/common-margin";
 import { formItemLayout } from "../../common/form-item-layout";
-import { getAntenna } from "../../common/get-antenna";
+import { getIoPayAddress } from "../../common/get-antenna";
 import { IopayRequired } from "../../common/iopay-required";
 import { colors } from "../../common/styles/style-color2";
 import { DEFAULT_STAKING_GAS_LIMIT } from "../../common/token-utils";
@@ -70,10 +70,9 @@ const NameRegistrationContainer = IopayRequired(
     class NameRegistration extends PureComponent<Props, State> {
       constructor(props: Props) {
         super(props);
-        const candName = ownersToNames[getAntenna().iotx.accounts[0].address];
         this.state = {
-          candName,
-          isUpdating: Boolean(candName),
+          candName: "",
+          isUpdating: false,
           isFetchingUpdatingInfo: true,
           disabled: true,
         };
@@ -174,29 +173,52 @@ const NameRegistrationContainer = IopayRequired(
       };
 
       async componentDidMount(): Promise<void> {
-        const { isUpdating, isFetchingUpdatingInfo, candName } = this.state;
-        if (isUpdating && isFetchingUpdatingInfo && candName) {
-          const resp = await getStaking().getCandidate(candName);
-          if (resp) {
-            this.setState({
-              isFetchingUpdatingInfo: false,
-            });
-            const form = this.updateFormRef.current;
-            if (!form) {
-              return;
-            }
+        const { isFetchingUpdatingInfo } = this.state;
+        const address = await getIoPayAddress();
+        if (address) {
+          const candName = ownersToNames[address];
+          const isUpdating = Boolean(candName);
+          this.setState({ isUpdating });
+          const form = isUpdating
+            ? this.updateFormRef.current
+            : this.registerFormRef.current;
+          if (form) {
             form.setFields([
               {
-                name: "operatorAddress",
+                name: "ownerAddress",
                 // @ts-ignore
-                value: resp.operatorAddress,
-              },
-              {
-                name: "rewardAddress",
-                // @ts-ignore
-                value: resp.rewardAddress,
+                value: address,
               },
             ]);
+          }
+          if (isUpdating && isFetchingUpdatingInfo && candName) {
+            this.setState({ candName });
+            const resp = await getStaking().getCandidate(candName);
+            if (resp) {
+              this.setState({
+                isFetchingUpdatingInfo: false,
+              });
+              if (!form) {
+                return;
+              }
+              form.setFields([
+                {
+                  name: "operatorAddress",
+                  // @ts-ignore
+                  value: resp.operatorAddress,
+                },
+                {
+                  name: "rewardAddress",
+                  // @ts-ignore
+                  value: resp.rewardAddress,
+                },
+                {
+                  name: "ownerAddress",
+                  // @ts-ignore
+                  value: address,
+                },
+              ]);
+            }
           }
         }
       }
@@ -337,7 +359,9 @@ const NameRegistrationContainer = IopayRequired(
               <OperatorAddressFormItem />
               <RewardAddressFormItem />
               <Form.Item>
-                <p><b>{t("profile.register_name.submit.desc")}</b></p>
+                <p>
+                  <b>{t("profile.register_name.submit.desc")}</b>
+                </p>
                 <Button
                   style={{ marginRight: "10px" }}
                   type={"primary"}
@@ -449,7 +473,6 @@ const OwnerAddressFormItem = () => {
       labelAlign={"left"}
       label={t("name_regsitration.owner")}
       name={"ownerAddress"}
-      initialValue={getAntenna().iotx.accounts[0].address}
       rules={[
         {
           required: true,
