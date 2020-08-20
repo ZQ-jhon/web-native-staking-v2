@@ -189,6 +189,11 @@ const NameRegistrationContainer = IopayRequired(
                 // @ts-ignore
                 value: address,
               },
+              {
+                name: "name",
+                // @ts-ignore
+                value: candName,
+              },
             ]);
           }
           if (isUpdating && isFetchingUpdatingInfo && candName) {
