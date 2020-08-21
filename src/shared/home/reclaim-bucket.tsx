@@ -7,18 +7,18 @@ import Layout from "antd/lib/layout";
 import { Buffer } from "buffer";
 import { toRau, validateAddress } from "iotex-antenna/lib/account/utils";
 import { t } from "onefx/lib/iso-i18n";
-import React, {Component, PureComponent, RefObject} from "react";
+import React, { Component, PureComponent, RefObject } from "react";
 import { connect } from "react-redux";
 import { getStaking } from "../../server/gateway/staking";
-import {getAntenna} from "../../shared/common/get-antenna";
+import { getAntenna } from "../../shared/common/get-antenna";
 import { LinkButton } from "../common/buttons";
-import {CommonMargin} from "../common/common-margin";
-import {RootStyle} from "../common/component-style";
-import {CopyButtonClipboardComponent} from "../common/copy-button-clipboard";
+import { CommonMargin } from "../common/common-margin";
+import { RootStyle } from "../common/component-style";
+import { CopyButtonClipboardComponent } from "../common/copy-button-clipboard";
 import { Flex } from "../common/flex";
-import {IopayRequired} from "../common/iopay-required";
+import { IopayRequired } from "../common/iopay-required";
 import { colors } from "../common/styles/style-color";
-import {Pd} from "../common/styles/style-padding";
+import { Pd } from "../common/styles/style-padding";
 import { DEFAULT_STAKING_GAS_LIMIT } from "../common/token-utils";
 import { validateIoAddress } from "../staking/field-validators";
 import { MAX_WIDTH } from "./voting";
@@ -85,16 +85,18 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
 
   checkDisable = () => {
     const { address, bucketIndex } = this.state;
-    return address.length === 0 ||
+    return (
+      address.length === 0 ||
       bucketIndex.length === 0 ||
-      !validateAddress(address);
+      !validateAddress(address)
+    );
   };
 
   sendToBlockChain = async () => {
-   const payload = {
+    const payload = {
       type: "Ethereum",
       msg: JSON.stringify(this.state.jsonMessage),
-      sig: this.state.sig.replace("0x", "")
+      sig: this.state.sig.replace("0x", ""),
     };
     const payloadStringtify = JSON.stringify(payload);
     const payloadBytes = Buffer.from(payloadStringtify);
@@ -109,7 +111,6 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
     this.setState({ tsx });
   };
 
-
   // tslint:disable-next-line:max-func-body-length
   reclaimBucketContent = () => {
     return (
@@ -119,8 +120,11 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
           <Form
             layout={"vertical"}
             style={{ padding: "1em" }}
-            ref={this.formRef}>
-            <h1><b>{t("reclaim.bucketHeader")}</b></h1>
+            ref={this.formRef}
+          >
+            <h1>
+              <b>{t("reclaim.bucketHeader")}</b>
+            </h1>
             {this.state.tsx.length > 0 && (
               <div>
                 <Alert
@@ -156,7 +160,12 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
                     bucketIndexCopied: false,
                   });
                 }}
-                addonAfter={<CopyButtonClipboardComponent text={this.state.bucketIndex} size={"small"} />}
+                addonAfter={
+                  <CopyButtonClipboardComponent
+                    text={this.state.bucketIndex}
+                    size={"small"}
+                  />
+                }
               />
             </Form.Item>
             {/*
@@ -182,7 +191,12 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
                     addressCopied: false,
                   });
                 }}
-                addonAfter={<CopyButtonClipboardComponent text={this.state.address} size={"small"} />}
+                addonAfter={
+                  <CopyButtonClipboardComponent
+                    text={this.state.address}
+                    size={"small"}
+                  />
+                }
               />
             </Form.Item>
             <p style={{ fontSize: "12px" }}>{t("reclaim.continueWebTools")}</p>
@@ -202,8 +216,17 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
                   rows={4}
                   value={JSON.stringify(this.state.jsonMessage)}
                 />
-                <div style={{ position: "absolute", marginTop: "-33px", right: "4px" }}>
-                  <CopyButtonClipboardComponent text={JSON.stringify(this.state.jsonMessage)} size={"small"} />
+                <div
+                  style={{
+                    position: "absolute",
+                    marginTop: "-33px",
+                    right: "4px",
+                  }}
+                >
+                  <CopyButtonClipboardComponent
+                    text={JSON.stringify(this.state.jsonMessage)}
+                    size={"small"}
+                  />
                 </div>
                 <LinkButton href="https://mycrypto.com/sign-and-verify-message/sign">
                   {t("reclaim.click-to-sign")}
@@ -223,20 +246,17 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
                 </Button>
               </Form.Item>
             )}
-            {
-              this.state.jsonMessage.recipient.length > 0 && (
-                <Form.Item
-                  label={t("reclaim.sig.desc")}
-                >
-                  <TextArea
-                    onChange={(event) => {
-                      this.setState({
-                        sig: event.target.value,
-                      });
-                    }}
-                  />
-                </Form.Item>
-              )}
+            {this.state.jsonMessage.recipient.length > 0 && (
+              <Form.Item label={t("reclaim.sig.desc")}>
+                <TextArea
+                  onChange={(event) => {
+                    this.setState({
+                      sig: event.target.value,
+                    });
+                  }}
+                />
+              </Form.Item>
+            )}
             {this.state.jsonMessage.recipient.length > 0 && (
               <Form.Item>
                 {
@@ -259,9 +279,7 @@ class ReclaimInnerTools extends PureComponent<null, STATE> {
       <RootStyle>
         <Layout>
           <CommonMargin />
-          <Pd>
-            {this.reclaimBucketContent()}
-          </Pd>
+          <Pd>{this.reclaimBucketContent()}</Pd>
         </Layout>
       </RootStyle>
     );
@@ -276,22 +294,21 @@ const layoutStyle = {
 };
 
 export const Reclaim = IopayRequired(
-    class ClaimButton extends Component<{ disabled: boolean, submit(): {}; }> {
-
-      render(): JSX.Element {
-        return (
-          <Button
-            type="primary"
-            htmlType="submit"
-            disabled={this.props.disabled}
-            style={{ marginRight: "10px" }}
-            onClick={this.props.submit}
-          >
-            {t("reclaim.sign-and-send")}
-          </Button>
-        );
-      }
+  class ClaimButton extends Component<{ disabled: boolean; submit(): {} }> {
+    render(): JSX.Element {
+      return (
+        <Button
+          type="primary"
+          htmlType="submit"
+          disabled={this.props.disabled}
+          style={{ marginRight: "10px" }}
+          onClick={this.props.submit}
+        >
+          {t("reclaim.sign-and-send")}
+        </Button>
+      );
     }
+  }
 );
 
 export const ReclaimTools = connect()(ReclaimInnerTools);

@@ -269,15 +269,18 @@ export function renderActionMenu(record: IBucket): JSX.Element {
   const canName = record.canName || "";
   return (
     <Menu className={"MyStakeInfoAction"}>
-      <Menu.Item key="1">
-        <RevoteModal
-          autoStake={record.autoStake}
-          stakedDuration={record.stakedDuration}
-          bucketIndex={record.index}
-          canName={canName}
-          clickable={renderRevote(record)}
-        />
-      </Menu.Item>
+      {!record.selfStakingBucket && (
+        <Menu.Item key="1">
+          <RevoteModal
+            autoStake={record.autoStake}
+            stakedDuration={record.stakedDuration}
+            bucketIndex={record.index}
+            canName={canName}
+            clickable={renderRevote(record)}
+          />
+        </Menu.Item>
+      )}
+
       <Menu.Item key="addStaking">
         <AddStakingModal
           bucketIndex={record.index}
