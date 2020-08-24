@@ -6,7 +6,7 @@ import { media } from "./style-media";
 
 export const wideContentPadding = {
   paddingLeft: "16px",
-  paddingRight: "16px"
+  paddingRight: "16px",
 };
 
 export const contentPadding = {
@@ -15,19 +15,19 @@ export const contentPadding = {
   paddingRight: "6.6vw",
   [media.deskWide]: {
     paddingLeft: "16vw",
-    paddingRight: "16vw"
-  }
+    paddingRight: "16vw",
+  },
 };
 
 export const topBottomContentPadding = {
   paddingTop: "12px",
-  paddingBottom: "12px"
+  paddingBottom: "12px",
 };
 export const Pd = styled("div", contentPadding);
 
 export const ContentPadding = ({
   children,
-  style
+  style,
 }: {
   children?: JSX.Element | null | Array<JSX.Element>;
   style?: StyleObject;

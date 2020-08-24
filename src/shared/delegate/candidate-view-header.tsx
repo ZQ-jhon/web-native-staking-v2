@@ -270,7 +270,12 @@ class CandidateProfileViewHeader extends Component<Props, State> {
                         error,
                         loading,
                       }: QueryResult<RewardsRatioQueryResult>) => {
-                        if (loading || error || !ratioData) {
+                        if (
+                          loading ||
+                          error ||
+                          !ratioData ||
+                          !ratioData.hermes2.byDelegate.distributionRatio.length
+                        ) {
                           return null;
                         }
                         return (
