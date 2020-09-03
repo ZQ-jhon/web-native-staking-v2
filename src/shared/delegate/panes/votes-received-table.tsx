@@ -1,21 +1,24 @@
 import Button from "antd/lib/button";
 import notification from "antd/lib/notification";
-import Table, {ColumnType} from "antd/lib/table";
+import Table, { ColumnType } from "antd/lib/table";
 import exportFromJSON from "export-from-json";
-import {fromRau} from "iotex-antenna/lib/account/utils";
-import {SpinPreloader} from "iotex-react-block-producers/lib/spin-preloader";
-import {t} from "onefx/lib/iso-i18n";
-import {styled} from "onefx/lib/styletron-react";
+import { fromRau } from "iotex-antenna/lib/account/utils";
+import { SpinPreloader } from "iotex-react-block-producers/lib/spin-preloader";
+import { t } from "onefx/lib/iso-i18n";
+import { styled } from "onefx/lib/styletron-react";
 import parse from "parse-duration";
-import React, {PureComponent} from "react";
-import {Query, QueryResult} from "react-apollo";
-import {getStaking} from "../../../server/gateway/staking";
-import {analyticsApolloClient, ownersToNames} from "../../common/apollo-client";
-import {CommonMargin} from "../../common/common-margin";
-import {Flex} from "../../common/flex";
-import {getIoPayAddress} from "../../common/get-antenna";
-import {numberWithCommas, secondsToDuration} from "../../common/number-util";
-import {GET_BUCKETS_BY_CANDIDATE} from "../../staking/smart-contract-gql-queries";
+import React, { PureComponent } from "react";
+import { Query, QueryResult } from "react-apollo";
+import { getStaking } from "../../../server/gateway/staking";
+import {
+  analyticsApolloClient,
+  ownersToNames,
+} from "../../common/apollo-client";
+import { CommonMargin } from "../../common/common-margin";
+import { Flex } from "../../common/flex";
+import { getIoPayAddress } from "../../common/get-antenna";
+import { numberWithCommas, secondsToDuration } from "../../common/number-util";
+import { GET_BUCKETS_BY_CANDIDATE } from "../../staking/smart-contract-gql-queries";
 
 type Buckets = {
   isNative: boolean;
@@ -23,7 +26,7 @@ type Buckets = {
   voterIotexAddress: string;
   votes: string;
   weightedVotes: string;
-  __typename: string
+  __typename: string;
 };
 
 type Props = {
@@ -56,9 +59,9 @@ export class VotesReceivedTable extends PureComponent<Props, State> {
     this.setState({ startEpoch: epochData.num });
   }
 
-  downloadVotes = (startEpoch:number) => {
+  downloadVotes = (startEpoch: number) => {
     let { registeredName } = this.props;
-    const { isPublic = false} = this.props;
+    const { isPublic = false } = this.props;
     if (!isPublic) {
       registeredName = this.state.registeredName;
     }
@@ -69,42 +72,54 @@ export class VotesReceivedTable extends PureComponent<Props, State> {
       return;
     }
 
-    if (startEpoch>0){
+    if (startEpoch > 0) {
       analyticsApolloClient
         .query({
           query: GET_BUCKETS_BY_CANDIDATE,
           variables: {
-            startEpoch: startEpoch-1,
+            startEpoch: startEpoch - 1,
             epochCount: 1,
             delegateName: registeredName,
-            pagination: { skip: 0, first: 500 }
+            pagination: { skip: 0, first: 500 },
           },
         })
-        .then(({ data: { delegate: {bucketInfo:{bucketInfoList}} } }) => {
-          if(bucketInfoList && bucketInfoList.length > 0){
-            const csvSource = bucketInfoList[0].bucketInfo;
-            csvSource.forEach((bucket: Buckets) => {
-              delete bucket.__typename;
-            });
-            exportFromJSON({
-              data: csvSource,
-              fileName: `votes_received_${registeredName}`,
-              exportType: "csv",
-            });
+        .then(
+          ({
+            data: {
+              delegate: {
+                bucketInfo: { bucketInfoList },
+              },
+            },
+          }) => {
+            if (bucketInfoList && bucketInfoList.length > 0) {
+              const csvSource = bucketInfoList[0].bucketInfo;
+              csvSource.forEach((bucket: Buckets) => {
+                delete bucket.__typename;
+              });
+              exportFromJSON({
+                data: csvSource,
+                fileName: `votes_received_${registeredName}`,
+                exportType: "csv",
+              });
+            }
           }
-        });
+        );
     }
   };
 
-  columns:Array<ColumnType<Buckets>> = [
+  columns: Array<ColumnType<Buckets>> = [
     {
       title: t("delegate.votesreceived.voter"),
       dataIndex: "voterIotexAddress",
       key: "voterIotexAddress",
-      width: "10vw",
+      width: "370px",
       ellipsis: true,
       render(text: string): JSX.Element {
-        return <span className="ellipsis-text" style={{ minWidth: 95 }}>{text}</span>;
+        return (
+          <span className="ellipsis-text" style={{ minWidth: 350 }}>
+            {text}
+          </span>
+        );
       },
     },
     {
@@ -134,7 +149,9 @@ export class VotesReceivedTable extends PureComponent<Props, State> {
       width: "18vw",
       ellipsis: true,
       render(weightedVotes: string): JSX.Element {
-        return <span>{`${numberWithCommas(fromRau(weightedVotes, "iotx"))}`}</span>;
+        return (
+          <span>{`${numberWithCommas(fromRau(weightedVotes, "iotx"))}`}</span>
+        );
       },
     },
     {
@@ -145,32 +162,32 @@ export class VotesReceivedTable extends PureComponent<Props, State> {
       ellipsis: true,
       render: (text: string) => {
         const duration = parse(text);
-        return <span style={{ minWidth: 100 }}>{duration?secondsToDuration(duration/1000):text}</span>;
+        return (
+          <span style={{ minWidth: 100 }}>
+            {duration ? secondsToDuration(duration / 1000) : text}
+          </span>
+        );
       },
     },
   ];
 
   render(): JSX.Element {
     let { registeredName } = this.props;
-    const { startEpoch } = this.state;
     const { isPublic = false } = this.props;
+
+    const { startEpoch, offset, limit } = this.state;
     if (!isPublic) {
       registeredName = this.state.registeredName;
     }
-    if (!registeredName) {
+    if (!registeredName || startEpoch <= 1) {
       return <Table />;
     }
 
-    if (startEpoch<=1){
-      return <Table />;
-    }
-
-    const { offset, limit } = this.state;
     const variables = {
-      startEpoch: startEpoch-1,
+      startEpoch: startEpoch - 1,
       epochCount: 1,
       delegateName: registeredName,
-      pagination: { skip: offset, first: limit }
+      pagination: { skip: offset, first: limit },
     };
 
     return (
@@ -181,15 +198,19 @@ export class VotesReceivedTable extends PureComponent<Props, State> {
           variables={variables}
           client={analyticsApolloClient}
         >
-          {({ loading, error, data }: QueryResult<{
+          {({
+            loading,
+            error,
+            data,
+          }: QueryResult<{
             delegate: {
               bucketInfo: {
                 bucketInfoList: Array<{
-                  count: number,
-                  bucketInfo: Array<Buckets>
-                }>
-              }
-            }
+                  count: number;
+                  bucketInfo: Array<Buckets>;
+                }>;
+              };
+            };
           }>) => {
             if (error) {
               notification.error({
@@ -199,10 +220,14 @@ export class VotesReceivedTable extends PureComponent<Props, State> {
               });
               return <></>;
             }
-
-            const buckets = data&&data.delegate.bucketInfo.bucketInfoList.length>0?data.delegate.bucketInfo.bucketInfoList[0].bucketInfo:[];
-            const total = data&&data.delegate.bucketInfo.bucketInfoList.length>0?data.delegate.bucketInfo.bucketInfoList[0].count:0;
-
+            const buckets =
+              data && data.delegate.bucketInfo.bucketInfoList.length > 0
+                ? data.delegate.bucketInfo.bucketInfoList[0].bucketInfo
+                : [];
+            const total =
+              data && data.delegate.bucketInfo.bucketInfoList.length > 0
+                ? data.delegate.bucketInfo.bucketInfoList[0].count
+                : 0;
             return (
               <SpinPreloader spinning={loading}>
                 {
