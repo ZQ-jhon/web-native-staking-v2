@@ -220,6 +220,7 @@ my_stake.canName: 'Delegate Name'
 my_stake.tranferOwnership.required: 'Please enter the Transfer address.'
 my_stake.tranferOwnership: 'Transfer Address'
 my_stake.data: Data
+my_stake.button.vote_with_iopay: 'Vote With IoPay'
 my_stake.edit.add_staking: Add Stake
 my_stake.edit.restake: Restake
 my_stake.edit.revote: 'Switch Delegate'
