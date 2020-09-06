@@ -6,6 +6,7 @@ import dateformat from "dateformat";
 import leftPad from "left-pad";
 import { IBucket } from "../../server/gateway/staking";
 
+export const HERMES_CONTRACT_ADDRESS = "io12mgttmfa2ffn9uqvn0yn37f4nz43d248l2ga85";
 export const DEFAULT_EPOCH_SECOND = 24 * 3600;
 export const DEFAULT_STAKING_DURATION_SECOND = 24 * 3600;
 

@@ -26,7 +26,7 @@ import { formItemLayout } from "../../common/form-item-layout";
 import { getIoPayAddress } from "../../common/get-antenna";
 import { IopayRequired } from "../../common/iopay-required";
 import { colors } from "../../common/styles/style-color2";
-import { DEFAULT_STAKING_GAS_LIMIT } from "../../common/token-utils";
+import {DEFAULT_STAKING_GAS_LIMIT, HERMES_CONTRACT_ADDRESS} from "../../common/token-utils";
 import {
   getStakeDurationMaxValue,
   smallerOrEqualTo,
@@ -256,7 +256,7 @@ const NameRegistrationContainer = IopayRequired(
               <CanNameFormItem candName={candName} />
               <OwnerAddressFormItem />
               <OperatorAddressFormItem />
-              <RewardAddressFormItem />
+              <RewardAddressFormItem formRef={this.updateFormRef}/>
               <Alert
                 message={
                   // tslint:disable-next-line:react-no-dangerous-html
@@ -362,7 +362,7 @@ const NameRegistrationContainer = IopayRequired(
             <div className="site-layout-content">
               <OwnerAddressFormItem />
               <OperatorAddressFormItem />
-              <RewardAddressFormItem />
+              <RewardAddressFormItem formRef={this.registerFormRef}/>
               <Form.Item>
                 <p>
                   <b>{t("profile.register_name.submit.desc")}</b>
@@ -515,7 +515,7 @@ const OperatorAddressFormItem = () => {
   );
 };
 
-const RewardAddressFormItem = () => {
+const RewardAddressFormItem = ({formRef}:{formRef?: RefObject<FormInstance>}) => {
   return (
     <>
       {/*
@@ -543,19 +543,24 @@ const RewardAddressFormItem = () => {
       </Form.Item>
       {/*
                 // @ts-ignore */}
-      <Form.Item {...formItemLayout} label={<span />}>
-        <Alert
-          message={
-            <p
-              dangerouslySetInnerHTML={{
-                __html: t("profile.reward-address.unset_warning"),
-              }}
+      <Form.Item {...formItemLayout} label={<span />} shouldUpdate={true}>
+        {
+          () => {
+            const rewardAddress = formRef&&formRef.current?formRef.current.getFieldValue("rewardAddress"):"";
+            return <Alert
+              message={
+                <p
+                  dangerouslySetInnerHTML={{
+                    __html: rewardAddress===HERMES_CONTRACT_ADDRESS?t("profile.reward-address.used_hermes"):t("profile.reward-address.unset_warning"),
+                  }}
+                />
+              }
+              type={rewardAddress===HERMES_CONTRACT_ADDRESS?"success":"warning"}
+              showIcon={true}
+              banner={true}
             />
           }
-          type="warning"
-          showIcon={true}
-          banner={true}
-        />
+        }
       </Form.Item>
     </>
   );
