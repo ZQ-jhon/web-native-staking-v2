@@ -2,7 +2,6 @@ import UploadOutlined from "@ant-design/icons/UploadOutlined";
 import Button from "antd/lib/button";
 import Form, { FormInstance } from "antd/lib/form";
 import Input from "antd/lib/input";
-import InputNumber from "antd/lib/input-number";
 import notification from "antd/lib/notification";
 import Upload from "antd/lib/upload";
 // @ts-ignore
@@ -121,7 +120,6 @@ export const CandidateForm = connect()(
               techSetup: prevData.techSetup,
               communityPlan: prevData.communityPlan,
               rewardPlan: prevData.rewardPlan,
-              annualReward: prevData.annualReward,
               ...values,
               socialMedia: values.socialMedia.split(" "),
             },
@@ -325,21 +323,6 @@ export const CandidateForm = connect()(
                     </Upload>
                   </Form.Item>
 
-                  {/*
-                // @ts-ignore */}
-                  <Form.Item
-                    label={t("profile.annual_reward")}
-                    name={"annualReward"}
-                    initialValue={data.annualReward}
-                    rules={[
-                      {
-                        required: true,
-                        message: t("profile.annual_reward.required"),
-                      },
-                    ]}
-                  >
-                    <InputNumber step={0.1} />
-                  </Form.Item>
                   {/*
                 // @ts-ignore */}
                   <Form.Item
