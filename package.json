@@ -177,7 +177,7 @@
     "koa-server-http-proxy": "0.1.0",
     "koa-useragent": "4.0.0",
     "left-pad": "1.3.0",
-    "markdown-it": "10.0.0",
+    "markdown-it": "12.3.2",
     "markdown-it-mark": "3.0.0",
     "markdown-it-toc-and-anchor": "4.2.0",
     "mongoose": "5.9.22",
