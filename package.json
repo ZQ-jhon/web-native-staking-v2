@@ -123,7 +123,7 @@
     "@types/koa-router": "7.4.1",
     "@types/mongoose": "5.7.30",
     "@types/node-fetch": "2.5.7",
-    "@types/nodemailer": "4.6.8",
+    "@types/nodemailer": "6.4.14",
     "@types/nodemailer-mailgun-transport": "1.4.1",
     "@types/react-copy-to-clipboard": "4.3.0",
     "@types/react-helmet": "5.0.16",
